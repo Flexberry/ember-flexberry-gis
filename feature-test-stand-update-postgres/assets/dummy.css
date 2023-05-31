@@ -8999,6 +8999,12 @@ form.flexberry-edit-layermap .simple-layers-style .ui.tab.segment .ui.grid.style
 .mappanel .leaflet-left .leaflet-control-zoom.leaflet-bar a:last-child {
   border-radius: 0px 0px 0.25rem 0.25rem;
 }
+.mobile .leaflet-control-container {
+  z-index: 800 !important;
+}
+.mobile .leaflet-control-container .leaflet-top {
+  z-index: 800 !important;
+}
 .leaflet-bottom.leaflet-left .main-ratiomenu.dropdown .menu .item {
   color: #3B4256;
 }
@@ -33050,6 +33056,9 @@ Floated Menu / Item
 }
 .ui.menu.flexberry-maptoolbar > .item:first-child {
   border-radius: 5px;
+}
+.mobile .ui.menu.flexberry-maptoolbar {
+  z-index: 800 !important;
 }
 .ui.menu.flexberry-maptoolbar {
   min-height: 0;

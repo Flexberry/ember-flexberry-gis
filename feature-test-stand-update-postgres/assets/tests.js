@@ -66,6 +66,23 @@ define('dummy/tests/components/flexberry-sitemap.jshint', ['exports'], function 
     assert.ok(true, 'components/flexberry-sitemap.js should pass jshint.');
   });
 });
+define('dummy/tests/components/mobile/flexberry-sitemap.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - components/mobile');
+  test('components/mobile/flexberry-sitemap.js should pass jscs', function () {
+    ok(true, 'components/mobile/flexberry-sitemap.js should pass jscs.');
+  });
+});
+define('dummy/tests/components/mobile/flexberry-sitemap.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - components/mobile/flexberry-sitemap.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'components/mobile/flexberry-sitemap.js should pass jshint.');
+  });
+});
 define('dummy/tests/controllers/api-test-map.jscs-test', ['exports'], function (exports) {
   'use strict';
 
