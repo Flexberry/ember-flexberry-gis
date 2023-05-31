@@ -10,7 +10,7 @@ import Ember from 'ember';
   @example
     templates/my-form.hbs
     ```handlebars
-    {{flexberry-sitemap-guideline sitemap=sitemap}}
+    {{flexberry-sitemap sitemap=sitemap}}
     ```
 
   @class FlexberrySitemapGuidelineComponent

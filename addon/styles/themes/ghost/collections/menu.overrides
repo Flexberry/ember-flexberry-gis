@@ -7,6 +7,10 @@
 }
 
 
+.mobile .ui.menu.flexberry-maptoolbar {
+  z-index: 800 !important;
+}
+
 // ====== RGIS map-themes========
 .ui.menu.flexberry-maptoolbar {
   min-height: 0;

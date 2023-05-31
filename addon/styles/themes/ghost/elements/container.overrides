@@ -115,6 +115,14 @@
   }
 }
 
+.mobile .leaflet-control-container {
+  z-index: 800 !important;
+}
+
+.mobile .leaflet-control-container .leaflet-top {
+  z-index: 800 !important;
+}
+
 .leaflet-bottom.leaflet-left .main-ratiomenu.dropdown .menu .item {
   color: @textColor;
 }
