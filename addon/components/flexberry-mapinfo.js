@@ -143,6 +143,15 @@ let MapInfoComponent = Ember.Component.extend({
   name: null,
 
   /**
+    Flag: indicates whether name of map can be edited.
+
+    @property nameIsEditable
+    @type Boolean
+    @default true
+  */
+  nameIsEditable: true,
+
+  /**
     Map description.
 
     @property description
@@ -217,8 +226,10 @@ let MapInfoComponent = Ember.Component.extend({
     let service = this.get('service');
     let storageClass = this.get('_storageClassName');
     let mapId = this.get('mapId');
+    let mapIsNew = Ember.isNone(service.getFromStorageSingle(storageClass, mapId));
     let dialogVisibility = !Ember.isNone(mapId) && service.getFromStorageSingle(storageClass, mapId) !== false;
 
+    this.set('nameIsEditable', !mapIsNew);
     this.set('visible', dialogVisibility);
     this.set('showOnOpen', dialogVisibility);
   },
