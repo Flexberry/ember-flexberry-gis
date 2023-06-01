@@ -775,3 +775,7 @@ div.bottompanel-wrapper {
     }
   }
 }
+
+.mobile .flexberry-map {
+  height: calc(~'100vh - 147px');
+}
