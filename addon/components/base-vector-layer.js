@@ -402,11 +402,11 @@ export default BaseLayer.extend({
     @method updateClusterLayer
   */
   updateClusterLayer(e) {
-    if(!e || !e.layer) {
+    if (!e || !e.layer) {
       return;
     }
 
-    if (e.type === 'layeradd'){
+    if (e.type === 'layeradd') {
       Ember.run.once(this, 'addClusterLayer', e);
       return;
     }
@@ -415,6 +415,7 @@ export default BaseLayer.extend({
     if (clusterLayer instanceof L.MarkerClusterGroup) {
       return;
     }
+
     clusterLayer.removeLayer(e.layer);
   },
 

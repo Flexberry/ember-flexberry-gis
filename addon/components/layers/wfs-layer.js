@@ -907,6 +907,7 @@ export default BaseVectorLayer.extend({
     if (!leafletObject || !(leafletObject instanceof L.FeatureGroup)) {
       leafletObject = this.get('_leafletObject');
     }
+
     if (leafletObject instanceof L.MarkerClusterGroup) {
       leafletObject = this.get('_leafletObject._originalVectorLayer');
     }
