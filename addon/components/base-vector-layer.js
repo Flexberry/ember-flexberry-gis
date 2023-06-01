@@ -383,13 +383,60 @@ export default BaseLayer.extend({
     let clusterLayer = L.markerClusterGroup(this.get('clusterOptions'));
     clusterLayer.addLayer(vectorLayer);
 
+    // Original vector layer is necessary for 'flexberry-layers-attributes-panel' component and identification map tool
+    clusterLayer._originalVectorLayer = vectorLayer;
+
+    // Original vectorLayer update does not trigger parent's clusterLayer.addLayer(), link explicitly
+    clusterLayer._originalVectorLayer.on('layeradd', this.updateClusterLayer, this);
+    clusterLayer._originalVectorLayer.on('layerremove', this.updateClusterLayer, this);
+
     clusterLayer._featureGroup.on('layeradd', this._setLayerOpacity, this);
     clusterLayer._featureGroup.on('layerremove', this._setLayerOpacity, this);
 
-    // Original vector layer is necessary for 'flexberry-layers-attributes-panel' component.
-    clusterLayer._originalVectorLayer = vectorLayer;
-
     return clusterLayer;
+  },
+
+  /**
+    Synchronizes ClusterLayer._originalVectorLayer._layers with ClusterLayer layers.
+
+    @method updateClusterLayer
+  */
+  updateClusterLayer(e) {
+    if(!e || !e.layer) {
+      return;
+    }
+
+    if (e.type === 'layeradd'){
+      Ember.run.once(this, 'addClusterLayer', e);
+      return;
+    }
+
+    let clusterLayer = this.get('_leafletObject');
+    if (clusterLayer instanceof L.MarkerClusterGroup) {
+      return;
+    }
+    clusterLayer.removeLayer(e.layer);
+  },
+
+  /**
+    Adds ClusterLayer layers.
+
+    @method addClusterLayer
+  */
+  addClusterLayer(e) {
+    if (!e || !e.target) {
+      console.error('Unable to update clusterLayer');
+      return;
+    }
+
+    let clusterLayer = this.get('_leafletObject');
+    if (!(clusterLayer instanceof L.MarkerClusterGroup)) {
+      return;
+    }
+
+    let updatedOriginalVectorLayer = e.target;
+    clusterLayer.addLayer(updatedOriginalVectorLayer);
+    this._setLayerState(); // Accept layer style options for new loaded features
   },
 
   /**
@@ -400,6 +447,8 @@ export default BaseLayer.extend({
   destroyClusterLayer(clusterLayer) {
     clusterLayer._featureGroup.off('layeradd', this._setLayerOpacity, this);
     clusterLayer._featureGroup.off('layerremove', this._setLayerOpacity, this);
+    clusterLayer._originalVectorLayer.off('layeradd', this.updateClusterLayer, this);
+    clusterLayer._originalVectorLayer.off('layerremove', this.updateClusterLayer, this);
   },
 
   /*
