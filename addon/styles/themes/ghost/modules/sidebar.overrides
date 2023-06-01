@@ -1266,7 +1266,7 @@
   left: auto;
 }
 
-.mobile .ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header .flexberry-treenode-prevent-expand-collapse {
+.mobile .ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header .flexberry-treenode-prevent-expand-collapse.flexberry-checkbox{
   position: absolute;
   z-index: 1;
 }
