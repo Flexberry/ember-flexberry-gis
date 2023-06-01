@@ -29,7 +29,6 @@
           }}
         {{/if}}
       {{else}}
-        {{#if layerModel.showOnMinimap}}
           {{#if (eq layerModel.type "group")}}
             {{#layers/group-layer
               leafletMap=leafletMap
@@ -46,16 +45,17 @@
               }}
             {{/layers/group-layer}}
           {{else}}
-            {{component (concat "layers/" layerModel.type "-layer")
-              leafletMap=leafletMap
-              leafletContainer=leafletContainer
-              layerModel=layerModel
-              index=layerModel.index
-              visibility=layerModel.visibility
-              dynamicProperties=layerModel.settingsAsObject
-            }}
+            {{#if layerModel.showOnMinimap}}
+              {{component (concat "layers/" layerModel.type "-layer")
+                leafletMap=leafletMap
+                leafletContainer=leafletContainer
+                layerModel=layerModel
+                index=layerModel.index
+                visibility=layerModel.visibility
+                dynamicProperties=layerModel.settingsAsObject
+              }}
+            {{/if}}
           {{/if}}
-        {{/if}}
       {{/if}}
     {{/if}}
   {{/each}}
