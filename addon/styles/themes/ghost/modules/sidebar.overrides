@@ -1265,3 +1265,12 @@
   right: 0;
   left: auto;
 }
+
+.mobile .ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header .flexberry-treenode-prevent-expand-collapse {
+  position: absolute;
+  z-index: 1;
+}
+
+.mobile .ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).title .flexberry-maplayer-caption-label {
+  padding-left: 47px;
+}
