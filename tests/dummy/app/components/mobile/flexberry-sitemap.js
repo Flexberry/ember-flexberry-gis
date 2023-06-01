@@ -46,6 +46,8 @@ export default FlexberrySitemapComponent.extend({
           if (selectedItem.length > 0) {
             selectedItem.removeClass('active selected');
           }
+
+          Ember.$('.ui.sidebar.main.menu').sidebar('toggle');
         }
       });
     }
