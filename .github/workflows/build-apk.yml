@@ -56,18 +56,19 @@ jobs:
         exec: |
           cd FlexberryGisTestStand.Cordova/FlexberryGisTestStand.Cordova && \
           cordova platform add android && \
-          cordova build android --release -- -- --packageType=apk && \
+          cp "/templates/ConfigXmlParser.java" "/platforms/android/CordovaLib/src/org/apache/cordova/ConfigXmlParser.java" && \
+          cp "/templates/AndroidManifest.xml" "/platforms/android/app/src/main/AndroidManifest.xml" && \
           cordova build android --packageType=apk .
     - uses: actions/checkout@v3
     - name: Git commit
-        run: |
+      run: |
           set -x
           git config user.name "Flexberry-man"
           git config user.email "mail@flexberry.net"
           git add --all
           git commit -m "Update APK"
     - name: Git push
-        run: |
+      run: |
           set -x
           SSH_AUTH_SOCK=/tmp/ssh_agent.sock
           export SSH_AUTH_SOCK;
