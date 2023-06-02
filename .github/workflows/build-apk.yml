@@ -18,3 +18,29 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+        
+    - name: Install ember and bower
+      run: |
+       set -x
+       node -v
+       npm install -g bower
+       npm install -g ember-cli@2.4.3
+       yarn install
+       bower install
+
+    - name: Tune ssh-keys
+      env:
+          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
+      run: |
+        set -x
+        export ENCRYPTION_KEY
+        #  Recover private key
+        openssl aes-256-cbc -in .github/workflows/secrets/id_rsa.enc -out .github/workflows/secrets/id_rsa -pass pass:$ENCRYPTION_KEY -d -md sha1
+        # Setup SSH agent
+        export SSH_AUTH_SOCK=/tmp/ssh_agent.sock
+        mkdir -p ~/.ssh
+        ssh-keyscan github.com >> ~/.ssh/known_hosts
+        # Start ssh agent
+        ssh-agent -a $SSH_AUTH_SOCK #> /dev/null
+        chmod 0600 .github/workflows/secrets/id_rsa
+        ssh-add .github/workflows/secrets/id_rsa
