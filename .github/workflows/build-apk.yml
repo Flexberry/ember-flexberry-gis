@@ -15,10 +15,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js ${{ matrix.node-version-cordova }}
       uses: actions/setup-node@v1
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: ${{ matrix.node-version-cordova }}
 
     - name: Install ember and bower
       run: |
@@ -46,12 +46,29 @@ jobs:
         chmod 0600 .github/workflows/secrets/id_rsa
         ssh-add .github/workflows/secrets/id_rsa
 
+    - name: Create Cordova
+      run: |
+        npm install -g cordova
+        cd FlexberryGisTestStand.Cordova
+        cordova create GisTestStand flexberry.gis.teststand GISTestStand
+        cd GisTestStand
+        cordova platform add android
+        cp "templates/ConfigXmlParser.java" "platforms/android/CordovaLib/src/org/apache/cordova/ConfigXmlParser.java"
+        cp "templates/AndroidManifest.xml" "platforms/android/app/src/main/AndroidManifest.xml"
+        cordova build android --packageType=apk
+  
+    - name: Update Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+        
+    - uses: actions/checkout@v2
     - name: Build frontend
       run: |
         export TRAVIS_BRANCH=$1
         export GH_TOKEN=${{ secrets.GITHUB_TOKEN }}
         export SSH_AUTH_SOCK=/tmp/ssh_agent.sock
-        ember build --output-path=FlexberryGisTestStand.Cordova/www
+        ember build --output-path=FlexberryGisTestStand.Cordova/GisTestStand/www
 
     - name: Update Node.js ${{ matrix.node-version-cordova }}
       uses: actions/setup-node@v1
@@ -60,12 +77,7 @@ jobs:
 
     - name: Build Cordova
       run: |
-        npm install -g cordova
-        cd FlexberryGisTestStand.Cordova
-        cordova create GisTestStand flexberry.gis.teststand GISTestStand
-        cordova platform add android
-        cp "templates/ConfigXmlParser.java" "platforms/android/CordovaLib/src/org/apache/cordova/ConfigXmlParser.java"
-        cp "templates/AndroidManifest.xml" "platforms/android/app/src/main/AndroidManifest.xml"
+        cd "FlexberryGisTestStand.Cordova/GisTestStand"
         cordova build android --packageType=apk
 
     - name: Git commit
@@ -75,6 +87,7 @@ jobs:
           git config user.email "mail@flexberry.net"
           git add "/platforms/android/app/build/outputs/apk/debug/app-debug.apk"
           git commit -m "Update APK"
+
     - name: Git push
       run: |
           set -x
