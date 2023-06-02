@@ -779,3 +779,10 @@ div.bottompanel-wrapper {
 .mobile .flexberry-map {
   height: calc(~'100vh - 147px');
 }
+.mobile .layer-result-list .feature-result-item-buttons,
+.mobile .layer-result-list .feature-result-item-toolbar {
+  justify-content: end;
+}
+.mobile .layer-result-list .feature-result-item .icon.item.more {
+  width: auto;
+}
