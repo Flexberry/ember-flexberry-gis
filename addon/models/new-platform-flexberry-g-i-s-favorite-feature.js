@@ -3,8 +3,7 @@
 */
 
 import { Model as FavoriteFeatureMixin, defineProjections } from '../mixins/regenerated/models/new-platform-flexberry-g-i-s-favorite-feature';
-import { Projection } from 'ember-flexberry-data';
-import { Offline } from 'ember-flexberry-data';
+import { Projection, Offline } from 'ember-flexberry-data';
 
 /**
   Favorite feature model.
