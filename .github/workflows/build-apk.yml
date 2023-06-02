@@ -62,7 +62,6 @@ jobs:
         chmod 0600 .github/workflows/secrets/id_rsa
         ssh-add .github/workflows/secrets/id_rsa
       
-    - uses: actions/checkout@v2
     - name: Build frontend
       run: |
         export TRAVIS_BRANCH=$1
