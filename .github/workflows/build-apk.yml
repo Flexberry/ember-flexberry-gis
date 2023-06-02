@@ -56,3 +56,4 @@ jobs:
       run: |
         npm install -g cordova
         cd "FlexberryGisTestStand.Cordova/FlexberryGisTestStand.Cordova"
+        cordova platform add android
