@@ -68,6 +68,18 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
   */
   classNameBindings: ['isActive:active', 'featureIsHL:highlight'],
 
+  /**
+    Flag: indicates type device is mobile or not.
+
+    @property isMobile
+    @type boolean
+    @readOnly
+  */
+  isMobile: Ember.computed(function () {
+    let device = this.get('device');
+    return device.mobile() || device.tablet();
+  }),
+
   featureIsHL: Ember.computed('highlightable', 'feature.highlight', function () {
     return this.get('feature.highlight') && this.get('highlightable');
   }),
@@ -306,7 +318,7 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
 
     let _this = this;
     let $caption = this.$('.feature-result-item-caption');
-    if ($caption.length > 0) {
+    if ($caption.length > 0 && !this.get('isMobile')) {
       $caption.hover(
         function () {
           let $toolbar = _this.$(this).parent().children('.feature-result-item-toolbar');

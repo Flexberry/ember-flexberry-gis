@@ -11,7 +11,7 @@
       change=(action 'addToCompareGeometries')
     }}
   {{/if}}
-  <div class="feature-result-item-toolbar {{if favoriteMode "favorite"}} {{if (gt feature.editForms.length 1) "links" ""}} hidden">
+  <div class="feature-result-item-toolbar {{if favoriteMode "favorite"}} {{if (gt feature.editForms.length 1) "links" ""}} {{if isMobile '' 'hidden'}}">
     {{#if intersection}}
       <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panToIntersection" on="click"}}>
         <i class="icon-guideline-hand"></i>
