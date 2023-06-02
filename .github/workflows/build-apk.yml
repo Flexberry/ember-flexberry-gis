@@ -47,10 +47,16 @@ jobs:
     
     - name: Build frontend
       run: |
-        if [  "$GITHUB_EVENT_NAME" != 'push' ]; then  exit 0; fi
-        if [ "$GITHUB_REF" != 'refs/heads/feature-test-stand-update' ]; then  exit 0; fi
-        ifs=$IFS; IFS=/; set -- $GITHUB_REF; IFS=$ifs; while [ $# -gt 1 ]; do shift; done;
         export TRAVIS_BRANCH=$1
         export GH_TOKEN=${{ secrets.GITHUB_TOKEN }}
         export SSH_AUTH_SOCK=/tmp/ssh_agent.sock
         ember build --output-path=FlexberryGisTestStand.Cordova/FlexberryGisTestStand.Cordova/www
+        
+    - name: Build Cordova
+      with:
+        exec: |
+          cd FlexberryGisTestStand.Cordova/FlexberryGisTestStand.Cordova && \
+          cordova platform add android && \
+          cp "/templates/ConfigXmlParser.java" "/platforms/android/CordovaLib/src/org/apache/cordova/ConfigXmlParser.java" && \
+          cp "/templates/AndroidManifest.xml" "/platforms/android/app/src/main/AndroidManifest.xml" && \
+          cordova build android --packageType=apk .
