@@ -19,7 +19,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-        
+
     - name: Install ember and bower
       run: |
        set -x
@@ -45,28 +45,29 @@ jobs:
         ssh-agent -a $SSH_AUTH_SOCK #> /dev/null
         chmod 0600 .github/workflows/secrets/id_rsa
         ssh-add .github/workflows/secrets/id_rsa
-    
+
     - name: Build frontend
       run: |
         export TRAVIS_BRANCH=$1
         export GH_TOKEN=${{ secrets.GITHUB_TOKEN }}
         export SSH_AUTH_SOCK=/tmp/ssh_agent.sock
-        ember build --output-path=FlexberryGisTestStand.Cordova/FlexberryGisTestStand.Cordova/www
-      
+        ember build --output-path=FlexberryGisTestStand.Cordova/www
+
     - name: Update Node.js ${{ matrix.node-version-cordova }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version-cordova }}
-        
+
     - name: Build Cordova
       run: |
         npm install -g cordova
-        cd "FlexberryGisTestStand.Cordova/FlexberryGisTestStand.Cordova"
+        cd FlexberryGisTestStand.Cordova
+        cordova create GisTestStand flexberry.gis.teststand GISTestStand
         cordova platform add android
         cp "templates/ConfigXmlParser.java" "platforms/android/CordovaLib/src/org/apache/cordova/ConfigXmlParser.java"
         cp "templates/AndroidManifest.xml" "platforms/android/app/src/main/AndroidManifest.xml"
         cordova build android --packageType=apk
-        
+
     - name: Git commit
       run: |
           set -x
