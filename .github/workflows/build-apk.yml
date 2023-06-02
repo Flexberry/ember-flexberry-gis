@@ -53,11 +53,10 @@ jobs:
         ember build --output-path=FlexberryGisTestStand.Cordova/FlexberryGisTestStand.Cordova/www
         
     - name: Build Cordova
-      uses: oxr463/setup-cordova@0.0.3
-      with:
-        exec: |
-          cd "/FlexberryGisTestStand.Cordova/FlexberryGisTestStand.Cordova" && \
-          cordova platform add android && \
-          cp "/templates/ConfigXmlParser.java" "/platforms/android/CordovaLib/src/org/apache/cordova/ConfigXmlParser.java" && \
-          cp "/templates/AndroidManifest.xml" "/platforms/android/app/src/main/AndroidManifest.xml" && \
-          cordova build android --packageType=apk .
+      run: |
+        npm install -g cordova
+        cd "/FlexberryGisTestStand.Cordova/FlexberryGisTestStand.Cordova"
+        cordova platform add android
+        cp "/templates/ConfigXmlParser.java" "/platforms/android/CordovaLib/src/org/apache/cordova/ConfigXmlParser.java"
+        cp "/templates/AndroidManifest.xml" "/platforms/android/app/src/main/AndroidManifest.xml"
+        cordova build android --packageType=apk .
