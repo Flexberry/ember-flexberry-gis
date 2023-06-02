@@ -68,6 +68,7 @@ jobs:
         export TRAVIS_BRANCH=$1
         export GH_TOKEN=${{ secrets.GITHUB_TOKEN }}
         export SSH_AUTH_SOCK=/tmp/ssh_agent.sock
+        ls
         ember build --output-path=FlexberryGisTestStand.Cordova/GisTestStand/www
 
     - name: Update Node.js ${{ matrix.node-version-cordova }}
