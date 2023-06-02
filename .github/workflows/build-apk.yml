@@ -2,7 +2,8 @@ name: Build APK
 
 on:
   push:
-    branches: [ feature-test-stand-update ]
+    branches:
+      - feature-test-stand-update
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
