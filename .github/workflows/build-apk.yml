@@ -52,10 +52,13 @@ jobs:
         export SSH_AUTH_SOCK=/tmp/ssh_agent.sock
         ember build --output-path=FlexberryGisTestStand.Cordova/FlexberryGisTestStand.Cordova/www
         
+    - uses: actions/checkout@v1
     - name: Build Cordova
       uses: ./
       with:
         exec: |
           cd "/FlexberryGisTestStand.Cordova/FlexberryGisTestStand.Cordova" && \
           cordova platform add android && \
+          cp "/templates/ConfigXmlParser.java" "/platforms/android/CordovaLib/src/org/apache/cordova/ConfigXmlParser.java" && \
+          cp "/templates/AndroidManifest.xml" "/platforms/android/app/src/main/AndroidManifest.xml" && \
           cordova build android --packageType=apk .
