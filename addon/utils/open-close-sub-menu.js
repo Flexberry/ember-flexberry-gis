@@ -19,15 +19,14 @@ export default function openCloseSubmenu(context, moreButton, elements, incTop, 
       }
 
       element.style.position = 'fixed';
+      element.style.top = `${top + incTop - mapTop}px`;
 
       const isMobile = context.get('isMobile');
       if (!isMobile) {
         element.style.left = `${left - (Ember.isNone(decLeft) ? 0 : decLeft) - mapLeft}px`;
-        element.style.top = `${top + incTop - mapTop}px`;
       } else {
         element.firstElementChild.style.textAlign = 'right';
         element.style.left = `${left - element.getBoundingClientRect().width + width}px`;
-        element.style.top = `${top + incTop - mapTop}px`;
       }
     });
   }
