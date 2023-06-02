@@ -1,4 +1,14 @@
+/**
+  @module ember-flexberry-gis
+*/
+
 import Ember from 'ember';
+
+/**
+  Mixin containing initialization logic for favorite feature offline serializer.
+  @class NewPlatformFlexberyGISLinkParameterOfflineSerializerMixin
+  @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
+*/
 
 export let OfflineSerializer = Ember.Mixin.create({
   getAttrs: function () {
