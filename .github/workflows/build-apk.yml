@@ -83,7 +83,6 @@ jobs:
           set -x
           git config user.name "Flexberry-man"
           git config user.email "mail@flexberry.net"
-          ls
           git add "FlexberryGisTestStand.Cordova/GisTestStand/platforms/android/app/build/outputs/apk/debug/app-debug.apk"
           git commit -m "Update APK"
 
