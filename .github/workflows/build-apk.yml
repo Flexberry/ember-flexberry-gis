@@ -10,7 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [10.x]
+        node-version-cordova: [14.x]
 
     steps:
     - uses: actions/checkout@v2
@@ -52,6 +53,11 @@ jobs:
         export SSH_AUTH_SOCK=/tmp/ssh_agent.sock
         ember build --output-path=FlexberryGisTestStand.Cordova/FlexberryGisTestStand.Cordova/www
       
+    - name: Update Node.js ${{ matrix.node-version-cordova }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version-cordova }}
+        
     - name: Build Cordova
       run: |
         npm install -g cordova
