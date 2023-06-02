@@ -53,6 +53,7 @@ jobs:
         ember build --output-path=FlexberryGisTestStand.Cordova/FlexberryGisTestStand.Cordova/www
         
     - name: Build Cordova
+      uses: ./
       with:
         exec: |
           cd FlexberryGisTestStand.Cordova/FlexberryGisTestStand.Cordova && \
