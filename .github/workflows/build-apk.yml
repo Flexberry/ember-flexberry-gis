@@ -2,7 +2,7 @@ name: Build APK
 
 on:
   push:
-    branches: [ feature-test-stand-update, feature-232474-build-apk ]
+    branches: [ feature-test-stand-update ]
   workflow_dispatch:
 
 jobs:
