@@ -55,9 +55,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build Cordova
       run: |
-        ls
         npm install -g cordova
-        ls
         cd "FlexberryGisTestStand.Cordova/FlexberryGisTestStand.Cordova"
         cordova platform add android
         cp "/templates/ConfigXmlParser.java" "/platforms/android/CordovaLib/src/org/apache/cordova/ConfigXmlParser.java"
