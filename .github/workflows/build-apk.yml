@@ -65,4 +65,4 @@ jobs:
         cordova platform add android
         cp "templates/ConfigXmlParser.java" "platforms/android/CordovaLib/src/org/apache/cordova/ConfigXmlParser.java"
         cp "templates/AndroidManifest.xml" "platforms/android/app/src/main/AndroidManifest.xml"
-        cordova build android --packageType=apk .
+        cordova build android --packageType=apk
