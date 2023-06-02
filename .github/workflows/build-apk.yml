@@ -59,7 +59,6 @@ jobs:
         ember build --output-path=FlexberryGisTestStand.Cordova/FlexberryGisTestStand.Cordova/www
 
     - name: Build Cordova
-      uses: ./
       with:
         exec: |
           cd FlexberryGisTestStand.Cordova/FlexberryGisTestStand.Cordova && \
@@ -67,20 +66,3 @@ jobs:
           cp "/templates/ConfigXmlParser.java" "/platforms/android/CordovaLib/src/org/apache/cordova/ConfigXmlParser.java" && \
           cp "/templates/AndroidManifest.xml" "/platforms/android/app/src/main/AndroidManifest.xml" && \
           cordova build android --packageType=apk .
-
-    - name: Git commit
-      run: |
-          set -x
-          git config user.name "Flexberry-man"
-          git config user.email "mail@flexberry.net"
-          git add "/platforms/android/app/build/outputs/apk/debug/app-debug.apk"
-          git commit -m "Update APK"
-
-    - name: Git push
-      run: |
-          set -x
-          SSH_AUTH_SOCK=/tmp/ssh_agent.sock
-          export SSH_AUTH_SOCK;
-          # Redirect any output to /dev/null to hide any sensitive credential data that might otherwise be exposed.
-          git push --force --quiet "git@github.com:Flexberry/ember-flexberry-gis.git" > /dev/null 2>&1
-          echo "Done."
