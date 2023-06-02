@@ -777,7 +777,7 @@ div.bottompanel-wrapper {
 }
 
 .mobile .flexberry-map {
-  height: calc(~'100vh - 147px');
+  height: calc(~'100vh - 148px');
 }
 .mobile .layer-result-list .feature-result-item-buttons,
 .mobile .layer-result-list .feature-result-item-toolbar {
@@ -785,4 +785,9 @@ div.bottompanel-wrapper {
 }
 .mobile .layer-result-list .feature-result-item .icon.item.more {
   width: auto;
+}
+
+.mobile .layer-result-list .flexberry-toggler-content .item:not(.icon) .feature-result-item-title .feature-result-item-toolbar,
+.mobile .layer-result-list .feature-result-item a.icon.item.more {
+  z-index: auto;
 }

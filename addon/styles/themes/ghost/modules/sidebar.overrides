@@ -1256,6 +1256,7 @@
   }
 }
 
+.mobile .sidebar-wrapper .ui.tabular.menu.flexberry-tab-bar.main-map-tab-bar,
 .mobile .ui.right.sidebar.tabbar {
   width: 100%;
 }
