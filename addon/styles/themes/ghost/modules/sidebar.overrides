@@ -772,10 +772,6 @@
   width: 200px;
 }
 
-.mobile .background-layers.flexberry-maptoolbar.ui.menu {
-  bottom: 140px !important;
-}
-
 .background-layers.flexberry-maptoolbar.ui.menu {
   bottom: 67px;
   .flexberry-background-layers-map-tool-div {
@@ -1277,4 +1273,8 @@
 
 .mobile .ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).title .flexberry-maplayer-caption-label {
   padding-left: 47px;
+}
+
+.mobile .background-layers.flexberry-maptoolbar.ui.menu {
+  bottom: 140px;
 }
