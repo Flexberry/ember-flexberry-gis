@@ -52,7 +52,6 @@ jobs:
         export SSH_AUTH_SOCK=/tmp/ssh_agent.sock
         ember build --output-path=FlexberryGisTestStand.Cordova/FlexberryGisTestStand.Cordova/www
       
-    - uses: actions/checkout@v2
     - name: Build Cordova
       run: |
         npm install -g cordova
