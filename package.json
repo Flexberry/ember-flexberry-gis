@@ -20,6 +20,7 @@
     "node": ">= 0.10.0"
   },
   "devDependencies": {
+    "@capacitor/cli": "^5.0.4",
     "@turf/area": "^5.1.5",
     "@turf/boolean-contains": "^5.1.5",
     "@turf/boolean-equal": "^5.1.5",
@@ -82,6 +83,8 @@
     "ui-ember-slider": "0.5.0"
   },
   "dependencies": {
+    "@capacitor/android": "^5.0.4",
+    "@capacitor/core": "^5.0.4",
     "ember-cli-babel": "^5.1.6",
     "ember-cli-htmlbars": "^1.0.3",
     "ember-flexberry": "2.6.1",
