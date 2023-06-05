@@ -1,0 +1,413 @@
+<style>
+  .box-buttons div {
+    margin: 8px 0;
+  }
+</style>
+<div class="ui vertical menu">
+  <iframe id="testframe"
+    src="../../api-test-map/51099a34-7b54-487e-868d-c44290edcded?lat=58.03537122378858&lng=56.19266510009766&zoom=11"
+    width="1000" height="800" align="left">
+  </iframe>
+  <div class="box-buttons">
+    <div>
+      <button id="showLayers">Show Layers</button>
+      <button id="hideLayers">Hide Layers</button>
+    </div>
+    <div>
+      <button id="queryLayers">Query Layers</button>
+    </div>
+    <div>
+      <button id="getIntersectionObjects">Get Intersection Objects</button>
+    </div>
+    <div>
+      <button id="getIntersectionArea">Get Intersection Area</button>
+    </div>
+    <div>
+      <button id="showIntersectionArea">Show Intersection Area</button>
+      <button id="clearIntersectionArea">Clear Intersection Area</button>
+    </div>
+    <div>
+      <button id="createNewlayer">Create New Layer</button>
+    </div>
+    <div>
+      <button id="showAllLayerObjects">Show All Layer Objects</button>
+    </div>
+    <div>
+      <button id="isContainsObject">Is Contains Object</button>
+    </div>
+    <div>
+      <button id="extendsAreaObject">Get Extended Area</button>
+    </div>
+    <div>
+      <button id="deleteLayerObject">Delete Object</button>
+      <button id="deleteLayerObjects">Delete Objects</button>
+    </div>
+    <div>
+      <button id="nearestObject">Get Nearest Object</button>
+      <button id="distanceObjects">Get Distance</button>
+    </div>
+    <div>
+      <button id="showObjects">Show Objects</button>
+      <button id="hideObjects">Hide Objects</button>
+    </div>
+    <div>
+      <button id="moveObjectToLayer">Move Object To Layer</button>
+    </div>
+    <div>
+      <button id="copyObject">Copy Object</button>
+    </div>
+    <div>
+      <button id="creatObject">Create Object</button>
+    </div>
+    <div>
+      <button id="getRhumb"> Get Rhumb</button>
+    </div>
+    <div>
+      <button id="getLayerObjectOptions">Get Object Attributes</button>
+    </div>
+    <div>
+      <button id="editLayerObject">Edit Layer Object</button>
+    </div>
+    <div>
+      <button id="hideLeftPanel">Hide left panel</button>
+      <button id="showLeftPanel">Show left panel</button>
+      <input type="text" size="40" id="nameTools">
+    </div>
+    <div>
+      <button id="hideRightPanel">Hide right panel</button>
+      <button id="showRightPanel">Show right panel</button>
+    </div>
+    <div>
+      <button id="startChangeMultyLayerObject">Change Multy Object</button>
+      <button id="createPolygonObjectCoordinates">Create Object By Coordinates</button>
+      <button id="createPolygonObjectRhumb">Create Object By Rhumb</button>
+    </div>
+    <div>
+      <button id="groupLayers">Group Layers</button>
+    </div>
+  </div>
+  <script type="text/javascript">
+    var frame = document.getElementById("testframe");
+    frame.addEventListener("load", function () {
+      if (frame.contentWindow.mapApi == undefined) {
+        frame.contentWindow.mapApi = {};
+      }
+
+      frame.contentWindow.mapApi.goToEditForm = function (layerId, objectId) {
+        console.log(`Go to edit form for element ${objectId}.`);
+      }
+
+      frame.contentWindow.mapApi.hasEditForm = function (layerId, objectId) {
+        return true;
+      }
+
+      frame.contentWindow.mapApi.goToListForm = function (layerId, objectIds) {
+        console.log(`Go to list form for elements ${objectIds}.`);
+      }
+
+      frame.contentWindow.mapApi.hasListForm = function (layerId) {
+        return true;
+      }
+
+      frame.contentWindow.mapApi.saveObject = function (obj, layerId) {
+        if (layerId === "56f4b518-e375-4b24-be2f-88d48110c0a3") {
+          obj.saveObject().then((feature) => console.log(feature)).catch((e) => console.log(e));
+        }
+        console.log(layerId)
+      }
+
+      frame.contentWindow.mapApi.layerInitCallback = function (model) {
+        let layer = model.returnLeafletObject();
+        layer.eachLayer(function (layerr) {
+          switch (model.layerModel.get('id')) {
+            case 'f7670a1f-1acb-4571-923c-1ce3bc88e11e':
+              layerr.setStyle({ color: '#808000', fillColor: '#FFD700' });
+              break;
+            case 'f8dec493-d879-49ae-ad55-f4f18c89cb88':
+              layerr.setStyle({ color: '#008B8B' });
+              break;
+            case '8f2d336c-6233-43d2-9704-b9a4be8840ca':
+              layerr.setStyle({isImage: false, options: {className: 'label', html:'<p>'+layerr.feature.properties.naimenovanie+'</p>'}});
+              break;
+          }
+          layerr.on('click', function (e) {
+            alert(e.target.feature.properties.name);
+          })
+        });
+      };
+
+      frame.contentWindow.mapApi.readyMapLayers = function () {
+        console.log('Layers loaded.')
+      };
+
+      frame.contentWindow.mapApi.errorMapLayers = function () {
+        console.log('Error loading layers.')
+      };
+
+      frame.contentWindow.mapApi.getLayerFeatureId = function (layer, layerObject) {
+        if (layer.id === "f7670a1f-1acb-4571-923c-1ce3bc88e11e") {
+          return layerObject.feature.properties.name;
+        }
+        return layerObject.feature.id;
+      }
+
+      var showButton = document.getElementById('showLayers');
+      var showLayers = function () {
+        frame.contentWindow.mapApi.mapModel.showLayers(['f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'f8dec493-d879-49ae-ad55-f4f18c89cb88']);
+      };
+      showButton.addEventListener('click', showLayers);
+
+      var hideButton = document.getElementById('hideLayers');
+      var hideLayers = function () {
+        frame.contentWindow.mapApi.mapModel.hideLayers(['f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'f8dec493-d879-49ae-ad55-f4f18c89cb88']);
+      };
+      hideButton.addEventListener('click', hideLayers);
+
+      var queryButton = document.getElementById('queryLayers');
+      var queryLayers = function () {
+        frame.contentWindow.mapApi.runQuery({ waterway: 'drain', name: 'Гайва' }, 'c2ce814e-cb31-432e-af9e-2e86cea65c67');
+      };
+      queryButton.addEventListener('click', queryLayers);
+
+      var intersectionButton = document.getElementById('getIntersectionObjects');
+      var getIntersections = function () {
+        console.log(frame.contentWindow.mapApi.mapModel.getIntersectionObjects('perm_water_line.7836', ['f8dec493-d879-49ae-ad55-f4f18c89cb88']));
+      };
+      intersectionButton.addEventListener('click', getIntersections);
+
+      var intersectionAreaButton = document.getElementById('getIntersectionArea');
+        var getIntersectionsArea = function () {
+          frame.contentWindow.mapApi.mapModel.getIntersectionArea('f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'Малые реки', 'f7670a1f-1acb-4571-923c-1ce3bc88e11e',  'Голованово', false)
+          .then(resolve => {console.log(resolve)},reject => {console.log(reject)});
+        };
+      intersectionAreaButton.addEventListener('click', getIntersectionsArea);
+
+      var showIntersectionAreaButton = document.getElementById('showIntersectionArea');
+        var showIntersectionsArea = function () {
+          frame.contentWindow.mapApi.mapModel.getIntersectionArea('f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'Малые реки', 'f7670a1f-1acb-4571-923c-1ce3bc88e11e',  'Голованово', true);
+        };
+      showIntersectionAreaButton.addEventListener('click', showIntersectionsArea);
+
+      var clearIntersectionAreaButton = document.getElementById('clearIntersectionArea');
+        var clearIntersectionsArea = function () {
+          frame.contentWindow.mapApi.mapModel.clearServiceLayer();
+        };
+      clearIntersectionAreaButton.addEventListener('click', clearIntersectionsArea);
+
+      var newLayerButton = document.getElementById('createNewlayer');
+      var newLayer = function () {
+        frame.contentWindow.mapApi.mapModel.createNewLayer({ name: 'test_osm', type: 'osm' }).then(id => console.log(id));
+      };
+      newLayerButton.addEventListener('click', newLayer);
+
+      var deleteLayerObjectButton = document.getElementById('deleteLayerObject');
+      var deleteObjectLayer = function () {
+        frame.contentWindow.mapApi.mapModel.deleteLayerObject('56f4b518-e375-4b24-be2f-88d48110c0a3', 'vydel_utverzhdeno_polygon.02b29e0f-e9b0-47c7-a6bf-a91abfe719c3');
+      };
+      deleteLayerObjectButton.addEventListener('click', deleteObjectLayer);
+
+      var deleteObjectsLayerButton = document.getElementById('deleteLayerObjects');
+      var deleteObjectsLayer = function () {
+        frame.contentWindow.mapApi.mapModel.deleteLayerObjects('56f4b518-e375-4b24-be2f-88d48110c0a3', ['vydel_utverzhdeno_polygon.1df5d9e9-e9e1-42ca-b4f4-c823bf84bc8e']);
+      };
+      deleteObjectsLayerButton.addEventListener('click', deleteObjectsLayer);
+
+      var showObjectsButton = document.getElementById('showObjects');
+      var showObjects = function () {
+        frame.contentWindow.mapApi.mapModel.showLayerObjects('f8dec493-d879-49ae-ad55-f4f18c89cb88', ['perm_water_line.8383', 'perm_water_line.8382']);
+      };
+      showObjectsButton.addEventListener('click', showObjects);
+
+      var hideObjectsButton = document.getElementById('hideObjects');
+      var hideObjects = function () {
+        frame.contentWindow.mapApi.mapModel.hideLayerObjects('f8dec493-d879-49ae-ad55-f4f18c89cb88', ['perm_water_line.8383', 'perm_water_line.8382']);
+      }
+      hideObjectsButton.addEventListener('click', hideObjects);
+
+      var showAllLayerObjectsButton = document.getElementById('showAllLayerObjects');
+      var showAllLayerObjects = function () {
+        frame.contentWindow.mapApi.mapModel.showAllLayerObjects('f8dec493-d879-49ae-ad55-f4f18c89cb88');
+      }
+      showAllLayerObjectsButton.addEventListener('click', showAllLayerObjects);
+
+      var moveButton = document.getElementById('moveObjectToLayer');
+      var moveObject = function () {
+        let promise = frame.contentWindow.mapApi.mapModel.moveObjectToLayer('perm_water_polygon.8238', 'cd68892e-2896-47e0-b0e1-28dd700bad87', 'f8dec493-d879-49ae-ad55-f4f18c89cb88');
+        promise.then(resolve => { console.log(resolve) }, reject => {
+          console.log(reject);
+        })
+      };
+      moveButton.addEventListener('click', moveObject);
+
+      var copyButton = document.getElementById('copyObject');
+      var copyObject = function () {
+        frame.contentWindow.mapApi.mapModel.copyObject('perm_water_polygon.8000', 'cd68892e-2896-47e0-b0e1-28dd700bad87', 'f8dec493-d879-49ae-ad55-f4f18c89cb88')
+          .then(() => { console.log('layer copied successfully') }, reject => { console.log(reject) })
+      };
+      copyButton.addEventListener('click', copyObject);
+
+      var containsButton = document.getElementById('isContainsObject');
+      var containsObject = function () {
+        let layerId = "f7670a1f-1acb-4571-923c-1ce3bc88e11e"
+        let isContains = frame.contentWindow.mapApi.mapModel.isContainsObject('Малые реки', layerId, 'Голованово', layerId)
+        console.log("layer 'Голованово' contains layer 'Малые реки':" + isContains);
+      };
+      containsButton.addEventListener('click', containsObject);
+
+      var extendsAreaButton = document.getElementById('extendsAreaObject');
+      var extendsObject = function () {
+        let layerId = "f7670a1f-1acb-4571-923c-1ce3bc88e11e"
+        let area = frame.contentWindow.mapApi.mapModel.getAreaExtends('Малые реки', layerId, 'Голованово', layerId)
+        console.log("the area of ​​layer 'Голованово' that extends beyond the boundaries of layer 'Малые реки':" + area);
+      };
+      extendsAreaButton.addEventListener('click', extendsObject);
+
+      var creatObjectButton = document.getElementById('creatObject');
+      var creatObjectLayers = function () {
+        frame.contentWindow.mapApi.createObject({ PK: '3059', nomer: '10' }, 'c2ce814e-cb31-432e-af9e-2e86cea65c67');
+      };
+      creatObjectButton.addEventListener('click', creatObjectLayers);
+
+      var getObjectAttrButton = document.getElementById('getLayerObjectOptions');
+      var getOptions = function () {
+        console.log(frame.contentWindow.mapApi.mapModel.getLayerObjectOptions('f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'Студгородок'));
+      };
+      getObjectAttrButton.addEventListener('click', getOptions);
+
+      var nearestObjectButton = document.getElementById('nearestObject');
+      var nearestObject = function () {
+        var obj = frame.contentWindow.mapApi.mapModel.getNearObject('f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'Студгородок', ['f7670a1f-1acb-4571-923c-1ce3bc88e11e']);
+        console.log(obj);
+      };
+      nearestObjectButton.addEventListener('click', nearestObject);
+
+      var distanceObjectsButton = document.getElementById('distanceObjects');
+      var distanceObjects = function () {
+        var distance = frame.contentWindow.mapApi.mapModel.getDistanceBetweenObjects('f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'Студгородок', 'f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'Архиерейка');
+        console.log(distance + ' (m)');
+      };
+      distanceObjectsButton.addEventListener('click', distanceObjects);
+
+      var editLayerObjectButton = document.getElementById('editLayerObject');
+      var editLayerObject = function () {
+        let newGeometry = {
+          coordinates: [[
+            [58.0127912,56.2439621],
+            [58.0222549,56.0901882],
+            [57.9096626,56.1933563],
+            [58.0127912,56.2439621]
+          ]],
+          type: "Polygon"
+        }
+        console.log(frame.contentWindow.mapApi.mapModel.editLayerObject("f7670a1f-1acb-4571-923c-1ce3bc88e11e", 'Малые реки', newGeometry));
+      };
+      editLayerObjectButton.addEventListener('click', editLayerObject);
+
+      var showLeftPanelButton = document.getElementById('showLeftPanel');
+      var showLeftPanel = function () {
+        var nameTool = document.getElementById('nameTools').value;
+        if (nameTool != '')
+          frame.contentWindow.mapApi.leafletMap.flexberryMap.tools.show(nameTool);
+        else
+          frame.contentWindow.mapApi.leafletMap.flexberryMap.tools.show();
+      };
+      showLeftPanelButton.addEventListener('click', showLeftPanel);
+
+      var hideLeftPanelButton = document.getElementById('hideLeftPanel');
+      var hideLeftPanel = function () {
+        var nameTool = document.getElementById('nameTools').value;
+        if (nameTool != '')
+          frame.contentWindow.mapApi.leafletMap.flexberryMap.tools.hide(nameTool);
+        else
+          frame.contentWindow.mapApi.leafletMap.flexberryMap.tools.hide();
+      };
+      hideLeftPanelButton.addEventListener('click', hideLeftPanel);
+
+      var showRightPanelButton = document.getElementById('showRightPanel');
+      var showRightPanel = function () {
+        frame.contentWindow.mapApi.leafletMap.flexberryMap.sidebar.show();
+      };
+      showRightPanelButton.addEventListener('click', showRightPanel);
+
+      var hideRightPanelButton = document.getElementById('hideRightPanel');
+      var hideRightPanel = function () {
+        frame.contentWindow.mapApi.leafletMap.flexberryMap.sidebar.hide();
+      };
+      hideRightPanelButton.addEventListener('click', hideRightPanel);
+
+      var startChangeMultyLayerObjectButton = document.getElementById('startChangeMultyLayerObject');
+      var startChangeMultyLayerObject = function () {
+
+        var featureLayer = frame.contentWindow.mapApi.mapModel.startChangeLayerObject('56f4b518-e375-4b24-be2f-88d48110c0a3', 'vydel_utverzhdeno_polygon.02b29e0f-e9b0-47c7-a6bf-a91abfe719c3');
+        frame.contentWindow.mapApi.mapModel.startChangeMultyLayerObject('56f4b518-e375-4b24-be2f-88d48110c0a3', featureLayer);
+      };
+      startChangeMultyLayerObjectButton.addEventListener('click', startChangeMultyLayerObject);
+
+      var createPolygonObjectCoordinatesButton = document.getElementById('createPolygonObjectCoordinates');
+      var createPolygonObjectCoordinates = function () {
+
+        var obj = {
+          type: 'Feature',
+          geometry: {
+            type: 'LineString',
+            coordinates: [[30, 10], [40, 40], [20, 40], [10, 20], [30, 10]]
+          },
+          properties: {
+            name: 'test_polygon'
+          }
+        };
+
+        var newObj = frame.contentWindow.mapApi.mapModel.addObjectToLayer('0f2b3002-1b28-44bd-877f-6c0a917b963f', obj);
+        console.log(newObj);
+      };
+      createPolygonObjectCoordinatesButton.addEventListener('click', createPolygonObjectCoordinates);
+
+      var createPolygonObjectRhumbButton = document.getElementById('createPolygonObjectRhumb');
+      var createPolygonObjectRhumb = function () {
+        data = {
+          type: 'LineString',
+          properties: { name: 'test_polygon' },
+          startPoint: [85, 79],
+          points: [
+            { rib: '1;2', rhumb: 'ЮВ;86.76787457562546', distance: 8182.6375760837955 },
+            { rib: '2;3', rhumb: 'СВ;79.04259420114585', distance: 8476.868426796427 },
+            { rib: '3;1', rhumb: 'ЮЗ;86.0047147391561', distance: 16532.122718537685 }
+          ]
+        };
+
+        var newObj = frame.contentWindow.mapApi.mapModel.createPolygonObjectRhumb('0f2b3002-1b28-44bd-877f-6c0a917b963f', data);
+        console.log(newObj);
+      };
+      createPolygonObjectRhumbButton.addEventListener('click', createPolygonObjectRhumb);
+
+      var startChangeMultyLayerObjectButton = document.getElementById('startChangeMultyLayerObject');
+      var startChangeMultyLayerObject = function () {
+        var featureLayer = frame.contentWindow.mapApi.mapModel.startChangeLayerObject('56f4b518-e375-4b24-be2f-88d48110c0a3', 'vydel_utverzhdeno_polygon.02b29e0f-e9b0-47c7-a6bf-a91abfe719c3');
+        frame.contentWindow.mapApi.mapModel.startChangeMultyLayerObject('56f4b518-e375-4b24-be2f-88d48110c0a3', featureLayer);
+      };
+      startChangeMultyLayerObjectButton.addEventListener('click', startChangeMultyLayerObject);
+
+      var getRhumbButton = document.getElementById('getRhumb');
+      var getRhumb = function () {
+        // Пример обычного полигона (длина вложенности массива: 3)
+        // var thumbs = frame.contentWindow.mapApi.mapModel.getRhumb('56f4b518-e375-4b24-be2f-88d48110c0a3', 'vydel_polygon.3110');
+        // Пример обычной линии (длина вложенности массива: 2)
+        var thumbs = frame.contentWindow.mapApi.mapModel.getRhumb('fc26ac89-ccb5-47f5-bd2d-89a5e587f9d3', 'Улица.1094');
+        // Пример мультиполигон (длина вложенности массива: 4)
+        //var thumbs = frame.contentWindow.mapApi.mapModel.getRhumb('56f4b518-e375-4b24-be2f-88d48110c0a3', 'vydel_polygon.3111');
+        // Пример мультилинии (длина вложенности массива: 2)
+        //var thumbs = frame.contentWindow.mapApi.mapModel.getRhumb('fc26ac89-ccb5-47f5-bd2d-89a5e587f9d3', 'Улица.15477');
+
+        console.log(thumbs);
+      }
+      getRhumbButton.addEventListener('click', getRhumb);
+
+      var groupLayersButton = document.getElementById('groupLayers');
+      var groupLayers = function () {
+        frame.contentWindow.mapApi.mapModel.moveLayerToGroup('756abf4d-76ad-4014-b9b2-39598fcd9c14', '31011034-d4ea-4604-b080-afea302c4259');
+      }
+      groupLayersButton.addEventListener('click', groupLayers);
+
+    });
+  </script>
+</div>

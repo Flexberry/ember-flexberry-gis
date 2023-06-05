@@ -13,6 +13,10 @@ export default {
     'caption': 'Home',
     'title': ''
   },
+  'main-menu': {
+    'caption': 'Back',
+    'title': ''
+  },
   'gis': {
     'caption': 'GIS',
     'title': '',

@@ -115,6 +115,14 @@
   }
 }
 
+.mobile .leaflet-control-container {
+  z-index: 800 !important;
+}
+
+.mobile .leaflet-control-container .leaflet-top {
+  z-index: 800 !important;
+}
+
 .leaflet-bottom.leaflet-left .main-ratiomenu.dropdown .menu .item {
   color: @textColor;
 }
@@ -766,4 +774,20 @@ div.bottompanel-wrapper {
       }
     }
   }
+}
+
+.mobile .flexberry-map {
+  height: calc(~'100vh - 148px');
+}
+.mobile .layer-result-list .feature-result-item-buttons,
+.mobile .layer-result-list .feature-result-item-toolbar {
+  justify-content: end;
+}
+.mobile .layer-result-list .feature-result-item .icon.item.more {
+  width: auto;
+}
+
+.mobile .layer-result-list .flexberry-toggler-content .item:not(.icon) .feature-result-item-title .feature-result-item-toolbar,
+.mobile .layer-result-list .feature-result-item a.icon.item.more {
+  z-index: auto;
 }

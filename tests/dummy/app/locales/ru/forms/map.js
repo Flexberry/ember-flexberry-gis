@@ -35,6 +35,18 @@ export default {
     },
     'compare': {
       'caption': 'Сравнить слои'
+    },
+    'analytics': {
+      'caption': 'Инструменты аналитики'
+    },
+    'submenu': {
+      'measure': 'Измерения на карте',
+      'locate': 'Мое местоположение',
+      'export': 'Печать карты'
+    },
+    'bookmarksAndFavorites': {
+      'caption': 'Закладки',
+      'favorites': 'Избранное'
     }
   }
 };

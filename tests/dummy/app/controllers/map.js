@@ -197,53 +197,61 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     @property sidebar
     @type Object[]
   */
-  sidebar: Ember.A([{
-    selector: 'treeview',
-    captionPath: 'forms.map.treeviewbuttontooltip',
-    iconClass: 'icon-guideline-layers'
-  }, {
-    selector: 'search',
-    captionPath: 'forms.map.searchbuttontooltip',
-    iconClass: 'icon-guideline-search'
-  }, {
-    selector: 'identify',
-    captionPath: 'forms.map.identifybuttontooltip',
-    iconClass: 'icon-guideline-layers-info',
-    class: 'identify'
-  }, {
-    selector: 'bookmarksAndFavorites',
-    captionPath: 'forms.map.bookmarksbuttontooltip',
-    iconClass: 'icon-guideline-bookmark'
-  }, {
-    selector: 'analytics',
-    caption: 'Инструменты аналитики',
-    iconClass: 'icon-guideline-chart',
-    class: 'analytics'
-  }, {
-    selector: 'createObject',
-    captionPath: 'forms.map.createobjectbuttontooltip',
-    iconClass: 'createObject icon'
-  }, {
-    selector: 'createOrEditObject',
-    captionPath: 'forms.map.createoreditobjectbuttontooltip',
-    iconClass: 'createOrEditObject icon',
-    class: 'createOrEditObject'
-  }, {
-    selector: 'compare',
-    captionPath: 'forms.map.comparebuttontooltip',
-    iconClass: 'compare icon',
-    class: 'compare'
-  }, {
-    selector: 'compareObjects',
-    caption: 'Сравнение объектов',
-    iconClass: 'compareObjects icon',
-    class: 'compareObjects'
-  }, {
-    selector: 'intersectionObjects',
-    caption: 'Сравнение объектов',
-    iconClass: 'intersectionObjects icon',
-    class: 'intersectionObjects'
-  }]),
+  sidebar: Ember.computed('i18n.locale', function() {
+    let i18n = this.get('i18n');
+
+    return Ember.A([{
+      selector: 'treeview',
+      caption: i18n.t('forms.map.tabbar.treeview.caption'),
+      captionPath: 'forms.map.treeviewbuttontooltip',
+      iconClass: 'icon-guideline-layers'
+    }, {
+      selector: 'search',
+      caption: i18n.t('forms.map.tabbar.search.caption'),
+      captionPath: 'forms.map.searchbuttontooltip',
+      iconClass: 'icon-guideline-search'
+    }, {
+      selector: 'identify',
+      caption: i18n.t('forms.map.tabbar.identify.caption'),
+      captionPath: 'forms.map.identifybuttontooltip',
+      iconClass: 'icon-guideline-layers-info',
+      class: 'identify'
+    }, {
+      selector: 'bookmarksAndFavorites',
+      caption: i18n.t('forms.map.tabbar.bookmarksAndFavorites.caption'),
+      captionPath: 'forms.map.bookmarksbuttontooltip',
+      iconClass: 'icon-guideline-bookmark'
+    }, {
+      selector: 'analytics',
+      caption: i18n.t('forms.map.tabbar.analytics.caption'),
+      iconClass: 'icon-guideline-chart',
+      class: 'analytics'
+    }, {
+      selector: 'createObject',
+      captionPath: 'forms.map.createobjectbuttontooltip',
+      iconClass: 'createObject icon'
+    }, {
+      selector: 'createOrEditObject',
+      captionPath: 'forms.map.createoreditobjectbuttontooltip',
+      iconClass: 'createOrEditObject icon',
+      class: 'createOrEditObject'
+    }, {
+      selector: 'compare',
+      captionPath: 'forms.map.comparebuttontooltip',
+      iconClass: 'compare icon',
+      class: 'compare'
+    }, {
+      selector: 'compareObjects',
+      caption: 'Сравнение объектов',
+      iconClass: 'compareObjects icon',
+      class: 'compareObjects'
+    }, {
+      selector: 'intersectionObjects',
+      caption: 'Сравнение объектов',
+      iconClass: 'intersectionObjects icon',
+      class: 'intersectionObjects'
+    }]);
+  }),
 
   _showFavorites: false,
 
@@ -452,7 +460,51 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     }
   },
 
+  _identificationFinished(e) {
+    let leafletMap = this.get('leafletMap');
+    let identifyServiceLayer = this.get('identifyServiceLayer');
+    if (identifyServiceLayer) {
+      identifyServiceLayer.clearLayers();
+    } else {
+      this.set('identifyServiceLayer', e.serviceLayer || L.featureGroup().addTo(leafletMap));
+    }
+
+    this.set('identifyToolPolygonLayer', e.polygonLayer);
+    this.set('identifyToolBufferedMainPolygonLayer', e.bufferedMainPolygonLayer);
+
+    e.results.forEach((identificationResult) => {
+      identificationResult.features.then((features) => {
+        features.forEach((feature) => {
+          let favModel = this.get('store').peekAll('new-platform-flexberry-g-i-s-favorite-feature').findBy('objectKey', feature.properties.primarykey);
+          if (favModel) {
+            Ember.set(feature, 'properties.isFavorite', true);
+          }
+        });
+      });
+    });
+
+    this.set('identifyToolResults', e.results);
+
+    // below is kind of madness, but if you want sidebar to move on identification finish - do that
+    if (this.get('sidebar.2.active') !== true) {
+      this.set('sidebar.2.active', true);
+    }
+
+    if (!this.get('sidebarOpened')) {
+      this.send('toggleSidebar', {
+        changed: false
+      });
+    }
+  },
+
   actions: {
+    clearFavourites() {
+      let serviceLayer = this.get('serviceLayer');
+      if (serviceLayer) {
+        serviceLayer.clearLayers();
+      }
+    },
+
     onLoad(layer) {
       let config = Ember.getOwner(this).resolveRegistration('config:environment');
       if (config.APP.backendUrls.hasOwnProperty('loaderBackendUrl')) {
@@ -491,7 +543,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       this.set('sidebar.3.active', true);
       this.send('toggleSidebar', {
         changed: true,
-        tabName: 'bookmarks'
+        tabName: 'bookmarksAndFavorites'
       });
     },
 
@@ -526,6 +578,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       @method  actions.onCreateOrEditFeature
     */
     onCreateOrEditFeature(e) {
+      this.send('clearFavourites');
       this.set('createOrEditedFeature', e);
       this.set('createOrEditObject', true);
 
@@ -574,6 +627,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     },
 
     showCompareSideBar() {
+      this.send('clearFavourites');
       if (sideBySide) {
         if (!this.get('compareService.compareLayersEnabled')) {
           this.set('sidebar.7.active', true);
@@ -817,24 +871,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       or a promise returning such array.
     */
     onIdentificationFinished(e) {
-      let serviceLayer = this.get('serviceLayer');
-      serviceLayer.clearLayers();
-
-      this.set('identifyToolPolygonLayer', e.polygonLayer);
-      this.set('identifyToolBufferedMainPolygonLayer', e.bufferedMainPolygonLayer);
-      this.set('identifyToolResults', e.results);
-
-      // Below is kind of madness, but if you want sidebar to move on identification finish - do that.
-      if (this.get('sidebar.2.active') !== true) {
-        this.set('sidebar.2.active', true);
-      }
-
-      if (!this.get('sidebarOpened')) {
-        this.send('toggleSidebar', {
-          changed: false,
-          tabName: 'identify'
-        });
-      }
+      this._identificationFinished(e);
     },
 
     /**

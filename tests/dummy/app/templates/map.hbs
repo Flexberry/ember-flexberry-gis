@@ -31,6 +31,7 @@
         change=(action "toggleSidebar")
         items=_sidebarFiltered
       }}
+      {{#if sidebarOpened}}
         {{flexberry-search-panel
           querySearch=(action "querySearch")
           clearSearch=(action "clearSearch")
@@ -45,6 +46,7 @@
           attrSearch=(action "attrSearch")
           placeholder=placeholderSearch
         }}
+      {{/if}}
       <div class="ui right sidebar treeview pushable tabbar">
         <div data-tab="treeview" class="ui tab treeview">
           <h3>{{t "forms.map.tabbar.treeview.caption"}}</h3>
@@ -201,12 +203,12 @@
             items=(array
               (hash
                 selector="bookmarks"
-                caption="Закладки"
+                caption=(t 'forms.map.tabbar.bookmarksAndFavorites.caption')
                 class="active"
               )
               (hash
                 selector="favorites"
-                caption="Избранное"
+                caption=(t 'forms.map.tabbar.bookmarksAndFavorites.favorites')
               )
             )
           }}
@@ -219,6 +221,7 @@
           <div data-tab="favorites" class="ui tab favorites over">
             {{favorites-list
               features=result
+              class="favorites-block"
               compareBtnDisabled=compareBtnDisabled
               serviceLayer=serviceLayer
               leafletMap=leafletMap
@@ -227,6 +230,9 @@
               compareTwoGeometries=(action 'OnCompareTwoGeometries')
               addToFavorite=(action "addToFavorite")
               addToCompareGeometries=(action 'addToCompareGeometries')
+              clear=(action "clearFavourites")
+              availableCRS=availableModes
+              accessibleData=access.mapLayerData
             }}
           </div>
         </div>
@@ -240,11 +246,11 @@
           {{/each}}
         </div>
         <div data-tab="analytics" class="ui tab analytics history satellite-search">
-          <h3>Инструменты аналитики</h3>
+          <h3>{{t "forms.map.tabbar.analytics.caption"}}</h3>
           <div class="analytics-tools compare-layers-tools ui basic primary button">
             {{map-tools/compare
               leafletMap=leafletMap
-              caption="Сравнение слоев"
+              caption=(t 'forms.map.tabbar.compare.caption')
               showCompareSideBar=(action "showCompareSideBar")
             }}
           </div>
@@ -339,7 +345,7 @@
       }}
         {{#block-slot "submenu"}}
           {{map-tools/measure
-            caption="Измерения на карте"
+            caption=(t 'forms.map.tabbar.submenu.measure')
             iconClass="icon-guideline-measure"
             leafletMap=leafletMap
             addHaArea=true
@@ -352,13 +358,13 @@
             measureHideIconClass="icon-guideline-hide"
           }}
           {{map-commands/locate
-            caption="Мое местоположение"
+            caption=(t 'forms.map.tabbar.submenu.locate')
             iconClass="icon-guideline-marker"
             leafletMap=leafletMap
           }}
           {{map-commands/export
             timeout=30000
-            caption="Печать карты"
+            caption=(t 'forms.map.tabbar.submenu.export')
             defaultMapCaption=model.name
             leafletMap=leafletMap
             layers=model.hierarchy

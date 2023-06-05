@@ -35,6 +35,18 @@ export default {
     },
     'compare': {
       'caption': 'Compare layers'
+    },
+    'analytics': {
+      'caption': 'Analytics tools'
+    },
+    'submenu': {
+      'measure': 'Measurements on map',
+      'locate': 'My location',
+      'export': 'Map print'
+    },
+    'bookmarksAndFavorites': {
+      'caption': 'Bookmarks',
+      'favorites': 'Favorites'
     }
   }
 };

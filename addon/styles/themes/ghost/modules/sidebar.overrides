@@ -1023,7 +1023,7 @@
   overflow-y: hidden !important;
   overflow-x: hidden;
   padding: 0 0 10px !important;
-  
+
   .identify-tab {
     height: 100%;
     display: flex;
@@ -1254,4 +1254,28 @@
       }
     }
   }
+}
+
+.mobile .sidebar-wrapper .ui.tabular.menu.flexberry-tab-bar.main-map-tab-bar,
+.mobile .ui.right.sidebar.tabbar {
+  width: 100%;
+}
+
+.mobile .ui.right.sidebar.treeview .flexberry-maplayers .flexberry-treenode-buttons-block {
+  text-align: right;
+  right: 0;
+  left: auto;
+}
+
+.mobile .ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header .flexberry-treenode-prevent-expand-collapse.flexberry-checkbox{
+  position: absolute;
+  z-index: 1;
+}
+
+.mobile .ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).title .flexberry-maplayer-caption-label {
+  padding-left: 47px;
+}
+
+.mobile .background-layers.flexberry-maptoolbar.ui.menu {
+  bottom: 140px;
 }
