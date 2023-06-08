@@ -771,6 +771,15 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       return result;
     };
 
+    let requiredFields = Ember.get(leafletObject, &#x27;readFormat.featureType.requiredFields&#x27;);
+    let readOnlyFields = Ember.get(leafletObject, &#x27;readFormat.excludedProperties&#x27;);
+    requiredFields = Object.assign({}, Ember.get(leafletObject, &#x27;readFormat.featureType.requiredFields&#x27;));
+    readOnlyFields.forEach((field) =&gt; {
+      if (requiredFields.hasOwnProperty(field)) {
+        delete requiredFields[field];
+      }
+    });
+
     return {
       availableDrawTools: availableDrawTools,
       typeGeometry: typeGeometry,
@@ -780,7 +789,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       fieldTypes: Ember.get(leafletObject, &#x27;readFormat.featureType.fieldTypes&#x27;),
       fieldParsers: Ember.get(leafletObject, &#x27;readFormat.featureType.fields&#x27;),
       fieldValidators: Ember.get(leafletObject, &#x27;readFormat.featureType.fieldValidators&#x27;),
-      requiredFields: Ember.get(leafletObject, &#x27;readFormat.featureType.requiredFields&#x27;),
+      requiredFields: requiredFields,
       readOnlyFields: Ember.get(leafletObject, &#x27;readFormat.excludedProperties&#x27;),
       fieldNames: getHeader()
     };
