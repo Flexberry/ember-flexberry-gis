@@ -513,7 +513,8 @@ export default BaseVectorLayer.extend({
 
       let resultingFilter = filter ? filter.toGml() : null;
 
-      let wfsLayer = this.get(&#x27;_leafletObject&#x27;);
+      // Clustering vector layer contains the wfsLayer context in the &quot;_leafletObject._originalVectorLayer&quot; path
+      let wfsLayer = this.get(&#x27;_leafletObject&#x27;) instanceof L.MarkerClusterGroup ? this.get(&#x27;_leafletObject._originalVectorLayer&#x27;) : this.get(&#x27;_leafletObject&#x27;);
 
       let maxFeatures = Ember.get(options, &#x27;maxFeatures&#x27;);
 
@@ -1321,6 +1322,10 @@ export default BaseVectorLayer.extend({
 
     if (!leafletObject || !(leafletObject instanceof L.FeatureGroup)) {
       leafletObject = this.get(&#x27;_leafletObject&#x27;);
+    }
+
+    if (leafletObject instanceof L.MarkerClusterGroup) {
+      leafletObject = this.get(&#x27;_leafletObject._originalVectorLayer&#x27;);
     }
 
     let leafletMap = this.get(&#x27;leafletMap&#x27;);

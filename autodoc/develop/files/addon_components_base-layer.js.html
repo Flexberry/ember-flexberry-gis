@@ -1038,7 +1038,15 @@ export default Ember.Component.extend(
 
       leafletContainer.addLayer(leafletLayer);
       let leafletMap = this.get(&#x27;leafletMap&#x27;);
-      if (!Ember.isNone(leafletMap) &amp;&amp; leafletLayer.options.continueLoading) {
+
+      if (Ember.isNone(leafletMap)) {
+        return;
+      }
+
+      let leafletLayerIsCluster = leafletLayer instanceof L.MarkerClusterGroup;
+      let continueLoading = leafletLayerIsCluster ? leafletLayer._originalVectorLayer.options.continueLoading : leafletLayer.options.continueLoading;
+
+      if (continueLoading) {
         let e = {
           layers: [this.get(&#x27;layerModel&#x27;)],
           results: Ember.A()
