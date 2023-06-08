@@ -160,11 +160,9 @@
     display: inline-block;
     z-index: 1;
     border-radius: 3.5px;
-    box-shadow: @defaultBoxShadow;
-    border: @defaultGrayBorder;
-    height: 40px;
     font-size: 14px;
-    background: @inputBackgroundColor;
+    border: 1px solid transparent;
+    height: 40px;
     &.ml-18 {
       margin-left: 18px;
     }
@@ -197,8 +195,8 @@
     &-selected {
       padding: 8px;
       border-radius: 3.5px;
-      border:solid 1px transparent;
-      box-shadow: 2px 2px 6px 0  fade(#000, 15%);
+      border: @defaultGrayBorder;
+      box-shadow: @defaultBoxShadow;
       height: 40px;
       background: @inputBackgroundColor;
 
@@ -209,6 +207,7 @@
         height: 52px;
         border-bottom-right-radius: 0px;
         border-bottom-left-radius: 0px;
+        margin-bottom: -1px;
       }
     }
     &-list {
@@ -216,8 +215,16 @@
       border-radius: 3.5px;
       box-shadow: 2px 5px 6px 0 fade(#000, 15%);
       display: none;
-      background: inherit;
+      background: @inputBackgroundColor;
       width: 170px;
+
+      &-separator {
+        position: inherit;
+        width: 40%;
+        height: 3px;
+        margin-top: -2px;
+        background: @inputBackgroundColor;
+      }
       ul {
         margin: 5px 0;
       }
