@@ -17788,11 +17788,11 @@ define("dummy/templates/components/flexberry-button-dropdown", ["exports"], func
           "loc": {
             "source": null,
             "start": {
-              "line": 10,
+              "line": 12,
               "column": 4
             },
             "end": {
-              "line": 15,
+              "line": 17,
               "column": 4
             }
           },
@@ -17834,7 +17834,7 @@ define("dummy/templates/components/flexberry-button-dropdown", ["exports"], func
           morphs[2] = dom.createMorphAt(dom.childAt(element0, [3]), 0, 0);
           return morphs;
         },
-        statements: [["attribute", "onClick", ["subexpr", "action", ["click", ["get", "item.layerMode", ["loc", [null, [11, 33], [11, 47]]]]], [], ["loc", [null, [11, 16], [11, 49]]]]], ["attribute", "class", ["get", "item.iconClass", ["loc", [null, [12, 17], [12, 31]]]]], ["content", "item.tooltip", ["loc", [null, [13, 36], [13, 52]]]]],
+        statements: [["attribute", "onClick", ["subexpr", "action", ["click", ["get", "item.layerMode", ["loc", [null, [13, 33], [13, 47]]]]], [], ["loc", [null, [13, 16], [13, 49]]]]], ["attribute", "class", ["get", "item.iconClass", ["loc", [null, [14, 17], [14, 31]]]]], ["content", "item.tooltip", ["loc", [null, [15, 36], [15, 52]]]]],
         locals: ["item"],
         templates: []
       };
@@ -17853,7 +17853,7 @@ define("dummy/templates/components/flexberry-button-dropdown", ["exports"], func
             "column": 0
           },
           "end": {
-            "line": 17,
+            "line": 19,
             "column": 6
           }
         },
@@ -17877,6 +17877,8 @@ define("dummy/templates/components/flexberry-button-dropdown", ["exports"], func
         var el3 = dom.createTextNode("\n  ");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n  ");
+        dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
         dom.setAttribute(el2, "class", "arrow");
         var el3 = dom.createTextNode("\n    ");
@@ -17893,6 +17895,11 @@ define("dummy/templates/components/flexberry-button-dropdown", ["exports"], func
         var el1 = dom.createTextNode("\n");
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
+        var el2 = dom.createTextNode("\n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2, "class", "flexberry-dropdown-button-list-separator");
+        dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n  ");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("ul");
@@ -17917,10 +17924,10 @@ define("dummy/templates/components/flexberry-button-dropdown", ["exports"], func
         morphs[1] = dom.createAttrMorph(element2, 'onClick');
         morphs[2] = dom.createAttrMorph(element3, 'class');
         morphs[3] = dom.createAttrMorph(element4, 'class');
-        morphs[4] = dom.createMorphAt(dom.childAt(element4, [1]), 1, 1);
+        morphs[4] = dom.createMorphAt(dom.childAt(element4, [3]), 1, 1);
         return morphs;
       },
-      statements: [["attribute", "class", ["concat", ["flexberry-dropdown-button-selected ", ["subexpr", "if", [["get", "isOpen", ["loc", [null, [1, 52], [1, 58]]]], "active"], [], ["loc", [null, [1, 47], [1, 69]]]]]]], ["attribute", "onClick", ["subexpr", "action", ["dropdownOpen"], [], ["loc", [null, [1, 79], [1, 105]]]]], ["attribute", "class", ["get", "selectIcon", ["loc", [null, [3, 15], [3, 25]]]]], ["attribute", "class", ["concat", ["flexberry-dropdown-button-list ", ["subexpr", "if", [["get", "isOpen", ["loc", [null, [8, 48], [8, 54]]]], "show"], [], ["loc", [null, [8, 43], [8, 63]]]]]]], ["block", "each", [["get", "items", ["loc", [null, [10, 12], [10, 17]]]]], [], 0, null, ["loc", [null, [10, 4], [15, 13]]]]],
+      statements: [["attribute", "class", ["concat", ["flexberry-dropdown-button-selected ", ["subexpr", "if", [["get", "isOpen", ["loc", [null, [1, 52], [1, 58]]]], "active"], [], ["loc", [null, [1, 47], [1, 69]]]]]]], ["attribute", "onClick", ["subexpr", "action", ["dropdownOpen"], [], ["loc", [null, [1, 79], [1, 105]]]]], ["attribute", "class", ["get", "selectIcon", ["loc", [null, [3, 15], [3, 25]]]]], ["attribute", "class", ["concat", ["flexberry-dropdown-button-list ", ["subexpr", "if", [["get", "isOpen", ["loc", [null, [9, 48], [9, 54]]]], "show"], [], ["loc", [null, [9, 43], [9, 63]]]]]]], ["block", "each", [["get", "items", ["loc", [null, [12, 12], [12, 17]]]]], [], 0, null, ["loc", [null, [12, 4], [17, 13]]]]],
       locals: [],
       templates: [child0]
     };
@@ -42367,7 +42374,7 @@ catch(err) {
 /* jshint ignore:start */
 
 if (!runningTests) {
-  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","intersectionArea":"intersectionArea","keywordForCosmos":"cosmos","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata","featureExportApi":"http://134.209.30.115:1818/api/featureexport","getNearDistance":"http://134.209.30.115:1818/odata/GetNearDistance"},"log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0+7533da2f"});
+  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","intersectionArea":"intersectionArea","keywordForCosmos":"cosmos","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata","featureExportApi":"http://134.209.30.115:1818/api/featureexport","getNearDistance":"http://134.209.30.115:1818/odata/GetNearDistance"},"log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0+54745138"});
 }
 
 /* jshint ignore:end */
