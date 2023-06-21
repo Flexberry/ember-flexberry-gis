@@ -664,9 +664,10 @@ export default Ember.Component.extend(
         });
       }
 
-      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) &&
-        leafletContainer.hasLayer(this.get('_labelsLayer'))) {
-        leafletContainer.removeLayer(this.get('_labelsLayer'));
+      let labelsLayer = this.get('_labelsLayer');
+      if (!Ember.isNone(labelsLayer) && leafletContainer.hasLayer(labelsLayer)) {
+        labelsLayer.clearLayers();
+        leafletContainer.removeLayer(labelsLayer);
       }
     },
 
