@@ -2279,28 +2279,6 @@ export default BaseLayer.extend({
   },
 
   /**
-    Removes labels from it's leaflet container.
-
-    @method _removeLabelsFromLeafletContainer
-    @private
-  */
-  _removeLabelsFromLeafletContainer() {
-    let leafletMap = this.get('leafletMap');
-
-    let additionalZoomLabel = this.get('additionalZoomLabel');
-    if (additionalZoomLabel && additionalZoomLabel.length > 0) {
-      additionalZoomLabel.forEach(zoomLabels => {
-        leafletMap.removeLayer(zoomLabels);
-      });
-    }
-
-    let _labelsLayer = this.get('_labelsLayer');
-    if (!Ember.isNone(_labelsLayer)) {
-      leafletMap.removeLayer(_labelsLayer);
-    }
-  },
-
-  /**
     Sets leaflet layer's visibility.
 
     @method _setLayerVisibility
@@ -2319,11 +2297,23 @@ export default BaseLayer.extend({
       }
     } else {
       this._removeLayerFromLeafletContainer();
-      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) &&
-        !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
-        this._removeLabelsFromLeafletContainer();
-      }
+      this._removeLabelsFromLeafletContainer();
     }
+  },
+
+   /**
+    Gets feature properties as plain object.
+    this is necessary to get properties from odata-vector-layer feature
+
+    @method _setLayerVisibility
+    @private
+  */
+  _getRegularProperties() {
+    if (!this || Ember.get(this, 'feature') || Ember.get(this, 'feature.properties')) {
+      return null;
+    }
+
+    return Ember.get(this, 'feature.properties');
   },
 
   _getGeometry(layer) {
