@@ -729,8 +729,13 @@ export default BaseVectorLayer.extend({
       leafletObject = this.get('_leafletObject');
     }
 
+    let _getRegularProperties = this.get('_getRegularProperties');
     layers.forEach((layer) => {
-      layer._getRegularProperties = this.get('_getRegularProperties').bind(layer);
+      if (Ember.isNone(layer)) {
+        return;
+      }
+
+      layer._getRegularProperties = _getRegularProperties.bind(layer);
       leafletObject.addLayer(layer, leafletObject);
     });
 
@@ -742,7 +747,8 @@ export default BaseVectorLayer.extend({
       if (currentkey === 'primarykey') {
         return accamulator;
       }
-      accamulator[currentkey] = this.feature.properties[currentkey]
+
+      accamulator[currentkey] = this.feature.properties[currentkey];
       return accamulator;
     }, {});
   },
