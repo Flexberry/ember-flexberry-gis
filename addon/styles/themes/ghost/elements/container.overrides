@@ -178,6 +178,7 @@ div.measure-drag-panel {
   background-color: @white;
   padding: 0px 30px !important;
   margin-bottom: 10px;
+  z-index: 101;
 
   .flexberry-dropdown-button {
     &.ml-20 {
