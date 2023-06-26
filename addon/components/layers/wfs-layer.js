@@ -174,6 +174,7 @@ export default BaseVectorLayer.extend({
           layer.options.shadowPane = pane;
         }
 
+        layer._getRegularProperties = this.get('_getRegularProperties').bind(layer);
         layer.options.pane = pane;
         layer.options.renderer = this.get('_renderer');
       }
