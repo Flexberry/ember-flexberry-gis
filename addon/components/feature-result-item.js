@@ -309,9 +309,11 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
     if ($caption.length > 0) {
       $caption.hover(
         function () {
-          let $toolbar = _this.$(this).parent().children('.feature-result-item-toolbar');
+          const togglerCaptionElement = _this.$(this);
+          let $toolbar = togglerCaptionElement.parent().children('.feature-result-item-toolbar');
           $toolbar.removeClass('hidden');
-          _this.$(this).addClass('blur');
+          $toolbar[0].style.minHeight = `${togglerCaptionElement.height()}px`;
+          togglerCaptionElement.addClass('blur');
         },
         function () {
           let $toolbar = _this.$(this).parent().children('.feature-result-item-toolbar');
