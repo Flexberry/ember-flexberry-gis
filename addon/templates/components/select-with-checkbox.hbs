@@ -24,11 +24,12 @@
   action='nothing'
   message=message
 }}
-  <i class="dropdown icon"></i>
-  {{#if isClearAllVisible}}
+  {{#if (and isClearAllVisible (gt countChoose 0))}}
     <i class="icon-guideline-cross-r" onClick={{action 'clearAll'}}></i>
   {{/if}}
-  <div class="text">{{t 'components.flexberry-layers-intersections-panel.chooseCaption'}}: {{countChoose}}</div>
+  <i class="icon separate"></i>
+  <i class="dropdown icon"></i>
+  <div class="count-choose">{{t 'components.flexberry-layers-intersections-panel.chooseCaption'}}: {{countChoose}}</div>
   <div class="menu">
     {{#if state.length}}
       {{yield}}
@@ -51,6 +52,14 @@
             label=item.value
             value=item.isVisible
           }}
+          {{#if item.help}}
+            {{help-popup
+              htmlMessage=item.help
+              variation="very wide"
+              position="bottom left"
+              small=true
+            }}
+          {{/if}}
         </div>
       {{/each}}
     {{else}}

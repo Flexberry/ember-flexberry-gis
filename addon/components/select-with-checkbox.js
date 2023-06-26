@@ -42,6 +42,10 @@ export default FlexberryDropdown.extend({
 
   isAllSelected: false,
 
+  propertyName: 'name',
+
+  propertyHelp: null,
+
   /**
     Minimum number of characters to search
 
@@ -133,16 +137,23 @@ export default FlexberryDropdown.extend({
       .map(([i, val]) => {
         let value = val;
         let key = i;
+        let help = '';
         if (this.get('isObject')) {
-          value = Ember.get(val, 'name');
+          value = Ember.get(val, this.get('propertyName'));
           key = val.id;
+          if (this.get('propertyHelp'))
+            help = Ember.get(val, this.get('propertyHelp'));
         }
 
-        return Ember.Object.create({ key, value, isVisible: false });
+        return Ember.Object.create({ key, value, help, isVisible: false });
       });
 
     this.set('state', state);
   })),
+
+  clearObserver: observer('clear', function() {
+    this.send('clearAll');
+  }),
 
   actions: {
     selectAll() {
@@ -159,7 +170,8 @@ export default FlexberryDropdown.extend({
 
     clearAll(event) {
       //click action is defined as a DOM event to cancel the semantic dropdown action
-      event.stopPropagation();
+      if (event)
+        event.stopPropagation();
       this.get('state').setEach('isVisible', false);
       this.sendAction('clearAll');
     },
