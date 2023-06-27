@@ -1146,10 +1146,26 @@ export default BaseVectorLayer.extend({
     }
 
     layers.forEach((layer) =&gt; {
+      if (Ember.isNone(layer)) {
+        return;
+      }
+
+      layer._getRegularProperties = this.get(&#x27;_getRegularProperties&#x27;).bind(layer);
       leafletObject.addLayer(layer, leafletObject);
     });
 
     this._super(...arguments);
+  },
+
+  _getRegularProperties() {
+    return Object.keys(this.feature.properties).reduce((accamulator, currentkey) =&gt; {
+      if (currentkey === &#x27;primarykey&#x27;) {
+        return accamulator;
+      }
+
+      accamulator[currentkey] = this.feature.properties[currentkey];
+      return accamulator;
+    }, {});
   },
 
   /**

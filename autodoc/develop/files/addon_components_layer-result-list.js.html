@@ -747,9 +747,11 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, ResultFeatureIn
     if ($caption.length &gt; 0) {
       $caption.hover(
         function () {
-          let $buttons = _this.$(this).parent().parent().parent().children(&#x27;.feature-result-item-buttons&#x27;);
+          const togglerCaptionElement = _this.$(this);
+          let $buttons = togglerCaptionElement.parent().parent().parent().children(&#x27;.feature-result-item-buttons&#x27;);
           $buttons.removeClass(&#x27;hidden&#x27;);
-          _this.$(this).addClass(&#x27;blur&#x27;);
+          $buttons[0].style.minHeight = &#x60;${togglerCaptionElement.height()}px&#x60;;
+          togglerCaptionElement.addClass(&#x27;blur&#x27;);
         },
         function () {
           let $buttons = _this.$(this).parent().parent().parent().children(&#x27;.feature-result-item-buttons&#x27;);

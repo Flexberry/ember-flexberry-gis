@@ -1485,7 +1485,7 @@ export default BaseLayer.extend({
     leafletObject.clearLayers();
 
     if (this.get(&#x27;labelSettings.signMapObjects&#x27;) &amp;&amp; !Ember.isNone(this.get(&#x27;_labelsLayer&#x27;)) &amp;&amp;
-      !Ember.isNone(this.get(&#x27;_leafletObject._labelsLayeri&#x27;))) {
+      !Ember.isNone(this.get(&#x27;_leafletObject._labelsLayer&#x27;))) {
       leafletObject._labelsLayer.eachLayer((layerShape) =&gt; {
         if (map.hasLayer(layerShape)) {
           map.removeLayer(layerShape);
@@ -2695,28 +2695,6 @@ export default BaseLayer.extend({
   },
 
   /**
-    Removes labels from it&#x27;s leaflet container.
-
-    @method _removeLabelsFromLeafletContainer
-    @private
-  */
-  _removeLabelsFromLeafletContainer() {
-    let leafletMap = this.get(&#x27;leafletMap&#x27;);
-
-    let additionalZoomLabel = this.get(&#x27;additionalZoomLabel&#x27;);
-    if (additionalZoomLabel &amp;&amp; additionalZoomLabel.length &gt; 0) {
-      additionalZoomLabel.forEach(zoomLabels =&gt; {
-        leafletMap.removeLayer(zoomLabels);
-      });
-    }
-
-    let _labelsLayer = this.get(&#x27;_labelsLayer&#x27;);
-    if (!Ember.isNone(_labelsLayer)) {
-      leafletMap.removeLayer(_labelsLayer);
-    }
-  },
-
-  /**
     Sets leaflet layer&#x27;s visibility.
 
     @method _setLayerVisibility
@@ -2735,11 +2713,23 @@ export default BaseLayer.extend({
       }
     } else {
       this._removeLayerFromLeafletContainer();
-      if (this.get(&#x27;labelSettings.signMapObjects&#x27;) &amp;&amp; !Ember.isNone(this.get(&#x27;_labelsLayer&#x27;)) &amp;&amp;
-        !Ember.isNone(this.get(&#x27;_leafletObject._labelsLayer&#x27;))) {
-        this._removeLabelsFromLeafletContainer();
-      }
+      this._removeLabelsFromLeafletContainer();
     }
+  },
+
+  /**
+    Gets feature properties as plain object.
+    this is necessary to get properties from odata-vector-layer feature
+
+    @method _setLayerVisibility
+    @private
+  */
+  _getRegularProperties() {
+    if (!this || Ember.get(this, &#x27;feature&#x27;) || Ember.get(this, &#x27;feature.properties&#x27;)) {
+      return null;
+    }
+
+    return Ember.get(this, &#x27;feature.properties&#x27;);
   },
 
   _getGeometry(layer) {
