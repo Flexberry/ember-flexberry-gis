@@ -141,8 +141,9 @@ export default FlexberryDropdown.extend({
         if (this.get('isObject')) {
           value = Ember.get(val, this.get('propertyName'));
           key = val.id;
-          if (this.get('propertyHelp'))
+          if (this.get('propertyHelp')) {
             help = Ember.get(val, this.get('propertyHelp'));
+          }
         }
 
         return Ember.Object.create({ key, value, help, isVisible: false });
@@ -170,8 +171,10 @@ export default FlexberryDropdown.extend({
 
     clearAll(event) {
       //click action is defined as a DOM event to cancel the semantic dropdown action
-      if (event)
+      if (event) {
         event.stopPropagation();
+      }
+
       this.get('state').setEach('isVisible', false);
       this.sendAction('clearAll');
     },
