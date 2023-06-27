@@ -2301,7 +2301,7 @@ export default BaseLayer.extend({
     }
   },
 
-   /**
+  /**
     Gets feature properties as plain object.
     this is necessary to get properties from odata-vector-layer feature
 

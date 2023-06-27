@@ -174,6 +174,7 @@ export default FlexberryDropdown.extend({
       if (event) {
         event.stopPropagation();
       }
+
       this.get('state').setEach('isVisible', false);
       this.sendAction('clearAll');
     },
