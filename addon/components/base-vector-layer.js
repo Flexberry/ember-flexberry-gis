@@ -2211,7 +2211,7 @@ export default BaseLayer.extend({
     let leafletContainer = this.get('leafletContainer');
 
     if (!leafletObject) {
-      leafletObject = this.get('_leafletObject');
+      leafletObject = this.get('_leafletObject') instanceof L.MarkerClusterGroup ? this.get('_leafletObject._originalVectorLayer') : this.get('_leafletObject');
     }
 
     let thisPane = this.get('_paneLabel');
@@ -2287,8 +2287,12 @@ export default BaseLayer.extend({
   _setLayerVisibility() {
     if (this.get('visibility')) {
       this._addLayerToLeafletContainer();
+
+      // Clustering vector layer contains the wfsLayer context in the "_leafletObject._originalVectorLayer" path
+      let wfsLayer = this.get('_leafletObject') instanceof L.MarkerClusterGroup ? this.get('_leafletObject._originalVectorLayer') : this.get('_leafletObject');
+
       if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) &&
-        !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
+        !Ember.isNone(Ember.get(wfsLayer, '_labelsLayer'))) {
         this._addLabelsToLeafletContainer();
         this._checkZoomPane();
         if (this.get('typeGeometry') === 'polyline') {
