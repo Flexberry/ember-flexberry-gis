@@ -381,27 +381,62 @@ export default BaseLayer.extend({
   */
   createClusterLayer(vectorLayer) {
     let clusterLayer = L.markerClusterGroup(this.get('clusterOptions'));
-    clusterLayer.addLayer(vectorLayer);
 
     // Original vector layer is necessary for 'flexberry-layers-attributes-panel' component and identification map tool
     clusterLayer._originalVectorLayer = vectorLayer;
 
-    // Original vectorLayer update does not trigger parent's clusterLayer.addLayer(), link explicitly
-    clusterLayer._originalVectorLayer.on('layeradd', this.updateClusterLayer, this);
-    clusterLayer._originalVectorLayer.on('layerremove', this.updateClusterLayer, this);
+    // Features loading of original vectorLayer does not trigger parent's clusterLayer.addLayer(), link explicitly
+    clusterLayer._originalVectorLayer.on('layeradd', this.loadClusterLayer, this);
+    clusterLayer._originalVectorLayer.on('layerremove', this.loadClusterLayer, this);
 
-    clusterLayer._featureGroup.on('layeradd', this._setLayerOpacity, this);
-    clusterLayer._featureGroup.on('layerremove', this._setLayerOpacity, this);
+    // Apply display settings for clustered features.
+    clusterLayer._featureGroup.on('layeradd', this.updateClusterLayer, this);
+    clusterLayer._featureGroup.on('layerremove', this.updateClusterLayer, this);
+
+    clusterLayer.addLayer(vectorLayer);
 
     return clusterLayer;
+  },
+  /**
+    Apply display settings for clustered objects. Updating the visibility of the feature labels, opacity.
+
+    @method updateClusterLayer
+    @param {Object} e action context.
+  */
+  updateClusterLayer(e) {
+    this._setLayerOpacity();
+
+    if (!e || !e.layer || !e.type) {
+      return;
+    }
+
+    if (e.layer instanceof L.MarkerCluster) {
+      return;
+    }
+
+    let leafletMap = this.get('leafletMap');
+    let layerLabel = e.layer._label;
+
+    if (e.type === 'layeradd') {
+      if (!leafletMap.hasLayer(layerLabel)) {
+        leafletMap.addLayer(layerLabel);
+      }
+
+    } else {
+      if (leafletMap.hasLayer(e.layer._label)) {
+        leafletMap.removeLayer(e.layer._label);
+      }
+    }
   },
 
   /**
     Synchronizes ClusterLayer._originalVectorLayer._layers with ClusterLayer layers.
+    This is required when continueLoading option.
 
-    @method updateClusterLayer
+    @method loadClusterLayer
+    @param {Object} e action context.
   */
-  updateClusterLayer(e) {
+  loadClusterLayer(e) {
     if (!e || !e.layer) {
       return;
     }
@@ -423,6 +458,7 @@ export default BaseLayer.extend({
     Adds ClusterLayer layers.
 
     @method addClusterLayer
+    @param {Object} e action context.
   */
   addClusterLayer(e) {
     if (!e || !e.target) {
@@ -431,12 +467,24 @@ export default BaseLayer.extend({
     }
 
     let clusterLayer = this.get('_leafletObject');
+    let leafletMap = this.get('leafletMap');
     if (!(clusterLayer instanceof L.MarkerClusterGroup)) {
       return;
     }
 
     let updatedOriginalVectorLayer = e.target;
     clusterLayer.addLayer(updatedOriginalVectorLayer);
+
+    // L.MarkerClusterGroup includes both child L.MarkerCluster and L.Marker in _featureGroup after originalVectorLayer addition
+    let clusterMarkers = clusterLayer._featureGroup.getLayers().filter(layer => layer instanceof L.MarkerCluster);
+
+    clusterMarkers.forEach(clusterMarker => {
+      // For L.MarkerCluster there is an option to get clustered markers
+      clusterMarker.getAllChildMarkers()
+        .filter(markerLayer => leafletMap.hasLayer(markerLayer._label))
+        .map(markerLayerWithLabel => leafletMap.removeLayer(markerLayerWithLabel._label));
+    });
+
     this._setLayerState(); // Accept layer style options for new loaded features
   },
 
@@ -448,8 +496,8 @@ export default BaseLayer.extend({
   destroyClusterLayer(clusterLayer) {
     clusterLayer._featureGroup.off('layeradd', this._setLayerOpacity, this);
     clusterLayer._featureGroup.off('layerremove', this._setLayerOpacity, this);
-    clusterLayer._originalVectorLayer.off('layeradd', this.updateClusterLayer, this);
-    clusterLayer._originalVectorLayer.off('layerremove', this.updateClusterLayer, this);
+    clusterLayer._originalVectorLayer.off('layeradd', this.loadClusterLayer, this);
+    clusterLayer._originalVectorLayer.off('layerremove', this.loadClusterLayer, this);
   },
 
   /*
