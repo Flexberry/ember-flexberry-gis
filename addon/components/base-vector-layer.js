@@ -1265,7 +1265,14 @@ export default BaseLayer.extend({
         }
 
         if (property && layer.feature.properties && layer.feature.properties.hasOwnProperty(property)) {
+          let readFormat = Ember.get(this._leafletObject, 'readFormat.featureType.fieldTypes');
+
           let label = layer.feature.properties[property];
+          if (readFormat[property] === 'date') {
+            let format = this.displaySettings.dateTimeFormat ? this.displaySettings.dateTimeFormat : this.displaySettings.dateFormat;
+            label = moment(label).format(format);
+          }
+
           if (Ember.isNone(label)) {
             label = '';
           }
@@ -2309,7 +2316,7 @@ export default BaseLayer.extend({
     @private
   */
   _getRegularProperties() {
-    if (!this || Ember.get(this, 'feature') || Ember.get(this, 'feature.properties')) {
+    if (!this || !Ember.get(this, 'feature') || !Ember.get(this, 'feature.properties')) {
       return null;
     }
 
