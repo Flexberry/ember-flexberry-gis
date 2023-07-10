@@ -27,6 +27,12 @@ export default function openCloseSubmenu(context, moreButton, elements, incTop, 
       } else {
         element.firstElementChild.style.textAlign = 'right';
         element.style.left = `${left - element.getBoundingClientRect().width + width}px`;
+
+        window.document.addEventListener('click', function(e) {
+          if (context.get('isSubmenu')) {
+            context.set('isSubmenu', false);
+          }
+        }, { once: true });
       }
     });
   }
