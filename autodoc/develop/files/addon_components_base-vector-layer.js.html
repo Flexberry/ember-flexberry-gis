@@ -1681,7 +1681,23 @@ export default BaseLayer.extend({
         }
 
         if (property &amp;&amp; layer.feature.properties &amp;&amp; layer.feature.properties.hasOwnProperty(property)) {
+          let readFormat = Ember.get(this._leafletObject, &#x27;readFormat.featureType.fieldTypes&#x27;);
+
           let label = layer.feature.properties[property];
+          let dateTimeFormat = this.displaySettings.dateTimeFormat;
+          let dateFormat = this.displaySettings.dateFormat;
+          if (readFormat[property] === &#x27;date&#x27; &amp;&amp; (!Ember.isEmpty(dateFormat) || !Ember.isEmpty(dateTimeFormat))) {
+            let dateValue = moment(label);
+
+            if (dateValue.isValid()) {
+              if (!Ember.isEmpty(dateTimeFormat)) {
+                label = (dateValue.format(&#x27;HH:mm:ss&#x27;) === &#x27;00:00:00&#x27;) ? dateValue.format(dateFormat) : dateValue.format(dateTimeFormat);
+              } else {
+                label = dateValue.format(dateFormat);
+              }
+            }
+          }
+
           if (Ember.isNone(label)) {
             label = &#x27;&#x27;;
           }
@@ -2725,7 +2741,7 @@ export default BaseLayer.extend({
     @private
   */
   _getRegularProperties() {
-    if (!this || Ember.get(this, &#x27;feature&#x27;) || Ember.get(this, &#x27;feature.properties&#x27;)) {
+    if (!this || !Ember.get(this, &#x27;feature&#x27;) || !Ember.get(this, &#x27;feature.properties&#x27;)) {
       return null;
     }
 
