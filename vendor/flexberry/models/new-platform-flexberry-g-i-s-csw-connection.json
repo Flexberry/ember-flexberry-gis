@@ -2,32 +2,18 @@
   "name": "NewPlatformFlexberryGISCswConnection",
   "modelName": "new-platform-flexberry-g-i-s-csw-connection",
   "className": "CswConnection",
+  "nameSpace": "NewPlatform.Flexberry.GIS",
   "parentModelName": null,
   "parentClassName": null,
   "attrs": [
-    {
-      "name": "name",
-      "type": "string",
-      "flexberryType": "string",
-      "notNull": true,
-      "defaultValue": "",
-      "stored": true
-    },
-    {
-      "name": "url",
-      "type": "string",
-      "flexberryType": "string",
-      "notNull": true,
-      "defaultValue": "",
-      "stored": true
-    },
     {
       "name": "createTime",
       "type": "date",
       "flexberryType": "AuditNullableDateTime",
       "notNull": false,
       "defaultValue": "",
-      "stored": true
+      "stored": true,
+      "ordered": false
     },
     {
       "name": "creator",
@@ -35,15 +21,8 @@
       "flexberryType": "string",
       "notNull": false,
       "defaultValue": "",
-      "stored": true
-    },
-    {
-      "name": "editTime",
-      "type": "date",
-      "flexberryType": "AuditNullableDateTime",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": true
+      "stored": true,
+      "ordered": false
     },
     {
       "name": "editor",
@@ -51,7 +30,35 @@
       "flexberryType": "string",
       "notNull": false,
       "defaultValue": "",
-      "stored": true
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "editTime",
+      "type": "date",
+      "flexberryType": "AuditNullableDateTime",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": true,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "url",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": true,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
     }
   ],
   "belongsTo": [],
@@ -137,5 +144,6 @@
     }
   ],
   "stored": true,
-  "offline": true
+  "offline": true,
+  "external": false
 }

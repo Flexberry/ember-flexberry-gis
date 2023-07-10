@@ -2,16 +2,18 @@
   "name": "NewPlatformFlexberryGISMapObjectSetting",
   "modelName": "new-platform-flexberry-g-i-s-map-object-setting",
   "className": "MapObjectSetting",
+  "nameSpace": "NewPlatform.Flexberry.GIS",
   "parentModelName": null,
   "parentClassName": null,
   "attrs": [
     {
-      "name": "typeName",
+      "name": "editForm",
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
       "defaultValue": "",
-      "stored": true
+      "stored": true,
+      "ordered": false
     },
     {
       "name": "listForm",
@@ -19,15 +21,17 @@
       "flexberryType": "string",
       "notNull": false,
       "defaultValue": "",
-      "stored": true
+      "stored": true,
+      "ordered": false
     },
     {
-      "name": "editForm",
+      "name": "multEditForm",
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
       "defaultValue": "",
-      "stored": true
+      "stored": true,
+      "ordered": false
     },
     {
       "name": "title",
@@ -35,7 +39,17 @@
       "flexberryType": "string",
       "notNull": false,
       "defaultValue": "",
-      "stored": true
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "typeName",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
     }
   ],
   "belongsTo": [
@@ -76,6 +90,12 @@
           "caption": "Title",
           "hidden": true,
           "index": 4
+        },
+        {
+          "name": "multEditForm",
+          "caption": "MultEditForm",
+          "hidden": true,
+          "index": 5
         }
       ],
       "belongsTo": [
@@ -87,6 +107,7 @@
           "hidden": false,
           "attrs": [],
           "index": 0,
+          "type": "default",
           "caption": "",
           "name": "defaultMap",
           "relatedTo": "new-platform-flexberry-g-i-s-map",
@@ -122,6 +143,12 @@
           "caption": "Форма редактирования",
           "hidden": false,
           "index": 3
+        },
+        {
+          "name": "multEditForm",
+          "caption": "Форма группового создания",
+          "hidden": false,
+          "index": 4
         }
       ],
       "belongsTo": [
@@ -136,10 +163,11 @@
               "name": "name",
               "caption": "",
               "hidden": true,
-              "index": 5
+              "index": 6
             }
           ],
-          "index": 4,
+          "index": 5,
+          "type": "standard",
           "caption": "Карта по умолчанию",
           "name": "defaultMap",
           "relatedTo": "new-platform-flexberry-g-i-s-map",
@@ -169,6 +197,12 @@
           "caption": "Форма редактирования",
           "hidden": false,
           "index": 2
+        },
+        {
+          "name": "multEditForm",
+          "caption": "Форма группового создания",
+          "hidden": false,
+          "index": 3
         }
       ],
       "belongsTo": [],
@@ -176,5 +210,6 @@
     }
   ],
   "stored": true,
-  "offline": true
+  "offline": true,
+  "external": false
 }

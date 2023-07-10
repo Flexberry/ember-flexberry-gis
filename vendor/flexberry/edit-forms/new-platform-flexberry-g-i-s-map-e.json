@@ -21,7 +21,7 @@
       "displayAttributeName": null,
       "required": false,
       "relationName": "MapLayer.LayerLink.MapObjectSetting",
-      "projection": "",
+      "projection": "MapObjectSettingL",
       "detailModelName": null
     },
     {
@@ -41,6 +41,7 @@
       "detailModelName": null
     }
   ],
+  "external": false,
   "caption": null,
   "name": "NewPlatformFlexberryGISMapE",
   "className": "MapE",

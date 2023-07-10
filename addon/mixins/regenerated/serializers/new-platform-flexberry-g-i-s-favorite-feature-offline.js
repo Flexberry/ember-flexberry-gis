@@ -5,8 +5,7 @@
 import Ember from 'ember';
 
 /**
-  Mixin containing initializetion logic for favorite feature offline serializer.
-
+  Mixin containing initialization logic for favorite feature offline serializer.
   @class NewPlatformFlexberyGISFavoriteFeatureOfflineSerializerMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */

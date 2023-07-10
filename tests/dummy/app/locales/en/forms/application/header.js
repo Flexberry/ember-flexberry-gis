@@ -7,6 +7,9 @@ export default {
     'user-settings-service-checkbox': {
       'caption': 'Use user settings service'
     },
+    'offline-mode': {
+      'caption': 'Use offline mode'
+    },
     'show-menu': {
       'caption': 'Show menu'
     },

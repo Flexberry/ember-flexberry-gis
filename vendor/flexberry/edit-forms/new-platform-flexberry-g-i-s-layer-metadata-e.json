@@ -9,12 +9,12 @@
       "detailModelName": null
     },
     {
-      "master": null,
-      "displayAttributeName": null,
-      "required": false,
+      "master": "mapObjectSetting",
+      "displayAttributeName": "typeName",
+      "required": true,
       "relationName": "LinkMetadata.MapObjectSetting",
-      "projection": "",
-      "detailModelName": null
+      "projection": "MapObjectSettingL",
+      "detailModelName": "new-platform-flexberry-g-i-s-link-metadata"
     },
     {
       "master": null,
@@ -25,6 +25,7 @@
       "detailModelName": null
     }
   ],
+  "external": false,
   "caption": null,
   "name": "NewPlatformFlexberryGISLayerMetadataE",
   "className": "LayerMetadataE",

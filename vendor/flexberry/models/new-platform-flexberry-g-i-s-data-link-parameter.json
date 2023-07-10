@@ -2,16 +2,18 @@
   "name": "NewPlatformFlexberryGISDataLinkParameter",
   "modelName": "new-platform-flexberry-g-i-s-data-link-parameter",
   "className": "DataLinkParameter",
+  "nameSpace": "NewPlatform.Flexberry.GIS",
   "parentModelName": null,
   "parentClassName": null,
   "attrs": [
     {
-      "name": "objectField",
+      "name": "expression",
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
       "defaultValue": "",
-      "stored": true
+      "stored": true,
+      "ordered": false
     },
     {
       "name": "layerField",
@@ -19,15 +21,8 @@
       "flexberryType": "string",
       "notNull": false,
       "defaultValue": "",
-      "stored": true
-    },
-    {
-      "name": "expression",
-      "type": "string",
-      "flexberryType": "string",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": true
+      "stored": true,
+      "ordered": false
     },
     {
       "name": "linkField",
@@ -35,7 +30,17 @@
       "flexberryType": "bool",
       "notNull": false,
       "defaultValue": "false",
-      "stored": true
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "objectField",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
     }
   ],
   "belongsTo": [
@@ -87,6 +92,7 @@
           "hidden": true,
           "attrs": [],
           "index": 0,
+          "type": "default",
           "caption": "",
           "name": "link",
           "relatedTo": "new-platform-flexberry-g-i-s-data-link",
@@ -97,5 +103,6 @@
     }
   ],
   "stored": true,
-  "offline": true
+  "offline": true,
+  "external": false
 }

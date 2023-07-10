@@ -25,18 +25,18 @@
       "ordered": false
     },
     {
-      "name": "editTime",
-      "type": "date",
-      "flexberryType": "AuditNullableDateTime",
+      "name": "editor",
+      "type": "string",
+      "flexberryType": "string",
       "notNull": false,
       "defaultValue": "",
       "stored": true,
       "ordered": false
     },
     {
-      "name": "editor",
-      "type": "string",
-      "flexberryType": "string",
+      "name": "editTime",
+      "type": "date",
+      "flexberryType": "AuditNullableDateTime",
       "notNull": false,
       "defaultValue": "",
       "stored": true,
