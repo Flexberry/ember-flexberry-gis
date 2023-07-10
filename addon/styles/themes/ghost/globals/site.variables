@@ -1,4 +1,11 @@
 
+@fontName          : 'GOSTUI2';
+
+@headerFont        : @fontName, 'Helvetica Neue', helvetica, arial, verdana, sans-serif;
+@pageFont          : @fontName, 'Helvetica Neue', helvetica, arial, verdana, sans-serif;
+
+@importGoogleFonts : false;
+
 /*******************************
       Components colors
 *******************************/
@@ -49,12 +56,9 @@
 /*******************************
     Map buttons menu variables
 *******************************/
-@absoluteBorderRadius: 0;
-@defaultBorderRadius: 3.5px;
-@buttonMenuBoxShadow: @defaultBoxShadow;
+@buttonMenuBoxShadow: none;
 @buttonMenuBorder: @defaultGrayBorder;
 @buttonMenuHoveredBoxShadow: none;
-// @buttonMenuHoveredBorder: @primaryColor;
 @buttonMenuColor: @primaryColor;
 @buttonMenuHoveredBackground: #fff;
 @buttonMenuHoveredBorder: 1px solid @primaryColor;
@@ -64,26 +68,32 @@
       Borders
 --------------------*/
 
-@controlBorderColor: @defaultBorderColor;
+@controlBorderColor: @inputBackground;
 
+/*-------------------
+        Grid
+--------------------*/
+
+@columnCount: 16;
 
 /*******************************
             DEFAULTS
 *******************************/
-@textColor: #343A32;
+@textColor: #3B4256;
 @labelColor: #8F928F;
-@primaryColor: @bluesky;
+@primaryColor: #0061D9;
 
-@buttonHoverColor: #2B7A38;
+@buttonHoverColor: saturate(darken(@primaryColor, 5), 10, relative);
+@buttonHoveredBoxShadow: none;
 
-@defaultBorderColor: @graycolor;
+@defaultBorderColor: transparent;
 @defaultBoxShadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.15);
-@defaultFieldBoxShadow: 2px 2px 4px 0 rgba(0, 0, 0, 0.10);
-@defaultGrayBorder: 1px solid @graycolor;
+@defaultFieldBoxShadow: none;
+@defaultGrayBorder: 1px solid transparent;
 
 @labelFontSize: 13px;
 
-@inputBackgroundColor: #F4F7FB
+@inputBackgroundColor: #F4F7FB;
 @borderColor: #c5c7ca;
 @headerTextColor: #0C49CD;
 @activeItemColor: #3B4256;

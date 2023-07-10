@@ -160,8 +160,7 @@
         Containers with controls inside
 *********************************************/
 
-.mappanel,
-.sidebar-wrapper {
+.mappanel {
     /* Table */
     .ui.table {
         color: #6f9be3;
@@ -260,7 +259,7 @@
     width: 0px;
     /* элементы меню */
     a.item {
-        color: @darkbluecolor;
+        color: @primaryColor;
         font-size: 0px;
         background: @whitecolor;
         box-shadow: @defaultBoxShadow;

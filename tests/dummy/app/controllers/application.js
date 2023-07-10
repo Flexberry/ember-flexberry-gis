@@ -46,18 +46,17 @@ export default Ember.Controller.extend({
     toggleSidebar() {
       let sidebar = Ember.$('.ui.sidebar.main.menu');
       sidebar.sidebar('toggle');
+      sidebar.toggleClass('sidebar-mini');
 
-      if (Ember.$('.inverted.vertical.main.menu').hasClass('visible')) {
-        Ember.$('.sidebar.icon.text-menu-show').removeClass('hidden');
-        Ember.$('.sidebar.icon.text-menu-hide').addClass('hidden');
-        Ember.$('.bgw-opacity').addClass('hidden');
-        Ember.$('.full.height').css({ transition: 'width 0.45s ease-in-out 0s', width: '100%' });
-      } else {
-        Ember.$('.sidebar.icon.text-menu-show').addClass('hidden');
-        Ember.$('.sidebar.icon.text-menu-hide').removeClass('hidden');
-        Ember.$('.bgw-opacity').removeClass('hidden');
-        Ember.$('.full.height').css({ transition: 'width 0.3s ease-in-out 0s', width: 'calc(100% - ' + sidebar.width() + 'px)' });
-      }
+      Ember.$('.full.height').toggleClass('content-opened');
+
+      Ember.$('.sidebar.icon .text_menu').toggleClass('hidden');
+      Ember.$('.sidebar.icon').toggleClass('text-menu-show');
+      Ember.$('.sidebar.icon').toggleClass('text-menu-hide');
+      Ember.$('.bgw-opacity').toggleClass('hidden');
+
+      // For reinit overflowed tabs.
+      $(window).trigger('resize');
     },
 
     /**
@@ -69,11 +68,9 @@ export default Ember.Controller.extend({
       Ember.$('.ui.sidebar.main.menu').sidebar('toggle');
 
       if (Ember.$('.inverted.vertical.main.menu').hasClass('visible')) {
-        Ember.$('.sidebar.icon.text-menu-show').removeClass('hidden');
         Ember.$('.sidebar.icon.text-menu-hide').addClass('hidden');
         Ember.$('.bgw-opacity').addClass('hidden');
       } else {
-        Ember.$('.sidebar.icon.text-menu-show').addClass('hidden');
         Ember.$('.sidebar.icon.text-menu-hide').removeClass('hidden');
         Ember.$('.bgw-opacity').removeClass('hidden');
       }
@@ -181,36 +178,43 @@ export default Ember.Controller.extend({
         link: 'index',
         caption: i18n.t('forms.application.sitemap.index.caption'),
         title: i18n.t('forms.application.sitemap.index.title'),
+        icon: 'icon-guideline-user',
         children: null
       }, {
         link: null,
         caption: i18n.t('forms.application.sitemap.gis.caption'),
         title: i18n.t('forms.application.sitemap.gis.title'),
+        icon: 'icon-guideline-earth',
         children: [{
           link: 'maps',
           caption: i18n.t('forms.application.sitemap.gis.maps.caption'),
           title: i18n.t('forms.application.sitemap.gis.maps.title'),
+          icon: 'icon-guideline-map',
           children: null
         }, {
           link: 'new-platform-flexberry-g-i-s-layer-metadata-l',
           caption: i18n.t('forms.application.sitemap.gis.map-metadata.caption'),
           title: i18n.t('forms.application.sitemap.gis.map-metadata.title'),
+          icon: 'icon-guideline-edit-note',
           children: null
         }, {
           link: 'gis-search-form',
           caption: i18n.t('forms.application.sitemap.gis.gis-search-form.caption'),
           title: i18n.t('forms.application.sitemap.gis.gis-search-form.title'),
+          icon: 'icon-guideline-search',
           children: null
         }, {
           link: 'new-platform-flexberry-g-i-s-map-object-setting-l',
           caption: i18n.t('forms.application.sitemap.map-object-setting.caption'),
           title: i18n.t('forms.application.sitemap.map-object-setting.title'),
+          icon: 'icon-guideline-setting',
           children: null
         }]
       }, {
         link: null,
         caption: i18n.t('forms.application.sitemap.components-examples.caption'),
         title: i18n.t('forms.application.sitemap.components-examples.title'),
+        icon: 'icon-guideline-date',
         children: [{
           link: 'components-examples/flexberry-boundingbox/settings-example',
           caption: i18n.t('forms.application.sitemap.components-examples.flexberry-boundingbox.caption'),

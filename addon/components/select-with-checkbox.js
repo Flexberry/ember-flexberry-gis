@@ -149,7 +149,7 @@ export default FlexberryDropdown.extend({
         return Ember.Object.create({ key, value, help, isVisible: false });
       });
 
-    this.set('state', state);
+    this.set('state', Ember.A(state));
   })),
 
   clearObserver: observer('clear', function() {

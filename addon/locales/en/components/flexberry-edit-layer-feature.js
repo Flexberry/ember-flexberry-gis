@@ -9,7 +9,7 @@ export default {
       'tooltip': 'Cancel'
     }
   },
-  'attributes': 'ATTRIBUTES',
+  'attributes': 'Attributes',
   'validation': {
     'no-layer': 'No layer',
     'data-errors': 'Validation errors',

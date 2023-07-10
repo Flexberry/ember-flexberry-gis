@@ -45,8 +45,7 @@
             Flexberry-map dropdown
 *********************************************/
 
-.mappanel,
-.sidebar-wrapper {
+.mappanel {
     .dropdown {
         /* стрелка раскрытия */
         &.icon:not(.flexberry-treenode-expand-collapse-icon) {
@@ -157,7 +156,6 @@
 .ui.menu {
   .dropdown.item:hover {
     background-color: @buttonMenuHoveredBackground;
-    border: @buttonMenuHoveredBorder;
     &.active {
       background:@buttonMenuActiveBackground;
     }
@@ -169,11 +167,6 @@
     border-radius: 0;
     > a.item {
       color: @darkbluecolor !important;
-
-      &.active {
-        background-color: @selectedBackground !important;
-        color: @selectedColor !important;
-      }
     }
   }
 }

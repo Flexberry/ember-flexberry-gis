@@ -2,88 +2,18 @@
   "name": "NewPlatformFlexberryGISMapLayer",
   "modelName": "new-platform-flexberry-g-i-s-map-layer",
   "className": "MapLayer",
+  "nameSpace": "NewPlatform.Flexberry.GIS",
   "parentModelName": null,
   "parentClassName": null,
   "attrs": [
-    {
-      "name": "name",
-      "type": "string",
-      "flexberryType": "string",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": true
-    },
-    {
-      "name": "description",
-      "type": "string",
-      "flexberryType": "stringMax",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": true
-    },
-    {
-      "name": "keyWords",
-      "type": "string",
-      "flexberryType": "stringMax",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": true
-    },
     {
       "name": "anyText",
       "type": "string",
       "flexberryType": "stringMax",
       "notNull": false,
       "defaultValue": "",
-      "stored": false
-    },
-    {
-      "name": "index",
-      "type": "number",
-      "flexberryType": "int",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": true
-    },
-    {
-      "name": "visibility",
-      "type": "boolean",
-      "flexberryType": "bool",
-      "notNull": false,
-      "defaultValue": "true",
-      "stored": true
-    },
-    {
-      "name": "type",
-      "type": "string",
-      "flexberryType": "string",
-      "notNull": true,
-      "defaultValue": "",
-      "stored": true
-    },
-    {
-      "name": "settings",
-      "type": "string",
-      "flexberryType": "stringMax",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": true
-    },
-    {
-      "name": "scale",
-      "type": "number",
-      "flexberryType": "int",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": true
-    },
-    {
-      "name": "coordinateReferenceSystem",
-      "type": "string",
-      "flexberryType": "string",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": true
+      "stored": false,
+      "ordered": false
     },
     {
       "name": "boundingBox",
@@ -91,31 +21,17 @@
       "flexberryType": "Geography",
       "notNull": false,
       "defaultValue": "",
-      "stored": true
+      "stored": true,
+      "ordered": false
     },
     {
-      "name": "public",
-      "type": "boolean",
-      "flexberryType": "bool",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": true
-    },
-    {
-      "name": "owner",
+      "name": "coordinateReferenceSystem",
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
       "defaultValue": "",
-      "stored": true
-    },
-    {
-      "name": "securityKey",
-      "type": "string",
-      "flexberryType": "string",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": true
+      "stored": true,
+      "ordered": false
     },
     {
       "name": "createTime",
@@ -123,7 +39,8 @@
       "flexberryType": "AuditNullableDateTime",
       "notNull": false,
       "defaultValue": "",
-      "stored": true
+      "stored": true,
+      "ordered": false
     },
     {
       "name": "creator",
@@ -131,15 +48,17 @@
       "flexberryType": "string",
       "notNull": false,
       "defaultValue": "",
-      "stored": true
+      "stored": true,
+      "ordered": false
     },
     {
-      "name": "editTime",
-      "type": "date",
-      "flexberryType": "AuditNullableDateTime",
+      "name": "description",
+      "type": "string",
+      "flexberryType": "stringMax",
       "notNull": false,
       "defaultValue": "",
-      "stored": true
+      "stored": true,
+      "ordered": false
     },
     {
       "name": "editor",
@@ -147,7 +66,107 @@
       "flexberryType": "string",
       "notNull": false,
       "defaultValue": "",
-      "stored": true
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "editTime",
+      "type": "date",
+      "flexberryType": "AuditNullableDateTime",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "index",
+      "type": "number",
+      "flexberryType": "int",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "keyWords",
+      "type": "string",
+      "flexberryType": "stringMax",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "owner",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "public",
+      "type": "boolean",
+      "flexberryType": "bool",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "scale",
+      "type": "number",
+      "flexberryType": "int",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "securityKey",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "settings",
+      "type": "string",
+      "flexberryType": "stringMax",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "type",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": true,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "visibility",
+      "type": "boolean",
+      "flexberryType": "bool",
+      "notNull": false,
+      "defaultValue": "true",
+      "stored": true,
+      "ordered": false
     }
   ],
   "belongsTo": [
@@ -292,6 +311,7 @@
           "hidden": true,
           "attrs": [],
           "index": 10,
+          "type": "default",
           "caption": "Родитель",
           "name": "parent",
           "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
@@ -305,6 +325,7 @@
           "hidden": true,
           "attrs": [],
           "index": 11,
+          "type": "default",
           "caption": "Карта",
           "name": "map",
           "relatedTo": "new-platform-flexberry-g-i-s-map",
@@ -401,6 +422,7 @@
           "hidden": false,
           "attrs": [],
           "index": 10,
+          "type": "standard",
           "caption": "Родитель",
           "name": "parent",
           "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
@@ -414,6 +436,7 @@
           "hidden": false,
           "attrs": [],
           "index": 11,
+          "type": "standard",
           "caption": "Карта",
           "name": "map",
           "relatedTo": "new-platform-flexberry-g-i-s-map",
@@ -469,6 +492,7 @@
             }
           ],
           "index": -1,
+          "type": "default",
           "caption": "Родитель",
           "name": "parent",
           "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
@@ -479,5 +503,6 @@
     }
   ],
   "stored": true,
-  "offline": true
+  "offline": true,
+  "external": false
 }

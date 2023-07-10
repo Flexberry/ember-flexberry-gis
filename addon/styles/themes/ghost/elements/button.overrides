@@ -129,6 +129,7 @@
   }
 
   .ui.icon.button:not(.fluid) {
+    background-color: @inputBackground;
     border: @buttonMenuBorder;
     box-shadow: @defaultBoxShadow;
     width: 40px;
@@ -426,4 +427,9 @@
       background-color: @white;
     }
   }
+}
+
+.ui.fluid.action.input > button {
+  border: none;
+  background: none;
 }

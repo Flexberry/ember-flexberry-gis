@@ -115,6 +115,14 @@
   }
 }
 
+.mobile .leaflet-control-container {
+  z-index: 800 !important;
+}
+
+.mobile .leaflet-control-container .leaflet-top {
+  z-index: 800 !important;
+}
+
 .leaflet-bottom.leaflet-left .main-ratiomenu.dropdown .menu .item {
   color: @textColor;
 }
@@ -431,7 +439,8 @@ div.bottompanel-wrapper {
           margin-bottom: 10px;
           .ui.button.flexberry-button,
           .flexberry-geometry-buffer {
-            border: @defaultGrayBorder;
+            background-color: @inputBackground;
+            border: none;
             box-shadow: @defaultBoxShadow;
             border-radius: @defaultBorderRadius !important;
             font-size: 1rem;
@@ -530,8 +539,6 @@ div.bottompanel-wrapper {
             }
 
           .flexberry-geometry-buffer {
-            border: @defaultGrayBorder;
-            background-color: @inputBackground;
 
             i.icon.erase {
               margin-left: -3px;
@@ -618,13 +625,22 @@ div.bottompanel-wrapper {
           height: ~"calc(100% - 65px)";
       }
 
+      &:not(.withToolbar) .flexberry-table-wrapper {
+        height: ~"calc(100% - 120px)";
+      }
+      &.withToolbar .flexberry-table-wrapper {
+        height: ~"calc(100% - 700px)";
+      }
       .flexberry-table-wrapper {
-          height: ~"calc(100% - 120px)";
           padding: 0 10px 10px 0;
 
           tbody {
             box-shadow: @defaultBoxShadow;
-            border: 1px solid #e5e5e5;
+            border: 1px solid @defaultBorderColor;
+          }
+          .table tr td {
+            border-left: 1px solid @defaultBorderColor;
+            border-top: 1px solid @defaultBorderColor;
           }
       }
 
@@ -763,4 +779,20 @@ div.bottompanel-wrapper {
       }
     }
   }
+}
+
+.mobile .flexberry-map {
+  height: calc(~'100vh - 148px');
+}
+.mobile .layer-result-list .feature-result-item-buttons,
+.mobile .layer-result-list .feature-result-item-toolbar {
+  justify-content: end;
+}
+.mobile .layer-result-list .feature-result-item .icon.item.more {
+  width: auto;
+}
+
+.mobile .layer-result-list .flexberry-toggler-content .item:not(.icon) .feature-result-item-title .feature-result-item-toolbar,
+.mobile .layer-result-list .feature-result-item a.icon.item.more {
+  z-index: auto;
 }

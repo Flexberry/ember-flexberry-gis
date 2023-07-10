@@ -5,8 +5,7 @@
 }
 
 .background-logo .ui.top.attached {
-    margin: 20px 5px;
-    width: 250px;
+    width: auto;
 }
 .intersection-panel {
     .intersections-panel-results-row {

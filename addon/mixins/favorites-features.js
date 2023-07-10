@@ -125,10 +125,10 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
       let savePromise;
       if (Ember.get(feature.properties, 'isFavorite')) {
         if (layerModelIndex !== -1) {
-          let records = store.peekAll('i-i-s-r-g-i-s-p-k-favorite-features')
+          let records = store.peekAll('new-platform-flexberry-g-i-s-favorite-feature')
             .filterBy('objectKey', feature.properties.primarykey)
             .filterBy('objectLayerKey', feature.layerModel.id);
-          let record = records.objectAt(0);
+          let record = Ember.A(records).objectAt(0);
           record.deleteRecord();
           Ember.set(feature.properties, 'favUpdating', true);
           savePromise = record.save().then(() => {
@@ -146,7 +146,7 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
       } else {
         let objectKey = this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(feature.layerModel, { feature });
         let newRecord = { id: generateUniqueId(), objectKey: objectKey, objectLayerKey: feature.layerModel.id };
-        let record = store.createRecord('i-i-s-r-g-i-s-p-k-favorite-features', newRecord);
+        let record = store.createRecord('new-platform-flexberry-g-i-s-favorite-feature', newRecord);
 
         Ember.set(feature.properties, 'favUpdating', true);
         savePromise = record.save().then(() => {
@@ -288,7 +288,7 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
   */
   fromIdArrayToFeatureArray() {
     let store = this.get('store');
-    let idFeaturesArray = store.findAll('i-i-s-r-g-i-s-p-k-favorite-features');
+    let idFeaturesArray = store.findAll('new-platform-flexberry-g-i-s-favorite-feature');
     idFeaturesArray.then((favorites) => {
       let favFeaturesArray = Ember.A();
       favorites.forEach(layer => {

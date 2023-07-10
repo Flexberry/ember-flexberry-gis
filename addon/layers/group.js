@@ -18,7 +18,7 @@ export default BaseLayer.extend({
     @type String
     @default 'folder icon'
   */
-  iconClass: 'folder icon',
+  iconClass: 'without-folder',
 
   /**
     Permitted operations related to layer type.

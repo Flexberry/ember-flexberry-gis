@@ -16,7 +16,7 @@
 @uiIconButtonWidth: 40px;
 @uiIconButtonColor: @primaryColor;
 @uiIconButtonBackground: @whitecolor;
-@uiIconButtonBoxShadow: 0 0 4px @darkbluecolor;
+@uiIconButtonBoxShadow: none;
 
 /* Hovered */
 @uiIconButtonHoveredColor: @primaryColor;

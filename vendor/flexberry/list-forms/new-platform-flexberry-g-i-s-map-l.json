@@ -1,6 +1,7 @@
 ﻿{
   "newForm": "new-platform-flexberry-g-i-s-map-e",
   "editForm": "new-platform-flexberry-g-i-s-map-e",
+  "external": false,
   "caption": null,
   "name": "NewPlatformFlexberryGISMapL",
   "className": "MapL",

@@ -7,104 +7,101 @@
 {{#yield-slot "head-block"}}
   {{yield}}
 {{/yield-slot}}
-
-<table class={{concat "ui celled table flexberry-table" (if allowEdit " flexberry-table-fixed" "") (if model "" " flexberry-table-no-model")}}>
-  <thead>
-    <tr>
-      {{#yield-slot "column-header-head-0"}}
-        {{yield}}
-      {{/yield-slot}}
-      {{#yield-slot "column-header-head-1"}}
-        {{yield}}
-      {{/yield-slot}}
-      {{#each-in header as |key value|}}
-      <th>{{value}}</th>
-      {{/each-in}}
-      {{#yield-slot "column-header-tail-0"}}
-        {{yield}}
-      {{/yield-slot}}
-    </tr>
-  </thead>
-  <tbody>
-    {{#if model}}
-        {{#each model as |row|}}
-        <tr>
-          {{#yield-slot "column-cell-head-0" (block-params row)}}
-            {{yield}}
-          {{/yield-slot}}
-          {{#yield-slot "column-cell-head-1" (block-params row)}}
-            {{yield}}
-          {{/yield-slot}}
-          {{#each-in header as |fieldName value|}}
-            {{#if allowEditOnList}}
-              <td onclick={{action "onCellClick" (concat (ember-guid row) "_" fieldName)}}>
-                {{#if (eq (get fieldTypes fieldName) "boolean")}}
-                  {{flexberry-checkbox
-                    value=(mut (get row fieldName))
-                    onChange=(action "onCellCheckboxChange" row)
-                    title=(get row fieldName)
-                  }}
-                {{else if (eq _selectedCellName (concat (ember-guid row) "_" fieldName))}}
-                  {{input
-                    type="text"
-                    value=(if (eq (get fieldTypes fieldName) "date") (moment-format (get row fieldName) allowEmpty=true) (get row fieldName))
-                    key-down=(action "onCellInputKeyDown" (hash row=row fieldName=fieldName))
-                    focus-out=(action "onCellInputFocusOut" (hash row=row fieldName=fieldName))
-                    title=(get row fieldName)
-                  }}
-                {{else if (eq (get fieldTypes fieldName) "date")}}
-                  <span title={{get row fieldName}}>{{moment-format (get row fieldName) allowEmpty=true}}</span>
-                {{else}}
-                  <span title={{get row fieldName}}>{{get row fieldName}}</span>
-                {{/if}}
-              </td>
-            {{else}}
-              <td><span title={{get row fieldName}}>{{get row fieldName}}</span></td>
-            {{/if}}
-          {{/each-in}}
-          {{#yield-slot "column-cell-tail-0" (block-params row)}}
-            {{yield}}
-          {{/yield-slot}}
-        </tr>
-        {{/each}}
-    {{else}}
-     <tr>
-        <td class="center aligned" colspan="{{_columnCount}}">{{t "components.flexberry-table.no-data"}}</td>
-     </tr>
-    {{/if}}
-  </tbody>
-  {{#if recordsTotalCount}}
-    <tfoot>
+<div class="flexberry-table-wrapper">
+  <table class={{concat "ui celled table flexberry-table" (if allowEdit " flexberry-table-fixed" "") (if model "" " flexberry-table-no-model")}}>
+    <thead>
       <tr>
-        <th colspan="{{_columnCount}}">
-          <div class="ui secondary menu no-margin">
-            <div class="ui basic buttons">
-              <button class="ui {{unless hasPreviousPage "disabled"}} button prev-page-button" {{action (if this.attrs.previousPage this.attrs.previousPage "previousPage")}}/>
-              {{#each pages as |page|}}
-                {{#if page.isEllipsis}}
-                  <button class="ui button disabled">...</button>
-                {{else}}
-                  {{#if page.isCurrent}}
-                    <button class="ui active button disabled">
-                      {{page.number}}
-                    </button>
-                  {{else}}
-                    <button class="ui button" {{action (if this.attrs.gotoPage this.attrs.gotoPage "gotoPage") page.number}}>
-                      {{page.number}}
-                    </button>
-                  {{/if}}
-                {{/if}}
-              {{/each}}
-              <button class="ui {{unless hasNextPage "disabled"}} button next-page-button" {{action (if this.attrs.nextPage this.attrs.nextPage "nextPage")}}/>
-            </div>
-            {{#if perPageAvailable}}
-              <div class="right menu">
-                {{flexberry-dropdown items=perPageValues value=perPageValue class="compact selection" onChange=(action "perPageClick")}}
-              </div>
-            {{/if}}
-          </div>
-        </th>
+        {{#yield-slot "column-header-head-0"}}
+          {{yield}}
+        {{/yield-slot}}
+        {{#yield-slot "column-header-head-1"}}
+          {{yield}}
+        {{/yield-slot}}
+        {{#each-in header as |key value|}}
+        <th>{{value}}</th>
+        {{/each-in}}
+        {{#yield-slot "column-header-tail-0"}}
+          {{yield}}
+        {{/yield-slot}}
       </tr>
-    </tfoot>
-  {{/if}}
-</table>
+    </thead>
+    <tbody>
+      {{#if model}}
+          {{#each model as |row|}}
+          <tr>
+            {{#yield-slot "column-cell-head-0" (block-params row)}}
+              {{yield}}
+            {{/yield-slot}}
+            {{#yield-slot "column-cell-head-1" (block-params row)}}
+              {{yield}}
+            {{/yield-slot}}
+            {{#each-in header as |fieldName value|}}
+              {{#if allowEditOnList}}
+                <td onclick={{action "onCellClick" (concat (ember-guid row) "_" fieldName)}}>
+                  {{#if (eq (get fieldTypes fieldName) "boolean")}}
+                    {{flexberry-checkbox
+                      value=(mut (get row fieldName))
+                      onChange=(action "onCellCheckboxChange" row)
+                      title=(get row fieldName)
+                    }}
+                  {{else if (eq _selectedCellName (concat (ember-guid row) "_" fieldName))}}
+                    {{input
+                      type="text"
+                      value=(if (eq (get fieldTypes fieldName) "date") (moment-format (get row fieldName) allowEmpty=true) (get row fieldName))
+                      key-down=(action "onCellInputKeyDown" (hash row=row fieldName=fieldName))
+                      focus-out=(action "onCellInputFocusOut" (hash row=row fieldName=fieldName))
+                      title=(get row fieldName)
+                    }}
+                  {{else if (eq (get fieldTypes fieldName) "date")}}
+                    <span title={{get row fieldName}}>{{moment-format (get row fieldName) allowEmpty=true}}</span>
+                  {{else}}
+                    <span title={{get row fieldName}}>{{get row fieldName}}</span>
+                  {{/if}}
+                </td>
+              {{else}}
+                <td><span title={{get row fieldName}}>{{get row fieldName}}</span></td>
+              {{/if}}
+            {{/each-in}}
+            {{#yield-slot "column-cell-tail-0" (block-params row)}}
+              {{yield}}
+            {{/yield-slot}}
+          </tr>
+          {{/each}}
+      {{else}}
+      <tr>
+          <td class="center aligned" colspan="{{_columnCount}}">{{t "components.flexberry-table.no-data"}}</td>
+      </tr>
+      {{/if}}
+    </tbody>
+  </table>
+</div>
+{{#if recordsTotalCount}}
+  <div>
+    <div class="ui secondary menu no-margin">
+      <div class="ui basic buttons">
+        <button class="ui {{unless hasPreviousPage "disabled"}} button prev-page-button" {{action (if this.attrs.previousPage this.attrs.previousPage "previousPage")}}/>
+        {{#each pages as |page|}}
+          {{#if page.isEllipsis}}
+            <button class="ui button disabled">...</button>
+          {{else}}
+            {{#if page.isCurrent}}
+              <button class="ui active button disabled">
+                {{page.number}}
+              </button>
+            {{else}}
+              <button class="ui button" {{action (if this.attrs.gotoPage this.attrs.gotoPage "gotoPage") page.number}}>
+                {{page.number}}
+              </button>
+            {{/if}}
+          {{/if}}
+        {{/each}}
+        <button class="ui {{unless hasNextPage "disabled"}} button next-page-button" {{action (if this.attrs.nextPage this.attrs.nextPage "nextPage")}}/>
+      </div>
+      {{#if perPageAvailable}}
+        <div class="right menu">
+          {{flexberry-dropdown items=perPageValues value=perPageValue class="compact selection" onChange=(action "perPageClick")}}
+        </div>
+      {{/if}}
+    </div>
+  </div>
+{{/if}}

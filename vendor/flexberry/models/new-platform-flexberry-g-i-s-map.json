@@ -7,6 +7,33 @@
   "parentClassName": null,
   "attrs": [
     {
+      "name": "anyText",
+      "type": "string",
+      "flexberryType": "stringMax",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": false,
+      "ordered": false
+    },
+    {
+      "name": "boundingBox",
+      "type": "string",
+      "flexberryType": "Geography",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "coordinateReferenceSystem",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
       "name": "createTime",
       "type": "date",
       "flexberryType": "AuditNullableDateTime",
@@ -25,9 +52,9 @@
       "ordered": false
     },
     {
-      "name": "editTime",
-      "type": "date",
-      "flexberryType": "AuditNullableDateTime",
+      "name": "description",
+      "type": "string",
+      "flexberryType": "stringMax",
       "notNull": false,
       "defaultValue": "",
       "stored": true,
@@ -43,18 +70,18 @@
       "ordered": false
     },
     {
-      "name": "name",
-      "type": "string",
-      "flexberryType": "string",
-      "notNull": true,
+      "name": "editTime",
+      "type": "date",
+      "flexberryType": "AuditNullableDateTime",
+      "notNull": false,
       "defaultValue": "",
       "stored": true,
       "ordered": false
     },
     {
-      "name": "description",
-      "type": "string",
-      "flexberryType": "stringMax",
+      "name": "editTimeMapLayers",
+      "type": "date",
+      "flexberryType": "AuditNullableDateTime",
       "notNull": false,
       "defaultValue": "",
       "stored": true,
@@ -67,15 +94,6 @@
       "notNull": false,
       "defaultValue": "",
       "stored": true,
-      "ordered": false
-    },
-    {
-      "name": "anyText",
-      "type": "string",
-      "flexberryType": "stringMax",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": false,
       "ordered": false
     },
     {
@@ -97,9 +115,27 @@
       "ordered": false
     },
     {
-      "name": "zoom",
-      "type": "decimal",
-      "flexberryType": "double",
+      "name": "name",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": true,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "owner",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "picture",
+      "type": "string",
+      "flexberryType": "string",
       "notNull": false,
       "defaultValue": "",
       "stored": true,
@@ -124,7 +160,7 @@
       "ordered": false
     },
     {
-      "name": "coordinateReferenceSystem",
+      "name": "settings",
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
@@ -133,27 +169,9 @@
       "ordered": false
     },
     {
-      "name": "boundingBox",
-      "type": "string",
-      "flexberryType": "Geography",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": true,
-      "ordered": false
-    },
-    {
-      "name": "owner",
-      "type": "string",
-      "flexberryType": "string",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": true,
-      "ordered": false
-    },
-    {
-      "name": "picture",
-      "type": "string",
-      "flexberryType": "string",
+      "name": "zoom",
+      "type": "decimal",
+      "flexberryType": "double",
       "notNull": false,
       "defaultValue": "",
       "stored": true,
@@ -180,28 +198,82 @@
           "index": 0
         },
         {
+          "name": "description",
+          "caption": "Описание",
+          "hidden": false,
+          "index": 1
+        },
+        {
+          "name": "lat",
+          "caption": "Центр карты (широта)",
+          "hidden": false,
+          "index": 2
+        },
+        {
+          "name": "lng",
+          "caption": "Центр карты (долгота)",
+          "hidden": false,
+          "index": 3
+        },
+        {
+          "name": "zoom",
+          "caption": "Зум карты",
+          "hidden": false,
+          "index": 4
+        },
+        {
+          "name": "public",
+          "caption": "Публичная карта",
+          "hidden": false,
+          "index": 5
+        },
+        {
+          "name": "coordinateReferenceSystem",
+          "caption": "Система координат",
+          "hidden": false,
+          "index": 6
+        },
+        {
+          "name": "picture",
+          "caption": "Изображение для карты",
+          "hidden": false,
+          "index": 7
+        },
+        {
           "name": "creator",
           "caption": "Создатель",
           "hidden": false,
-          "index": 1
+          "index": 8
         },
         {
           "name": "createTime",
           "caption": "Время создания",
           "hidden": false,
-          "index": 2
+          "index": 9
         },
         {
           "name": "editor",
           "caption": "Редактор",
           "hidden": false,
-          "index": 3
+          "index": 10
         },
         {
           "name": "editTime",
           "caption": "Время редактирования",
           "hidden": false,
-          "index": 4
+          "index": 11
+        },
+        {
+          "name": "editTimeMapLayers",
+          "caption": "",
+          "hidden": false,
+          "index": 12
+        },
+        {
+          "name": "settings",
+          "caption": "Настройки карты",
+          "hidden": false,
+          "index": 13
         }
       ],
       "belongsTo": [],
@@ -246,6 +318,12 @@
           "caption": "Система координат",
           "hidden": true,
           "index": 5
+        },
+        {
+          "name": "settings",
+          "caption": "Настройки карты",
+          "hidden": false,
+          "index": 6
         }
       ],
       "belongsTo": [],
@@ -372,6 +450,12 @@
           "caption": "Изображение",
           "hidden": false,
           "index": 5
+        },
+        {
+          "name": "settings",
+          "caption": "Настройки карты",
+          "hidden": true,
+          "index": 6
         }
       ],
       "belongsTo": [],

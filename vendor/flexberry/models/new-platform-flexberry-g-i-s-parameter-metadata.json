@@ -2,56 +2,18 @@
   "name": "NewPlatformFlexberryGISParameterMetadata",
   "modelName": "new-platform-flexberry-g-i-s-parameter-metadata",
   "className": "ParameterMetadata",
+  "nameSpace": "NewPlatform.Flexberry.GIS",
   "parentModelName": null,
   "parentClassName": null,
   "attrs": [
-    {
-      "name": "objectField",
-      "type": "string",
-      "flexberryType": "string",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": true
-    },
-    {
-      "name": "layerField",
-      "type": "string",
-      "flexberryType": "string",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": true
-    },
-    {
-      "name": "expression",
-      "type": "string",
-      "flexberryType": "string",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": true
-    },
-    {
-      "name": "queryKey",
-      "type": "string",
-      "flexberryType": "string",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": true
-    },
-    {
-      "name": "linkField",
-      "type": "boolean",
-      "flexberryType": "bool",
-      "notNull": false,
-      "defaultValue": "false",
-      "stored": true
-    },
     {
       "name": "createTime",
       "type": "date",
       "flexberryType": "AuditNullableDateTime",
       "notNull": false,
       "defaultValue": "",
-      "stored": true
+      "stored": true,
+      "ordered": false
     },
     {
       "name": "creator",
@@ -59,15 +21,8 @@
       "flexberryType": "string",
       "notNull": false,
       "defaultValue": "",
-      "stored": true
-    },
-    {
-      "name": "editTime",
-      "type": "date",
-      "flexberryType": "AuditNullableDateTime",
-      "notNull": false,
-      "defaultValue": "",
-      "stored": true
+      "stored": true,
+      "ordered": false
     },
     {
       "name": "editor",
@@ -75,7 +30,62 @@
       "flexberryType": "string",
       "notNull": false,
       "defaultValue": "",
-      "stored": true
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "editTime",
+      "type": "date",
+      "flexberryType": "AuditNullableDateTime",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "expression",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "layerField",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "linkField",
+      "type": "boolean",
+      "flexberryType": "bool",
+      "notNull": false,
+      "defaultValue": "false",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "objectField",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
+    },
+    {
+      "name": "queryKey",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true,
+      "ordered": false
     }
   ],
   "belongsTo": [
@@ -133,6 +143,7 @@
           "hidden": false,
           "attrs": [],
           "index": 5,
+          "type": "default",
           "caption": "Связь",
           "name": "layerLink",
           "relatedTo": "new-platform-flexberry-g-i-s-link-metadata",
@@ -185,6 +196,7 @@
           "hidden": true,
           "attrs": [],
           "index": 5,
+          "type": "default",
           "caption": "Связь",
           "name": "layerLink",
           "relatedTo": "new-platform-flexberry-g-i-s-link-metadata",
@@ -195,5 +207,6 @@
     }
   ],
   "stored": true,
-  "offline": true
+  "offline": true,
+  "external": false
 }

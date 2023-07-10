@@ -54,8 +54,4 @@
 @invertedSubMenuColor: @primaryColor;
 
 /* Inverted Hover */
-@invertedHoverColor: @primaryColor;
 @invertedSubMenuHoverColor: @primaryColor;
-
-/* Inverted Active Hover  */
-@invertedActiveHoverColor: @primaryColor;

@@ -1,0 +1,8 @@
+.sidebar-wrapper .ui.accordion:not(.styled) .title ~ .content:not(.ui):last-child {
+  padding: 0em 1rem;
+  color: @textColor;
+}
+
+.sidebar-wrapper .ui.accordion:not(.styled) .title ~ .content a {
+  color: @textColor;
+}

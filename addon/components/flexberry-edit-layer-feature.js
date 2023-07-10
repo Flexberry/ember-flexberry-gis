@@ -483,7 +483,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
   */
   parseData(index, data) {
     let fieldNames = this.get('_model.fieldNames');
-    let readOnlyFields = this.get('_model.readOnlyFields');
+    let readOnlyFields = Ember.A(this.get('_model.readOnlyFields'));
     let fieldParsers = this.get('_model.fieldParsers');
     let fieldValidators = this.get('_model.fieldValidators');
     let fieldTypes = this.get('_model.fieldTypes');

@@ -1,6 +1,7 @@
 ﻿{
   "newForm": "new-platform-flexberry-g-i-s-layer-metadata-e",
   "editForm": "new-platform-flexberry-g-i-s-layer-metadata-e",
+  "external": false,
   "caption": null,
   "name": "NewPlatformFlexberryGISLayerMetadataL",
   "className": "LayerMetadataL",

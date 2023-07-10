@@ -19,7 +19,7 @@ export default Ember.Service.extend({
     @type Boolean
     @default false
   */
-  available: false,
+  available: true,
 
   /**
     Checks whether window.localStorage is available in current browser.

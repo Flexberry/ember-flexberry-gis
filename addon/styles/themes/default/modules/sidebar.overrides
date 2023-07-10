@@ -32,7 +32,6 @@
     .bookmark-item,
     .bmrk-add-block {
       border: none;
-      box-shadow: @lightBoxShadow;
       border-radius: 5px;
       height: 35px;
       .ember-text-field {
@@ -70,7 +69,7 @@
       padding: 0px;
       margin-bottom: 15px;
       .bmrk-add-block-buttons .ui.icon.button {
-        padding-top: 8px;
+        padding-top: 0;
       }
       .error+.bmrk-add-block-buttons .ui.icon.button &:nth-child(1) {
         color: @bmrkAddBlockButtonsColor;
@@ -121,7 +120,6 @@
     top: 0;
     .ui.icon.button {
       box-shadow: none;
-      border-left: 1px solid #b7bfcd;
     }
   }
 }
@@ -154,7 +152,6 @@
             height: 30px;
             width: 30px;
             padding: 6px 0;
-            box-shadow: @darkBoxShadow;
         }
     }
     .flexberry-maplayers.flexberry-tree-root {
@@ -336,10 +333,11 @@
           position: absolute;
           top: 10px;
           z-index: 100;
-          background: @whitecolor;
-          border: 1px solid #E5E5E5;
+          background-color: @inputBackground;
+          border: none;
           border-radius: 3.5px;
           box-sizing: border-box;
+          box-shadow: 2px 4px 5px rgba(0, 0, 0, 0.1);
           &.reversed {
             div {
               padding-top: 16px;
@@ -361,6 +359,7 @@
               top: -25px;
               right: 10px;
               background-color: rgba(255,255,255,0);
+              box-shadow: none;
               border: none;
               margin: 0;
             }
@@ -385,7 +384,7 @@
 /************************************
           Create/Edit Block
 *************************************/
-
+.sidebar-wrapper,
 .right-sidebar-wrapper {
   .ui.right.sidebar {
     .ui.tab.createOrEditObject {
@@ -587,7 +586,7 @@
 
     .ui.tab {
       padding: 10px;
-      color: @darkbluecolor;
+      color: @primaryColor;
       &.bottompanel-tab-data-panel {
         padding: 0px;
         .layers-attributes-tab-container {
@@ -608,17 +607,6 @@
     &.folded {
       bottom: 0;
       height: 40px;
-    }
-
-    &.sidebarOpened {
-      width: ~"calc(100% - 430px)";
-    }
-
-    &.withToolbar {
-      width: ~"calc(100% - 70px)";
-      &.sidebarOpened {
-        width: ~"calc(100% - 480px)";
-      }
     }
   }
 

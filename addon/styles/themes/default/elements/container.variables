@@ -17,7 +17,7 @@
 @flexberryMapOnlyContainerHeight: 100vh;
 
 @flexberryMapWidth: 100%;
-@flexberryMapHeight: ~"calc(100vh - 225px)";
+@flexberryMapHeight: ~"calc(100vh - 182px)";
 @flexberryMapBackgroundColor: @whitecolor;
 
 @flexberryMapLoaderColor: #ffffff !important;

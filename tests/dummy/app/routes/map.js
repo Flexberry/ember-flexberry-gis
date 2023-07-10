@@ -3,6 +3,7 @@
 */
 
 import EditMapRoute from 'ember-flexberry-gis/routes/edit-map';
+import Ember from 'ember';
 import EditFormRouteOperationsIndicationMixin from 'ember-flexberry/mixins/edit-form-route-operations-indication';
 
 /**
@@ -13,18 +14,17 @@ import EditFormRouteOperationsIndicationMixin from 'ember-flexberry/mixins/edit-
   @uses EditFormRouteOperationsIndicationMixin, MapRouteCswLoaderMixin
 */
 export default EditMapRoute.extend(EditFormRouteOperationsIndicationMixin, {
-  access: {
-    map: true,
-    mapLayerModel: [],
-    mapLayerData: [],
-    presenceLayerInGeoportal: []
-  },
-
-  afterModel(model) {
-    this.set('access.mapLayerModel', model.get('mapLayer').map((r) => { return r.id; }));
-    this.set('access.mapLayerData', model.get('mapLayer').map((r) => { return r.id; }));
-
-    this._super(...arguments);
-  },
-
+  actions: {
+    willTransition(transition) {
+      this.controller.toggleProperty('showSpinner');
+      if (this.controller.get('showSpinner')) {
+        transition.abort();
+        Ember.run.later(() => {
+          transition.retry();
+        });
+      } else {
+        return true;
+      }
+    }
+  }
 });

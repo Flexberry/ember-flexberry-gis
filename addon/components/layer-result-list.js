@@ -51,6 +51,18 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, ResultFeatureIn
   classNameBindings: ['resultsHeightClass'],
 
   /**
+    Flag: indicates type device is mobile or not.
+
+    @property isMobile
+    @type boolean
+    @readOnly
+  */
+  isMobile: Ember.computed(function () {
+    let device = this.get('device');
+    return device.mobile() || device.tablet();
+  }),
+
+  /**
     Flag indicates if intersection panel is active.
 
     @property intersection
@@ -328,7 +340,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, ResultFeatureIn
   didUpdate() {
     let _this = this;
     let $caption = this.$('.title .flexberry-toggler-caption');
-    if ($caption.length > 0) {
+    if ($caption.length > 0 && !this.get('isMobile')) {
       $caption.hover(
         function () {
           const togglerCaptionElement = _this.$(this);
@@ -502,7 +514,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, ResultFeatureIn
     });
 
     let store = this.get('store');
-    store.findAll('i-i-s-r-g-i-s-p-k-favorite-features').then((idsFavorite) => {
+    store.findAll('new-platform-flexberry-g-i-s-favorite-feature').then((idsFavorite) => {
       Ember.RSVP.allSettled(promises).finally(() => {
         let order = 1;
         displayResults.forEach((result) => {
