@@ -1268,9 +1268,18 @@ export default BaseLayer.extend({
           let readFormat = Ember.get(this._leafletObject, 'readFormat.featureType.fieldTypes');
 
           let label = layer.feature.properties[property];
-          if (readFormat[property] === 'date') {
-            let format = this.displaySettings.dateTimeFormat ? this.displaySettings.dateTimeFormat : this.displaySettings.dateFormat;
-            label = moment(label).format(format);
+          let dateTimeFormat = this.displaySettings.dateTimeFormat;
+          let dateFormat = this.displaySettings.dateFormat;
+          if (readFormat[property] === 'date' && (!Ember.isEmpty(dateFormat) || !Ember.isEmpty(dateTimeFormat))) {
+            let dateValue = moment(label);
+
+            if (dateValue.isValid()) {
+              if (!Ember.isEmpty(dateTimeFormat)) {
+                label = (dateValue.format('HH:mm:ss') === '00:00:00') ? dateValue.format(dateFormat) : dateValue.format(dateTimeFormat);
+              } else {
+                label = dateValue.format(dateFormat);
+              }
+            }
           }
 
           if (Ember.isNone(label)) {
