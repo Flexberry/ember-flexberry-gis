@@ -58,7 +58,7 @@ test('test action panToIntersection with geometry', function (assert) {
     mapApi: {
       getFromApi() { return mapModel;}
     },
-    crs: { code: 'EPSG:4356' }
+    crsCode: 'EPSG:4356'
   });
 
   let stubConvertCoordinates = sinon.stub(mapModel, '_convertObjectCoordinates');
