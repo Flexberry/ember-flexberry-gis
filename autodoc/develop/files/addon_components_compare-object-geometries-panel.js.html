@@ -417,8 +417,6 @@
 import Ember from &#x27;ember&#x27;;
 import layout from &#x27;../templates/components/compare-object-geometries-panel&#x27;;
 import LeafletZoomToFeatureMixin from &#x27;../mixins/leaflet-zoom-to-feature&#x27;;
-import distance from &#x27;npm:@turf/distance&#x27;;
-import helpers from &#x27;npm:@turf/helpers&#x27;;
 import jsts from &#x27;npm:jsts&#x27;;
 import { coordinatesToString } from &#x27;../utils/coordinates-to&#x27;;
 
@@ -431,6 +429,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     @type MapApiService
     */
   mapApi: Ember.inject.service(),
+
+  isActive: false,
 
   /**
     Objects to compare.
@@ -471,35 +471,44 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     @private
     @readonly
   */
-  _onTwoObjectsChange: Ember.observer(&#x27;twoObjects.[]&#x27;, function() {
+  _onTwoObjectsChange: Ember.observer(&#x27;twoObjects.[]&#x27;, &#x27;isActive&#x27;, function () {
     let two = this.get(&#x27;twoObjects&#x27;);
-    if (two.length === 2) {
-      let mapModel = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;mapModel&#x27;);
-      let crs = two[0].layerModel.get(&#x27;_leafletObject.options.crs&#x27;);
-      this.set(&#x27;crs&#x27;, crs);
-      let firstObject =  two[0];
-      let secondObject = null;
-      if (two[1].layerModel.get(&#x27;_leafletObject.options.crs&#x27;).code !== crs.code) {
-        secondObject = Object.assign({}, two[1]);
-        mapModel._convertObjectCoordinates(crs.code, secondObject);
-      } else {
-        secondObject = two[1];
-      }
 
-      let geojsonReader = new jsts.io.GeoJSONReader();
-      let firstObjectJstsGeom = geojsonReader.read(firstObject.geometry);
-      let secondObjectJstsGeom = geojsonReader.read(secondObject.geometry);
-      Ember.set(firstObject, &#x27;area&#x27;, firstObjectJstsGeom.getArea().toFixed(3));
-      Ember.set(secondObject, &#x27;area&#x27;, secondObjectJstsGeom.getArea().toFixed(3));
+    if (!this.get(&#x27;isActive&#x27;) || two.length !== 2) {
+      this.set(&#x27;firstObject&#x27;, null);
+      this.set(&#x27;secondObject&#x27;, null);
+      this.set(&#x27;distanceBetween&#x27;, 0);
+      this.set(&#x27;intersection&#x27;, 0);
+      this.set(&#x27;nonIntersection&#x27;, 0);
+
+      return;
+    }
+
+    if (two.length === 2) {
+      let firstObjectJsts = this._getJsts(two[0]);
+      let secondObjectJsts = this._getJsts(two[1]);
+
+      let firstObject = Object.assign({}, two[0], { area: firstObjectJsts.getArea().toFixed(3) });
+      let secondObject = Object.assign({}, two[1], { area: secondObjectJsts.getArea().toFixed(3) });
 
       this.set(&#x27;firstObject&#x27;, firstObject);
       this.set(&#x27;secondObject&#x27;, secondObject);
-      let dist = this.getDistance(firstObject, secondObject);
-      this.set(&#x27;distanceBetween&#x27;, dist);
-      this.set(&#x27;intersection&#x27;, this.getIntersection(firstObjectJstsGeom, secondObjectJstsGeom));
-      this.set(&#x27;nonIntersection&#x27;, this.getNonIntersection(firstObjectJstsGeom, secondObjectJstsGeom));
+
+      this.set(&#x27;distanceBetween&#x27;, firstObjectJsts.getCentroid().distance(secondObjectJsts.getCentroid()).toFixed(3));
+      this.set(&#x27;intersection&#x27;, this.getIntersection(firstObjectJsts, secondObjectJsts));
+      this.set(&#x27;nonIntersection&#x27;, this.getNonIntersection(firstObjectJsts, secondObjectJsts));
     }
   }),
+
+  _getJsts(source) {
+    let firstFeature = source.leafletLayer;
+    if (Ember.get(source, &#x27;leafletLayer.getLayers&#x27;)) {
+      firstFeature = source.leafletLayer.getLayers()[0];
+    }
+
+    // корректные данные в метрах только в 3857
+    return firstFeature.toJsts(this.get(&#x27;crs&#x27;), this.get(&#x27;scale&#x27;));
+  },
 
   /**
     First object to compare.
@@ -581,7 +590,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   */
   serviceLayer: null,
 
-  crs: null,
+  /**
+    Area and distance in meters only with crs=3857
+  */
+  crs: L.CRS.EPSG3857,
+
+  /**
+    Scale for crs transformation
+  */
+  scale: 10000000000,
 
   /**
     Observer for leafletMap property adding layer with results.
@@ -694,50 +711,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     if (!Ember.isBlank(geometry.coordinates[0])) {
       let copyGeometry = Object.assign({}, geometry);
       let mapModel = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;mapModel&#x27;);
-      let convertedFeatureLayer = mapModel._convertObjectCoordinates(this.get(&#x27;crs&#x27;).code, { geometry: copyGeometry });
+      let convertedFeatureLayer = mapModel._convertObjectCoordinates(this.get(&#x27;crs.code&#x27;), { geometry: copyGeometry });
       return L.geoJSON(convertedFeatureLayer.geometry, style);
     }
-  },
-
-  getDistance(firstObject, secondObject) {
-    let firstCenter;
-    let secondCenter;
-
-    let firstFeature = firstObject.leafletLayer;
-    if (Ember.get(firstObject, &#x27;leafletLayer.getLayers&#x27;)) {
-      firstFeature = firstObject.leafletLayer.getLayers()[0];
-    }
-
-    if (firstFeature instanceof L.Marker) {
-      firstCenter = firstFeature.getLatLng();
-    } else {
-      firstCenter = firstFeature.getBounds().getCenter();
-    }
-
-    let secondFeature = secondObject.leafletLayer;
-    if (Ember.get(secondObject, &#x27;leafletLayer.getLayers&#x27;)) {
-      secondFeature = secondObject.leafletLayer.getLayers()[0];
-    }
-
-    if (secondFeature instanceof L.Marker) {
-      secondCenter = secondFeature.getLatLng();
-    } else {
-      secondCenter = secondFeature.getBounds().getCenter();
-    }
-
-    let firstPoint = helpers.point([firstCenter.lat, firstCenter.lng]);
-    let secondPoint = helpers.point([secondCenter.lat, secondCenter.lng]);
-    return (distance.default(firstPoint, secondPoint, { units: &#x27;kilometers&#x27; }) * 1000).toFixed(3);
-  },
-
-  convertCoordinates(feature) {
-    if (Ember.get(feature, &#x27;leafletLayer.options.crs.code&#x27;)) {
-      let mapModel = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;mapModel&#x27;);
-      return feature.leafletLayer.options.crs.code === &#x27;EPSG:4326&#x27; ?
-        feature : mapModel._convertObjectCoordinates(Ember.get(feature, &#x27;leafletLayer.options.crs.code&#x27;), feature);
-    }
-
-    return feature;
   },
 
   getIntersection(firstObject, secondObject) {

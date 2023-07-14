@@ -29594,7 +29594,7 @@
         },
         {
             "file": "addon/components/compare-object-geometries-panel.js",
-            "line": 12,
+            "line": 10,
             "description": "Service for managing map API.",
             "itemtype": "property",
             "name": "mapApi",
@@ -29660,7 +29660,7 @@
         },
         {
             "file": "addon/components/compare-object-geometries-panel.js",
-            "line": 88,
+            "line": 97,
             "description": "First object to compare.",
             "itemtype": "property",
             "name": "firstObject",
@@ -29671,7 +29671,7 @@
         },
         {
             "file": "addon/components/compare-object-geometries-panel.js",
-            "line": 97,
+            "line": 106,
             "description": "First object's value to display.",
             "itemtype": "property",
             "name": "firstObjectDisplayValue",
@@ -29682,7 +29682,7 @@
         },
         {
             "file": "addon/components/compare-object-geometries-panel.js",
-            "line": 110,
+            "line": 119,
             "description": "Second object to compare.",
             "itemtype": "property",
             "name": "secondObject",
@@ -29693,7 +29693,7 @@
         },
         {
             "file": "addon/components/compare-object-geometries-panel.js",
-            "line": 119,
+            "line": 128,
             "description": "Second object's value to display.",
             "itemtype": "property",
             "name": "secondObjectDisplayValue",
@@ -29704,7 +29704,7 @@
         },
         {
             "file": "addon/components/compare-object-geometries-panel.js",
-            "line": 132,
+            "line": 141,
             "description": "Leaflet map object for zoom and pan.",
             "itemtype": "property",
             "name": "leafletMap",
@@ -29715,7 +29715,7 @@
         },
         {
             "file": "addon/components/compare-object-geometries-panel.js",
-            "line": 141,
+            "line": 150,
             "description": "Flag indicates if panel is folded.",
             "itemtype": "property",
             "name": "folded",
@@ -29726,7 +29726,7 @@
         },
         {
             "file": "addon/components/compare-object-geometries-panel.js",
-            "line": 150,
+            "line": 159,
             "description": "Layer contains non/intersection features.",
             "itemtype": "property",
             "name": "featuresLayer",
@@ -29737,7 +29737,7 @@
         },
         {
             "file": "addon/components/compare-object-geometries-panel.js",
-            "line": 159,
+            "line": 168,
             "description": "Service layer.",
             "itemtype": "property",
             "name": "serviceLayer",
@@ -29748,7 +29748,21 @@
         },
         {
             "file": "addon/components/compare-object-geometries-panel.js",
-            "line": 170,
+            "line": 177,
+            "description": "Area and distance in meters only with crs=3857",
+            "class": "DivControlComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/compare-object-geometries-panel.js",
+            "line": 182,
+            "description": "Scale for crs transformation",
+            "class": "DivControlComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/compare-object-geometries-panel.js",
+            "line": 187,
             "description": "Observer for leafletMap property adding layer with results.",
             "itemtype": "property",
             "name": "_OnMapChanged",
@@ -29760,7 +29774,7 @@
         },
         {
             "file": "addon/components/compare-object-geometries-panel.js",
-            "line": 184,
+            "line": 201,
             "description": "Handles click on a close button.",
             "itemtype": "method",
             "name": "actions.findIntersections",
@@ -29769,7 +29783,7 @@
         },
         {
             "file": "addon/components/compare-object-geometries-panel.js",
-            "line": 201,
+            "line": 218,
             "description": "Handles click on tab.",
             "itemtype": "method",
             "name": "actions.hidePanel",
@@ -29778,7 +29792,7 @@
         },
         {
             "file": "addon/components/compare-object-geometries-panel.js",
-            "line": 210,
+            "line": 227,
             "description": "Handles click on pan to icon.",
             "itemtype": "method",
             "name": "actions.panToIntersection",
@@ -29794,7 +29808,7 @@
         },
         {
             "file": "addon/components/compare-object-geometries-panel.js",
-            "line": 236,
+            "line": 253,
             "description": "Handles click on zoom to icon.",
             "itemtype": "method",
             "name": "actions.zoomToIntersection",
@@ -29810,7 +29824,7 @@
         },
         {
             "file": "addon/components/compare-object-geometries-panel.js",
-            "line": 269,
+            "line": 286,
             "description": "Convert feature coordinate.",
             "itemtype": "method",
             "name": "actions._convertGeometryToFeatureLayer",
@@ -52493,7 +52507,7 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/compare-object-geometries-panel.js:269"
+            "line": " addon/components/compare-object-geometries-panel.js:286"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -53978,6 +53992,14 @@
         {
             "message": "Missing item type\nDeinitializes DOM-related component's properties.",
             "line": " addon/components/base-vector-layer.js:1179"
+        },
+        {
+            "message": "Missing item type\nArea and distance in meters only with crs=3857",
+            "line": " addon/components/compare-object-geometries-panel.js:177"
+        },
+        {
+            "message": "Missing item type\nScale for crs transformation",
+            "line": " addon/components/compare-object-geometries-panel.js:182"
         },
         {
             "message": "Missing item type\nReference to component's template.",
