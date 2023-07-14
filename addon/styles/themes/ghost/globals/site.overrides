@@ -93,9 +93,9 @@
         color: @blueyGreyColor;
     }
     & > i.dropdown.icon {
-        margin-right: 16px;
-        font-size: 20px;
-        padding: 6px;
+        font-size: 24px;
+        padding: 4px 3px;
+        right: 8px;
     }
     .item .flexberry-checkbox.ui.checkbox {
         width: 100%;
