@@ -5306,7 +5306,7 @@ define('dummy/tests/unit/components/compare-object-geometries-panel-test', ['exp
           return mapModel;
         }
       },
-      crs: { code: 'EPSG:4356' }
+      crs: L.CRS.EPSG4326
     });
 
     var stubConvertCoordinates = _sinon['default'].stub(mapModel, '_convertObjectCoordinates');
@@ -5321,7 +5321,7 @@ define('dummy/tests/unit/components/compare-object-geometries-panel-test', ['exp
 
     assert.deepEqual(result.getLayers()[0].feature.geometry.type, 'Polygon');
     assert.deepEqual(result.getLayers()[0].feature.geometry.coordinates, [[[1, 2], [2, 3], [3, 4], [1, 2]]]);
-    assert.deepEqual(stubConvertCoordinates.getCall(0).args[0], 'EPSG:4356');
+    assert.deepEqual(stubConvertCoordinates.getCall(0).args[0], 'EPSG:4326');
     assert.deepEqual(stubConvertCoordinates.getCall(0).args[1].geometry.type, 'Polygon');
     stubConvertCoordinates.restore();
   });
