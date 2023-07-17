@@ -494,8 +494,8 @@ export default BaseLayer.extend({
     @method destroyLayer
   */
   destroyClusterLayer(clusterLayer) {
-    clusterLayer._featureGroup.off('layeradd', this._setLayerOpacity, this);
-    clusterLayer._featureGroup.off('layerremove', this._setLayerOpacity, this);
+    clusterLayer._featureGroup.off('layeradd', this.updateClusterLayer, this);
+    clusterLayer._featureGroup.off('layerremove', this.updateClusterLayer, this);
     clusterLayer._originalVectorLayer.off('layeradd', this.loadClusterLayer, this);
     clusterLayer._originalVectorLayer.off('layerremove', this.loadClusterLayer, this);
   },
@@ -1293,6 +1293,10 @@ export default BaseLayer.extend({
   _applyProperty(str, layer) {
     let hasReplace = false;
     let propName;
+
+    // Clustering vector layer contains the leaflet's main context in the "_leafletObject._originalVectorLayer" path
+    let leafletObject = this.get('_leafletObject') instanceof L.MarkerClusterGroup ? this.get('_leafletObject._originalVectorLayer') : this.get('_leafletObject');
+
     try {
       propName = Ember.$('<p>' + str + '</p>').find('propertyname');
     } catch (e) {
@@ -1313,7 +1317,7 @@ export default BaseLayer.extend({
         }
 
         if (property && layer.feature.properties && layer.feature.properties.hasOwnProperty(property)) {
-          let readFormat = Ember.get(this._leafletObject, 'readFormat.featureType.fieldTypes');
+          let readFormat = Ember.get(leafletObject, 'readFormat.featureType.fieldTypes');
 
           let label = layer.feature.properties[property];
           let dateTimeFormat = this.displaySettings.dateTimeFormat;
@@ -2352,11 +2356,11 @@ export default BaseLayer.extend({
     if (this.get('visibility')) {
       this._addLayerToLeafletContainer();
 
-      // Clustering vector layer contains the wfsLayer context in the "_leafletObject._originalVectorLayer" path
-      let wfsLayer = this.get('_leafletObject') instanceof L.MarkerClusterGroup ? this.get('_leafletObject._originalVectorLayer') : this.get('_leafletObject');
+      // Clustering vector layer contains the leaflet's main context in the "_leafletObject._originalVectorLayer" path
+      let leafletObject = this.get('_leafletObject') instanceof L.MarkerClusterGroup ? this.get('_leafletObject._originalVectorLayer') : this.get('_leafletObject');
 
       if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) &&
-        !Ember.isNone(Ember.get(wfsLayer, '_labelsLayer'))) {
+        !Ember.isNone(Ember.get(leafletObject, '_labelsLayer'))) {
         this._addLabelsToLeafletContainer();
         this._checkZoomPane();
         if (this.get('typeGeometry') === 'polyline') {
