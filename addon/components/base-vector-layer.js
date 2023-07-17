@@ -1294,8 +1294,12 @@ export default BaseLayer.extend({
     let hasReplace = false;
     let propName;
 
+    let leafletObject = this.get('_leafletObject');
+
     // Clustering vector layer contains the leaflet's main context in the "_leafletObject._originalVectorLayer" path
-    let leafletObject = this.get('_leafletObject') instanceof L.MarkerClusterGroup ? this.get('_leafletObject._originalVectorLayer') : this.get('_leafletObject');
+    if (leafletObject instanceof L.MarkerClusterGroup) {
+      leafletObject = this.get('_leafletObject._originalVectorLayer');
+    }
 
     try {
       propName = Ember.$('<p>' + str + '</p>').find('propertyname');
@@ -2356,8 +2360,12 @@ export default BaseLayer.extend({
     if (this.get('visibility')) {
       this._addLayerToLeafletContainer();
 
+      let leafletObject = this.get('_leafletObject');
+
       // Clustering vector layer contains the leaflet's main context in the "_leafletObject._originalVectorLayer" path
-      let leafletObject = this.get('_leafletObject') instanceof L.MarkerClusterGroup ? this.get('_leafletObject._originalVectorLayer') : this.get('_leafletObject');
+      if (leafletObject instanceof L.MarkerClusterGroup) {
+        leafletObject = this.get('_leafletObject._originalVectorLayer');
+      }
 
       if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) &&
         !Ember.isNone(Ember.get(leafletObject, '_labelsLayer'))) {
