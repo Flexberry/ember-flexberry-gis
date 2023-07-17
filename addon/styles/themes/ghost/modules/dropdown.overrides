@@ -153,6 +153,14 @@
   }
 }
 
+.rgis-sidebar-wrapper .ui.selection.dropdown.multi-dropdown {
+  &,
+  &.active,
+  &:focus .menu {
+      border: none;
+  }
+}
+
 .ui.menu.flexberry-maptoolbar,
 .ui.menu {
   .dropdown.item:hover {

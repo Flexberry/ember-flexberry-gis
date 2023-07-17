@@ -225,7 +225,7 @@
         .accordion .content {
             padding: 0px 0px 8px 30px;
             .flexberry-slider {
-                margin: 5px 0px 0px 25px;
+                margin: 5px 0px 2px 25px;
                 .ui-slider .slider {
                     &.slider.slider-horizontal {
                         height: 7px;
