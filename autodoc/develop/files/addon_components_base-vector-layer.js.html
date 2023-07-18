@@ -797,27 +797,62 @@ export default BaseLayer.extend({
   */
   createClusterLayer(vectorLayer) {
     let clusterLayer = L.markerClusterGroup(this.get(&#x27;clusterOptions&#x27;));
-    clusterLayer.addLayer(vectorLayer);
 
     // Original vector layer is necessary for &#x27;flexberry-layers-attributes-panel&#x27; component and identification map tool
     clusterLayer._originalVectorLayer = vectorLayer;
 
-    // Original vectorLayer update does not trigger parent&#x27;s clusterLayer.addLayer(), link explicitly
-    clusterLayer._originalVectorLayer.on(&#x27;layeradd&#x27;, this.updateClusterLayer, this);
-    clusterLayer._originalVectorLayer.on(&#x27;layerremove&#x27;, this.updateClusterLayer, this);
+    // Features loading of original vectorLayer does not trigger parent&#x27;s clusterLayer.addLayer(), link explicitly
+    clusterLayer._originalVectorLayer.on(&#x27;layeradd&#x27;, this.loadClusterLayer, this);
+    clusterLayer._originalVectorLayer.on(&#x27;layerremove&#x27;, this.loadClusterLayer, this);
 
-    clusterLayer._featureGroup.on(&#x27;layeradd&#x27;, this._setLayerOpacity, this);
-    clusterLayer._featureGroup.on(&#x27;layerremove&#x27;, this._setLayerOpacity, this);
+    // Apply display settings for clustered features.
+    clusterLayer._featureGroup.on(&#x27;layeradd&#x27;, this.updateClusterLayer, this);
+    clusterLayer._featureGroup.on(&#x27;layerremove&#x27;, this.updateClusterLayer, this);
+
+    clusterLayer.addLayer(vectorLayer);
 
     return clusterLayer;
+  },
+  /**
+    Apply display settings for clustered objects. Updating the visibility of the feature labels, opacity.
+
+    @method updateClusterLayer
+    @param {Object} e action context.
+  */
+  updateClusterLayer(e) {
+    this._setLayerOpacity();
+
+    if (!e || !e.layer || !e.type) {
+      return;
+    }
+
+    if (e.layer instanceof L.MarkerCluster) {
+      return;
+    }
+
+    let leafletMap = this.get(&#x27;leafletMap&#x27;);
+    let layerLabel = e.layer._label;
+
+    if (e.type === &#x27;layeradd&#x27;) {
+      if (!leafletMap.hasLayer(layerLabel)) {
+        leafletMap.addLayer(layerLabel);
+      }
+
+    } else {
+      if (leafletMap.hasLayer(e.layer._label)) {
+        leafletMap.removeLayer(e.layer._label);
+      }
+    }
   },
 
   /**
     Synchronizes ClusterLayer._originalVectorLayer._layers with ClusterLayer layers.
+    This is required when continueLoading option.
 
-    @method updateClusterLayer
+    @method loadClusterLayer
+    @param {Object} e action context.
   */
-  updateClusterLayer(e) {
+  loadClusterLayer(e) {
     if (!e || !e.layer) {
       return;
     }
@@ -839,6 +874,7 @@ export default BaseLayer.extend({
     Adds ClusterLayer layers.
 
     @method addClusterLayer
+    @param {Object} e action context.
   */
   addClusterLayer(e) {
     if (!e || !e.target) {
@@ -847,12 +883,24 @@ export default BaseLayer.extend({
     }
 
     let clusterLayer = this.get(&#x27;_leafletObject&#x27;);
+    let leafletMap = this.get(&#x27;leafletMap&#x27;);
     if (!(clusterLayer instanceof L.MarkerClusterGroup)) {
       return;
     }
 
     let updatedOriginalVectorLayer = e.target;
     clusterLayer.addLayer(updatedOriginalVectorLayer);
+
+    // L.MarkerClusterGroup includes both child L.MarkerCluster and L.Marker in _featureGroup after originalVectorLayer addition
+    let clusterMarkers = clusterLayer._featureGroup.getLayers().filter(layer =&gt; layer instanceof L.MarkerCluster);
+
+    clusterMarkers.forEach(clusterMarker =&gt; {
+      // For L.MarkerCluster there is an option to get clustered markers
+      clusterMarker.getAllChildMarkers()
+        .filter(markerLayer =&gt; leafletMap.hasLayer(markerLayer._label))
+        .map(markerLayerWithLabel =&gt; leafletMap.removeLayer(markerLayerWithLabel._label));
+    });
+
     this._setLayerState(); // Accept layer style options for new loaded features
   },
 
@@ -862,10 +910,10 @@ export default BaseLayer.extend({
     @method destroyLayer
   */
   destroyClusterLayer(clusterLayer) {
-    clusterLayer._featureGroup.off(&#x27;layeradd&#x27;, this._setLayerOpacity, this);
-    clusterLayer._featureGroup.off(&#x27;layerremove&#x27;, this._setLayerOpacity, this);
-    clusterLayer._originalVectorLayer.off(&#x27;layeradd&#x27;, this.updateClusterLayer, this);
-    clusterLayer._originalVectorLayer.off(&#x27;layerremove&#x27;, this.updateClusterLayer, this);
+    clusterLayer._featureGroup.off(&#x27;layeradd&#x27;, this.updateClusterLayer, this);
+    clusterLayer._featureGroup.off(&#x27;layerremove&#x27;, this.updateClusterLayer, this);
+    clusterLayer._originalVectorLayer.off(&#x27;layeradd&#x27;, this.loadClusterLayer, this);
+    clusterLayer._originalVectorLayer.off(&#x27;layerremove&#x27;, this.loadClusterLayer, this);
   },
 
   /*
@@ -1661,6 +1709,14 @@ export default BaseLayer.extend({
   _applyProperty(str, layer) {
     let hasReplace = false;
     let propName;
+
+    let leafletObject = this.get(&#x27;_leafletObject&#x27;);
+
+    // Clustering vector layer contains the leaflet&#x27;s main context in the &quot;_leafletObject._originalVectorLayer&quot; path
+    if (leafletObject instanceof L.MarkerClusterGroup) {
+      leafletObject = this.get(&#x27;_leafletObject._originalVectorLayer&#x27;);
+    }
+
     try {
       propName = Ember.$(&#x27;&lt;p&gt;&#x27; + str + &#x27;&lt;/p&gt;&#x27;).find(&#x27;propertyname&#x27;);
     } catch (e) {
@@ -1681,7 +1737,7 @@ export default BaseLayer.extend({
         }
 
         if (property &amp;&amp; layer.feature.properties &amp;&amp; layer.feature.properties.hasOwnProperty(property)) {
-          let readFormat = Ember.get(this._leafletObject, &#x27;readFormat.featureType.fieldTypes&#x27;);
+          let readFormat = Ember.get(leafletObject, &#x27;readFormat.featureType.fieldTypes&#x27;);
 
           let label = layer.feature.properties[property];
           let dateTimeFormat = this.displaySettings.dateTimeFormat;
@@ -2643,7 +2699,7 @@ export default BaseLayer.extend({
     let leafletContainer = this.get(&#x27;leafletContainer&#x27;);
 
     if (!leafletObject) {
-      leafletObject = this.get(&#x27;_leafletObject&#x27;);
+      leafletObject = this.get(&#x27;_leafletObject&#x27;) instanceof L.MarkerClusterGroup ? this.get(&#x27;_leafletObject._originalVectorLayer&#x27;) : this.get(&#x27;_leafletObject&#x27;);
     }
 
     let thisPane = this.get(&#x27;_paneLabel&#x27;);
@@ -2719,8 +2775,16 @@ export default BaseLayer.extend({
   _setLayerVisibility() {
     if (this.get(&#x27;visibility&#x27;)) {
       this._addLayerToLeafletContainer();
+
+      let leafletObject = this.get(&#x27;_leafletObject&#x27;);
+
+      // Clustering vector layer contains the leaflet&#x27;s main context in the &quot;_leafletObject._originalVectorLayer&quot; path
+      if (leafletObject instanceof L.MarkerClusterGroup) {
+        leafletObject = this.get(&#x27;_leafletObject._originalVectorLayer&#x27;);
+      }
+
       if (this.get(&#x27;labelSettings.signMapObjects&#x27;) &amp;&amp; !Ember.isNone(this.get(&#x27;_labelsLayer&#x27;)) &amp;&amp;
-        !Ember.isNone(this.get(&#x27;_leafletObject._labelsLayer&#x27;))) {
+        !Ember.isNone(Ember.get(leafletObject, &#x27;_labelsLayer&#x27;))) {
         this._addLabelsToLeafletContainer();
         this._checkZoomPane();
         if (this.get(&#x27;typeGeometry&#x27;) === &#x27;polyline&#x27;) {
