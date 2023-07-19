@@ -95,7 +95,7 @@ export default TileLayer.extend({
       filter = L.XmlUtil.serializeXmlDocumentString(filter);
     }
 
-    options = Ember.$.extend(true, {}, options, { filter: filter });
+    options = Ember.$.extend(true, {}, options, { filter: filter, env: env });
 
     return L.tileLayer.wms(this.get('url'), options);
   },
