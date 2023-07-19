@@ -417,7 +417,7 @@ export default BaseLayer.extend({
     let leafletMap = this.get('leafletMap');
     let layerLabel = e.layer._label;
 
-    if (layerLabel !== undefined) {
+    if (layerLabel) {
       if (e.type === 'layeradd') {
         if (!leafletMap.hasLayer(layerLabel)) {
           leafletMap.addLayer(layerLabel);
