@@ -5,6 +5,7 @@
 import Ember from 'ember';
 import TileLayer from './tile-layer';
 import { begIndex } from '../base-vector-layer';
+import ENV from 'ember-app/config/environment';
 
 /**
   WMS layer component for leaflet map.
@@ -13,6 +14,8 @@ import { begIndex } from '../base-vector-layer';
   @extends TileLayerComponent
  */
 export default TileLayer.extend({
+  env: ENV.APP.wmsEnv,
+
   leafletOptions: [
     'minZoom', 'maxZoom', 'maxNativeZoom', 'tileSize', 'subdomains',
     'errorTileUrl', 'attribution', 'tms', 'continuousWorld', 'noWrap',
@@ -95,7 +98,7 @@ export default TileLayer.extend({
       filter = L.XmlUtil.serializeXmlDocumentString(filter);
     }
 
-    options = Ember.$.extend(true, {}, options, { filter: filter, env: env });
+    options = Ember.$.extend(true, {}, options, { filter: filter, env: this.get('env') });
 
     return L.tileLayer.wms(this.get('url'), options);
   },
