@@ -417,14 +417,16 @@ export default BaseLayer.extend({
     let leafletMap = this.get('leafletMap');
     let layerLabel = e.layer._label;
 
-    if (e.type === 'layeradd') {
-      if (!leafletMap.hasLayer(layerLabel)) {
-        leafletMap.addLayer(layerLabel);
-      }
+    if (layerLabel !== undefined) {
+      if (e.type === 'layeradd') {
+        if (!leafletMap.hasLayer(layerLabel)) {
+          leafletMap.addLayer(layerLabel);
+        }
 
-    } else {
-      if (leafletMap.hasLayer(e.layer._label)) {
-        leafletMap.removeLayer(e.layer._label);
+      } else {
+        if (leafletMap.hasLayer(e.layer._label)) {
+          leafletMap.removeLayer(e.layer._label);
+        }
       }
     }
   },
