@@ -77,6 +77,7 @@ moduleForComponent('layers/wfs-layer', 'Unit | Component | layers/wfs layer', {
     param = Ember.$.extend(param, options);
 
     let leafletMap = createLeafletMap();
+    leafletMap.mainMap = true
 
     Ember.$.extend(param, { 'leafletMap': leafletMap });
 
@@ -706,7 +707,6 @@ test('test getNearObject with wpsUrl', function (assert) {
   assert.expect(9);
   var done = assert.async(2);
   Ember.run(() => {
-    leafletMap.mainMap = true;
     options = Ember.$.extend(options, { pkField: 'primarykey', wpsUrl: 'http://localhost:8080/geoserver/wps' });
     let layerModel = Ember.Object.create({
       type: 'wfs',
@@ -862,7 +862,6 @@ test('test getNearObject without wpsUrl, same layer', function (assert) {
   assert.expect(10);
   var done = assert.async(2);
   Ember.run(() => {
-    leafletMap.mainMap = true;
     options = Ember.$.extend(options, { pkField: 'primarykey' });
     let layerModel = Ember.Object.create({
       type: 'wfs',
@@ -1011,7 +1010,6 @@ test('test getNearObject without wpsUrl, other layer', function (assert) {
   assert.expect(10);
   var done = assert.async(2);
   Ember.run(() => {
-    leafletMap.mainMap = true;
     options = Ember.$.extend(options, { pkField: 'primarykey' });
     let layerModel = Ember.Object.create({
       type: 'wfs',
