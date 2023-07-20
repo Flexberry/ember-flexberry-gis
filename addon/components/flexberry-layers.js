@@ -61,5 +61,34 @@ export default Ember.Component.extend({
     @type Boolean
     @default false
   */
-  forMinimap: false
+  forMinimap: false,
+
+  init() {
+    if (this.get('forMinimap')) {
+      let layers = this.get('layers');
+      layers.filter((layerModel) => {
+        return layerModel.get('type') === 'group' && !layerModel.get('settingsAsObject').hasOwnProperty('showOnMinimap');
+      }).forEach((group) => {
+        this.setMinimap(group.layers, group);
+        if (!group.get('settingsAsObject').hasOwnProperty('showOnMinimap')) {
+          group.set('settingsAsObject.showOnMinimap', false);
+        }
+      });
+    }
+
+    this._super(...arguments);
+  },
+
+  setMinimap(layers, group) {
+    layers.forEach((layerModel) => {
+      if (Ember.isArray(layerModel.layers)) {
+        if (layerModel.layers.length > 0) {
+          this.setMinimap(layerModel.layers, group);
+        } else if (layerModel.settingsAsObject.showOnMinimap) {
+          group.set('settingsAsObject.showOnMinimap', true);
+          return
+        }
+      }
+    });
+  }
 });
