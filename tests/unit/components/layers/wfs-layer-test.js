@@ -77,7 +77,7 @@ moduleForComponent('layers/wfs-layer', 'Unit | Component | layers/wfs layer', {
     param = Ember.$.extend(param, options);
 
     let leafletMap = createLeafletMap();
-    leafletMap.mainMap = true
+    leafletMap.mainMap = true;
 
     Ember.$.extend(param, { 'leafletMap': leafletMap });
 
