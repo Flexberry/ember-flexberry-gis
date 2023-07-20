@@ -592,6 +592,7 @@ test('test getNearObject', function (assert) {
       visibility: false,
       settingsAsObject:options
     });
+    leafletMap.mainMap = true;
     let component = this.subject({
       createVectorLayer() {
         let feature1 =  L.polygon([[[[56.43419266, 58.15478571], [56.44148827, 58.155465], [56.44148827, 58.15274775], [56.43419266, 58.15478571]]]]);
