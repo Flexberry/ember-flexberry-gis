@@ -86,7 +86,7 @@ export default Ember.Component.extend({
           this.setMinimap(layerModel.layers, group);
         } else if (layerModel.settingsAsObject.showOnMinimap) {
           group.set('settingsAsObject.showOnMinimap', true);
-          return
+          return;
         }
       }
     });
