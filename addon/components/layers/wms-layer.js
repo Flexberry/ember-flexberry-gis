@@ -106,13 +106,13 @@ export default TileLayer.extend({
 
   setEnv() {
     let config = Ember.getOwner(this).resolveRegistration('config:environment');
-    let env = config.APP.wmsEnv
+    let env = config.APP.wmsEnv;
     if (env.indexOf('%time%') > 0) {
       let timzone = new Date().toTimeString().split(' ')[1].match(/[+-]\d{4}/);
       if (timzone && timzone.length > 0) {
         timzone = timzone[0];
         timzone = (timzone.substring(0, 1) === '+' ? '-' : '+') + timzone.substring(1, 3) + ':' + timzone.substring(3, 5);
-        let env = env.replace('%time%', timzone);
+        env = env.replace('%time%', timzone);
         this.set('env', env);
       }
     }
