@@ -5,7 +5,6 @@
 import Ember from 'ember';
 import TileLayer from './tile-layer';
 import { begIndex } from '../base-vector-layer';
-import ENV from 'ember-app/config/environment';
 
 /**
   WMS layer component for leaflet map.
@@ -14,7 +13,7 @@ import ENV from 'ember-app/config/environment';
   @extends TileLayerComponent
  */
 export default TileLayer.extend({
-  env: ENV.APP.wmsEnv,
+  env: '',
 
   leafletOptions: [
     'minZoom', 'maxZoom', 'maxNativeZoom', 'tileSize', 'subdomains',
@@ -106,12 +105,14 @@ export default TileLayer.extend({
   },
 
   setEnv() {
-    if (this.get('env').indexOf('%time%') > 0) {
+    let config = Ember.getOwner(this).resolveRegistration('config:environment');
+    let env = config.APP.wmsEnv
+    if (env.indexOf('%time%') > 0) {
       let timzone = new Date().toTimeString().split(' ')[1].match(/[+-]\d{4}/);
       if (timzone && timzone.length > 0) {
         timzone = timzone[0];
         timzone = (timzone.substring(0, 1) === '+' ? '-' : '+') + timzone.substring(1, 3) + ':' + timzone.substring(3, 5);
-        let env = this.get('env').replace('%time%', timzone);
+        let env = env.replace('%time%', timzone);
         this.set('env', env);
       }
     }
