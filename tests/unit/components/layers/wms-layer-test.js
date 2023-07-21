@@ -6,7 +6,8 @@ moduleForComponent('layers/wms-layer', 'Unit | Component | layers/wms layer', {
 
 test('it return L.TileLayer.wms on createLayer', function(assert) {
   let component = this.subject({
-    requiredOptions: ['']
+    requiredOptions: [''],
+    env: '',
   });
   let layer = component.createLayer();
   assert.ok(layer instanceof L.TileLayer.WMS, 'Expected L.TileLayer.wms instance');
