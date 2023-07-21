@@ -37,6 +37,8 @@ module.exports = function (environment) {
         getNearDistance: backendUrl + '/odata/GetNearDistance'
       },
 
+      wmsEnv: 'timezone:%time%',
+
       // Log service settings.
       log: {
         // Flag: indicates whether log service is enabled or not.
