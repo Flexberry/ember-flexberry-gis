@@ -833,14 +833,16 @@ export default BaseLayer.extend({
     let leafletMap = this.get(&#x27;leafletMap&#x27;);
     let layerLabel = e.layer._label;
 
-    if (e.type === &#x27;layeradd&#x27;) {
-      if (!leafletMap.hasLayer(layerLabel)) {
-        leafletMap.addLayer(layerLabel);
-      }
+    if (layerLabel) {
+      if (e.type === &#x27;layeradd&#x27;) {
+        if (!leafletMap.hasLayer(layerLabel)) {
+          leafletMap.addLayer(layerLabel);
+        }
 
-    } else {
-      if (leafletMap.hasLayer(e.layer._label)) {
-        leafletMap.removeLayer(e.layer._label);
+      } else {
+        if (leafletMap.hasLayer(e.layer._label)) {
+          leafletMap.removeLayer(e.layer._label);
+        }
       }
     }
   },
