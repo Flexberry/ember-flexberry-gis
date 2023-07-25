@@ -61,5 +61,5 @@ export default Ember.Component.extend({
     @type Boolean
     @default false
   */
-  forMinimap: false
+  forMinimap: false,
 });
