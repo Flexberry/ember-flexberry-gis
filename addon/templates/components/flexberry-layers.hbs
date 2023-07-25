@@ -30,7 +30,6 @@
         {{/if}}
       {{else}}
           {{#if (eq layerModel.type "group")}}
-            {{#if layerModel.showOnMinimap}}
               {{#layers/group-layer
                 leafletMap=leafletMap
                 leafletContainer=leafletContainer
@@ -43,10 +42,9 @@
                   leafletMap=leafletMap
                   leafletContainer=leafletLayerGroup
                   layers=layerModel.layers
-                  forMinimap=true
+                  forMinimap=forMinimap
                 }}
               {{/layers/group-layer}}
-            {{/if}}
           {{else}}
             {{#if layerModel.showOnMinimap}}
               {{component (concat "layers/" layerModel.type "-layer")
