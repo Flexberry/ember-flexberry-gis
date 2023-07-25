@@ -5108,6 +5108,7 @@ define('dummy/tests/unit/components/base-vector-layer-test', ['exports', 'ember'
         visibility: false,
         settingsAsObject: options
       });
+      leafletMap.mainMap = true;
       var component = _this12.subject({
         createVectorLayer: function createVectorLayer() {
           var feature1 = L.polygon([[[[56.43419266, 58.15478571], [56.44148827, 58.155465], [56.44148827, 58.15274775], [56.43419266, 58.15478571]]]]);
@@ -7345,6 +7346,7 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
       param = _ember['default'].$.extend(param, options);
 
       var leafletMap = (0, _dummyTestsHelpersCommonForLayer['default'])();
+      leafletMap.mainMap = true;
 
       _ember['default'].$.extend(param, { 'leafletMap': leafletMap });
 
