@@ -499,7 +499,9 @@ let FlexberryMapComponent = Ember.Component.extend(
 
     // Create leaflet map.
     let leafletMap = L.map($leafletContainer[0], options);
+    leafletMap.mainMap = false;
     if (this.get('mainMap')) {
+      leafletMap.mainMap = true;
       L.DomEvent.on(leafletMap, 'mousedown mouseup mousein mouseout', (e) => {
         if (e.originalEvent.button === 1) {
           if (e.type === 'mousedown') {
