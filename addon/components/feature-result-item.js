@@ -356,6 +356,11 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
       (feature.geometry.type === 'Point' || feature.geometry.type === 'MultiPoint' ||
         feature.geometry.type === 'LineString' || feature.geometry.type === 'MultiLineString')) {
       let layerTolerance = feature.layerModel.get('_leafletObject.options.renderer.options.tolerance');
+
+      if (feature.layerModel.get('settingsAsObject.clusterize')) {
+        layerTolerance =  feature.layerModel.get('_leafletObject._originalVectorLayer.options.renderer.options.tolerance');
+      }
+
       if (Ember.isPresent(layerTolerance) && layerTolerance === 0) {
         Ember.set(feature.layerModel.get('_leafletObject.options.renderer.options'), 'tolerance', 3);
       }

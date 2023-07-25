@@ -218,6 +218,11 @@ export default BaseVectorLayer.extend({
 
   _editLayer(layer) {
     let leafletObject = this.get('_leafletObject');
+
+    if (leafletObject instanceof L.MarkerClusterGroup) {
+      leafletObject = Ember.get(leafletObject, '_originalVectorLayer');
+    }
+
     leafletObject.baseEditLayer(layer);
 
     if (layer.state = state.update) {
@@ -500,6 +505,9 @@ export default BaseVectorLayer.extend({
 
   saveSuccess() {
     let leafletObject = this.get('_leafletObject');
+    if (!leafletObject.changes) {
+      return;
+    }
 
     let changes = Object.values(leafletObject.changes);
     changes.forEach((layer) => {
