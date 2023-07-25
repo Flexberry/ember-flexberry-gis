@@ -77,6 +77,21 @@ export default BaseLayer.extend({
     return container[0];
   },
 
+  returnLeafletObject() {
+    let leafletObject = this.get('_leafletObject');
+
+    if (Ember.isNone(leafletObject)) {
+      return;
+    }
+
+    if (this.get('clusterize')) {
+      let originalVectorLayer = Ember.get(leafletObject, '_originalVectorLayer');
+      leafletObject = originalVectorLayer ? originalVectorLayer : leafletObject;
+    }
+
+    return leafletObject;
+  },
+
   /**
     @method _getContainerPaneLabelMulti
     @return HTMLElement
@@ -200,6 +215,9 @@ export default BaseLayer.extend({
 
         if (this.get('labelSettings.signMapObjects')) {
           this._addLabelsToLeafletContainer(layers, leafletObject);
+          if (this.get('_leafletObject') instanceof L.MarkerClusterGroup) {
+            this.loadClusterLayer({ type:'layeradd', target: this.returnLeafletObject(), layer: {} })
+          }
         }
 
         leafletObject.fire('loadCompleted');
@@ -525,7 +543,7 @@ export default BaseLayer.extend({
   */
   showAllLayerObjects() {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let leafletObject = this.get('_leafletObject');
+      let leafletObject = this.returnLeafletObject();
       let map = this.get('leafletMap');
       let layer = this.get('layerModel');
 
@@ -1095,7 +1113,7 @@ export default BaseLayer.extend({
     // Call public identify method, if layer should be continueLoad.
     e.results.push({
       layerModel: this.get('layerModel'),
-      promise: this.continueLoad(this.get('_leafletObject'))
+      promise: this.continueLoad(this.returnLeafletObject())
     });
   },
 
@@ -1296,12 +1314,7 @@ export default BaseLayer.extend({
     let hasReplace = false;
     let propName;
 
-    let leafletObject = this.get('_leafletObject');
-
-    // Clustering vector layer contains the leaflet's main context in the "_leafletObject._originalVectorLayer" path
-    if (leafletObject instanceof L.MarkerClusterGroup) {
-      leafletObject = this.get('_leafletObject._originalVectorLayer');
-    }
+    let leafletObject = this.returnLeafletObject();
 
     try {
       propName = Ember.$('<p>' + str + '</p>').find('propertyname');
@@ -2285,7 +2298,7 @@ export default BaseLayer.extend({
     let leafletContainer = this.get('leafletContainer');
 
     if (!leafletObject) {
-      leafletObject = this.get('_leafletObject') instanceof L.MarkerClusterGroup ? this.get('_leafletObject._originalVectorLayer') : this.get('_leafletObject');
+      leafletObject = this.returnLeafletObject();
     }
 
     let thisPane = this.get('_paneLabel');
@@ -2362,16 +2375,16 @@ export default BaseLayer.extend({
     if (this.get('visibility')) {
       this._addLayerToLeafletContainer();
 
-      let leafletObject = this.get('_leafletObject');
-
-      // Clustering vector layer contains the leaflet's main context in the "_leafletObject._originalVectorLayer" path
-      if (leafletObject instanceof L.MarkerClusterGroup) {
-        leafletObject = this.get('_leafletObject._originalVectorLayer');
-      }
+      let leafletObject = this.returnLeafletObject();
 
       if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) &&
         !Ember.isNone(Ember.get(leafletObject, '_labelsLayer'))) {
-        this._addLabelsToLeafletContainer();
+
+        // _setLayerVisibility method handles <load> action of default wfs-layer
+        // For L.MarkerClusterGroup there is <updateClusterLayer> handler that defines label visibility in its own way
+        if (!(this.get('_leafletObject') instanceof L.MarkerClusterGroup)) {
+          this._addLabelsToLeafletContainer();
+        }
         this._checkZoomPane();
         if (this.get('typeGeometry') === 'polyline') {
           this._updatePositionLabelForLine();
