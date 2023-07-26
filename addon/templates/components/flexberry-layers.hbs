@@ -30,20 +30,21 @@
         {{/if}}
       {{else}}
           {{#if (eq layerModel.type "group")}}
-            {{#layers/group-layer
-              leafletMap=leafletMap
-              leafletContainer=leafletContainer
-              layerModel=layerModel
-              index=layerModel.index
-              visibility=layerModel.visibility
-              dynamicProperties=layerModel.settingsAsObject as |leafletLayerGroup|
-            }}
-              {{flexberry-layers
+              {{#layers/group-layer
                 leafletMap=leafletMap
-                leafletContainer=leafletLayerGroup
-                layers=layerModel.layers
+                leafletContainer=leafletContainer
+                layerModel=layerModel
+                index=layerModel.index
+                visibility=layerModel.visibility
+                dynamicProperties=layerModel.settingsAsObject as |leafletLayerGroup|
               }}
-            {{/layers/group-layer}}
+                {{flexberry-layers
+                  leafletMap=leafletMap
+                  leafletContainer=leafletLayerGroup
+                  layers=layerModel.layers
+                  forMinimap=forMinimap
+                }}
+              {{/layers/group-layer}}
           {{else}}
             {{#if layerModel.showOnMinimap}}
               {{component (concat "layers/" layerModel.type "-layer")
