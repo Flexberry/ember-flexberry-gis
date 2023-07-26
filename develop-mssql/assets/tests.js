@@ -8863,7 +8863,8 @@ define('dummy/tests/unit/components/layers/with-history-layer-test.jshint', ['ex
 define('dummy/tests/unit/components/layers/wms-layer-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
 
   (0, _emberQunit.moduleForComponent)('layers/wms-layer', 'Unit | Component | layers/wms layer', {
-    unit: true
+    unit: true,
+    needs: ['config:environment']
   });
 
   (0, _emberQunit.test)('it return L.TileLayer.wms on createLayer', function (assert) {
