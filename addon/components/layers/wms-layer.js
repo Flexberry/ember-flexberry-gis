@@ -97,6 +97,8 @@ export default TileLayer.extend({
       filter = L.XmlUtil.serializeXmlDocumentString(filter);
     }
 
+    // env parameters from config
+    // can be used in SLD-styles
     this.setEnv();
 
     options = Ember.$.extend(true, {}, options, { filter: filter, env: this.get('env') });
@@ -106,16 +108,8 @@ export default TileLayer.extend({
 
   setEnv() {
     let config = Ember.getOwner(this).resolveRegistration('config:environment');
-    let env = config.APP.wmsEnv;
-    if (env.indexOf('%time%') > 0) {
-      let timzone = new Date().toTimeString().split(' ')[1].match(/[+-]\d{4}/);
-      if (timzone && timzone.length > 0) {
-        timzone = timzone[0];
-        timzone = (timzone.substring(0, 1) === '+' ? '-' : '+') + timzone.substring(1, 3) + ':' + timzone.substring(3, 5);
-        env = env.replace('%time%', timzone);
-        this.set('env', env);
-      }
-    }
+    let env = config.APP.wmsEnv || '';
+    this.set('env', env);
   },
 
   /**
