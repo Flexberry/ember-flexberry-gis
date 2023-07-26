@@ -37,6 +37,10 @@ module.exports = function (environment) {
         getNearDistance: backendUrl + '/odata/GetNearDistance'
       },
 
+      // Variables are specified in WMS GetMap requests by using the env request parameter followed by
+      // a list of name:value pairs separated by semicolons: ...&env=name1:value1;name2=value2&...
+      wmsEnv: '',
+
       // Log service settings.
       log: {
         // Flag: indicates whether log service is enabled or not.
