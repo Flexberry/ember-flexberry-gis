@@ -13792,7 +13792,7 @@
         },
         {
             "file": "addon/components/layers/wms-layer.js",
-            "line": 24,
+            "line": 26,
             "description": "Performs 'getFeatureInfo' request to WMS-service related to layer.",
             "params": [
                 {
@@ -13806,7 +13806,7 @@
         },
         {
             "file": "addon/components/layers/wms-layer.js",
-            "line": 56,
+            "line": 58,
             "description": "Returns leaflet layer's bounding box.",
             "itemtype": "method",
             "name": "_getBoundingBox",
@@ -13820,7 +13820,7 @@
         },
         {
             "file": "addon/components/layers/wms-layer.js",
-            "line": 76,
+            "line": 78,
             "description": "Creates leaflet layer related to layer type.",
             "itemtype": "method",
             "name": "createLayer",
@@ -13832,7 +13832,7 @@
         },
         {
             "file": "addon/components/layers/wms-layer.js",
-            "line": 103,
+            "line": 115,
             "description": "Handles 'flexberry-map:identify' event of leaflet map.",
             "itemtype": "method",
             "name": "identify",
@@ -13870,7 +13870,7 @@
         },
         {
             "file": "addon/components/layers/wms-layer.js",
-            "line": 123,
+            "line": 135,
             "description": "Handles 'flexberry-map:search' event of leaflet map.",
             "itemtype": "method",
             "name": "search",
@@ -13915,7 +13915,7 @@
         },
         {
             "file": "addon/components/layers/wms-layer.js",
-            "line": 139,
+            "line": 151,
             "description": "Sets leaflet layer's zindex.",
             "itemtype": "method",
             "name": "_setLayerZIndex",
@@ -52461,7 +52461,7 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/wms-layer.js:76"
+            "line": " addon/components/layers/wms-layer.js:78"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -53169,7 +53169,7 @@
         },
         {
             "message": "Missing item type\nPerforms 'getFeatureInfo' request to WMS-service related to layer.",
-            "line": " addon/components/layers/wms-layer.js:24"
+            "line": " addon/components/layers/wms-layer.js:26"
         },
         {
             "message": "Missing item type\nInitializes component.",
