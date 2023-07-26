@@ -216,7 +216,7 @@ export default BaseLayer.extend({
         if (this.get('labelSettings.signMapObjects')) {
           this._addLabelsToLeafletContainer(layers, leafletObject);
           if (this.get('_leafletObject') instanceof L.MarkerClusterGroup) {
-            this.loadClusterLayer({ type:'layeradd', target: this.returnLeafletObject(), layer: {} })
+            this.loadClusterLayer({ type:'layeradd', target: this.returnLeafletObject(), layer: {} });
           }
         }
 
@@ -2385,6 +2385,7 @@ export default BaseLayer.extend({
         if (!(this.get('_leafletObject') instanceof L.MarkerClusterGroup)) {
           this._addLabelsToLeafletContainer();
         }
+
         this._checkZoomPane();
         if (this.get('typeGeometry') === 'polyline') {
           this._updatePositionLabelForLine();

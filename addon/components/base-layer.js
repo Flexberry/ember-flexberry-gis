@@ -634,7 +634,7 @@ export default Ember.Component.extend(
         return;
       }
 
-      let continueLoading = this.returnLeafletObject().options.continueLoading
+      let continueLoading = this.returnLeafletObject().options.continueLoading;
 
       if (continueLoading) {
         let e = {
