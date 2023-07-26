@@ -162,7 +162,7 @@ export default BaseVectorLayer.extend({
 
   _addLayersOnMap(layers, leafletObject) {
     if (!leafletObject) {
-      leafletObject = this.get('_leafletObject');
+      leafletObject = this.returnLeafletObject();
     }
 
     let leafletMap = this.get('leafletMap');
@@ -195,7 +195,7 @@ export default BaseVectorLayer.extend({
   },
 
   _removeLayer(layer) {
-    let leafletObject = this.get('_leafletObject');
+    let leafletObject = this.returnLeafletObject();
     leafletObject.baseRemoveLayer(layer);
 
     if (this.get('labelSettings.signMapObjects') && leafletObject.additionalZoomLabel) {
@@ -211,13 +211,13 @@ export default BaseVectorLayer.extend({
     }
 
     if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) &&
-      !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
+      !Ember.isNone(leafletObject._labelsLayer)) {
       L.FeatureGroup.prototype.removeLayer.call(leafletObject._labelsLayer, layer._label);
     }
   },
 
   _editLayer(layer) {
-    let leafletObject = this.get('_leafletObject');
+    let leafletObject = this.returnLeafletObject();
     leafletObject.baseEditLayer(layer);
 
     if (layer.state = state.update) {
@@ -233,7 +233,7 @@ export default BaseVectorLayer.extend({
     Update label's layer
   */
   updateLabel(layer) {
-    let leafletObject = this.get('_leafletObject');
+    let leafletObject = this.returnLeafletObject();
 
     if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) &&
       !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
@@ -351,7 +351,7 @@ export default BaseVectorLayer.extend({
     @method _clearLayers
   */
   _clearLayers() {
-    let leafletObject = this.get('_leafletObject');
+    let leafletObject = this.returnLeafletObject();
     leafletObject.eachLayer((layer) => {
       L.FeatureGroup.prototype.removeLayer.call(leafletObject, layer);
     });
@@ -499,7 +499,7 @@ export default BaseVectorLayer.extend({
   },
 
   saveSuccess() {
-    let leafletObject = this.get('_leafletObject');
+    let leafletObject = this.returnLeafletObject();
 
     let changes = Object.values(leafletObject.changes);
     changes.forEach((layer) => {
@@ -600,7 +600,7 @@ export default BaseVectorLayer.extend({
 
     // Create filter for each search field.
     let equals = Ember.A();
-    let leafletObject = this.get('_leafletObject');
+    let leafletObject = this.returnLeafletObject();
     if (!Ember.isNone(leafletObject)) {
       let fieldsType = Ember.get(leafletObject, 'readFormat.featureType.fieldTypes');
       if (!Ember.isBlank(fieldsType) && !Ember.isBlank(e.searchOptions.queryString)) {
@@ -768,7 +768,7 @@ export default BaseVectorLayer.extend({
   */
   loadLayerFeatures(e) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let leafletObject = this.get('_leafletObject');
+      let leafletObject = this.returnLeafletObject();
       let featureIds = e.featureIds;
       if (!leafletObject.options.showExisting) {
         let getLoadedFeatures = (featureIds) => {
@@ -836,7 +836,7 @@ export default BaseVectorLayer.extend({
   */
   getLayerFeatures(e) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let leafletObject = this.get('_leafletObject');
+      let leafletObject = this.returnLeafletObject();
       let featureIds = e.featureIds;
       if (!leafletObject.options.showExisting) {
         let filter = null;
@@ -1033,7 +1033,7 @@ export default BaseVectorLayer.extend({
     @return {Array} Array contains primarykey features which need load.
   */
   clearChanges(ids) {
-    let leafletObject = this.get('_leafletObject');
+    let leafletObject = this.returnLeafletObject();
     let editTools = leafletObject.leafletMap.editTools;
 
     let featuresIds = [];
@@ -1091,7 +1091,7 @@ export default BaseVectorLayer.extend({
   */
   cancelEdit(ids) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let leafletObject = this.get('_leafletObject');
+      let leafletObject = this.returnLeafletObject();
       let featuresIds = this.clearChanges(ids);
       if (featuresIds.length === 0) {
         resolve();
@@ -1114,7 +1114,7 @@ export default BaseVectorLayer.extend({
     @return {String} Xml for request gs:Nearest.
   */
   getWPSgsNearest(point) {
-    let leafletObject = this.get('_leafletObject');
+    let leafletObject = this.returnLeafletObject();
     let typeNS = leafletObject.options.typeNS;
     let typeName = leafletObject.options.typeName;
     let crsName = L.CRS.EPSG4326.code;
@@ -1234,7 +1234,7 @@ export default BaseVectorLayer.extend({
     return new Ember.RSVP.Promise((resolve, reject) => {
       let result = null;
       let mapApi = this.get('mapApi').getFromApi('mapModel');
-      let leafletObject = this.get('_leafletObject');
+      let leafletObject = this.returnLeafletObject();
       let layerModel = this.get('layerModel');
       let wpsUrl = leafletObject.options.wpsUrl;
       if (!Ember.isNone(wpsUrl)) {

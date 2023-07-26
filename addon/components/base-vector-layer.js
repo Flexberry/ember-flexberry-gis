@@ -467,7 +467,7 @@ export default BaseLayer.extend({
     }
 
     let clusterLayer = this.get('_leafletObject');
-    if (clusterLayer instanceof L.MarkerClusterGroup) {
+    if (!(clusterLayer instanceof L.MarkerClusterGroup)) {
       return;
     }
 
