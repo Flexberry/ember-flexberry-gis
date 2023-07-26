@@ -430,10 +430,9 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
       Ember.set(this.get('resultObject'), 'expanded', true);
       if (clickedFeature.highlight) {
         this.set('activeScroll', true);
-        if (!this.get('infoExpanded')) { // open feature-result-item properties
-          this.set('infoExpanded', true);
-          this.set('_linksExpanded', true);
-        }
+        this.set('infoExpanded', false); // trigger didRender hook manually
+        this.set('infoExpanded', true); // open feature-result-item properties
+        this.set('_linksExpanded', true);
       }
     },
     /**
