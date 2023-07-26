@@ -30,7 +30,7 @@ let copyLayer = function(layerModel, store, ignoreLinks) {
   copyLeafletObjectGetter(layerModel, layerModelCopy);
 
   //Copy 'returnLeafletObject' function into created empty model.
-  copyReturnLeafletObject(layerModel, layerModelCopy)
+  copyReturnLeafletObject(layerModel, layerModelCopy);
 
   return layerModelCopy;
 };
