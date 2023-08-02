@@ -77,6 +77,12 @@ export default BaseLayer.extend({
     return container[0];
   },
 
+  /**
+    Returns leaflet layer.
+
+    @method returnLeafletObject
+    @returns leafletObject
+  */
   returnLeafletObject() {
     let leafletObject = this.get('_leafletObject');
 
@@ -84,7 +90,9 @@ export default BaseLayer.extend({
       return;
     }
 
-    if (this.get('clusterize')) {
+    // Clustering vector layer contains the wfsLayer context in the "_leafletObject._originalVectorLayer" path
+    // The context of the original vector layer is important for map handlers, methods instead of cluster group
+    if (leafletObject instanceof L.MarkerClusterGroup) {
       let originalVectorLayer = Ember.get(leafletObject, '_originalVectorLayer');
       leafletObject = originalVectorLayer ? originalVectorLayer : leafletObject;
     }
@@ -179,7 +187,7 @@ export default BaseLayer.extend({
 
   _setFeaturesProcessCallback(leafletObject) {
     if (!leafletObject) {
-      leafletObject = this.get('_leafletObject');
+      leafletObject = this.returnLeafletObject();
     }
 
     leafletObject.on('load', (loaded) => {
@@ -193,7 +201,7 @@ export default BaseLayer.extend({
   _featuresProcessCallback(layers, leafletObject) {
     return new Ember.RSVP.Promise((resolve) => {
       if (!leafletObject) {
-        leafletObject = this.get('_leafletObject');
+        leafletObject = this.returnLeafletObject();
       }
 
       if (!layers) {
@@ -215,6 +223,10 @@ export default BaseLayer.extend({
 
         if (this.get('labelSettings.signMapObjects')) {
           this._addLabelsToLeafletContainer(layers, leafletObject);
+          // Sometimes featuresProcessCallBack is triggered returning 0 features
+          // Then adds labels of layer features that is inside a cluster,
+          // It is necessary to clean up the labels with the cluster layer handler
+          // that works only for _originalVectorLayer feature addition
           if (this.get('_leafletObject') instanceof L.MarkerClusterGroup) {
             this.loadClusterLayer({ type:'layeradd', target: this.returnLeafletObject(), layer: {} });
           }
@@ -620,7 +632,7 @@ export default BaseLayer.extend({
     @return nothing
   */
   hideAllLayerObjects() {
-    let leafletObject = this.get('_leafletObject');
+    let leafletObject = this.returnLeafletObject();
     let map = this.get('leafletMap');
     let layer = this.get('layerModel');
 
@@ -663,7 +675,7 @@ export default BaseLayer.extend({
   */
   _setVisibilityObjects(objectIds, visibility = false) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let leafletObject = this.get('_leafletObject');
+      let leafletObject = this.returnLeafletObject();
       let map = this.get('leafletMap');
       let layer = this.get('layerModel');
 
@@ -910,7 +922,7 @@ export default BaseLayer.extend({
       try {
         let features = Ember.A();
         let bounds = new Terraformer.Primitive(e.polygonLayer.toGeoJSON());
-        let leafletLayer = this.get('_leafletObject');
+        let leafletLayer = this.returnLeafletObject();
         let mapModel = this.get('mapApi').getFromApi('mapModel');
         let scale = this.get('mapApi').getFromApi('precisionScale');
         leafletLayer.eachLayer(function (layer) {
@@ -951,7 +963,7 @@ export default BaseLayer.extend({
   search(e) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let searchSettingsPath = 'layerModel.settingsAsObject.searchSettings';
-      let leafletLayer = this.get('_leafletObject');
+      let leafletLayer = this.returnLeafletObject();
       let features = Ember.A();
 
       let searchFields = (e.context ? this.get(`${searchSettingsPath}.contextSearchFields`) : this.get(`${searchSettingsPath}.searchFields`)) || Ember.A();
@@ -1012,7 +1024,7 @@ export default BaseLayer.extend({
         }
       });
 
-      let leafletLayer = this.get('_leafletObject');
+      let leafletLayer = this.returnLeafletObject();
       leafletLayer.eachLayer((layer) => {
         let feature = Ember.get(layer, 'feature');
         let meet = true;
@@ -1038,7 +1050,7 @@ export default BaseLayer.extend({
   */
   loadLayerFeatures(e) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      resolve(this.get('_leafletObject'));
+      resolve(this.returnLeafletObject());
     });
   },
 
@@ -1051,7 +1063,7 @@ export default BaseLayer.extend({
   */
   getLayerFeatures(e) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let leafletObject = this.get('_leafletObject');
+      let leafletObject = this.returnLeafletObject();
       let featureIds = e.featureIds;
       if (Ember.isArray(featureIds) && !Ember.isNone(featureIds)) {
         let objects = [];
@@ -1085,7 +1097,7 @@ export default BaseLayer.extend({
 
     e.results.push({
       layerModel: this.get('layerModel'),
-      leafletObject: this.get('_leafletObject'),
+      leafletObject: this.returnLeafletObject(),
       features: e.load ? this.loadLayerFeatures(e) : this.getLayerFeatures(e)
     });
   },
@@ -1126,7 +1138,7 @@ export default BaseLayer.extend({
   reload() {
     this.clearChanges();
 
-    let leafletObject = this.get('_leafletObject');
+    let leafletObject = this.returnLeafletObject();
     let map = this.get('leafletMap');
 
     leafletObject.eachLayer((layerShape) => {
@@ -1137,7 +1149,7 @@ export default BaseLayer.extend({
     leafletObject.clearLayers();
 
     if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) &&
-      !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
+      !Ember.isNone(leafletObject._labelsLayer)) {
       leafletObject._labelsLayer.eachLayer((layerShape) => {
         if (map.hasLayer(layerShape)) {
           map.removeLayer(layerShape);
@@ -1147,7 +1159,7 @@ export default BaseLayer.extend({
     }
 
     if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('additionalZoomLabel')) &&
-      !Ember.isNone(this.get('_leafletObject.additionalZoomLabel'))) {
+      !Ember.isNone(leafletObject.additionalZoomLabel)) {
       this.get('additionalZoomLabel').forEach(zoomLabels => {
         zoomLabels.eachLayer((layerShape) => {
           if (map.hasLayer(layerShape)) {
@@ -1193,7 +1205,7 @@ export default BaseLayer.extend({
     @private
   */
   _checkZoomPane() {
-    let leafletObject = this.get('_leafletObject');
+    let leafletObject = this.returnLeafletObject();
     let thisPane = this.get('_pane');
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap) && thisPane && !Ember.isNone(leafletObject)) {
@@ -1428,7 +1440,7 @@ export default BaseLayer.extend({
   _showLabelsMovingMap() {
     let additionalZoomLabel = this.get('additionalZoomLabel');
     let _labelsLayer = this.get('_labelsLayer');
-    let leafletObject = this.get('_leafletObject');
+    let leafletObject = this.returnLeafletObject();
     if (this.get('leafletMap').hasLayer(_labelsLayer) && leafletObject) {
       this._createStringLabel(leafletObject.getLayers(), _labelsLayer, additionalZoomLabel);
     }
@@ -2108,7 +2120,7 @@ export default BaseLayer.extend({
   */
   _updatePositionLabelForLine() {
     let additionalZoomLabel = this.get('additionalZoomLabel');
-    let leafletObject = this.get('_leafletObject');
+    let leafletObject = this.returnLeafletObject();
 
     let _this = this;
 
@@ -2194,7 +2206,7 @@ export default BaseLayer.extend({
     if (!Ember.isNone(labelSettingsString)) {
       let leafletMap = this.get('leafletMap');
       if (!leafletObject) {
-        leafletObject = this.get('_leafletObject');
+        leafletObject = this.returnLeafletObject();
       }
 
       let additionalZoomLabel = this.get('additionalZoomLabel');
