@@ -31789,7 +31789,7 @@
         },
         {
             "file": "addon/components/flexberry-edit-layer-feature.js",
-            "line": 825,
+            "line": 826,
             "itemtype": "method",
             "name": "restoreLayers",
             "access": "private",
@@ -31799,7 +31799,7 @@
         },
         {
             "file": "addon/components/flexberry-edit-layer-feature.js",
-            "line": 880,
+            "line": 881,
             "description": "Sends request to trancate GeoWebCache for layer by boundingBox.",
             "itemtype": "method",
             "name": "trancateGeoWebCache",
@@ -31815,7 +31815,7 @@
         },
         {
             "file": "addon/components/flexberry-edit-layer-feature.js",
-            "line": 1264,
+            "line": 1265,
             "description": "Handles a new geometry draw start.",
             "params": [
                 {
@@ -54181,7 +54181,7 @@
         },
         {
             "message": "Missing item type\nHandles a new geometry draw start.",
-            "line": " addon/components/flexberry-edit-layer-feature.js:1264"
+            "line": " addon/components/flexberry-edit-layer-feature.js:1265"
         },
         {
             "message": "Missing item type\nReference to component's CSS-classes names.\nMust be also a component's instance property to be available from component's .hbs template.",

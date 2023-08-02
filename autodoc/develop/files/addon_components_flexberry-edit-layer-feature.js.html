@@ -1230,6 +1230,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     this.set(&#x27;latlngs&#x27;, null);
     this.set(&#x27;layers&#x27;, null);
     this.set(&#x27;isLayerCopy&#x27;, false);
+    this.set(&#x27;parsingErrors&#x27;, {});
 
     this.set(&#x27;data&#x27;, null);
     this.set(&#x27;initialData&#x27;, null);
