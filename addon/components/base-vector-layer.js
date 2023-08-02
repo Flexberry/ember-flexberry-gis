@@ -223,6 +223,7 @@ export default BaseLayer.extend({
 
         if (this.get('labelSettings.signMapObjects')) {
           this._addLabelsToLeafletContainer(layers, leafletObject);
+
           // Sometimes featuresProcessCallBack is triggered returning 0 features
           // Then adds labels of layer features that is inside a cluster,
           // It is necessary to clean up the labels with the cluster layer handler
