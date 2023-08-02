@@ -430,6 +430,9 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
       Ember.set(this.get('resultObject'), 'expanded', true);
       if (clickedFeature.highlight) {
         this.set('activeScroll', true);
+
+        // Feature highlighting doesn't trigger didRender hook
+        // You need to toggle the template property to trigger it and scroll the list
         if (this.get('infoExpanded')) {
           this.set('infoExpanded', false); // trigger didRender hook manually
         }
