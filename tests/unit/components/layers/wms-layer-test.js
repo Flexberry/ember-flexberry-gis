@@ -1,7 +1,10 @@
 import { moduleForComponent, test } from 'ember-qunit';
 
 moduleForComponent('layers/wms-layer', 'Unit | Component | layers/wms layer', {
-  unit: true
+  unit: true,
+  needs: [
+    'config:environment'
+  ],
 });
 
 test('it return L.TileLayer.wms on createLayer', function(assert) {

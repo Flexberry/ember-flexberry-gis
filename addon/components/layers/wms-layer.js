@@ -13,6 +13,8 @@ import { begIndex } from '../base-vector-layer';
   @extends TileLayerComponent
  */
 export default TileLayer.extend({
+  env: '',
+
   leafletOptions: [
     'minZoom', 'maxZoom', 'maxNativeZoom', 'tileSize', 'subdomains',
     'errorTileUrl', 'attribution', 'tms', 'continuousWorld', 'noWrap',
@@ -95,9 +97,19 @@ export default TileLayer.extend({
       filter = L.XmlUtil.serializeXmlDocumentString(filter);
     }
 
-    options = Ember.$.extend(true, {}, options, { filter: filter });
+    // env parameters from config
+    // can be used in SLD-styles
+    this.setEnv();
+
+    options = Ember.$.extend(true, {}, options, { filter: filter, env: this.get('env') });
 
     return L.tileLayer.wms(this.get('url'), options);
+  },
+
+  setEnv() {
+    let config = Ember.getOwner(this).resolveRegistration('config:environment');
+    let env = config.APP.wmsEnv || '';
+    this.set('env', env);
   },
 
   /**
