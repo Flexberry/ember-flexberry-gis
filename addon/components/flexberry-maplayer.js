@@ -825,6 +825,16 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       */
       onVisibilityCheckboxChange(...args) {
         this.sendAction('changeVisibility', ...args);
+
+        if (!this.get('layer')) {
+          console.error('layer is not defined');
+          return;
+        }
+
+        // When enabling a layer, enable all groups recursively
+        if (this.get('layer.visibility')) {
+          this.sendAction('changeGroupVisibility');
+        }
       },
 
       /**
@@ -891,6 +901,28 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
 
         // Show dialog.
         this.set('_addDialogIsVisible', true);
+      },
+
+      /**
+        Processes the visibility of a group layer when the visibility of inner layers is changed
+
+        @method actions.changeGroupVisibility
+      */
+      changeGroupVisibility() {
+        if (!this.get('layer')) {
+          console.error('layer is not defined', )
+          return;
+        };
+
+        if (!this.get('isGroup')) {
+          return;
+        }
+
+        if (!this.get('layer.visibility')) {
+          Ember.set(this.get('layer'), 'visibility', true);
+        }
+
+        this.sendAction('changeGroupVisibility');
       },
 
       /**
