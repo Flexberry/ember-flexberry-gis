@@ -126,6 +126,7 @@ export default Ember.Mixin.create({
       if (this.parentLayersVisible(parentIds, side)) {
         this.setLayerBySide(layer, side, map);
       }
+
       this.sendAction('enableGroupVisibility');
     }
   },
