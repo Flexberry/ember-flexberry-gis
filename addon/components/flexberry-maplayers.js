@@ -517,8 +517,8 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
         this.sendAction(actionName, layer);
       },
 
-      changeGroupVisibility() {
-        this.sendAction('changeGroupVisibility');
+      enableGroupVisibility() {
+        this.sendAction('enableGroupVisibility');
       },
 
       onAllLayerVisibilityChanged(e) {

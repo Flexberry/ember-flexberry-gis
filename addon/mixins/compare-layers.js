@@ -92,6 +92,8 @@ export default Ember.Mixin.create({
       Ember.set(settings, 'groupLayersEnabled', [...sideGroupLayers]);
       let layersToEnable = sideChildLayers.filter(l => l.parentIds.includes(layer.get('id')) && this.parentLayersVisible(l.parentIds, side));
       layersToEnable.forEach((l) => this.setLayerBySide(l.layer, side, map));
+
+      this.sendAction('enableGroupVisibility');
     }
   },
 
@@ -124,6 +126,7 @@ export default Ember.Mixin.create({
       if (this.parentLayersVisible(parentIds, side)) {
         this.setLayerBySide(layer, side, map);
       }
+      this.sendAction('enableGroupVisibility');
     }
   },
 
