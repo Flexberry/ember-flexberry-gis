@@ -920,7 +920,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
           return;
         }
 
-        if (this.get('compare.compareLayersEnabled')) {
+        if (this.get('compare.compareLayersEnabled') && !this.get('ignoreCompareMode')) {
           let side = this.get('compare.side');
           let compareSettings = this.get(`compare.compareState.${side}`);
           let sideGroupLayers = compareSettings.groupLayersEnabled;

@@ -84,8 +84,8 @@ export default Ember.Mixin.create({
     const isEnabled = !!sideGroupLayers.find(id => id === layer.get('id'));
     if (isEnabled) {
       sideGroupLayers = sideGroupLayers.filter(id => id !== layer.get('id'));
+      let disableLayers = sideChildLayers.filter(l => l.parentIds.includes(layer.get('id')) && this.parentLayersVisible(l.parentIds, side));
       Ember.set(settings, 'groupLayersEnabled', [...sideGroupLayers]);
-      let disableLayers = sideChildLayers.filter(l => l.parentIds.includes(layer.get('id')));
       disableLayers.forEach((l) => this.setLayerBySide(l.layer, side, map));
     } else {
       sideGroupLayers.push(layer.get('id'));
