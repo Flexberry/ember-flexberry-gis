@@ -24,7 +24,7 @@ export default Ember.Mixin.create({
    */
   setLayerBySide(layer, side, leafletMap) {
     const layerId = Ember.get(layer, 'id');
-    const leafletOriginalLayer = Ember.get(layer, '_leafletObjectFirst') || Ember.get(layer, '_leafletObject');
+    const leafletOriginalLayer = Ember.get(layer, '_leafletObjectFirst') || layer.returnLeafletObject();
     let layersSideSettings = this.get(`compare.compareState.${side}`);
     let existedLayers = layersSideSettings.layers.filter(l => l.id === layerId);
     if (existedLayers.length > 0) {
@@ -33,7 +33,7 @@ export default Ember.Mixin.create({
       Ember.set(layersSideSettings, 'layerIds', layersSideSettings.layerIds.filter(l => l !== layerId));
     } else {
       if (layer.get('settingsAsObject.labelSettings.signMapObjects')) {
-        const labelsOriginalLayer = layer.get('_leafletObject._labelsLayerMulti');
+        const labelsOriginalLayer = layer.returnLeafletObject()._labelsLayerMulti;
         if (labelsOriginalLayer) {
           layersSideSettings.layers.push({
             id: layerId,
@@ -41,7 +41,7 @@ export default Ember.Mixin.create({
           });
         }
 
-        const labelsAdditionalOriginalLayer = layer.get('_leafletObject.additionalZoomLabel');
+        const labelsAdditionalOriginalLayer = layer.returnLeafletObject().additionalZoomLabel;
         if (labelsAdditionalOriginalLayer) {
           labelsAdditionalOriginalLayer.forEach(zoomLabels => {
             layersSideSettings.layers.push({
@@ -51,7 +51,7 @@ export default Ember.Mixin.create({
           });
         }
 
-        const labelsMultiOriginalLayer = layer.get('_leafletObject._labelsLayer');
+        const labelsMultiOriginalLayer = layer.returnLeafletObject()._labelsLayer;
         if (labelsMultiOriginalLayer) {
           layersSideSettings.layers.push({
             id: layerId,

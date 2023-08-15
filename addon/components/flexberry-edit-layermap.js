@@ -604,6 +604,7 @@ export default Ember.Component.extend(
       let keyWords = this.get('layer.keyWords');
       let boundingBox = this.get('layer.boundingBox');
       let leafletObjectGetter = this.get('layer.leafletObjectGetter');
+      let returnLeafletObject = this.get('layer.returnLeafletObject');
       let bounds = getBounds(boundingBox);
 
       let crs = this.get('layer.coordinateReferenceSystem');
@@ -637,7 +638,8 @@ export default Ember.Component.extend(
           maxLat: bounds.maxLat,
           maxLng: bounds.maxLng,
         },
-        leafletObjectGetter: leafletObjectGetter
+        leafletObjectGetter: leafletObjectGetter,
+        returnLeafletObject: returnLeafletObject
       });
     },
 
