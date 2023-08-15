@@ -1241,6 +1241,16 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       */
       onVisibilityCheckboxChange(...args) {
         this.sendAction(&#x27;changeVisibility&#x27;, ...args);
+
+        if (!this.get(&#x27;layer&#x27;)) {
+          console.error(&#x27;layer is not defined&#x27;);
+          return;
+        }
+
+        // When enabling a layer, enable all groups recursively
+        if (this.get(&#x27;layer.visibility&#x27;)) {
+          this.sendAction(&#x27;enableGroupVisibility&#x27;);
+        }
       },
 
       /**
@@ -1307,6 +1317,39 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
 
         // Show dialog.
         this.set(&#x27;_addDialogIsVisible&#x27;, true);
+      },
+
+      /**
+        Processes the visibility of a group layer when the visibility of inner layers is changed
+
+        @method actions.enableGroupVisibility
+      */
+      enableGroupVisibility() {
+        let layer = this.get(&#x27;layer&#x27;);
+
+        if (!layer) {
+          console.error(&#x27;layer is not defined&#x27;);
+          return;
+        }
+
+        if (!this.get(&#x27;isGroup&#x27;)) {
+          return;
+        }
+
+        if (this.get(&#x27;compare.compareLayersEnabled&#x27;) &amp;&amp; !this.get(&#x27;ignoreCompareMode&#x27;)) {
+          let side = this.get(&#x27;compare.side&#x27;);
+          let compareSettings = this.get(&#x60;compare.compareState.${side}&#x60;);
+          let sideGroupLayers = compareSettings.groupLayersEnabled;
+          let isGroupVisibleInCompareTree = !!sideGroupLayers.find(id =&gt; id === layer.get(&#x27;id&#x27;));
+
+          if (!isGroupVisibleInCompareTree) {
+            this.setGroupLayerBySide(layer, this.get(&#x27;compare.side&#x27;), this.get(&#x27;leafletMap&#x27;));
+          }
+        } else {
+          Ember.set(layer, &#x27;visibility&#x27;, true);
+        }
+
+        this.sendAction(&#x27;enableGroupVisibility&#x27;);
       },
 
       /**

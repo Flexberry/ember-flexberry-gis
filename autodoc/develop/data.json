@@ -36579,7 +36579,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 830,
+            "line": 840,
             "description": "Handles {{#crossLink \"FlexberryDdauSliderComponent/sendingActions.change:method\"}}'flexberry-ddau-slider' component's 'change' action{{/crossLink}}.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.changeVisibility:method\"}}'changeOpacity'action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onOpacitySliderChange",
@@ -36595,7 +36595,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 841,
+            "line": 851,
             "description": "Invokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.fitBounds:method\"}}'fitBounds' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onBoundsButtonClick",
@@ -36611,7 +36611,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 852,
+            "line": 862,
             "description": "Handles attributes button's 'click' event.\nInvokes component's {{#crossLink \"FlexberryMaplayersComponent/sendingActions.attributes:method\"}}'attributes'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onAttributesButtonClick",
@@ -36627,7 +36627,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 864,
+            "line": 874,
             "description": "Handles create feature button's 'click' event.\nInvokes component's {{#crossLink \"FlexberryMaplayersComponent/sendingActions.attributes:method\"}}'attributes'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onFeatureCreateButtonClick",
@@ -36643,7 +36643,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 876,
+            "line": 886,
             "description": "Handles add button's 'click' event.\nInvokes component's {{#crossLink \"FlexberryMaplayersComponent/sendingActions.add:method\"}}'add'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onAddButtonClick",
@@ -36659,7 +36659,16 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 896,
+            "line": 906,
+            "description": "Processes the visibility of a group layer when the visibility of inner layers is changed",
+            "itemtype": "method",
+            "name": "actions.enableGroupVisibility",
+            "class": "FlexberryMaplayerComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-maplayer.js",
+            "line": 939,
             "description": "Handles add dialog's 'approve' action.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.add:method\"}}'add'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onAddDialogApprove",
@@ -36682,7 +36691,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 910,
+            "line": 953,
             "description": "Handles add dialog's 'deny' action.",
             "itemtype": "method",
             "name": "actions.onAddDialogDeny",
@@ -36691,7 +36700,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 919,
+            "line": 962,
             "description": "Handles copy button's 'click' event.\nInvokes component's {{#crossLink \"FlexberryMaplayersComponent/sendingActions.copy:method\"}}'copy'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onCopyButtonClick",
@@ -36707,7 +36716,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 939,
+            "line": 982,
             "description": "Handles copy dialog's 'approve' action.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.copy:method\"}}'copy'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onCopyDialogApprove",
@@ -36730,7 +36739,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 957,
+            "line": 1000,
             "description": "Handles copy dialog's 'deny' action.",
             "itemtype": "method",
             "name": "actions.onCopyDialogDeny",
@@ -36739,7 +36748,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 966,
+            "line": 1009,
             "description": "Handles edit button's 'click' event.\nShows component's edit dialog.",
             "itemtype": "method",
             "name": "actions.onEditButtonClick",
@@ -36756,7 +36765,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 985,
+            "line": 1028,
             "description": "Handles edit dialog's 'approve' action.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.add:method\"}}'edit'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onEditDialogApprove",
@@ -36779,7 +36788,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 999,
+            "line": 1042,
             "description": "Handles edit dialog's 'deny' action.",
             "itemtype": "method",
             "name": "actions.onEditDialogDeny",
@@ -36788,7 +36797,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 1008,
+            "line": 1051,
             "description": "Handles remove button's 'click' event.\nShows component's remove dialog.",
             "itemtype": "method",
             "name": "actions.onRemoveButtonClick",
@@ -36805,7 +36814,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 1027,
+            "line": 1070,
             "description": "Handles remove dialog's 'approve' action.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.remove:method\"}}'remove'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onRemoveDialogApprove",
@@ -36814,7 +36823,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 1039,
+            "line": 1082,
             "description": "Handles remove dialog's 'deny' action.",
             "itemtype": "method",
             "name": "actions.onRemoveDialogDeny",
@@ -36823,7 +36832,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 1059,
+            "line": 1102,
             "description": "Creates layer's copy.",
             "itemtype": "method",
             "name": "createLayerCopy",
@@ -36844,7 +36853,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 1073,
+            "line": 1116,
             "description": "Component's action invoking when layer node's header has been clicked.",
             "itemtype": "method",
             "name": "sendingActions.headerClick",
@@ -36860,7 +36869,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 1081,
+            "line": 1124,
             "description": "Component's action invoking before layer node will be expanded.\nLayer node can be prevented from being expanded with call to action event object's 'originalEvent.stopPropagation()'.",
             "itemtype": "method",
             "name": "sendingActions.beforeExpand",
@@ -36876,7 +36885,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 1090,
+            "line": 1133,
             "description": "Component's action invoking before layer node will be collapsed.\nLayer node can be prevented from being collapsed with call to action event object's 'originalEvent.stopPropagation()'.",
             "itemtype": "method",
             "name": "sendingActions.beforeCollapse",
@@ -36892,7 +36901,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 1099,
+            "line": 1142,
             "description": "Component's action invoking when layer node's 'visibility' state changed.",
             "itemtype": "method",
             "name": "sendingActions.changeVisibility",
@@ -36908,7 +36917,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 1107,
+            "line": 1150,
             "description": "Component's action invoking when layer node's 'opacity' value changed.",
             "itemtype": "method",
             "name": "sendingActions.changeOpacity",
@@ -36924,7 +36933,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 1115,
+            "line": 1158,
             "description": "Component's action invoking when layer node's 'extent' button clicked.",
             "itemtype": "method",
             "name": "sendingActions.fitBounds",
@@ -36940,7 +36949,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 1123,
+            "line": 1166,
             "description": "Component's action invoking when user wants to add child layer into current.",
             "itemtype": "method",
             "name": "sendingActions.add",
@@ -36963,7 +36972,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 1131,
+            "line": 1174,
             "description": "Component's action invoking when user wants to copy current layer.",
             "itemtype": "method",
             "name": "sendingActions.copy",
@@ -36991,7 +37000,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 1140,
+            "line": 1183,
             "description": "Component's action invoking when user wants to edit current layer.",
             "itemtype": "method",
             "name": "sendingActions.edit",
@@ -37014,7 +37023,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 1148,
+            "line": 1191,
             "description": "Component's action invoking when user wants to remove current layer.",
             "itemtype": "method",
             "name": "sendingActions.remove",
@@ -37030,7 +37039,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 1155,
+            "line": 1198,
             "description": "Component's action invoking when user wants to look at attributes of current layer.",
             "itemtype": "method",
             "name": "sendingActions.attributesEdit",
@@ -37441,7 +37450,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayers.js",
-            "line": 540,
+            "line": 544,
             "description": "Handles add button's 'click' event.\nInvokes component's {{#crossLink \"FlexberryMaplayersComponent/sendingActions.add:method\"}}'add'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onAddButtonClick",
@@ -37457,7 +37466,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayers.js",
-            "line": 561,
+            "line": 565,
             "description": "Handles add dialog's 'approve' action.\nInvokes component's {{#crossLink \"FlexberryMaplayersComponent/sendingActions.add:method\"}}'add'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onAddDialogApprove",
@@ -37480,7 +37489,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayers.js",
-            "line": 575,
+            "line": 579,
             "description": "Component's action invoking when user wants to add child layer into layers tree root.",
             "itemtype": "method",
             "name": "sendingActions.add",
@@ -46049,7 +46058,7 @@
         },
         {
             "file": "addon/mixins/compare-layers.js",
-            "line": 98,
+            "line": 100,
             "description": "Toggle child layer visibility on selected side",
             "params": [
                 {
@@ -46073,7 +46082,7 @@
         },
         {
             "file": "addon/mixins/compare-layers.js",
-            "line": 130,
+            "line": 134,
             "description": "Recursive get all parent layer ids",
             "params": [
                 {
@@ -46095,7 +46104,7 @@
         },
         {
             "file": "addon/mixins/compare-layers.js",
-            "line": 146,
+            "line": 150,
             "description": "Check if all parent layers are visible.",
             "params": [
                 {
@@ -46117,7 +46126,7 @@
         },
         {
             "file": "addon/mixins/compare-layers.js",
-            "line": 158,
+            "line": 162,
             "description": "Set background layer by selected side",
             "params": [
                 {
@@ -46141,7 +46150,7 @@
         },
         {
             "file": "addon/mixins/compare-layers.js",
-            "line": 178,
+            "line": 182,
             "description": "Get opposite side",
             "params": [
                 {
@@ -46158,7 +46167,7 @@
         },
         {
             "file": "addon/mixins/compare-layers.js",
-            "line": 187,
+            "line": 191,
             "description": "Refresh sideBySide side layers",
             "params": [
                 {
@@ -46172,7 +46181,7 @@
         },
         {
             "file": "addon/mixins/compare-layers.js",
-            "line": 205,
+            "line": 209,
             "description": "Method to refresh compare mode",
             "params": [
                 {
@@ -46186,7 +46195,7 @@
         },
         {
             "file": "addon/mixins/compare-layers.js",
-            "line": 242,
+            "line": 246,
             "description": "Function to save and update sidebar state on each side",
             "params": [
                 {
@@ -46200,7 +46209,7 @@
         },
         {
             "file": "addon/mixins/compare-layers.js",
-            "line": 286,
+            "line": 290,
             "description": "Set background or tree side",
             "params": [
                 {
@@ -52801,15 +52810,15 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/compare-layers.js:130"
+            "line": " addon/mixins/compare-layers.js:134"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/compare-layers.js:146"
+            "line": " addon/mixins/compare-layers.js:150"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/compare-layers.js:178"
+            "line": " addon/mixins/compare-layers.js:182"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -54701,39 +54710,39 @@
         },
         {
             "message": "Missing item type\nToggle child layer visibility on selected side",
-            "line": " addon/mixins/compare-layers.js:98"
+            "line": " addon/mixins/compare-layers.js:100"
         },
         {
             "message": "Missing item type\nRecursive get all parent layer ids",
-            "line": " addon/mixins/compare-layers.js:130"
+            "line": " addon/mixins/compare-layers.js:134"
         },
         {
             "message": "Missing item type\nCheck if all parent layers are visible.",
-            "line": " addon/mixins/compare-layers.js:146"
+            "line": " addon/mixins/compare-layers.js:150"
         },
         {
             "message": "Missing item type\nSet background layer by selected side",
-            "line": " addon/mixins/compare-layers.js:158"
+            "line": " addon/mixins/compare-layers.js:162"
         },
         {
             "message": "Missing item type\nGet opposite side",
-            "line": " addon/mixins/compare-layers.js:178"
+            "line": " addon/mixins/compare-layers.js:182"
         },
         {
             "message": "Missing item type\nRefresh sideBySide side layers",
-            "line": " addon/mixins/compare-layers.js:187"
+            "line": " addon/mixins/compare-layers.js:191"
         },
         {
             "message": "Missing item type\nMethod to refresh compare mode",
-            "line": " addon/mixins/compare-layers.js:205"
+            "line": " addon/mixins/compare-layers.js:209"
         },
         {
             "message": "Missing item type\nFunction to save and update sidebar state on each side",
-            "line": " addon/mixins/compare-layers.js:242"
+            "line": " addon/mixins/compare-layers.js:246"
         },
         {
             "message": "Missing item type\nSet background or tree side",
-            "line": " addon/mixins/compare-layers.js:286"
+            "line": " addon/mixins/compare-layers.js:290"
         },
         {
             "message": "Missing item type\nExecutes component's DOM-related logic.",

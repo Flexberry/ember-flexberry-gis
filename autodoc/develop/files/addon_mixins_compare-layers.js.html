@@ -500,14 +500,16 @@ export default Ember.Mixin.create({
     const isEnabled = !!sideGroupLayers.find(id =&gt; id === layer.get(&#x27;id&#x27;));
     if (isEnabled) {
       sideGroupLayers = sideGroupLayers.filter(id =&gt; id !== layer.get(&#x27;id&#x27;));
+      let disableLayers = sideChildLayers.filter(l =&gt; l.parentIds.includes(layer.get(&#x27;id&#x27;)) &amp;&amp; this.parentLayersVisible(l.parentIds, side));
       Ember.set(settings, &#x27;groupLayersEnabled&#x27;, [...sideGroupLayers]);
-      let disableLayers = sideChildLayers.filter(l =&gt; l.parentIds.includes(layer.get(&#x27;id&#x27;)));
       disableLayers.forEach((l) =&gt; this.setLayerBySide(l.layer, side, map));
     } else {
       sideGroupLayers.push(layer.get(&#x27;id&#x27;));
       Ember.set(settings, &#x27;groupLayersEnabled&#x27;, [...sideGroupLayers]);
       let layersToEnable = sideChildLayers.filter(l =&gt; l.parentIds.includes(layer.get(&#x27;id&#x27;)) &amp;&amp; this.parentLayersVisible(l.parentIds, side));
       layersToEnable.forEach((l) =&gt; this.setLayerBySide(l.layer, side, map));
+
+      this.sendAction(&#x27;enableGroupVisibility&#x27;);
     }
   },
 
@@ -540,6 +542,8 @@ export default Ember.Mixin.create({
       if (this.parentLayersVisible(parentIds, side)) {
         this.setLayerBySide(layer, side, map);
       }
+
+      this.sendAction(&#x27;enableGroupVisibility&#x27;);
     }
   },
 
