@@ -355,9 +355,10 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
     if (feature.geometry && feature.geometry.type &&
       (feature.geometry.type === 'Point' || feature.geometry.type === 'MultiPoint' ||
         feature.geometry.type === 'LineString' || feature.geometry.type === 'MultiLineString')) {
-      let layerTolerance = feature.layerModel.get('_leafletObject.options.renderer.options.tolerance');
-      if (Ember.isPresent(layerTolerance) && layerTolerance === 0) {
-        Ember.set(feature.layerModel.get('_leafletObject.options.renderer.options'), 'tolerance', 3);
+      let leafletObject = feature.layerModel.returnLeafletObject();
+      let layerOptions = Ember.get(leafletObject, 'options.renderer.options');
+      if (Ember.isPresent(layerOptions) && layerOptions.tolerance === 0) {
+        Ember.set(layerOptions, 'tolerance', 3);
       }
     }
 
@@ -430,10 +431,15 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
       Ember.set(this.get('resultObject'), 'expanded', true);
       if (clickedFeature.highlight) {
         this.set('activeScroll', true);
-        if (!this.get('infoExpanded')) { // open feature-result-item properties
-          this.set('infoExpanded', true);
-          this.set('_linksExpanded', true);
+
+        // Feature highlighting doesn't trigger didRender hook
+        // You need to toggle the template property to trigger it and scroll the list
+        if (this.get('infoExpanded')) {
+          this.set('infoExpanded', false); // trigger didRender hook manually
         }
+
+        this.set('infoExpanded', true); // open feature-result-item properties
+        this.set('_linksExpanded', true);
       }
     },
     /**
