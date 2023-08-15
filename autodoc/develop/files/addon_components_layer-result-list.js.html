@@ -450,6 +450,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, ResultFeatureIn
   */
   store: Ember.inject.service(),
 
+  favoriteModelName: &#x27;i-i-s-r-g-i-s-p-k-favorite-features&#x27;,
+
   /**
     Component&#x27;s wrapping &lt;div&gt; CSS-classes names.
 
@@ -918,7 +920,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, ResultFeatureIn
     });
 
     let store = this.get(&#x27;store&#x27;);
-    store.findAll(&#x27;i-i-s-r-g-i-s-p-k-favorite-features&#x27;).then((idsFavorite) =&gt; {
+    let config = Ember.getOwner(this).resolveRegistration(&#x27;config:environment&#x27;);
+    let favoriteModelName = !Ember.isBlank(config.APP.favoriteModelName) ? config.APP.favoriteModelName : this.get(&#x27;favoriteModelName&#x27;);
+    store.findAll(favoriteModelName).then((idsFavorite) =&gt; {
       Ember.RSVP.allSettled(promises).finally(() =&gt; {
         let order = 1;
         displayResults.forEach((result) =&gt; {
@@ -957,8 +961,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, ResultFeatureIn
 
             result.features.forEach((feature) =&gt; {
               Ember.set(feature, &#x27;layerModel&#x27;, Ember.get(result, &#x27;layerModel&#x27;));
+              let pkField = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;mapModel&#x27;)._getPkField(Ember.get(result, &#x27;layerModel&#x27;));
               Ember.set(feature, &#x27;properties.isFavorite&#x27;, !Ember.isNone(idsFavorite.find((favoriteFeature) =&gt;
-                Ember.get(favoriteFeature, &#x27;objectKey&#x27;) === Ember.get(feature, &#x27;properties.primarykey&#x27;) &amp;&amp;
+                Ember.get(favoriteFeature, &#x27;objectKey&#x27;) === Ember.get(feature, &#x60;properties.${pkField}&#x60;) &amp;&amp;
                 Ember.get(favoriteFeature, &#x27;objectLayerKey&#x27;) === Ember.get(feature, &#x27;layerModel.id&#x27;))));
               Ember.set(feature, &#x27;displayValue&#x27;, this.getFeatureDisplayProperty(feature, result.settings));
 

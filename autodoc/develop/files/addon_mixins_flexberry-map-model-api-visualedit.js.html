@@ -577,9 +577,6 @@ export default Ember.Mixin.create(SnapDraw, {
     return new Ember.RSVP.Promise((resolve, reject) =&gt; {
       try {
         let [layerModel, leafletObject] = this._getModelLeafletObject(layerId);
-        if (leafletObject instanceof L.MarkerClusterGroup) {
-          leafletObject = leafletObject._originalVectorLayer;
-        }
 
         let editTools = this._getEditTools();
         let newLayer;
@@ -805,7 +802,7 @@ export default Ember.Mixin.create(SnapDraw, {
       throw &#x60;Layer &#x27;${layerId}&#x27; not found&#x60;;
     }
 
-    let leafletObject = layerModel.get(&#x27;_leafletObject&#x27;);
+    let leafletObject = layerModel.returnLeafletObject();
     return [layerModel, leafletObject];
   },
 

@@ -777,6 +777,10 @@ export default Ember.Component.extend(
             Ember.set(this.get(&#x27;layerModel&#x27;), &#x27;leafletObjectGetter&#x27;, this.getLeafletObject.bind(this));
           }
 
+          if (Ember.isNone(this.get(&#x27;layerModel.returnLeafletObject&#x27;))) {
+            Ember.set(this.get(&#x27;layerModel&#x27;), &#x27;returnLeafletObject&#x27;, this.returnLeafletObject.bind(this));
+          }
+
           // Save the reference to the instance method for getting attributes options.
           if (Ember.isNone(this.get(&#x27;layerModel._attributesOptions&#x27;))) {
             Ember.set(this.get(&#x27;layerModel&#x27;), &#x27;_attributesOptions&#x27;, this._getAttributesOptions.bind(this));
@@ -1046,8 +1050,7 @@ export default Ember.Component.extend(
         return;
       }
 
-      let leafletLayerIsCluster = leafletLayer instanceof L.MarkerClusterGroup;
-      let continueLoading = leafletLayerIsCluster ? leafletLayer._originalVectorLayer.options.continueLoading : leafletLayer.options.continueLoading;
+      let continueLoading = this.returnLeafletObject().options.continueLoading;
 
       if (continueLoading) {
         let e = {

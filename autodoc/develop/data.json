@@ -13346,7 +13346,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 995,
+            "line": 991,
             "description": "Adds a listener function to leafletMap.",
             "itemtype": "method",
             "name": "onLeafletMapEvent",
@@ -13358,21 +13358,21 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 1011,
+            "line": 1007,
             "description": "Initializes DOM-related component's properties.",
             "class": "WfsLayerComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 1019,
+            "line": 1015,
             "description": "Deinitializes DOM-related component's properties.",
             "class": "WfsLayerComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 1032,
+            "line": 1028,
             "description": "Clear changes.",
             "itemtype": "method",
             "name": "clearChanges",
@@ -13392,7 +13392,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 1089,
+            "line": 1085,
             "description": "Handles 'flexberry-map:cancelEdit' event of leaflet map.",
             "itemtype": "method",
             "name": "cancelEdit",
@@ -13412,7 +13412,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 1113,
+            "line": 1109,
             "description": "Create body of request gs:Nearest for WPS.",
             "itemtype": "method",
             "name": "getWPSgsNearest",
@@ -13432,7 +13432,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 1164,
+            "line": 1160,
             "description": "Request with filter DWithin.",
             "itemtype": "method",
             "name": "dwithin",
@@ -13462,7 +13462,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 1193,
+            "line": 1189,
             "description": "Recursively calls itself increasing the distance until it gets the result.",
             "itemtype": "method",
             "name": "upDistance",
@@ -13497,7 +13497,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 1222,
+            "line": 1218,
             "description": "Get nearest object.\nIf settings of layer has wpsUrl, it do request to WPS service with request 'gs:Nearest'. It get data for request calling getWPSgsNearest().\nResponse of WPS servise is FeatureCollection in json format with one feature without themselves properties of feature.\nTherefore, feature by id is loaded and distance is calculated.\nIf settings of layer has not wpsUrl, it do call upDistance() for array of distances [1, 10, 100, 1000, 10000, 100000, 1000000].\nResult being processed base-vector-layer's method _calcNearestObject.",
             "itemtype": "method",
             "name": "getNearObject",
@@ -27892,7 +27892,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 405,
+            "line": 409,
             "description": "Destroys leaflet layer related to layer type.",
             "itemtype": "method",
             "name": "_destroyLayer",
@@ -27903,7 +27903,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 438,
+            "line": 442,
             "description": "Returns array of default layer localized properties.",
             "itemtype": "method",
             "name": "getDefaultLocalizedProperties",
@@ -27914,7 +27914,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 448,
+            "line": 452,
             "description": "Returns promise with the layer properties object.",
             "itemtype": "method",
             "name": "_getAttributesOptions",
@@ -27925,7 +27925,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 490,
+            "line": 494,
             "description": "Resets leaflet layer related to layer type.",
             "itemtype": "method",
             "name": "_resetLayer",
@@ -27936,7 +27936,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 511,
+            "line": 515,
             "description": "Sets leaflet layer's state related to actual settings.",
             "itemtype": "method",
             "name": "_setLayerState",
@@ -27947,7 +27947,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 524,
+            "line": 528,
             "description": "Sets leaflet layer's zindex.",
             "itemtype": "method",
             "name": "_setLayerZIndex",
@@ -27958,7 +27958,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 548,
+            "line": 552,
             "description": "Sets leaflet layer's visibility.",
             "itemtype": "method",
             "name": "_setLayerVisibility",
@@ -27969,7 +27969,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 563,
+            "line": 567,
             "description": "Sets leaflet layer's visibility.",
             "itemtype": "method",
             "name": "_setLayerOpacity",
@@ -27980,7 +27980,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 578,
+            "line": 582,
             "description": "Sets leaflet layer's style.",
             "itemtype": "method",
             "name": "_setLayerStyle",
@@ -27991,7 +27991,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 600,
+            "line": 604,
             "description": "Adds layer to it's leaflet container.",
             "itemtype": "method",
             "name": "_addLayerToLeafletContainer",
@@ -28002,7 +28002,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 646,
+            "line": 649,
             "description": "Removes layer from it's leaflet container.",
             "itemtype": "method",
             "name": "_removeLayerFromLeafletContainer",
@@ -28013,7 +28013,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 663,
+            "line": 666,
             "description": "Removes labels from it's leaflet container.",
             "itemtype": "method",
             "name": "_removeLabelsFromLeafletContainer",
@@ -28024,7 +28024,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 685,
+            "line": 688,
             "description": "Observes and handles changes in JSON-string with layer settings.\nPerforms layer's recreation with new settings.",
             "itemtype": "method",
             "name": "visibilityDidChange",
@@ -28035,7 +28035,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 696,
+            "line": 699,
             "description": "Observes and handles changes in {{#crossLink \"BaseLayerComponent/visibility:property\"}}'visibility' property{{/crossLink}}.\nSwitches layer's visibility.",
             "itemtype": "method",
             "name": "visibilityDidChange",
@@ -28046,7 +28046,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 707,
+            "line": 710,
             "description": "Observes and handles changes in {{#crossLink \"BaseLayerComponent/opacity:property\"}}'opacity' property{{/crossLink}}.\nChanges layer's opacity.",
             "itemtype": "method",
             "name": "_opacityDidChange",
@@ -28057,7 +28057,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 718,
+            "line": 721,
             "description": "Observes and handles changes in {{#crossLink \"BaseLayerComponent/styleSettings:property\"}}'styleSettings' property{{/crossLink}}.\nChanges layer's style settings.",
             "itemtype": "method",
             "name": "_styleSettingsDidChange",
@@ -28068,7 +28068,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 733,
+            "line": 736,
             "description": "Handles 'flexberry-map:identify' event of leaflet map.",
             "itemtype": "method",
             "name": "_identify",
@@ -28108,7 +28108,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 762,
+            "line": 765,
             "description": "Handles 'flexberry-map:getNearObject' event of leaflet map.",
             "itemtype": "method",
             "name": "_getNearObject",
@@ -28148,7 +28148,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 793,
+            "line": 796,
             "description": "Handles 'flexberry-map:search' event of leaflet map.",
             "itemtype": "method",
             "name": "search",
@@ -28193,7 +28193,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 818,
+            "line": 821,
             "description": "Handles 'flexberry-map:query' event of leaflet map.",
             "itemtype": "method",
             "name": "query",
@@ -28224,7 +28224,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 848,
+            "line": 851,
             "description": "Returns leaflet layer's bounding box.",
             "itemtype": "method",
             "name": "_getBoundingBox",
@@ -28238,7 +28238,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 859,
+            "line": 862,
             "description": "Handles 'flexberry-map:createObject' event of leaflet map.",
             "itemtype": "method",
             "name": "createObject",
@@ -28269,7 +28269,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 886,
+            "line": 889,
             "description": "Handles 'flexberry-map:cancelEdit' event of leaflet map.",
             "itemtype": "method",
             "name": "_cancelEdit",
@@ -28285,7 +28285,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 898,
+            "line": 901,
             "description": "Handles 'flexberry-map:cancelEdit' event of leaflet map.",
             "itemtype": "method",
             "name": "cancelEdit",
@@ -28298,14 +28298,14 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 908,
+            "line": 911,
             "description": "Initializes component.",
             "class": "BaseLayerComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 921,
+            "line": 924,
             "description": "Adds a listener function to leafletMap.",
             "itemtype": "method",
             "name": "onLeafletMapEvent",
@@ -28317,21 +28317,21 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 930,
+            "line": 933,
             "description": "Initializes DOM-related component's properties.",
             "class": "BaseLayerComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 958,
+            "line": 961,
             "description": "Deinitializes DOM-related component's properties.",
             "class": "BaseLayerComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 979,
+            "line": 982,
             "description": "Returns leaflet layer.",
             "itemtype": "method",
             "name": "getLeafletObjectPromise",
@@ -28343,7 +28343,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 992,
+            "line": 995,
             "description": "Returns leaflet layer.",
             "itemtype": "method",
             "name": "returnLeafletObject",
@@ -28355,7 +28355,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 1002,
+            "line": 1005,
             "description": "Creates leaflet layer related to layer type.",
             "itemtype": "method",
             "name": "createLayer",
@@ -28367,7 +28367,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 1013,
+            "line": 1016,
             "description": "Destroys leaflet layer related to layer type.",
             "itemtype": "method",
             "name": "destroyLayer",
@@ -28376,7 +28376,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 1021,
+            "line": 1024,
             "description": "Identifies layer's objects inside specified bounding box.",
             "itemtype": "method",
             "name": "identify",
@@ -28414,7 +28414,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 1040,
+            "line": 1043,
             "description": "Get nearest object.",
             "itemtype": "method",
             "name": "getNearObject",
@@ -28430,7 +28430,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 1054,
+            "line": 1057,
             "description": "Handles 'flexberry-map:search' event of leaflet map.",
             "itemtype": "method",
             "name": "search",
@@ -28475,7 +28475,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 1070,
+            "line": 1073,
             "description": "Handles 'flexberry-map:query' event of leaflet map.",
             "itemtype": "method",
             "name": "_query",
@@ -28506,7 +28506,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 1084,
+            "line": 1087,
             "description": "Returns leaflet layer's bounding box.",
             "itemtype": "method",
             "name": "getBoundingBox",
@@ -28518,7 +28518,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 1104,
+            "line": 1107,
             "description": "Observes and handles changes in layer's properties marked as leaflet options.\nPerforms layer's recreation with new options.\nNote: it is overridden method from 'leaflet-options' mixin.",
             "itemtype": "method",
             "name": "leafletOptionsDidChange",
@@ -28534,7 +28534,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 1130,
+            "line": 1133,
             "description": "Injects (leafelt GeoJSON layers)[http://leafletjs.com/reference-1.0.0.html#geojson] according to current CRS\ninto specified (GeoJSON)[http://geojson.org/geojson-spec] feature, features, or featureCollection",
             "itemtype": "method",
             "name": "injectLeafletLayersIntoGeoJSON",
@@ -28559,7 +28559,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 1189,
+            "line": 1192,
             "description": "Component's action invoking on layer creation.",
             "itemtype": "method",
             "name": "sendingActions.layerInit",
@@ -28587,7 +28587,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 1198,
+            "line": 1201,
             "description": "Component's action invoking before the layer destroying.",
             "itemtype": "method",
             "name": "sendingActions.layerDestroy",
@@ -28678,6 +28678,18 @@
         {
             "file": "addon/components/base-vector-layer.js",
             "line": 80,
+            "description": "Returns leaflet layer.",
+            "itemtype": "method",
+            "name": "returnLeafletObject",
+            "return": {
+                "description": "leafletObject"
+            },
+            "class": "BaseVectorLayerComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/base-vector-layer.js",
+            "line": 103,
             "itemtype": "method",
             "name": "_getContainerPaneLabelMulti",
             "return": {
@@ -28688,7 +28700,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 91,
+            "line": 114,
             "itemtype": "property",
             "name": "_pane",
             "type": "String",
@@ -28698,7 +28710,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 102,
+            "line": 125,
             "itemtype": "property",
             "name": "_paneLabel",
             "type": "String",
@@ -28708,7 +28720,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 117,
+            "line": 140,
             "itemtype": "property",
             "name": "_renderer",
             "type": "Object",
@@ -28718,7 +28730,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 127,
+            "line": 150,
             "description": "Sets leaflet layer's zindex.",
             "itemtype": "method",
             "name": "_setLayerZIndex",
@@ -28729,7 +28741,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 211,
+            "line": 242,
             "description": "Add layers after features callback",
             "itemtype": "method",
             "name": "_addLayersOnMap",
@@ -28740,7 +28752,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 221,
+            "line": 252,
             "description": "Sets leaflet layer's opacity.",
             "itemtype": "method",
             "name": "_setLayerOpacity",
@@ -28751,7 +28763,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 253,
+            "line": 284,
             "description": "Returns array of default layer localized properties.",
             "itemtype": "method",
             "name": "getDefaultLocalizedProperties",
@@ -28762,7 +28774,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 262,
+            "line": 293,
             "description": "Returns promise with the layer properties object.",
             "itemtype": "method",
             "name": "_getAttributesOptions",
@@ -28773,7 +28785,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 297,
+            "line": 328,
             "description": "Creates leaflet vector layer related to layer type.",
             "itemtype": "method",
             "name": "createVectorLayer",
@@ -28792,7 +28804,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 309,
+            "line": 340,
             "description": "Creates read format for the specified leaflet vector layer.",
             "itemtype": "method",
             "name": "createReadFormat",
@@ -28812,7 +28824,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 375,
+            "line": 406,
             "description": "Clusterizes created vector layer if 'clusterize' option is enabled.",
             "itemtype": "method",
             "name": "createClusterLayer",
@@ -28832,7 +28844,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 400,
+            "line": 431,
             "description": "Apply display settings for clustered objects. Updating the visibility of the feature labels, opacity.",
             "itemtype": "method",
             "name": "updateClusterLayer",
@@ -28848,7 +28860,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 434,
+            "line": 465,
             "description": "Synchronizes ClusterLayer._originalVectorLayer._layers with ClusterLayer layers.\nThis is required when continueLoading option.",
             "itemtype": "method",
             "name": "loadClusterLayer",
@@ -28864,7 +28876,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 459,
+            "line": 490,
             "description": "Adds ClusterLayer layers.",
             "itemtype": "method",
             "name": "addClusterLayer",
@@ -28880,7 +28892,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 493,
+            "line": 524,
             "description": "Destroys clusterized leaflet layer related to layer type.",
             "itemtype": "method",
             "name": "destroyLayer",
@@ -28889,7 +28901,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 521,
+            "line": 552,
             "description": "Show all layer objects.",
             "itemtype": "method",
             "name": "showAllLayerObjects",
@@ -28902,7 +28914,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 599,
+            "line": 630,
             "description": "Hide all layer objects.",
             "itemtype": "method",
             "name": "hideAllLayerObjects",
@@ -28914,7 +28926,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 639,
+            "line": 670,
             "description": "Determine the visibility of the specified objects by id for the layer.",
             "itemtype": "method",
             "name": "_setVisibilityObjects",
@@ -28941,7 +28953,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 732,
+            "line": 763,
             "description": "Get nearest object.\nGets all leaflet layer objects and processes them _calcNearestObject().",
             "itemtype": "method",
             "name": "getNearObject",
@@ -28976,7 +28988,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 762,
+            "line": 793,
             "description": "Calculates nearest object.\nIterates all objects and calculates min distance. If it searches for nearest object in same layer, it is excluded e.featureLayer.",
             "itemtype": "method",
             "name": "getNearObject",
@@ -29016,7 +29028,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 798,
+            "line": 829,
             "description": "Creates leaflet layer related to layer type.",
             "itemtype": "method",
             "name": "createLayer",
@@ -29029,7 +29041,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 846,
+            "line": 877,
             "description": "Destroys leaflet layer related to layer type.",
             "itemtype": "method",
             "name": "destroyLayer",
@@ -29038,7 +29050,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 858,
+            "line": 889,
             "description": "Handles 'flexberry-map:identify' event of leaflet map.",
             "itemtype": "method",
             "name": "identify",
@@ -29069,7 +29081,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 921,
+            "line": 952,
             "description": "Handles 'flexberry-map:search' event of leaflet map.",
             "itemtype": "method",
             "name": "search",
@@ -29114,7 +29126,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 969,
+            "line": 1000,
             "description": "Handles 'flexberry-map:query' event of leaflet map.",
             "itemtype": "method",
             "name": "_query",
@@ -29140,7 +29152,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1014,
+            "line": 1045,
             "description": "Handles 'flexberry-map:loadLayerFeatures' event of leaflet map.",
             "itemtype": "method",
             "name": "loadLayerFeatures",
@@ -29160,7 +29172,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1027,
+            "line": 1058,
             "description": "Handles 'flexberry-map:getLayerFeatures' event of leaflet map.",
             "itemtype": "method",
             "name": "getLayerFeatures",
@@ -29180,7 +29192,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1056,
+            "line": 1087,
             "description": "Handles 'flexberry-map:getOrLoadLayerFeatures' event of leaflet map.",
             "itemtype": "method",
             "name": "_getOrLoadLayerFeatures",
@@ -29200,14 +29212,14 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1075,
+            "line": 1106,
             "description": "Handles zoomend",
             "class": "BaseVectorLayerComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1081,
+            "line": 1112,
             "description": "Handles 'flexberry-map:continueLoad' event of leaflet map.",
             "itemtype": "method",
             "name": "search",
@@ -29233,7 +29245,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1149,
+            "line": 1180,
             "description": "Adds a listener function to leafletMap.",
             "itemtype": "method",
             "name": "onLeafletMapEvent",
@@ -29245,14 +29257,14 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1163,
+            "line": 1194,
             "description": "Initializes DOM-related component's properties.",
             "class": "BaseVectorLayerComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1171,
+            "line": 1202,
             "description": "Switches pane depending on the zoom.",
             "itemtype": "method",
             "name": "_checkZoomPane",
@@ -29263,14 +29275,14 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1229,
+            "line": 1260,
             "description": "Deinitializes DOM-related component's properties.",
             "class": "BaseVectorLayerComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1257,
+            "line": 1288,
             "description": "Switches labels layer's minScaleRange.",
             "itemtype": "method",
             "name": "_zoomMinDidChange",
@@ -29281,7 +29293,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1272,
+            "line": 1303,
             "description": "Switches labels layer's maxScaleRange.",
             "itemtype": "method",
             "name": "_zoomMaxDidChange",
@@ -29292,7 +29304,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1287,
+            "line": 1318,
             "description": "Create array of strings and feature properies.",
             "itemtype": "method",
             "name": "_applyProperty",
@@ -29317,7 +29329,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1359,
+            "line": 1385,
             "description": "Apply function.",
             "itemtype": "method",
             "name": "_applyFunction",
@@ -29337,7 +29349,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1411,
+            "line": 1437,
             "description": "Show labels when map moving",
             "itemtype": "method",
             "name": "_showLabelsMovingMap",
@@ -29346,7 +29358,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1424,
+            "line": 1450,
             "description": "Create label string for every object of layer.",
             "itemtype": "method",
             "name": "_createStringLabel",
@@ -29372,7 +29384,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1478,
+            "line": 1504,
             "description": "Create label for object of layer.",
             "itemtype": "method",
             "name": "_createLabel",
@@ -29408,7 +29420,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1741,
+            "line": 1767,
             "description": "Set position for point.",
             "itemtype": "method",
             "name": "_setPositionPoint",
@@ -29424,7 +29436,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1823,
+            "line": 1849,
             "description": "Get text width for line object.",
             "itemtype": "method",
             "name": "_getWidthText",
@@ -29465,7 +29477,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1855,
+            "line": 1881,
             "description": "Set label for line object",
             "itemtype": "method",
             "name": "_setLabelLine",
@@ -29486,7 +29498,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 1989,
+            "line": 2015,
             "description": "Set align for line object's label",
             "itemtype": "method",
             "name": "_setAlignForLine",
@@ -29507,7 +29519,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 2012,
+            "line": 2038,
             "description": "Add text for line object",
             "itemtype": "method",
             "name": "_addTextForLine",
@@ -29538,7 +29550,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 2091,
+            "line": 2117,
             "description": "Update position for line object's label",
             "itemtype": "method",
             "name": "_updatePositionLabelForLine",
@@ -29547,7 +29559,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 2172,
+            "line": 2198,
             "description": "Show lables",
             "itemtype": "method",
             "name": "_showLabels",
@@ -29568,7 +29580,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 2271,
+            "line": 2297,
             "description": "Adds labels to it's leaflet container.",
             "itemtype": "method",
             "name": "_addLabelsToLeafletContainer",
@@ -29591,7 +29603,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 2330,
+            "line": 2356,
             "description": "Create pane for additional labels.",
             "itemtype": "method",
             "name": "_additionalZoomLabelPane",
@@ -29602,7 +29614,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 2355,
+            "line": 2381,
             "description": "Sets leaflet layer's visibility.",
             "itemtype": "method",
             "name": "_setLayerVisibility",
@@ -29613,7 +29625,7 @@
         },
         {
             "file": "addon/components/base-vector-layer.js",
-            "line": 2386,
+            "line": 2413,
             "description": "Gets feature properties as plain object.\nthis is necessary to get properties from odata-vector-layer feature",
             "itemtype": "method",
             "name": "_setLayerVisibility",
@@ -30467,7 +30479,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 370,
+            "line": 371,
             "description": "Collecting settings for executing a zoomToBounds function",
             "itemtype": "method",
             "name": "getLayerPropsForZoom",
@@ -30476,7 +30488,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 408,
+            "line": 409,
             "description": "Highlight feature-result-items",
             "itemtype": "method",
             "name": "actions.highlightFeature",
@@ -30497,7 +30509,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 439,
+            "line": 445,
             "description": "Show\\hide submenu",
             "itemtype": "method",
             "name": "actions.onSubmenu",
@@ -30506,7 +30518,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 451,
+            "line": 457,
             "description": "Performs row editing.",
             "itemtype": "method",
             "name": "actions.onRowEdit",
@@ -30515,7 +30527,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 519,
+            "line": 525,
             "description": "Handles click on show/hide all intersection coordinates.",
             "itemtype": "method",
             "name": "actions.toggleShowAllCords",
@@ -30524,7 +30536,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 533,
+            "line": 539,
             "description": "Invokes {{#crossLink \"FeatureResultItemComponent/sendingActions.selectFeature:method\"}}'selectFeature' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.selectFeature",
@@ -30533,7 +30545,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 541,
+            "line": 547,
             "description": "Invokes {{#crossLink \"FeatureResultItemComponent/sendingActions.panTo:method\"}}'panTo' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.panTo",
@@ -30542,7 +30554,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 553,
+            "line": 559,
             "description": "Invokes {{#crossLink \"FeatureResultItemComponent/sendingActions.zoomTo:method\"}}'zoomTo' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.zoomTo",
@@ -30551,7 +30563,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 567,
+            "line": 573,
             "description": "Show\\hide detailed feature info",
             "itemtype": "method",
             "name": "actions.showInfo",
@@ -30560,7 +30572,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 576,
+            "line": 582,
             "description": "Show\\hide links list (if present).",
             "itemtype": "method",
             "name": "actions.toggleLinks",
@@ -30569,7 +30581,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 584,
+            "line": 590,
             "description": "Process the specified method.",
             "itemtype": "method",
             "name": "actions.goToEditForm",
@@ -30590,7 +30602,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 597,
+            "line": 603,
             "description": "Show\\hide panel for seraching intersections.\nAction is sended to layer-result-list.",
             "itemtype": "method",
             "name": "actions.findIntersection",
@@ -30599,7 +30611,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 607,
+            "line": 613,
             "description": "Action for search satellites",
             "itemtype": "method",
             "name": "actions.searchSatellites",
@@ -30608,7 +30620,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 616,
+            "line": 622,
             "description": "Add feature to favorites list\nAction is sended to layer-result-list.",
             "itemtype": "method",
             "name": "actions.addToFavorite",
@@ -30617,7 +30629,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 625,
+            "line": 631,
             "description": "Handles click on checkbox.\nAction is sended to layer-result-list.",
             "itemtype": "method",
             "name": "actions.addToCompareGeometries",
@@ -30626,7 +30638,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 634,
+            "line": 640,
             "description": "Pans and zooms to intersection object.",
             "itemtype": "method",
             "name": "actions.panToIntersection",
@@ -30635,7 +30647,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 642,
+            "line": 648,
             "description": "Zooms to intersection and add intersection object on map.",
             "itemtype": "method",
             "name": "actions.zoomToIntersection",
@@ -30644,7 +30656,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 652,
+            "line": 658,
             "description": "This method update feature result item when feature is edited",
             "params": [
                 {
@@ -30658,7 +30670,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 696,
+            "line": 702,
             "description": "Component's action invoking for select feature",
             "itemtype": "method",
             "name": "sendingActions.selectFeature",
@@ -30674,7 +30686,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 702,
+            "line": 708,
             "description": "Component's action invoking for feature zooming",
             "itemtype": "method",
             "name": "sendingActions.zoomTo",
@@ -30690,7 +30702,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 708,
+            "line": 714,
             "description": "Component's action invoking for feature pan",
             "itemtype": "method",
             "name": "sendingActions.panTo",
@@ -32422,7 +32434,7 @@
         },
         {
             "file": "addon/components/flexberry-edit-layermap.js",
-            "line": 644,
+            "line": 646,
             "description": "Destroys inner hash containing layer copy.",
             "itemtype": "method",
             "name": "_destroyInnerLayer",
@@ -32433,7 +32445,7 @@
         },
         {
             "file": "addon/components/flexberry-edit-layermap.js",
-            "line": 657,
+            "line": 659,
             "description": "Observes visibility changes & creates/destroys inner hash containing layer copy.",
             "itemtype": "method",
             "name": "_visibleDidChange",
@@ -32444,7 +32456,7 @@
         },
         {
             "file": "addon/components/flexberry-edit-layermap.js",
-            "line": 675,
+            "line": 677,
             "description": "Observes type changes & changes link to object containing type-related settings.",
             "itemtype": "method",
             "name": "_innerLayerTypeDidChange",
@@ -32455,14 +32467,14 @@
         },
         {
             "file": "addon/components/flexberry-edit-layermap.js",
-            "line": 690,
+            "line": 692,
             "description": "Initializes component.",
             "class": "FlexberryEditLayerDialogComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-edit-layermap.js",
-            "line": 738,
+            "line": 740,
             "description": "Applies data from controls to layer hash.",
             "itemtype": "method",
             "name": "getLayerProperties",
@@ -32471,7 +32483,7 @@
         },
         {
             "file": "addon/components/flexberry-edit-layermap.js",
-            "line": 777,
+            "line": 779,
             "description": "Component's action invoking init hook is finished.\nProvides binding for {{#crossLink \"FlexberryEditLayerComponent/sendingActions.onInit:method\"}}'flexberry-edit-layer' component's 'getLayerProperties' method{{/crossLink}}.",
             "itemtype": "method",
             "name": "sendingActions.onInit",
@@ -32480,7 +32492,7 @@
         },
         {
             "file": "addon/components/flexberry-edit-layermap.js",
-            "line": 784,
+            "line": 786,
             "description": "Component's action invoking to remove model from store.",
             "itemtype": "method",
             "name": "sendingActions.removeLayerLink",
@@ -32496,7 +32508,7 @@
         },
         {
             "file": "addon/components/flexberry-edit-layermap.js",
-            "line": 792,
+            "line": 794,
             "description": "Component's action invoking to add model to store.",
             "itemtype": "method",
             "name": "sendingActions.addLayerLink",
@@ -37374,7 +37386,7 @@
         {
             "file": "addon/components/flexberry-maplayers.js",
             "line": 409,
-            "description": "Proprty containing current active layers.",
+            "description": "Property containing current active layers.",
             "itemtype": "property",
             "name": "currentLayers",
             "type": "Array",
@@ -39036,7 +39048,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 37,
+            "line": 39,
             "description": "Component's wrapping <div> CSS-classes names.\n\nAny other CSS-class names can be added through component's 'class' property.\n```handlebars\n{{layer-result-list class=\"my-class\"}}\n```",
             "itemtype": "property",
             "name": "classNames",
@@ -39047,7 +39059,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 53,
+            "line": 55,
             "description": "Flag indicates if intersection panel is active.",
             "itemtype": "property",
             "name": "intersection",
@@ -39058,7 +39070,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 62,
+            "line": 64,
             "description": "Flag indicates if layer-result-list used with favorites list.",
             "itemtype": "property",
             "name": "favoriteMode",
@@ -39069,14 +39081,14 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 71,
+            "line": 73,
             "description": "Reference to component's template.",
             "class": "LayerResultListComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 76,
+            "line": 78,
             "description": "Flag indicates whether result layers support highlighting",
             "itemtype": "property",
             "name": "enableHighlight",
@@ -39087,7 +39099,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 84,
+            "line": 86,
             "description": "FeatureGroup to display layer from selectedFeature.",
             "itemtype": "property",
             "name": "serviceLayer",
@@ -39098,7 +39110,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 93,
+            "line": 95,
             "description": "Leaflet map object for zoom and pan.",
             "itemtype": "property",
             "name": "leafletMap",
@@ -39109,7 +39121,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 102,
+            "line": 104,
             "description": "Array of results for display, each result contains object with following properties\nlayerModel - MapLayer model\nfeatures - promise for array of GeoJSON features",
             "itemtype": "property",
             "name": "results",
@@ -39120,7 +39132,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 113,
+            "line": 115,
             "description": "Ready results for display without promise.",
             "itemtype": "property",
             "name": "_displayResults",
@@ -39131,7 +39143,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 122,
+            "line": 124,
             "description": "Ready-made results.each.features collected from all _displayResults for display without promises.",
             "itemtype": "property",
             "name": "selectedFeatures",
@@ -39142,7 +39154,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 131,
+            "line": 133,
             "description": "Flag: indicates when results contains no data.",
             "itemtype": "property",
             "name": "_noData",
@@ -39153,7 +39165,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 140,
+            "line": 142,
             "description": "Flag: indicates when one or more results.features promises rejected.",
             "itemtype": "property",
             "name": "_hasError",
@@ -39164,7 +39176,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 149,
+            "line": 151,
             "description": "Current selected feature.",
             "itemtype": "property",
             "name": "_selectedFeature",
@@ -39175,7 +39187,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 158,
+            "line": 160,
             "description": "Flag: indicates whether to display links list (if present).",
             "itemtype": "property",
             "name": "_linksExpanded",
@@ -39186,7 +39198,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 167,
+            "line": 169,
             "description": "Action button hasListForm display.",
             "itemtype": "property",
             "name": "hasListForm",
@@ -39197,7 +39209,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 176,
+            "line": 178,
             "description": "Visibility of the export dialog.",
             "itemtype": "property",
             "name": "exportDialogVisible",
@@ -39208,7 +39220,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 185,
+            "line": 187,
             "description": "Object to search",
             "itemtype": "property",
             "name": "exportResult",
@@ -39219,7 +39231,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 194,
+            "line": 196,
             "description": "Zooms to all features in the layer.",
             "itemtype": "method",
             "name": "actions.zoomToAll",
@@ -39235,7 +39247,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 214,
+            "line": 216,
             "description": "Сlears the highlight state of selectedFeatures elements (all found features).",
             "itemtype": "method",
             "name": "actions.clearHighlights",
@@ -39251,7 +39263,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 230,
+            "line": 232,
             "description": "Show\\hide links list (if present).",
             "itemtype": "method",
             "name": "actions.toggleLinks",
@@ -39260,7 +39272,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 238,
+            "line": 240,
             "description": "Process the specified method.",
             "itemtype": "method",
             "name": "actions.goToListForm",
@@ -39281,7 +39293,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 251,
+            "line": 253,
             "description": "Action is sended to layer-result-list-action-handler.\nAction shows intersection panel.",
             "itemtype": "method",
             "name": "actions.findIntersection",
@@ -39296,7 +39308,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 261,
+            "line": 263,
             "description": "Search satellite action",
             "params": [
                 {
@@ -39309,7 +39321,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 269,
+            "line": 271,
             "description": "Action adds feature to favorites.",
             "itemtype": "method",
             "name": "actions.findIntersection",
@@ -39324,7 +39336,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 279,
+            "line": 281,
             "description": "Performs row editing.",
             "itemtype": "method",
             "name": "actions.editFeature",
@@ -39333,7 +39345,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 288,
+            "line": 290,
             "description": "Action adds feature to array for comparing geometries.",
             "itemtype": "method",
             "name": "actions.addToCompareGeometries",
@@ -39348,7 +39360,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 298,
+            "line": 300,
             "description": "Action zooms to intersection and shows object on map.",
             "itemtype": "method",
             "name": "actions.zoomToIntersection",
@@ -39363,7 +39375,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 307,
+            "line": 309,
             "description": "Action pans to intersection feature.",
             "itemtype": "method",
             "name": "actions.panToIntersection",
@@ -39378,7 +39390,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 318,
+            "line": 320,
             "description": "Set the parameters of export and show the dialog.",
             "params": [
                 {
@@ -39392,7 +39404,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 353,
+            "line": 355,
             "description": "Checks model layer links and adds list and edit forms to result object.",
             "itemtype": "method",
             "name": "_processLayerLinkForDisplayResults",
@@ -39415,7 +39427,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 405,
+            "line": 407,
             "description": "Observer for passed results",
             "itemtype": "method",
             "name": "_resultObserver",
@@ -39424,7 +39436,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 638,
+            "line": 643,
             "description": "Get an array of layer shapes id.",
             "itemtype": "method",
             "name": "_getFeatureShapeIds",
@@ -46386,7 +46398,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 22,
+            "line": 24,
             "description": "Array of 2 features that will be compared.",
             "itemtype": "property",
             "name": "twoObjectToCompare",
@@ -46397,7 +46409,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 30,
+            "line": 32,
             "description": "Is compare geometries panel enabled.",
             "itemtype": "property",
             "name": "showComapreGeometriesPanel",
@@ -46408,7 +46420,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 38,
+            "line": 40,
             "description": "Array of items in fav list.",
             "itemtype": "property",
             "name": "favFeatures",
@@ -46419,7 +46431,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 46,
+            "line": 48,
             "description": "Flag indicates if comapre button disabled.",
             "itemtype": "property",
             "name": "compareBtnDisabled",
@@ -46430,7 +46442,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 54,
+            "line": 56,
             "description": "'Select 2 objects'.",
             "itemtype": "property",
             "name": "cordsCaption",
@@ -46441,7 +46453,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 63,
+            "line": 65,
             "description": "Observer on twoObjectToCompare array.",
             "itemtype": "property",
             "name": "_onTwoObjectToCompareChange",
@@ -46453,7 +46465,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 77,
+            "line": 79,
             "description": "Observer for leafletMap property.",
             "itemtype": "property",
             "name": "onLeafletMapDidChange",
@@ -46465,7 +46477,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 99,
+            "line": 108,
             "description": "Injected ember storage.",
             "itemtype": "property",
             "name": "folded",
@@ -46475,7 +46487,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 108,
+            "line": 117,
             "description": "Handles click on favorite icon.",
             "itemtype": "method",
             "name": "addToFavorite",
@@ -46490,7 +46502,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 183,
+            "line": 193,
             "description": "Handles click on checkbox in favorite list.",
             "itemtype": "method",
             "name": "addToCompareGeometries",
@@ -46505,7 +46517,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 205,
+            "line": 215,
             "description": "Handles compare features button.",
             "itemtype": "method",
             "name": "OnCompareTwoGeometries",
@@ -46514,7 +46526,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 219,
+            "line": 229,
             "description": "Habdles click on exit comare panel icon",
             "itemtype": "method",
             "name": "closeComparePanel",
@@ -46523,7 +46535,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 229,
+            "line": 239,
             "description": "Method checks id layerModel in array.\nif it is returns its index.",
             "itemtype": "method",
             "name": "isLayerModelInArray",
@@ -46532,7 +46544,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 245,
+            "line": 255,
             "description": "Adding new feature to leayer model array of features.",
             "itemtype": "method",
             "name": "addNewFeatureToLayerModel",
@@ -46541,7 +46553,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 256,
+            "line": 266,
             "description": "Adding new layer model and new feature to array.",
             "itemtype": "method",
             "name": "addNewFeatureToNewLayerModel",
@@ -46550,7 +46562,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 268,
+            "line": 278,
             "description": "Remove feature from fav features list.",
             "itemtype": "method",
             "name": "removeFeatureFromLayerModel",
@@ -46559,7 +46571,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 284,
+            "line": 294,
             "description": "Get features from array of ids.",
             "itemtype": "method",
             "name": "fromIdArrayToFeatureArray",
@@ -46568,7 +46580,7 @@
         },
         {
             "file": "addon/mixins/favorites-features.js",
-            "line": 356,
+            "line": 366,
             "description": "This method update favorite feature when feature is edited",
             "params": [
                 {
@@ -47335,7 +47347,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-visualedit.js",
-            "line": 286,
+            "line": 283,
             "description": "Get editTools.",
             "itemtype": "method",
             "name": "_getEditTools",
@@ -47350,7 +47362,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-visualedit.js",
-            "line": 304,
+            "line": 301,
             "description": "Return leaflet layer thats corresponds to passed layerId.",
             "itemtype": "method",
             "name": "getLayerModel",
@@ -47370,7 +47382,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-visualedit.js",
-            "line": 320,
+            "line": 317,
             "description": "Get [layerModel, leafletObject, featureLayer] by layer id or layer id and object id.",
             "params": [
                 {
@@ -47405,7 +47417,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-visualedit.js",
-            "line": 379,
+            "line": 376,
             "description": "Get [layerModel, leafletObject] by layer id.",
             "params": [
                 {
@@ -47425,7 +47437,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-visualedit.js",
-            "line": 396,
+            "line": 393,
             "description": "Start creating multy objects.",
             "itemtype": "method",
             "name": "startChangeMultyLayerObject",
@@ -48268,7 +48280,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1343,
+            "line": 1349,
             "description": "Get coordinates point.",
             "itemtype": "method",
             "name": "getCoordPoint",
@@ -48308,7 +48320,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1416,
+            "line": 1422,
             "description": "Loading features by packages",
             "itemtype": "method",
             "name": "loadingFeaturesByPackages",
@@ -48333,7 +48345,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1443,
+            "line": 1449,
             "description": "Get merged geometry. Loads objects from a layers by packages of 100 units each.\nWaits when all objects successfully load. Transform objects into JSTS objects.\nFirst it merges geometry of objects on first layer using _getMulti method, then on second layer.\nResult of combining objects in each layer is merged into a common geometry using createMulti method.",
             "itemtype": "method",
             "name": "getMergedGeometry",
@@ -48378,7 +48390,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1502,
+            "line": 1508,
             "description": "Add to array points and feature.",
             "itemtype": "method",
             "name": "_addToArrayPointsAndFeature",
@@ -48403,7 +48415,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1536,
+            "line": 1542,
             "description": "Difference layers.",
             "itemtype": "method",
             "name": "differenceLayers",
@@ -48428,7 +48440,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1617,
+            "line": 1623,
             "description": "Compare layers.",
             "itemtype": "method",
             "name": "compareLayers",
@@ -48463,7 +48475,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1717,
+            "line": 1723,
             "description": "Exponentiation.",
             "itemtype": "method",
             "name": "_pointAmplifier",
@@ -48476,7 +48488,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1726,
+            "line": 1732,
             "description": "Transform coordinates in points.",
             "itemtype": "method",
             "name": "_coordsToPoints",
@@ -48496,7 +48508,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1746,
+            "line": 1752,
             "description": "Transform points in coordinates.",
             "itemtype": "method",
             "name": "_pointsToCoords",
@@ -48516,7 +48528,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1782,
+            "line": 1788,
             "description": "Download file.",
             "itemtype": "method",
             "name": "downloadFile",
@@ -52453,7 +52465,7 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/wfs-layer.js:1089"
+            "line": " addon/components/layers/wfs-layer.js:1085"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -52505,35 +52517,39 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/base-layer.js:979"
+            "line": " addon/components/base-layer.js:982"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/base-layer.js:992"
+            "line": " addon/components/base-layer.js:995"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/base-layer.js:1002"
+            "line": " addon/components/base-layer.js:1005"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/base-vector-layer.js:297"
+            "line": " addon/components/base-vector-layer.js:80"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/base-vector-layer.js:309"
+            "line": " addon/components/base-vector-layer.js:328"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/base-vector-layer.js:1014"
+            "line": " addon/components/base-vector-layer.js:340"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/base-vector-layer.js:1027"
+            "line": " addon/components/base-vector-layer.js:1045"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/base-vector-layer.js:1056"
+            "line": " addon/components/base-vector-layer.js:1058"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/components/base-vector-layer.js:1087"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -52821,15 +52837,15 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:304"
+            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:301"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:320"
+            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:317"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:379"
+            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:376"
         },
         {
             "message": "replacing incorrect tag: parm with param",
@@ -53153,11 +53169,11 @@
         },
         {
             "message": "Missing item type\nInitializes DOM-related component's properties.",
-            "line": " addon/components/layers/wfs-layer.js:1011"
+            "line": " addon/components/layers/wfs-layer.js:1007"
         },
         {
             "message": "Missing item type\nDeinitializes DOM-related component's properties.",
-            "line": " addon/components/layers/wfs-layer.js:1019"
+            "line": " addon/components/layers/wfs-layer.js:1015"
         },
         {
             "message": "Missing item type\nInitializes component.",
@@ -53997,15 +54013,15 @@
         },
         {
             "message": "Missing item type\nInitializes component.",
-            "line": " addon/components/base-layer.js:908"
+            "line": " addon/components/base-layer.js:911"
         },
         {
             "message": "Missing item type\nInitializes DOM-related component's properties.",
-            "line": " addon/components/base-layer.js:930"
+            "line": " addon/components/base-layer.js:933"
         },
         {
             "message": "Missing item type\nDeinitializes DOM-related component's properties.",
-            "line": " addon/components/base-layer.js:958"
+            "line": " addon/components/base-layer.js:961"
         },
         {
             "message": "Missing item type\nBecause z-index leaflet-tile-pane = 200.\nDo more just in case",
@@ -54013,15 +54029,15 @@
         },
         {
             "message": "Missing item type\nHandles zoomend",
-            "line": " addon/components/base-vector-layer.js:1075"
+            "line": " addon/components/base-vector-layer.js:1106"
         },
         {
             "message": "Missing item type\nInitializes DOM-related component's properties.",
-            "line": " addon/components/base-vector-layer.js:1163"
+            "line": " addon/components/base-vector-layer.js:1194"
         },
         {
             "message": "Missing item type\nDeinitializes DOM-related component's properties.",
-            "line": " addon/components/base-vector-layer.js:1229"
+            "line": " addon/components/base-vector-layer.js:1260"
         },
         {
             "message": "Missing item type\nArea and distance in meters only with crs=3857",
@@ -54117,7 +54133,7 @@
         },
         {
             "message": "Missing item type\nThis method update feature result item when feature is edited",
-            "line": " addon/components/feature-result-item.js:652"
+            "line": " addon/components/feature-result-item.js:658"
         },
         {
             "message": "Missing item type\nReference to component's template.",
@@ -54193,7 +54209,7 @@
         },
         {
             "message": "Missing item type\nInitializes component.",
-            "line": " addon/components/flexberry-edit-layermap.js:690"
+            "line": " addon/components/flexberry-edit-layermap.js:692"
         },
         {
             "message": "Missing item type\nWe need to differentiate events from different instances, because we don't turn off event subscriptions",
@@ -54489,15 +54505,15 @@
         },
         {
             "message": "Missing item type\nReference to component's template.",
-            "line": " addon/components/layer-result-list.js:71"
+            "line": " addon/components/layer-result-list.js:73"
         },
         {
             "message": "Missing item type\nSearch satellite action",
-            "line": " addon/components/layer-result-list.js:261"
+            "line": " addon/components/layer-result-list.js:263"
         },
         {
             "message": "Missing item type\nSet the parameters of export and show the dialog.",
-            "line": " addon/components/layer-result-list.js:318"
+            "line": " addon/components/layer-result-list.js:320"
         },
         {
             "message": "Missing item type\nReference to component's template.",
@@ -54737,7 +54753,7 @@
         },
         {
             "message": "Missing item type\nThis method update favorite feature when feature is edited",
-            "line": " addon/mixins/favorites-features.js:356"
+            "line": " addon/mixins/favorites-features.js:366"
         },
         {
             "message": "Missing item type\nService for Map loading from store",
@@ -54749,11 +54765,11 @@
         },
         {
             "message": "Missing item type\nGet [layerModel, leafletObject, featureLayer] by layer id or layer id and object id.",
-            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:320"
+            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:317"
         },
         {
             "message": "Missing item type\nGet [layerModel, leafletObject] by layer id.",
-            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:379"
+            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:376"
         },
         {
             "message": "Missing item type\nRemoves attached event listeners on destroy.",

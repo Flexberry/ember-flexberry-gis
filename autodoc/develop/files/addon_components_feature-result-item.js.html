@@ -771,9 +771,10 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
     if (feature.geometry &amp;&amp; feature.geometry.type &amp;&amp;
       (feature.geometry.type === &#x27;Point&#x27; || feature.geometry.type === &#x27;MultiPoint&#x27; ||
         feature.geometry.type === &#x27;LineString&#x27; || feature.geometry.type === &#x27;MultiLineString&#x27;)) {
-      let layerTolerance = feature.layerModel.get(&#x27;_leafletObject.options.renderer.options.tolerance&#x27;);
-      if (Ember.isPresent(layerTolerance) &amp;&amp; layerTolerance === 0) {
-        Ember.set(feature.layerModel.get(&#x27;_leafletObject.options.renderer.options&#x27;), &#x27;tolerance&#x27;, 3);
+      let leafletObject = feature.layerModel.returnLeafletObject();
+      let layerOptions = Ember.get(leafletObject, &#x27;options.renderer.options&#x27;);
+      if (Ember.isPresent(layerOptions) &amp;&amp; layerOptions.tolerance === 0) {
+        Ember.set(layerOptions, &#x27;tolerance&#x27;, 3);
       }
     }
 
@@ -846,10 +847,15 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
       Ember.set(this.get(&#x27;resultObject&#x27;), &#x27;expanded&#x27;, true);
       if (clickedFeature.highlight) {
         this.set(&#x27;activeScroll&#x27;, true);
-        if (!this.get(&#x27;infoExpanded&#x27;)) { // open feature-result-item properties
-          this.set(&#x27;infoExpanded&#x27;, true);
-          this.set(&#x27;_linksExpanded&#x27;, true);
+
+        // Feature highlighting doesn&#x27;t trigger didRender hook
+        // You need to toggle the template property to trigger it and scroll the list
+        if (this.get(&#x27;infoExpanded&#x27;)) {
+          this.set(&#x27;infoExpanded&#x27;, false); // trigger didRender hook manually
         }
+
+        this.set(&#x27;infoExpanded&#x27;, true); // open feature-result-item properties
+        this.set(&#x27;_linksExpanded&#x27;, true);
       }
     },
     /**

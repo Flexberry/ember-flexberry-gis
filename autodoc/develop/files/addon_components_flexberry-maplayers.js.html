@@ -823,7 +823,7 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
     rightLayer: null,
 
     /**
-      Proprty containing current active layers.
+      Property containing current active layers.
 
       @property currentLayers
       @type Array
@@ -897,13 +897,13 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
         let layersToAdd = this.get(&#x27;currentLayers&#x27;);
         let layers = this.get(&#x27;layers&#x27;);
         layers.forEach(layer =&gt; {
-          const leafletLayer = layer.get(&#x27;_leafletObject&#x27;);
+          const leafletLayer = layer.returnLeafletObject();
           if (leafletLayer &amp;&amp; leafletLayer.getContainer &amp;&amp; leafletLayer.getContainer()) {
             leafletLayer.getContainer().style.clip = &#x27;&#x27;;
           }
 
           if (layer.get(&#x27;settingsAsObject.labelSettings.signMapObjects&#x27;)) {
-            const labelsAdditionalOriginalLayer = layer.get(&#x27;_leafletObject.additionalZoomLabel&#x27;);
+            const labelsAdditionalOriginalLayer = layer.returnLeafletObject().additionalZoomLabel;
             if (labelsAdditionalOriginalLayer) {
               labelsAdditionalOriginalLayer.forEach(zoomLabels =&gt; {
                 if (zoomLabels &amp;&amp; zoomLabels.getContainer &amp;&amp; zoomLabels.getContainer()) {
@@ -912,7 +912,7 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
               });
             }
 
-            const labelsOriginalLayer = layer.get(&#x27;_leafletObject._labelsLayer&#x27;);
+            const labelsOriginalLayer = layer.returnLeafletObject()._labelsLayer;
             if (labelsOriginalLayer &amp;&amp; labelsOriginalLayer.getContainer &amp;&amp; labelsOriginalLayer.getContainer()) {
               leafletLayer.getContainer().style.clip = &#x27;&#x27;;
             }

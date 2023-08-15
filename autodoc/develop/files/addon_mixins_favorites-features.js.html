@@ -435,6 +435,8 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
 
   favorites: Ember.A(),
 
+  favoriteModelName: &#x27;i-i-s-r-g-i-s-p-k-favorite-features&#x27;,
+
   /**
     Array of 2 features that will be compared.
     @property twoObjectToCompare
@@ -512,6 +514,13 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
     leafletMap.off(&#x27;flexberry-map:updateFavorite&#x27;, this._updateFavorite, this);
   },
 
+  didInsertElement() {
+    this._super(...arguments);
+    let config = Ember.getOwner(this).resolveRegistration(&#x27;config:environment&#x27;);
+    let favoriteModelName = !Ember.isBlank(config.APP.favoriteModelName) ? config.APP.favoriteModelName : this.get(&#x27;favoriteModelName&#x27;);
+    this.set(&#x27;favoriteModelName&#x27;, favoriteModelName);
+  },
+
   /**
     Injected ember storage.
 
@@ -541,8 +550,9 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
       let savePromise;
       if (Ember.get(feature.properties, &#x27;isFavorite&#x27;)) {
         if (layerModelIndex !== -1) {
-          let records = store.peekAll(&#x27;i-i-s-r-g-i-s-p-k-favorite-features&#x27;)
-            .filterBy(&#x27;objectKey&#x27;, feature.properties.primarykey)
+          let pkField = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;mapModel&#x27;)._getPkField(feature.layerModel);
+          let records = store.peekAll(this.get(&#x27;favoriteModelName&#x27;))
+            .filterBy(&#x27;objectKey&#x27;, feature.properties[pkField])
             .filterBy(&#x27;objectLayerKey&#x27;, feature.layerModel.id);
           let record = records.objectAt(0);
           record.deleteRecord();
@@ -562,7 +572,7 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
       } else {
         let objectKey = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;mapModel&#x27;)._getLayerFeatureId(feature.layerModel, { feature });
         let newRecord = { id: generateUniqueId(), objectKey: objectKey, objectLayerKey: feature.layerModel.id };
-        let record = store.createRecord(&#x27;i-i-s-r-g-i-s-p-k-favorite-features&#x27;, newRecord);
+        let record = store.createRecord(this.get(&#x27;favoriteModelName&#x27;), newRecord);
 
         Ember.set(feature.properties, &#x27;favUpdating&#x27;, true);
         savePromise = record.save().then(() =&gt; {
@@ -704,7 +714,7 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
   */
   fromIdArrayToFeatureArray() {
     let store = this.get(&#x27;store&#x27;);
-    let idFeaturesArray = store.findAll(&#x27;i-i-s-r-g-i-s-p-k-favorite-features&#x27;);
+    let idFeaturesArray = store.findAll(this.get(&#x27;favoriteModelName&#x27;));
     idFeaturesArray.then((favorites) =&gt; {
       let favFeaturesArray = Ember.A();
       favorites.forEach(layer =&gt; {
