@@ -231,6 +231,7 @@ export default Ember.Component.extend({
               }
             }
           };
+
           filter = function (layerModel) {
             return layerModel.get('canBeContextSearched') && visibilityLayer(layerModel);
           };
