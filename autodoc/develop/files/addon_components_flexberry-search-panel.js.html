@@ -636,8 +636,20 @@ export default Ember.Component.extend({
           maxResultsCount: this.get(&#x27;maxResultsCount&#x27;)
         };
         if (!this.get(&#x27;attrVisible&#x27;)) {
+          let visibilityLayer = function(layerModel) {
+            if (!layerModel.get(&#x27;visibility&#x27;)) {
+              return false;
+            } else {
+              if (!Ember.isNone(layerModel.get(&#x27;parent&#x27;))) {
+                return layerModel.get(&#x27;visibility&#x27;) &amp;&amp; visibilityLayer(layerModel.get(&#x27;parent&#x27;));
+              } else {
+                return layerModel.get(&#x27;visibility&#x27;);
+              }
+            }
+          };
+
           filter = function (layerModel) {
-            return layerModel.get(&#x27;canBeContextSearched&#x27;) &amp;&amp; layerModel.get(&#x27;visibility&#x27;);
+            return layerModel.get(&#x27;canBeContextSearched&#x27;) &amp;&amp; visibilityLayer(layerModel);
           };
         } else {
           searchOptions.propertyName = this.get(&#x27;propertyName&#x27;);
