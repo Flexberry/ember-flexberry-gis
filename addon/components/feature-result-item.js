@@ -355,7 +355,12 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
     if (feature.geometry && feature.geometry.type &&
       (feature.geometry.type === 'Point' || feature.geometry.type === 'MultiPoint' ||
         feature.geometry.type === 'LineString' || feature.geometry.type === 'MultiLineString')) {
-      let leafletObject = feature.layerModel.returnLeafletObject();
+      let leafletObject = feature.layerModel.get('_leafletObject');
+
+      if (leafletObject instanceof L.MarkerClusterGroup) {
+        leafletObject = Ember.get(leafletObject, '_originalVectorLayer');
+      }
+
       let layerOptions = Ember.get(leafletObject, 'options.renderer.options');
       if (Ember.isPresent(layerOptions) && layerOptions.tolerance === 0) {
         Ember.set(layerOptions, 'tolerance', 3);
