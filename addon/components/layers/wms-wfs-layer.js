@@ -90,6 +90,22 @@ export default WmsLayerComponent.extend({
   },
 
   /**
+    Returns leafletObject.
+    Needed for identification (always invisible, won't be added to map).
+
+    @method returnLeafletObject
+    @returns leafletObject
+  */
+  returnLeafletObject() {
+    let vectorLayer = this.get('_wfsLayer');
+
+    // if wfsLayer context is not available, return leaflet object of tile layer (wms)
+    let leafletObject = Ember.get(vectorLayer, '_leafletObject') || this.get('_leafletObject');
+
+    return leafletObject;
+  },
+
+  /**
     Handles 'flexberry-map:identify' event of leaflet map.
 
     @method identify
