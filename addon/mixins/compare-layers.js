@@ -24,9 +24,17 @@ export default Ember.Mixin.create({
    */
   setLayerBySide(layer, side, leafletMap) {
     const layerId = Ember.get(layer, 'id');
-    const leafletOriginalLayer = Ember.get(layer, '_leafletObjectFirst') || Ember.get(layer, '_leafletObject');
-    let leafletVectorLayer = Ember.get(layer, '_leafletObject');
+    let leafletOriginalLayer = Ember.get(layer, '_leafletObjectFirst') || Ember.get(layer, '_leafletObject'); // layer displaying context
+    let leafletVectorLayer = Ember.get(layer, '_leafletObject'); // layer vector context
 
+    // layers for side-by-side plugin must have the getContainer() method
+    // Cluster layer does not implement this method, so displaying the cluster layer in the plugin is not available
+    // Use vector context for both display and map tools
+    if (leafletOriginalLayer instanceof L.MarkerClusterGroup) {
+      leafletOriginalLayer = Ember.get(leafletOriginalLayer, '_originalVectorLayer');
+    }
+
+    // Clustering vector layer contains the vector context in the "_leafletObject._originalVectorLayer" path
     if (leafletVectorLayer instanceof L.MarkerClusterGroup) {
       leafletVectorLayer = Ember.get(leafletVectorLayer, '_originalVectorLayer');
     }
