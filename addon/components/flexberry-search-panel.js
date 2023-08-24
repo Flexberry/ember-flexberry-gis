@@ -201,9 +201,9 @@ export default Ember.Component.extend({
       let leafletMap = this.get('leafletMap');
       let queryStringForRegex = queryString ? queryString.trim() : '';
 
-      const regexDegreeNoDegreeSymbol = /^([-]?[0-9]+([.,][0-9]+)?)[,]?\s+([-]?[0-9]+([.,][0-9]+)?)$/;
-      const regexDegreeWithDegreeSymbol = /^([-]?[0-9]+([.,][0-9]+)?)[°][,]?\s+([-]?[0-9]+([.,][0-9]+)?)[°]$/;
-      const regexDegreeMinSec = /^([-]?[0-9]+[°][0-9]+['][0-9]+([.,][0-9]+)?["])[,]?\s+([-]?[0-9]+[°][0-9]+['][0-9]+([.,][0-9]+)?["])$/;
+      const regexDegreeNoDegreeSymbol = /^([-]?\d+([.,]\d+)?)[,]?\s+([-]?\d+([.,]\d+)?)$/;
+      const regexDegreeWithDegreeSymbol = /^([-]?\d+([.,]\d+)?)[°][,]?\s+([-]?\d+([.,]\d+)?)[°]$/;
+      const regexDegreeMinSec = /^([-]?\d+[°]\d+[']\d+([.,]\d+)?["])[,]?\s+([-]?\d+[°]\d+[']\d+([.,]\d+)?["])$/;
       if (regexDegreeWithDegreeSymbol.test(queryStringForRegex)) {
         // Go to coordinates
         let coords = regexDegreeWithDegreeSymbol.exec(queryStringForRegex);
