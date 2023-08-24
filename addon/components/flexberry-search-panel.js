@@ -199,23 +199,24 @@ export default Ember.Component.extend({
       this.set('showErrorMessage', false);
       let queryString = this.get('queryString');
       let leafletMap = this.get('leafletMap');
-      const regexDegreeNoDegreeSymbol = /^\s*([-]?[0-9]+[.,]?[0-9]*)[,]?\s+([-]?[0-9]+[.,]?[0-9]*)/;
-      const regexDegreeWithDegreeSymbol = /^\s*([-]?[0-9]+[.,]?[0-9]*)[°][,]?\s+([-]?[0-9]+[.,]?[0-9]*)[°]/;
-      const regexDegreeMinSec = /^\s*([-]?[0-9]+[°][0-9]+['][0-9]+[.,]?[0-9]*["])[,]?\s+([-]?[0-9]+[°][0-9]+['][0-9]+[.,]?[0-9]*["])/;
-      if (regexDegreeWithDegreeSymbol.test(queryString)) {
+      let queryStringForRegex = queryString ? queryString.trim() : '';
+      const regexDegreeNoDegreeSymbol = /^([-]?[0-9]+[.,]?[0-9]*)[,]?\s+([-]?[0-9]+[.,]?[0-9]*)/;
+      const regexDegreeWithDegreeSymbol = /^([-]?[0-9]+[.,]?[0-9]*)[°][,]?\s+([-]?[0-9]+[.,]?[0-9]*)[°]/;
+      const regexDegreeMinSec = /^([-]?[0-9]+[°][0-9]+['][0-9]+([.,][0-9]+)?["])[,]?\s+([-]?[0-9]+[°][0-9]+['][0-9]+([.,][0-9]+)?["])/;
+      if (regexDegreeWithDegreeSymbol.test(queryStringForRegex)) {
         // Go to coordinates
-        let coords = regexDegreeWithDegreeSymbol.exec(queryString);
+        let coords = regexDegreeWithDegreeSymbol.exec(queryStringForRegex);
         this.goTo(coords[1].replace(',', '.'), coords[2].replace(',', '.'));
-      } else if (regexDegreeNoDegreeSymbol.test(queryString)) {
+      } else if (regexDegreeNoDegreeSymbol.test(queryStringForRegex)) {
         // Go to coordinates
-        let coords = regexDegreeNoDegreeSymbol.exec(queryString);
+        let coords = regexDegreeNoDegreeSymbol.exec(queryStringForRegex);
         this.goTo(coords[1].replace(',', '.'), coords[2].replace(',', '.'));
-      } else if (regexDegreeMinSec.test(queryString)) {
+      } else if (regexDegreeMinSec.test(queryStringForRegex)) {
         // Go to coordinates with degree, minute, second
-        let degMinSec = regexDegreeMinSec.exec(queryString);
+        let degMinSec = regexDegreeMinSec.exec(queryStringForRegex);
         let coord1 = this.degreeMinSecToDegree(degMinSec[1]);
-        let coord2 = this.degreeMinSecToDegree(degMinSec[2]);
-        this.goTo(coord1, coord2, degMinSec[1].replace(',', '.'), degMinSec[2].replace(',', '.'));
+        let coord2 = this.degreeMinSecToDegree(degMinSec[3]);
+        this.goTo(coord1, coord2, degMinSec[1].replace(',', '.'), degMinSec[3].replace(',', '.'));
       } else {
         // Сontext search and coordinate search
         let filter;
