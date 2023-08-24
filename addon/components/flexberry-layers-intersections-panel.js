@@ -579,6 +579,11 @@ export default Ember.Component.extend({
   },
 
   /**
+    Crs for measure
+  */
+  crsForMeasure: L.CRS.EPSG3857,
+
+  /**
     Searching intersections.
 
     @method _findIntersections
@@ -600,10 +605,7 @@ export default Ember.Component.extend({
           let objB = e.polygonLayer.toGeoJSON();
           item.isIntersect = false;
           if (objB.id !== objA.id) {
-            let crs = item.leafletLayer.options.crs;
-            if (Ember.isNone(crs)) {
-              crs = this.get('leafletMap').options.crs;
-            }
+            let crs = this.get('crsForMeasure');
 
             let coordsToLatLng = function(coords) {
               return crs.unproject(L.point(coords));
