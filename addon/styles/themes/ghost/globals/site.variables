@@ -87,3 +87,4 @@
 @borderColor: #c5c7ca;
 @headerTextColor: #0C49CD;
 @activeItemColor: #3B4256;
+@tempItemColor: rgba(59, 66, 86, 0.40);
