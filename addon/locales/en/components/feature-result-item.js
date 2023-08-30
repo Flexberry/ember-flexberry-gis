@@ -13,4 +13,5 @@ export default {
   'defaultLocalizedProperties': {
     'intersectionArea': 'Intersection area'
   },
+  'search-satellite-authenticated': 'To search for satellite images, you need to log in to the system'
 };

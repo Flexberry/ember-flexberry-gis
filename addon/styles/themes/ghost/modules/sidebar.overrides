@@ -441,6 +441,9 @@
     .flexberry-maplayer-caption-label {
       cursor: pointer;
       font-size: 14px;
+      &.temp-item {
+        color: @tempItemColor;
+      }
     }
 
     .flexberry-maplayer-type-icon.without-folder~.flexberry-treenode-buttons-block .allmore .more.submenu {

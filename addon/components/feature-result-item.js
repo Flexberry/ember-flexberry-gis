@@ -24,6 +24,14 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
   mapApi: Ember.inject.service(),
 
   /**
+    Injected ember session.
+
+    @property session
+    @type Ember.session
+  */
+  session: Ember.inject.service(),
+
+  /**
     Flag indicates whether to show all coordinates.
     @property mapApi
     @type MapApiService

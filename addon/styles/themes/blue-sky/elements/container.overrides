@@ -340,6 +340,11 @@ a.item:active,
   .flexberry-toggler-content {
     padding-top: 0px !important;
   }
+
+  a.icon.item.disabled-link {
+    pointer-events: none;
+    color: @tempItemColor;
+  }
 }
 
 .layer-result-list .flexberry-toggler-content .item:not(.icon) .ui.table {

@@ -33,7 +33,7 @@
         {{flexberry-icon
           class=(concat flexberryClassNames.typeIcon " " _typeIconClass)
         }}
-        <div class={{flexberryClassNames.caption}}>
+        <div class={{concat flexberryClassNames.caption  (if layer.temp " temp-item" "")}}>
           {{layer.name}}
           {{#if (and histEnabled (eq layer.type "with-history"))}}
            от {{flexberry-simpledatetime
