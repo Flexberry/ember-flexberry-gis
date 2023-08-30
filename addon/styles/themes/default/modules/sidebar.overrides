@@ -270,6 +270,7 @@
                 width: 100%;
                 display: flex;
                 margin-bottom: 5px;
+                align-items: center;
 
                 .layer-legend-image,
                 .layer-legend-caption {
@@ -283,6 +284,7 @@
                   margin: @layerLegendCaptionMargin;
                   max-width: @layerLegendCaptionMaxWidth;
                   width: @layerLegendCaptionWidth;
+                  line-height: 1.2;
                 }
               }
             }
