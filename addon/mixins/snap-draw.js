@@ -199,9 +199,9 @@ export default Ember.Mixin.create({
 
     layers.filter(l => {
       if (!l._bounds) {
-        L.featureGroup().addLayer(l).getBounds().intersects(bounds);
+        return L.featureGroup().addLayer(l).getBounds().intersects(bounds);
       } else {
-        l._bounds.intersects(bounds);
+        return l._bounds.intersects(bounds);
       }
     }).forEach((layer, index) => {
       let layerDistance = this._calculateDistance(latlng, layer);

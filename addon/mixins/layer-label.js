@@ -20,6 +20,7 @@ export default Ember.Mixin.create({
   */
   _setLayerLabelZIndex: function (begIndex) {
     let labelsLayers = this.get('labelsLayers');
+    let leafletMap = this.get('leafletMap');
     if (labelsLayers) {
       labelsLayers.forEach(labelsLayer => {
         let _paneLabel = labelsLayer._paneLabel;
@@ -1089,6 +1090,7 @@ export default Ember.Mixin.create({
   },
 
   _createLabelsLayerOldSettings(labelsLayersArray) {
+    let leafletMap = this.get('leafletMap');
     let labelLayer = L.featureGroup();
     let minScaleRange = this.get('labelSettings.scaleRange.minScaleRange') || this.get('minZoom');
     let maxScaleRange = this.get('labelSettings.scaleRange.maxScaleRange') || this.get('maxZoom');
@@ -1141,6 +1143,7 @@ export default Ember.Mixin.create({
   },
 
   _createLabelsLayer(labelsLayersArray) {
+    let leafletMap = this.get('leafletMap');
     let labelSettings = this.get('labelSettings.rules');
     let i = 0;
     labelSettings.forEach(settings => {
@@ -1254,7 +1257,8 @@ export default Ember.Mixin.create({
         });
       }
     } else if (!this._containerHasLabelsLayers()) {
-      ;// already done everything
+      // already done everything
+      labelsLayers = this.get('labelsLayers');
     } else {
       this._showLabels(layers, leafletObject);
       this._additionalZoomLabelPane();

@@ -58,7 +58,6 @@ export default BaseVectorLayer.extend({
   */
   save() {
     let leafletObject = this.get('_leafletObject');
-    let leafletMap = this.get('leafletMap');
     leafletObject.eachLayer(layer => {
       if (Ember.get(layer, 'model.hasDirtyAttributes')) {
         if (layer.state === state.insert) {
@@ -109,7 +108,7 @@ export default BaseVectorLayer.extend({
             leafletObject.labelsLayers.forEach(zoomLabels => {
               layer._label.forEach(l => {
                 if (leafletObject.leafletMap.hasLayer(L) && zoomLabels.hasLayer(l)) {
-                  L.FeatureGroup.prototype.removeLayer.call(zoomLabels, д);
+                  L.FeatureGroup.prototype.removeLayer.call(zoomLabels, l);
                 }
               });
             });
