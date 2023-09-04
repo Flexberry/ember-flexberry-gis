@@ -404,14 +404,17 @@ export default BaseLayer.extend(layerLabel, {
 
     if (layerLabel) {
       if (e.type === 'layeradd') {
-        if (!leafletMap.hasLayer(layerLabel)) {
-          leafletMap.addLayer(layerLabel);
-        }
-
+        layerLabel.forEach(label => {
+          if (!leafletMap.hasLayer(label)) {
+            leafletMap.addLayer(label);
+          }
+        });
       } else {
-        if (leafletMap.hasLayer(e.layer._label)) {
-          leafletMap.removeLayer(e.layer._label);
-        }
+        layerLabel.forEach(label => {
+          if (leafletMap.hasLayer(label)) {
+            leafletMap.removeLayer(label);
+          }
+        });
       }
     }
   },
@@ -468,8 +471,16 @@ export default BaseLayer.extend(layerLabel, {
     clusterMarkers.forEach(clusterMarker => {
       // For L.MarkerCluster there is an option to get clustered markers
       clusterMarker.getAllChildMarkers()
-        .filter(markerLayer => leafletMap.hasLayer(markerLayer._label))
-        .map(markerLayerWithLabel => leafletMap.removeLayer(markerLayerWithLabel._label));
+        .filter(markerLayer => {
+          return markerLayer._label.some(label => {
+            return leafletMap.hasLayer(label);
+          });
+        })
+        .map(markerLayerWithLabel => {
+          markerLayerWithLabel._label.forEach(label => {
+            leafletMap.removeLayer(label)
+          });
+        });
     });
 
     this._setLayerState(); // Accept layer style options for new loaded features
