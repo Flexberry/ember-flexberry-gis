@@ -344,9 +344,9 @@ test('test showAllLayerObjects with continueLoading: true and showExisting: fals
         assert.equal(clearLayersSpy.callCount, 0);
         assert.equal(loadLayerFeaturesSpy.callCount, 0);
         assert.equal(removeLayerSpy.callCount, 0);
-        assert.equal(addLayerSpy.callCount, 2);
+        assert.equal(addLayerSpy.callCount, 1);
         assert.equal(continueLoadSpy.callCount, 1);
-        assert.equal(hasLayerSpy.callCount, 4);
+        assert.equal(hasLayerSpy.callCount, 2);
         clearLayersSpy.restore();
         loadLayerFeaturesSpy.restore();
         removeLayerSpy.restore();
@@ -402,8 +402,8 @@ test('test hideAllLayerObjects', function (assert) {
       leafletObject.hideAllLayerObjects();
 
       assert.equal(eachLayerSpy.callCount, 1);
-      assert.equal(removeLayerSpy.callCount, 2);
-      assert.equal(hasLayerSpy.callCount, 3);
+      assert.equal(removeLayerSpy.callCount, 1);
+      assert.equal(hasLayerSpy.callCount, 1);
       eachLayerSpy.restore();
       removeLayerSpy.restore();
       hasLayerSpy.restore();
@@ -459,7 +459,7 @@ test('test _setVisibilityObjects with showExisting=false and visibility = true',
         assert.equal(resule, 'success');
         assert.equal(loadLayerFeaturesSpy.callCount, 1);
         assert.equal(removeLayerSpy.callCount, 0);
-        assert.equal(addLayerSpy.callCount, 2);
+        assert.equal(addLayerSpy.callCount, 1);
         loadLayerFeaturesSpy.restore();
         removeLayerSpy.restore();
         addLayerSpy.restore();
@@ -517,7 +517,7 @@ test('test _setVisibilityObjects with showExisting=false and visibility = false'
       leafletObject._setVisibilityObjects(['1'], false).then((resule) => {
         assert.equal(resule, 'success');
         assert.equal(loadLayerFeaturesSpy.callCount, 0);
-        assert.equal(removeLayerSpy.callCount, 2);
+        assert.equal(removeLayerSpy.callCount, 1);
         assert.equal(addLayerSpy.callCount, 0);
         loadLayerFeaturesSpy.restore();
         removeLayerSpy.restore();

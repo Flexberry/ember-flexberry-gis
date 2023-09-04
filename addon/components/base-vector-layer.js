@@ -7,7 +7,7 @@ import BaseLayer from './base-layer';
 import { setLeafletLayerOpacity } from '../utils/leaflet-opacity';
 import { checkMapZoom } from '../utils/check-zoom';
 import layerLabel from '../mixins/layer-label';
-
+import featureWithAreaIntersect from '../utils/feature-with-area-intersect';
 const { assert } = Ember;
 
 /**
@@ -478,7 +478,7 @@ export default BaseLayer.extend(layerLabel, {
         })
         .map(markerLayerWithLabel => {
           markerLayerWithLabel._label.forEach(label => {
-            leafletMap.removeLayer(label)
+            leafletMap.removeLayer(label);
           });
         });
     });
@@ -1106,7 +1106,7 @@ export default BaseLayer.extend(layerLabel, {
     if (!Ember.isNone(leafletMap)) {
       leafletMap.off('flexberry-map:getOrLoadLayerFeatures', this._getOrLoadLayerFeatures, this);
 
-      willDestroyElementLabel(leafletMap);
+      this.willDestroyElementLabel(leafletMap);
     }
   },
 

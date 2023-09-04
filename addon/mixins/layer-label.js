@@ -40,6 +40,7 @@ export default Ember.Mixin.create({
   */
   showAllLayerObjectsLabel(leafletObject, layer) {
     let labelsLayers = leafletObject.labelsLayers;
+    let map = this.get('leafletMap');
     if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(labelsLayers)) {
       labelsLayers.forEach(labelsLayer => {
         if (map.hasLayer(labelsLayer)) {
@@ -60,11 +61,12 @@ export default Ember.Mixin.create({
   */
   hideAllLayerObjectsLabel(leafletObject, layer) {
     let labelsLayers = leafletObject.labelsLayers;
+    let map = this.get('leafletMap');
     if (layer.get('settingsAsObject.labelSettings.signMapObjects') && !Ember.isNone(labelsLayers)) {
       labelsLayers.forEach(labelsLayer => {
         if (map.hasLayer(labelsLayer)) {
           labelsLayer.eachLayer(function (labelLayer) {
-            if (!map.hasLayer(labelLayer)) {
+            if (map.hasLayer(labelLayer)) {
               map.removeLayer(labelLayer);
             }
           });
@@ -321,9 +323,7 @@ export default Ember.Mixin.create({
   _showLabelsMovingMap() {
     let labelsLayers = this.get('labelsLayers');
     let leafletObject = this.returnLeafletObject();
-   // if (this.get('leafletMap').hasLayer(_labelsLayer) && leafletObject) {
-      this._createStringLabel(leafletObject.getLayers(), labelsLayers);
-   // }
+    this._createStringLabel(leafletObject.getLayers(), labelsLayers);
   },
 
   /**
@@ -334,17 +334,6 @@ export default Ember.Mixin.create({
     @param {Object} labelsLayers Array with labels layers
   */
   _createStringLabel(layers, labelsLayers) {
-    let optionsLabel = this.get('labelSettings.options');
-    let labelSettingsString = this.get('labelSettings.labelSettingsString');
-    let style = Ember.String.htmlSafe(
-      `font-family: ${Ember.get(optionsLabel, 'captionFontFamily')}; ` +
-      `font-size: ${Ember.get(optionsLabel, 'captionFontSize')}px; ` +
-      `font-weight: ${Ember.get(optionsLabel, 'captionFontWeight')}; ` +
-      `font-style: ${Ember.get(optionsLabel, 'captionFontStyle')}; ` +
-      `text-decoration: ${Ember.get(optionsLabel, 'captionFontDecoration')}; ` +
-      `color: ${Ember.get(optionsLabel, 'captionFontColor')}; ` +
-      `text-align: ${Ember.get(optionsLabel, 'captionFontAlign')}; `);
-
     let leafletMap = this.get('leafletMap');
     let bbox = leafletMap.getBounds();
     if (layers) {
@@ -355,27 +344,37 @@ export default Ember.Mixin.create({
 
         if (aLayers.length > 0) {
           labelsLayerZoom = aLayers[0];
+          let optionsLabel = labelsLayerZoom.settings.options;
+          let labelSettingsString = labelsLayerZoom.settings.labelSettingsString;
+          let style = Ember.String.htmlSafe(
+            `font-family: ${Ember.get(optionsLabel, 'captionFontFamily')}; ` +
+            `font-size: ${Ember.get(optionsLabel, 'captionFontSize')}px; ` +
+            `font-weight: ${Ember.get(optionsLabel, 'captionFontWeight')}; ` +
+            `font-style: ${Ember.get(optionsLabel, 'captionFontStyle')}; ` +
+            `text-decoration: ${Ember.get(optionsLabel, 'captionFontDecoration')}; ` +
+            `color: ${Ember.get(optionsLabel, 'captionFontColor')}; ` +
+            `text-align: ${Ember.get(optionsLabel, 'captionFontAlign')}; `);
+
+          layers.forEach((layer) => {
+            let currentLabelExists = false;
+            if (labelsLayerZoom && layer._label) {
+              currentLabelExists = layer._label.filter(l => {
+                return (l.minZoom == null || l.minZoom <= zoom) && (l.maxZoom == null || l.maxZoom >= zoom);
+              }).length > 0;
+            } else {
+              currentLabelExists = !Ember.isNone(layer._label);
+            }
+
+            let showExisting = this.get('showExisting');
+            let intersectBBox = layer.getBounds ? bbox.intersects(layer.getBounds()) : bbox.contains(layer.getLatLng());
+            let staticLoad = showExisting !== false && intersectBBox;
+            if (!currentLabelExists && (showExisting === false || staticLoad)) {
+              let label = layer.labelValue || this._applyFunction(this._applyProperty(labelSettingsString, layer));
+              this._createLabel(label, layer, style, labelsLayerZoom);
+            }
+          });
         }
       }
-
-      layers.forEach((layer) => {
-        let currentLabelExists = false;
-        if (labelsLayerZoom && layer._label) {
-          currentLabelExists = layer._label.filter(label => {
-            return label.zoomCheck === labelsLayerZoom.check;
-          }).length > 0;
-        } else {
-          currentLabelExists = !Ember.isNone(layer._label);
-        }
-
-        let showExisting = this.get('showExisting');
-        let intersectBBox = layer.getBounds ? bbox.intersects(layer.getBounds()) : bbox.contains(layer.getLatLng());
-        let staticLoad = showExisting !== false && intersectBBox;
-        if (!currentLabelExists && (showExisting === false || staticLoad)) {
-          let label = layer.labelValue || this._applyFunction(this._applyProperty(labelSettingsString, layer));
-          this._createLabel(label, layer, style, labelsLayerZoom);
-        }
-      });
     }
   },
 
@@ -412,7 +411,7 @@ export default Ember.Mixin.create({
     let latlng = layer.getLatLng();
     let iconWidth = 30;
     let iconHeight = 30;
-    let positionPoint = this._setPositionPoint(iconWidth, iconHeight);
+    let positionPoint = this._setPositionPoint(iconWidth, iconHeight, labelsLayerZoom.settings);
     let anchor = positionPoint.anchor;
     let className = 'label';
     className += ' point ' + positionPoint.cssClass;
@@ -447,7 +446,7 @@ export default Ember.Mixin.create({
     let geojsonWriter = new jsts.io.GeoJSONWriter();
     let className = 'label';
 
-    let multi = labelsLayerZoom ? labelsLayerZoom.check === 'multi' : false;
+    let multi = labelsLayerZoom.settings.multi;
     let objJsts = layer.toJsts(L.CRS.EPSG4326);
 
     try {
@@ -469,7 +468,6 @@ export default Ember.Mixin.create({
 
           label.feature = layer.feature;
           label.leafletMap = this.get('leafletMap');
-          label.zoomCheck = labelsLayerZoom.check;
         }
       }
 
@@ -484,11 +482,6 @@ export default Ember.Mixin.create({
 
         // возможно тут тоже надо будет сделать L.featureGroup()
         label = this._createLabelMarker(layer, latlng, className, html, iconWidth, iconHeight, anchor, paneLabel);
-
-        if (labelsLayerZoom) {
-          // остальное и так проставилось в _createLabelMarker (feature, leafletMap)
-          label.zoomCheck = labelsLayerZoom.check; // флаг для поиска. переделать!
-        }
       }
     }
     catch (e) {
@@ -521,10 +514,10 @@ export default Ember.Mixin.create({
 
     let label;
     let geojsonWriter = new jsts.io.GeoJSONWriter();
-    let optionsLabel = this.get('labelSettings.options');
+    let optionsLabel = labelsLayerZoom.settings.options;
     let className = 'label';
 
-    let multi = labelsLayerZoom ? labelsLayerZoom.check === 'multi' : false;
+    let multi = labelsLayerZoom.settings.multi;
 
     try {
       let objJsts = layer.toJsts(L.CRS.EPSG4326);
@@ -535,7 +528,6 @@ export default Ember.Mixin.create({
           label = L.featureGroup();
           label.feature = layer.feature;
           label.leafletMap = this.get('leafletMap');
-          label.zoomCheck = labelsLayerZoom.check;
         }
 
         for (let i = 0; i < (multi ? countGeometries : 1); i++) {
@@ -554,7 +546,7 @@ export default Ember.Mixin.create({
           };
 
           layer._svgConteiner = null;
-          this._addTextForLine(layer, text, options, style, partline);
+          this._addTextForLine(layer, text, options, style, partline, labelsLayerZoom.settings);
           iconWidth = 12;
           iconHeight = 12;
           html = Ember.$(layer._svgConteiner).html();
@@ -575,17 +567,13 @@ export default Ember.Mixin.create({
           align: Ember.get(optionsLabel, 'captionFontAlign')
         };
 
-        this._addTextForLine(layer, text, options, style);
+        this._addTextForLine(layer, text, options, style, null, labelsLayerZoom.settings);
         iconWidth = 12;
         iconHeight = 12;
         html = Ember.$(layer._svgConteiner).html();
 
         let paneLabel = labelsLayerZoom._paneLabel;
         label = this._createLabelMarker(layer, latlng, className, html, iconWidth, iconHeight, anchor, paneLabel);
-
-        if (multi) {
-          label.zoomCheck = labelsLayerZoom.check;
-        }
       }
     }
     catch (e) {
@@ -651,28 +639,63 @@ export default Ember.Mixin.create({
 
     @method _setPositionPoint
     @param {Number} width
+    @param {Number} height
+    @param {Object} settingsLabel
   */
-  _setPositionPoint(width, height) {
+  _setPositionPoint(width, height, settingsLabel) {
     // значения для маркера по умолчанию
     let left = 12.5;
     let right = 12.5;
     let top = 41;
     let bottom = 0;
 
-    let iconSize = this.get('styleSettings.style.marker.style.iconSize');
-    let iconAnchor = this.get('styleSettings.style.marker.style.iconAnchor');
-    if (!Ember.isNone(iconAnchor) && iconAnchor.length === 2 && !Ember.isNone(iconSize) && iconSize.length === 2) {
-      left = iconAnchor[0] || 0;
-      right = (iconSize[0] || 0) - (iconAnchor[0] || 0);
-      top = iconAnchor[1] || 0;
-      bottom = (iconSize[1] || 0) - (iconAnchor[1] || 0);
+    let stylesMarker = this.get('styleSettings.style.marker');
+    if (stylesMarker && Ember.isArray(stylesMarker) && stylesMarker.length > 0) {
+      let leftMin = 0;
+      let rightMax = 0;
+      let topMin = 0;
+      let bottomMax = 0;
+      stylesMarker.forEach(styleMarker => {
+        let iconSize = styleMarker.style.iconSize;
+        let iconAnchor = styleMarker.style.iconAnchor;
+        if (!Ember.isNone(iconAnchor) && iconAnchor.length === 2 && !Ember.isNone(iconSize) && iconSize.length === 2) {
+          left = iconAnchor[0] || 0;
+          right = (iconSize[0] || 0) - (iconAnchor[0] || 0);
+          top = iconAnchor[1] || 0;
+          bottom = (iconSize[1] || 0) - (iconAnchor[1] || 0);
+          if (left <= leftMin) {
+            leftMin = left;
+          }
+
+          if (right >= rightMax) {
+            rightMax = right;
+          }
+
+          if (top <= topMin) {
+            topMin = top;
+          }
+
+          if (bottom >= bottomMax) {
+            bottomMax = bottom;
+          }
+        }
+      });
+    } else {
+      let iconSize = this.get('styleSettings.style.marker.style.iconSize');
+      let iconAnchor = this.get('styleSettings.style.marker.style.iconAnchor');
+      if (!Ember.isNone(iconAnchor) && iconAnchor.length === 2 && !Ember.isNone(iconSize) && iconSize.length === 2) {
+        left = iconAnchor[0] || 0;
+        right = (iconSize[0] || 0) - (iconAnchor[0] || 0);
+        top = iconAnchor[1] || 0;
+        bottom = (iconSize[1] || 0) - (iconAnchor[1] || 0);
+      }
     }
 
     let style;
     let anchor;
     let cssClass;
 
-    switch (this.get('labelSettings.location.locationPoint')) {
+    switch (settingsLabel.location.locationPoint) {
       case 'overLeft':
         style = 'text-align: right;';
         anchor = [left + width, top + height];
@@ -767,7 +790,7 @@ export default Ember.Mixin.create({
     @param {Object} layer
     @param {Object} svg
   */
-  _setLabelLine(layer, svg, partline, text) {
+  _setLabelLine(layer, svg, partline, text, settingsLabel) {
     let leafletMap = this.get('leafletMap');
     let latlngArr = layer.getLatLngs();
     if (partline) {
@@ -817,7 +840,7 @@ export default Ember.Mixin.create({
       }
     }
 
-    let { textLength } = this._getPathAndTextLength(layer, text);
+    let { textLength } = this._getPathAndTextLength(layer, text, settingsLabel);
 
     let d = '';
     let kx = minX - 6;
@@ -879,9 +902,9 @@ export default Ember.Mixin.create({
     return { x,  y };
   },
 
-  _getPathAndTextLength(layer, text) {
+  _getPathAndTextLength(layer, text, settingsLabel) {
     let pathLength = layer._path.getTotalLength();
-    let optionsLabel = this.get('labelSettings.options');
+    let optionsLabel = settingsLabel.options;
     let textLength = this._getWidthText(
       text,
       Ember.get(optionsLabel, 'captionFontFamily'),
@@ -901,8 +924,8 @@ export default Ember.Mixin.create({
     @param {Object} layer
     @param {Object} svg
   */
-  _setAlignForLine(layer, text, align, textNode) {
-    let { pathLength, textLength } = this._getPathAndTextLength(layer, text);
+  _setAlignForLine(layer, text, align, textNode, settingsLabel) {
+    let { pathLength, textLength } = this._getPathAndTextLength(layer, text, settingsLabel);
 
     if (align === 'center') {
       textNode.setAttribute('dx', ((pathLength / 2) - (textLength / 2)));
@@ -926,7 +949,7 @@ export default Ember.Mixin.create({
     @param {Object} options
     @param {String} style
   */
-  _addTextForLine(layer, text, options, style, partline) {
+  _addTextForLine(layer, text, options, style, partline, settingsLabel) {
     let lsvg = L.svg();
     lsvg._initContainer();
     lsvg._initPath(layer);
@@ -962,8 +985,8 @@ export default Ember.Mixin.create({
     let textNode = L.SVG.create('text');
     let textPath = L.SVG.create('textPath');
     let dy = 0;
-    let sizeFont = parseInt(this.get('labelSettings.options.captionFontSize'));
-    let _lineLocationSelect = this.get('labelSettings.location.lineLocationSelect');
+    let sizeFont = parseInt(settingsLabel.options.captionFontSize);
+    let _lineLocationSelect = settingsLabel.location.lineLocationSelect;
 
     if (_lineLocationSelect === 'along') {
       dy = Math.ceil(sizeFont / 4);
@@ -982,7 +1005,7 @@ export default Ember.Mixin.create({
     textPath.appendChild(document.createTextNode(text));
     textNode.appendChild(textPath);
 
-    this._setLabelLine(layer, svg, partline, text);
+    this._setLabelLine(layer, svg, partline, text, settingsLabel);
     layer._path.setAttribute('stroke-opacity', 0);
     layer._textNode = textNode;
     svg.firstChild.appendChild(layer._path);
@@ -993,7 +1016,7 @@ export default Ember.Mixin.create({
     div.appendChild(svg);
     layer._svgConteiner = div;
 
-    this._setAlignForLine(layer, text, options.align, textNode);
+    this._setAlignForLine(layer, text, options.align, textNode, settingsLabel);
   },
 
   /**
@@ -1027,10 +1050,10 @@ export default Ember.Mixin.create({
               layer._label.forEach(zoomLabel => {
                 if (zoomLabel instanceof L.FeatureGroup) {
                   zoomLabel.getLayers().forEach((label) => {
-                    _this._updateAttributesSvg(layer, label._parentLayer, label._svg, label._path);
+                    _this._updateAttributesSvg(layer, label._parentLayer, label._svg, label._path, labelsLayersZoom.settings);
                   });
                 } else {
-                  _this._updateAttributesSvg(layer, null, zoomLabel._svg, zoomLabel._path);
+                  _this._updateAttributesSvg(layer, null, zoomLabel._svg, zoomLabel._path, labelsLayersZoom.settings);
                 }
               });
             }
@@ -1040,8 +1063,8 @@ export default Ember.Mixin.create({
     }
   },
 
-  _updateAttributesSvg(layer, partline, svg, path) {
-    this._setLabelLine(layer, svg, partline, layer._text);
+  _updateAttributesSvg(layer, partline, svg, path, settingsLabel) {
+    this._setLabelLine(layer, svg, partline, layer._text, settingsLabel);
     let d = layer._path.getAttribute('d');
     path.setAttribute('d', d);
 
@@ -1061,7 +1084,7 @@ export default Ember.Mixin.create({
     let text = layer._text;
     let textNode = layer._textNode;
 
-    this._setAlignForLine(layer, text, options.align, textNode);
+    this._setAlignForLine(layer, text, options.align, textNode, settingsLabel);
     Ember.$('text#text-' + id).attr('dx', textNode.getAttribute('dx'));
   },
 
@@ -1072,6 +1095,7 @@ export default Ember.Mixin.create({
     labelLayer.minZoom = minScaleRange;
     labelLayer.maxZoom = maxScaleRange;
     labelLayer.settings = this.get('labelSettings');
+    labelLayer.settings.multi = false;
     labelLayer.leafletMap = leafletMap;
     let i = 0;
     let layerId = !Ember.isNone(this.get('layerId')) ? this.get('layerId') : '';
@@ -1082,6 +1106,7 @@ export default Ember.Mixin.create({
       let container = Ember.$(`.${className}`);
       return container[0];
     };
+
     labelLayer.getContainer = _getContainerPaneLabel.bind(this);
     labelsLayersArray.addObject(labelLayer);
 
@@ -1100,7 +1125,8 @@ export default Ember.Mixin.create({
           labelLayer.minZoom = zoomSettings.minZoom;
           labelLayer.maxZoom = zoomSettings.maxZoom;
           labelLayer.check = zoomSettings.check;
-          labelLayer.settings = this.get('labelSettings');
+          labelLayer.settings = Object.assign({}, this.get('labelSettings'));
+          labelLayer.settings.multi = zoomSettings.check === 'multi';
           labelLayer.leafletMap = leafletMap;
           labelLayer.getContainer = _getContainerPaneLabel.bind(this);
           labelLayer._paneLabel = _paneLabel;
@@ -1123,15 +1149,17 @@ export default Ember.Mixin.create({
       labelsLayer.maxZoom = settings.scaleRange.maxScaleRange;
       labelsLayer.settings = settings;
       labelsLayer.leafletMap = leafletMap;
+      let layerId = !Ember.isNone(this.get('layerId')) ? this.get('layerId') : '';
       let _paneLabel = 'labelLayer' + i + '_' + this.get('layerModel.id') + layerId;
       const _getContainerPaneLabel = function () {
         let className = 'leaflet-' + _paneLabel + '-pane';
         let container = Ember.$(`.${className}`);
         return container[0];
       };
+
       labelsLayer.getContainer = _getContainerPaneLabel.bind(this);
       labelsLayer._paneLabel = _paneLabel;
-      labelsLayersArray.addObject(labelLayer);
+      labelsLayersArray.addObject(labelsLayer);
       i++;
     });
   },
@@ -1226,7 +1254,7 @@ export default Ember.Mixin.create({
         });
       }
     } else if (!this._containerHasLabelsLayers()) {
-      // already done everything
+      ;// already done everything
     } else {
       this._showLabels(layers, leafletObject);
       this._additionalZoomLabelPane();

@@ -107,10 +107,11 @@ export default BaseVectorLayer.extend({
           L.FeatureGroup.prototype.removeLayer.call(leafletObject, layer);
           if (!Ember.isNone(layer._label) && leafletObject.labelsLayers) {
             leafletObject.labelsLayers.forEach(zoomLabels => {
-              let label = layer._label.filter(label => { return label.zoomCheck === zoomLabels.check; });
-              if (label.length !== 0) {
-                L.FeatureGroup.prototype.removeLayer.call(zoomLabels, label[0]);
-              }
+              layer._label.forEach(l => {
+                if (leafletObject.leafletMap.hasLayer(L) && zoomLabels.hasLayer(l)) {
+                  L.FeatureGroup.prototype.removeLayer.call(zoomLabels, д);
+                }
+              });
             });
           }
         });
@@ -200,12 +201,13 @@ export default BaseVectorLayer.extend({
     if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('labelsLayers')) &&
       !Ember.isNone(this.get('_leafletObject.labelsLayers')) && !Ember.isNone(layer._label)) {
       leafletObject.labelsLayers.forEach(zoomLabels => {
-        let label = layer._label.filter(label => { return label.zoomCheck === zoomLabels.check; });
-        if (label.length !== 0) {
-          let id = layer._label.indexOf(label[0]);
-          L.FeatureGroup.prototype.removeLayer.call(zoomLabels, label[0]);
-          delete layer._label[id];
-        }
+        layer._label.forEach(l => {
+          if (zoomLabels.hasLayer(l)) {
+            let id = layer._label.indexOf(l);
+            L.FeatureGroup.prototype.removeLayer.call(zoomLabels, l);
+            delete layer._label[id];
+          }
+        });
       });
 
       this._createStringLabel([layer], leafletObject.labelsLayers);
@@ -262,11 +264,12 @@ export default BaseVectorLayer.extend({
 
     if (this.get('labelSettings.signMapObjects') && leafletObject.labelsLayers && !Ember.isNone(layer._label)) {
       leafletObject.labelsLayers.forEach(zoomLabels => {
-        let label = layer._label.filter(label => { return label.zoomCheck === zoomLabels.check; });
-        if (label.length !== 0) {
-          L.FeatureGroup.prototype.removeLayer.call(zoomLabels, label[0]);
-          delete layer._label;
-        }
+        layer._label.forEach(l => {
+          if (zoomLabels.hasLayer(l)) {
+            L.FeatureGroup.prototype.removeLayer.call(zoomLabels, l);
+            delete layer._label;
+          }
+        });
       });
     }
   },
