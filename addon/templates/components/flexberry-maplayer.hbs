@@ -48,7 +48,7 @@
           {{/if}}
         </div>
         {{#if (and (not compare.compareLayersEnabled) (not readonly))}}
-          <div class="flexberry-treenode-buttons-block hidden">
+          <div class="flexberry-treenode-buttons-block">
             {{#if (and (not readonlyData) (not isGroup) _editOperationIsAvailable _addFeatureIsAvailableApi)}}
               {{flexberry-button
                 class=(concat flexberryClassNames.attributesButton " floated " flexberryClassNames.preventExpandCollapse)
@@ -73,13 +73,6 @@
                   click=(action "onSubmenu")
                 }}
                 <div class="more submenu {{if isSubmenu '' 'hidden'}}">
-                  <div class="button-more-submenu">
-                  {{flexberry-button
-                    class=(concat "more submenu floated " flexberryClassNames.preventExpandCollapse)
-                    iconClass="icon-guideline-points"
-                    click=(action "onSubmenu")
-                  }}
-                  </div>
                   {{#if _fitBoundsOperationIsAvailable}}
                     {{flexberry-button
                       class=(concat flexberryClassNames.boundsButton " floated " flexberryClassNames.preventExpandCollapse)

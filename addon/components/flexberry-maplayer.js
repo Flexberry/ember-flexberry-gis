@@ -713,25 +713,6 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         this.set('isGroup', true);
         this.set('disabled', 'disabled');
       }
-
-      if (!this.get('readonly')) {
-        let _this = this;
-        let $captionBlock = Ember.$('.ui.tab.treeview .flexberry-treenode-caption-block');
-        if ($captionBlock.length > 0) {
-          $captionBlock.hover(
-            function () {
-              let $toolbar = Ember.$(this).children('.flexberry-treenode-buttons-block');
-              $toolbar.removeClass('hidden');
-              Ember.$(this).children('.flexberry-maplayer-caption-label').addClass('blur');
-            },
-            function () {
-              let $toolbar = Ember.$(this).children('.flexberry-treenode-buttons-block');
-              $toolbar.addClass('hidden');
-              Ember.$(this).children('.flexberry-maplayer-caption-label').removeClass('blur');
-              _this.set('isSubmenu', false);
-            });
-        }
-      }
     },
 
     actions: {
@@ -768,7 +749,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         let component = Ember.$('.' + this.get('componentName'));
         let moreButton = Ember.$('.more.floated.button', component);
         let elements = Ember.$('.more.submenu.hidden', component);
-        openCloseSubmenu(this, moreButton, elements, 2);
+        openCloseSubmenu(this, moreButton, elements);
       },
 
       onAddCompare() {

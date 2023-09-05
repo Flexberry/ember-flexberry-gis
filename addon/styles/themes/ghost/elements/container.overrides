@@ -302,9 +302,8 @@ div.measure-drag-panel {
     background: @layerResultListActiveBackground;
     color: @primaryColor;
   }
-
-  .flexberry-toggler-content {
-    padding-top: 0px !important;
+  .ui.accordion:not(.styled) .title ~ .content:not(.ui).flexberry-toggler-content {
+    padding: 0 0 0 1.25rem ;
   }
 }
 
