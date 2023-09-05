@@ -386,7 +386,12 @@ export default Ember.Mixin.create(SnapDraw, {
       throw `Layer '${layerId}' not found`;
     }
 
-    let leafletObject = layerModel.returnLeafletObject();
+    let leafletObject = layerModel.get('_leafletObject');
+
+    if (leafletObject instanceof L.MarkerClusterGroup) {
+      leafletObject = Ember.get(leafletObject, '_originalVectorLayer');
+    }
+
     return [layerModel, leafletObject];
   },
 

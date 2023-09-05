@@ -113,14 +113,12 @@
             {{t "components.feature-result-item.find-intersection-caption"}}
           </a>
         </div>
-        {{#if accessibleMap}}
-          <div>
-            <a class="icon item"  {{action "searchSatellites" feature on="click"}}>
-              <i class="icon-guideline-earth"></i>
-              {{t "components.feature-result-item.search-satellite"}}
-            </a>
-          </div>
-        {{/if}}
+        <div title={{if session.isAuthenticated "" (t "components.feature-result-item.search-satellite-authenticated")}}>
+          <a class="icon item {{if session.isAuthenticated "" "disabled-link"}}"  {{action "searchSatellites" feature on="click"}}>
+            <i class="icon-guideline-earth"></i>
+            {{t "components.feature-result-item.search-satellite"}}
+          </a>
+        </div>
       </div>
     {{/if}}
   </div>

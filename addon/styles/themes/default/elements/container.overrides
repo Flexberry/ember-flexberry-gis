@@ -747,7 +747,7 @@ div.measure-drag-panel {
   background: #fff none;
   .wrapper .label {
     font-size: 14px;
-    display: block; 
+    display: block;
     margin: 5px 0;
   }
   .button {
@@ -891,8 +891,14 @@ div.measure-drag-panel {
             margin: 0;
         }
     }
-    a.icon.item.more {
-      line-height: 5px;
+    a.icon.item {
+      &.more {
+        line-height: 5px;
+      }
+      &.disabled-link {
+        pointer-events: none;
+        color: @tempItemColor;
+      }
     }
     .more.submenu {
       position: absolute;
@@ -994,7 +1000,7 @@ div.measure-drag-panel {
     margin-bottom: 5px;
     margin-top: 5px;
   }
-  
+
   .feature-result-item-group:first-child .flexberry-toggler {
     padding-top: 0px;
     margin-top: 0px;

@@ -24,7 +24,21 @@ export default Ember.Mixin.create({
    */
   setLayerBySide(layer, side, leafletMap) {
     const layerId = Ember.get(layer, 'id');
-    const leafletOriginalLayer = Ember.get(layer, '_leafletObjectFirst') || layer.returnLeafletObject();
+    let leafletOriginalLayer = Ember.get(layer, '_leafletObjectFirst') || Ember.get(layer, '_leafletObject'); // layer displaying context
+    let leafletVectorLayer = Ember.get(layer, '_leafletObject'); // layer vector context
+
+    // layers for side-by-side plugin must have the getContainer() method
+    // Cluster layer does not implement this method, so displaying the cluster layer in the plugin is not available
+    // Use vector context for both display and map tools
+    if (leafletOriginalLayer instanceof L.MarkerClusterGroup) {
+      leafletOriginalLayer = Ember.get(leafletOriginalLayer, '_originalVectorLayer');
+    }
+
+    // Clustering vector layer contains the vector context in the "_leafletObject._originalVectorLayer" path
+    if (leafletVectorLayer instanceof L.MarkerClusterGroup) {
+      leafletVectorLayer = Ember.get(leafletVectorLayer, '_originalVectorLayer');
+    }
+
     let layersSideSettings = this.get(`compare.compareState.${side}`);
     let existedLayers = layersSideSettings.layers.filter(l => l.id === layerId);
     if (existedLayers.length > 0) {
@@ -33,7 +47,7 @@ export default Ember.Mixin.create({
       Ember.set(layersSideSettings, 'layerIds', layersSideSettings.layerIds.filter(l => l !== layerId));
     } else {
       if (layer.get('settingsAsObject.labelSettings.signMapObjects')) {
-        const labelsOriginalLayer = layer.returnLeafletObject()._labelsLayerMulti;
+        const labelsOriginalLayer = leafletVectorLayer._labelsLayerMulti;
         if (labelsOriginalLayer) {
           layersSideSettings.layers.push({
             id: layerId,
@@ -41,7 +55,7 @@ export default Ember.Mixin.create({
           });
         }
 
-        const labelsAdditionalOriginalLayer = layer.returnLeafletObject().additionalZoomLabel;
+        const labelsAdditionalOriginalLayer = leafletVectorLayer.additionalZoomLabel;
         if (labelsAdditionalOriginalLayer) {
           labelsAdditionalOriginalLayer.forEach(zoomLabels => {
             layersSideSettings.layers.push({
@@ -51,7 +65,7 @@ export default Ember.Mixin.create({
           });
         }
 
-        const labelsMultiOriginalLayer = layer.returnLeafletObject()._labelsLayer;
+        const labelsMultiOriginalLayer = leafletVectorLayer._labelsLayer;
         if (labelsMultiOriginalLayer) {
           layersSideSettings.layers.push({
             id: layerId,

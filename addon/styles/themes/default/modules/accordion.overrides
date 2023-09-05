@@ -21,6 +21,9 @@
     text-overflow: ellipsis;
     word-break: normal;
     word-wrap: break-word;
+    &.temp-item {
+      color: @tempItemColor;
+    }
   }
 }
 
