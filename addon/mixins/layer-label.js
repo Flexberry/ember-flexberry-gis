@@ -208,8 +208,6 @@ export default Ember.Mixin.create({
     let hasReplace = false;
     let propName;
 
-    let leafletObject = this.returnLeafletObject();
-
     try {
       propName = Ember.$('<p>' + str + '</p>').find('propertyname');
     } catch (e) {
@@ -230,28 +228,7 @@ export default Ember.Mixin.create({
         }
 
         if (property && layer.feature.properties && layer.feature.properties.hasOwnProperty(property)) {
-          let readFormat = Ember.get(leafletObject, 'readFormat.featureType.fieldTypes');
-
-          let label = layer.feature.properties[property];
-          let dateTimeFormat = this.displaySettings.dateTimeFormat;
-          let dateFormat = this.displaySettings.dateFormat;
-          if (readFormat[property] === 'date' && (!Ember.isEmpty(dateFormat) || !Ember.isEmpty(dateTimeFormat))) {
-            let dateValue = moment(label);
-
-            if (dateValue.isValid()) {
-              if (!Ember.isEmpty(dateTimeFormat)) {
-                label = (dateValue.format('HH:mm:ss') === '00:00:00') ? dateValue.format(dateFormat) : dateValue.format(dateTimeFormat);
-              } else {
-                label = dateValue.format(dateFormat);
-              }
-            }
-          }
-
-          if (Ember.isNone(label)) {
-            label = '';
-          }
-
-          str = str.replace(prop.outerHTML, label);
+          str = this._labelValue(layer, property, prop, str);
         }
       }
     }
@@ -261,6 +238,33 @@ export default Ember.Mixin.create({
     } else {
       return str;
     }
+  },
+
+  _labelValue(layer, property, prop, str) {
+    let leafletObject = this.returnLeafletObject();
+    let readFormat = Ember.get(leafletObject, 'readFormat.featureType.fieldTypes');
+    let label = layer.feature.properties[property];
+    let dateTimeFormat = this.displaySettings.dateTimeFormat;
+    let dateFormat = this.displaySettings.dateFormat;
+    if (readFormat[property] === 'date' && (!Ember.isEmpty(dateFormat) || !Ember.isEmpty(dateTimeFormat))) {
+      let dateValue = moment(label);
+
+      if (dateValue.isValid()) {
+        if (!Ember.isEmpty(dateTimeFormat)) {
+          label = (dateValue.format('HH:mm:ss') === '00:00:00') ? dateValue.format(dateFormat) : dateValue.format(dateTimeFormat);
+        } else {
+          label = dateValue.format(dateFormat);
+        }
+      }
+    }
+
+    if (Ember.isNone(label)) {
+      label = '';
+    }
+
+    str = str.replace(prop.outerHTML, label);
+
+    return str;
   },
 
   /**
@@ -292,14 +296,7 @@ export default Ember.Mixin.create({
         if (!Ember.isNone(nameFunc)) {
           nameFunc = Ember.$(item).attr('name').replaceAll('\\"', '');
           if (nameFunc === 'toFixed') {
-            let attr = Ember.$(item).attr('attr').replaceAll('\\"', '');
-            let property = item.innerHTML;
-            let numProp = Number.parseFloat(property);
-            let numAttr = Number.parseFloat(attr);
-            if (!Ember.isNone(attr) && !Ember.isNone(property) && !Number.isNaN(numProp) && !Number.isNaN(numAttr)) {
-              let newStr = numProp.toFixed(numAttr);
-              str = str.replace(item.outerHTML, newStr);
-            }
+            str = this._toFixedFunction(item, str);
           }
         }
       }
@@ -310,6 +307,19 @@ export default Ember.Mixin.create({
     } else {
       return str;
     }
+  },
+
+  _toFixedFunction(item, str) {
+    let attr = Ember.$(item).attr('attr').replaceAll('\\"', '');
+    let property = item.innerHTML;
+    let numProp = Number.parseFloat(property);
+    let numAttr = Number.parseFloat(attr);
+    if (!Ember.isNone(attr) && !Ember.isNone(property) && !Number.isNaN(numProp) && !Number.isNaN(numAttr)) {
+      let newStr = numProp.toFixed(numAttr);
+      str = str.replace(item.outerHTML, newStr);
+    }
+
+    return str;
   },
 
   /**
