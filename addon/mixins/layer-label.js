@@ -341,52 +341,48 @@ export default Ember.Mixin.create({
   */
   _createStringLabel(layers, labelsLayers) {
     if (layers) {
-      let labelsLayerZoom = null;
-      if (labelsLayers) {
-        let zoom = this.get('leafletMap').getZoom();
-        let aLayers = labelsLayers.filter(l => { return (l.minZoom == null || l.minZoom <= zoom) && (l.maxZoom == null || l.maxZoom >= zoom); });
+      let labelsLayerZoom = this._getLabelsLayersZoom();
+      if (labelsLayerZoom) {
+        let optionsLabel = labelsLayerZoom.settings.options;
+        let labelSettingsString = labelsLayerZoom.settings.labelSettingsString;
+        let style = Ember.String.htmlSafe(
+          `font-family: ${Ember.get(optionsLabel, 'captionFontFamily')}; ` +
+          `font-size: ${Ember.get(optionsLabel, 'captionFontSize')}px; ` +
+          `font-weight: ${Ember.get(optionsLabel, 'captionFontWeight')}; ` +
+          `font-style: ${Ember.get(optionsLabel, 'captionFontStyle')}; ` +
+          `text-decoration: ${Ember.get(optionsLabel, 'captionFontDecoration')}; ` +
+          `color: ${Ember.get(optionsLabel, 'captionFontColor')}; ` +
+          `text-align: ${Ember.get(optionsLabel, 'captionFontAlign')}; `);
 
-        if (aLayers.length > 0) {
-          labelsLayerZoom = aLayers[0];
-          let optionsLabel = labelsLayerZoom.settings.options;
-          let labelSettingsString = labelsLayerZoom.settings.labelSettingsString;
-          let style = Ember.String.htmlSafe(
-            `font-family: ${Ember.get(optionsLabel, 'captionFontFamily')}; ` +
-            `font-size: ${Ember.get(optionsLabel, 'captionFontSize')}px; ` +
-            `font-weight: ${Ember.get(optionsLabel, 'captionFontWeight')}; ` +
-            `font-style: ${Ember.get(optionsLabel, 'captionFontStyle')}; ` +
-            `text-decoration: ${Ember.get(optionsLabel, 'captionFontDecoration')}; ` +
-            `color: ${Ember.get(optionsLabel, 'captionFontColor')}; ` +
-            `text-align: ${Ember.get(optionsLabel, 'captionFontAlign')}; `);
-
-          layers.forEach((layer) => {
-            this._checkAndCreateLabel(labelsLayerZoom, layer, labelSettingsString, style);
-          });
-        }
+        this._checkLabelInView(layers, labelsLayerZoom).forEach(layer => {
+          let label = layer.labelValue || this._applyFunction(this._applyProperty(labelSettingsString, layer));
+          this._createLabel(label, layer, style, labelsLayerZoom);
+        });
       }
     }
   },
 
-  _checkAndCreateLabel(labelsLayerZoom, layer, labelSettingsString, style) {
+  _checkLabelInView(layers, labelsLayerZoom, checkExist = true) {
     let leafletMap = this.get('leafletMap');
     let currentLabelExists = false;
     let bbox = leafletMap.getBounds();
-    let zoom = this.get('leafletMap').getZoom();
-    if (labelsLayerZoom && layer._label) {
-      currentLabelExists = layer._label.filter(l => {
-        return (l.minZoom == null || l.minZoom <= zoom) && (l.maxZoom == null || l.maxZoom >= zoom);
-      }).length > 0;
-    } else {
-      currentLabelExists = !Ember.isNone(layer._label);
-    }
+    let zoom = leafletMap.getZoom();
+    return layers.filter((layer) => {
+      if (labelsLayerZoom && layer._label) {
+        currentLabelExists = layer._label.filter(l => {
+          return (l.minZoom == null || l.minZoom <= zoom) && (l.maxZoom == null || l.maxZoom >= zoom);
+        }).length > 0;
+      } else {
+        currentLabelExists = !Ember.isNone(layer._label);
+      }
 
-    let showExisting = this.get('showExisting');
-    let intersectBBox = layer.getBounds ? bbox.intersects(layer.getBounds()) : bbox.contains(layer.getLatLng());
-    let staticLoad = showExisting !== false && intersectBBox;
-    if (!currentLabelExists && (showExisting === false || staticLoad)) {
-      let label = layer.labelValue || this._applyFunction(this._applyProperty(labelSettingsString, layer));
-      this._createLabel(label, layer, style, labelsLayerZoom);
-    }
+      currentLabelExists = checkExist && currentLabelExists;
+
+      let showExisting = this.get('showExisting');
+      let intersectBBox = layer.getBounds ? bbox.intersects(layer.getBounds()) : bbox.contains(layer.getLatLng());
+      let staticLoad = showExisting !== false && intersectBBox;
+      return !currentLabelExists && (showExisting === false || staticLoad);
+    });
   },
 
   /**
@@ -703,6 +699,22 @@ export default Ember.Mixin.create({
     }
   },
 
+  _positionMax(maxPosition, position) {
+    if (position >= maxPosition) {
+      return position;
+    }
+
+    return maxPosition;
+  },
+
+  _positionMin(minPosition, position) {
+    if (position >= minPosition) {
+      return position;
+    }
+
+    return minPosition;
+  },
+
   _positionForComboStyle(stylesMarker) {
     let leftMin = 0;
     let rightMax = 0;
@@ -721,21 +733,10 @@ export default Ember.Mixin.create({
         right = (iconSize[0] || 0) - (iconAnchor[0] || 0);
         top = iconAnchor[1] || 0;
         bottom = (iconSize[1] || 0) - (iconAnchor[1] || 0);
-        if (left <= leftMin) {
-          leftMin = left;
-        }
-
-        if (right >= rightMax) {
-          rightMax = right;
-        }
-
-        if (top <= topMin) {
-          topMin = top;
-        }
-
-        if (bottom >= bottomMax) {
-          bottomMax = bottom;
-        }
+        leftMin = this._positionMin(leftMin, left);
+        rightMax = this._positionMax(rightMax, right);
+        topMin = this._positionMin(topMin, top);
+        bottomMax = this._positionMax(bottomMax, bottom);
       }
     });
 
@@ -1110,21 +1111,11 @@ export default Ember.Mixin.create({
     this._setAlignForLine(layer, text, options.align, textNode, settingsLabel);
   },
 
-  /**
-    Update position for line object's label
-
-    @method _updatePositionLabelForLine
-  */
-  _updatePositionLabelForLine() {
+  _getLabelsLayersZoom() {
     let labelsLayers = this.get('labelsLayers');
-    let leafletObject = this.returnLeafletObject();
-
-    let _this = this;
-
     let labelsLayersZoom = null;
+    let zoom =  this.get('leafletMap').getZoom();
     if (labelsLayers) {
-      let zoom =  this.get('leafletMap').getZoom();
-
       let aLayers = labelsLayers.filter(l => { return (l.minZoom == null || l.minZoom <= zoom) && (l.maxZoom == null || l.maxZoom >= zoom); });
 
       if (aLayers.length > 0) {
@@ -1132,25 +1123,34 @@ export default Ember.Mixin.create({
       }
     }
 
-    if (!Ember.isNone(leafletObject)) {
-      if (labelsLayersZoom && this.get('leafletMap').hasLayer(labelsLayersZoom)) {
-        leafletObject.eachLayer(function (layer) {
-          if (!Ember.isNone(layer._path) && !Ember.isEmpty(layer._text)) {
-            if (!Ember.isNone(layer._label)) {
-              // тут бы по идее тоже не для всех обновлять, а для нужного
-              layer._label.forEach(zoomLabel => {
-                if (zoomLabel instanceof L.FeatureGroup) {
-                  zoomLabel.getLayers().forEach((label) => {
-                    _this._updateAttributesSvg(layer, label._parentLayer, label._svg, label._path, labelsLayersZoom.settings);
-                  });
-                } else {
-                  _this._updateAttributesSvg(layer, null, zoomLabel._svg, zoomLabel._path, labelsLayersZoom.settings);
-                }
-              });
-            }
-          }
-        });
-      }
+    return labelsLayersZoom;
+  },
+
+  /**
+    Update position for line object's label
+
+    @method _updatePositionLabelForLine
+  */
+  _updatePositionLabelForLine() {
+    let leafletObject = this.returnLeafletObject();
+    let _this = this;
+    let labelsLayersZoom = this._getLabelsLayersZoom();
+
+    if (!Ember.isNone(leafletObject) && labelsLayersZoom && this.get('leafletMap').hasLayer(labelsLayersZoom)) {
+      // обновлять будем только то что видно
+      this._checkLabelInView(leafletObject.getLayers(), labelsLayersZoom, false).forEach(layer => {
+        if (!Ember.isNone(layer._path) && !Ember.isEmpty(layer._text) && !Ember.isNone(layer._label)) {
+            layer._label.forEach(zoomLabel => {
+              if (zoomLabel instanceof L.FeatureGroup) {
+                zoomLabel.getLayers().forEach((label) => {
+                  _this._updateAttributesSvg(layer, label._parentLayer, label._svg, label._path, labelsLayersZoom.settings);
+                });
+              } else {
+                _this._updateAttributesSvg(layer, null, zoomLabel._svg, zoomLabel._path, labelsLayersZoom.settings);
+              }
+            });
+        }
+      });
     }
   },
 
@@ -1237,6 +1237,37 @@ export default Ember.Mixin.create({
     return labelsLayer;
   },
 
+  _labelsLayersCreate(leafletObject) {
+    let labelsLayers = this.get('labelsLayers');
+    let leafletMap = this.get('leafletMap');
+    let labelSettingsString = this.get('labelSettings.labelSettingsString');
+    if (Ember.isNone(labelsLayers)) {
+      let labelsLayersArray = Ember.A();
+      if (labelSettingsString) {
+        this._createLabelsLayerOldSettings(labelsLayersArray);
+      } else {
+        this._createLabelsLayer(labelsLayersArray);
+      }
+
+      leafletObject.labelsLayers = labelsLayersArray;
+      this.set('labelsLayers', labelsLayersArray);
+      labelsLayers = labelsLayersArray;
+
+      if (this.get('typeGeometry') === 'polyline') {
+        leafletMap.on('zoomend', this._updatePositionLabelForLine, this);
+      }
+
+      // для showExisting не грузим все надписи сразу. слишком много. поэтому приходится догружать при сдвиге карты, как будто это continueLoading,
+      // но т.к. в обычном варианте надписи рисуются в featureprocesscallback, то в данной ситуации придется вызывать добавление надписей самостоятельно
+      // и для слоев с дополнительными слоями с надписями тоже придется вызвать руками, потому что по прямой логике из featureprocesscallback они уже вызывались
+      if (this.get('showExisting') !== false || labelsLayersArray) {
+        leafletMap.on('moveend', this._showLabelsMovingMap, this);
+      }
+    } else {
+      leafletObject.labelsLayers = labelsLayers;
+    }
+  },
+
   /**
     Show lables
 
@@ -1247,12 +1278,11 @@ export default Ember.Mixin.create({
   _showLabels(layers, leafletObject) {
     let labelSettingsString = this.get('labelSettings.labelSettingsString');
     let rules = this.get('labelSettings.rules');
-    if (!Ember.isNone(labelSettingsString) || !Ember.isNone(rules)) {
-      let leafletMap = this.get('leafletMap');
-      if (!leafletObject) {
-        leafletObject = this.returnLeafletObject();
-      }
+    if (!leafletObject) {
+      leafletObject = this.returnLeafletObject();
+    }
 
+    if (!Ember.isNone(labelSettingsString) || !Ember.isNone(rules)) {
       let labelsLayers = this.get('labelsLayers');
       if (!Ember.isNone(labelsLayers) && Ember.isNone(leafletObject.labelsLayers)) {
         labelsLayers.forEach(labelLayer => {
@@ -1260,32 +1290,8 @@ export default Ember.Mixin.create({
         });
       }
 
-      if (Ember.isNone(labelsLayers)) {
-        let labelsLayersArray = Ember.A();
-        if (labelSettingsString) {
-          this._createLabelsLayerOldSettings(labelsLayersArray);
-        } else {
-          this._createLabelsLayer(labelsLayersArray);
-        }
-
-        leafletObject.labelsLayers = labelsLayersArray;
-        this.set('labelsLayers', labelsLayersArray);
-        labelsLayers = labelsLayersArray;
-
-        if (this.get('typeGeometry') === 'polyline') {
-          leafletMap.on('zoomend', this._updatePositionLabelForLine, this);
-        }
-
-        // для showExisting не грузим все надписи сразу. слишком много. поэтому приходится догружать при сдвиге карты, как будто это continueLoading,
-        // но т.к. в обычном варианте надписи рисуются в featureprocesscallback, то в данной ситуации придется вызывать добавление надписей самостоятельно
-        // и для слоев с дополнительными слоями с надписями тоже придется вызвать руками, потому что по прямой логике из featureprocesscallback они уже вызывались
-        if (this.get('showExisting') !== false || labelsLayersArray) {
-          leafletMap.on('moveend', this._showLabelsMovingMap, this);
-        }
-      } else {
-        leafletObject.labelsLayers = labelsLayers;
-      }
-
+      this._labelsLayersCreate(leafletObject);
+      labelsLayers = this.get('labelsLayers');
       this._createStringLabel(layers, labelsLayers);
       if (Ember.isNone(this.get('labelsLayers'))) {
         this.set('labelsLayers', labelsLayers);
