@@ -1125,52 +1125,27 @@ export default Ember.Mixin.create({
   },
 
   _createLabelsLayerOldSettings(labelsLayersArray) {
-    let leafletMap = this.get('leafletMap');
-    let labelLayer = L.featureGroup();
+    let i = 0;
+    let labelLayer = this._commonSettingsLabelsLayer(i);
     let minScaleRange = this.get('labelSettings.scaleRange.minScaleRange') || this.get('minZoom');
     let maxScaleRange = this.get('labelSettings.scaleRange.maxScaleRange') || this.get('maxZoom');
     labelLayer.minZoom = minScaleRange;
     labelLayer.maxZoom = maxScaleRange;
     labelLayer.settings = this.get('labelSettings');
     labelLayer.settings.multi = false;
-    labelLayer.leafletMap = leafletMap;
-    let i = 0;
-    let layerId = !Ember.isNone(this.get('layerId')) ? this.get('layerId') : '';
-    labelLayer._paneLabel = 'labelLayer' + i + '_' + this.get('layerModel.id') + layerId;
-    i++;
-    const _getContainerPaneLabel = function () {
-      let className = 'leaflet-' + labelLayer._paneLabel + '-pane';
-      let container = Ember.$(`.${className}`);
-      return container[0];
-    };
-
-    labelLayer.getContainer = _getContainerPaneLabel.bind(this);
     labelsLayersArray.addObject(labelLayer);
+    i++
 
     let additionalZoomSettings = this.get('labelSettings.scaleRange.additionalZoom');
     if (additionalZoomSettings) {
       additionalZoomSettings.forEach(zoomSettings => {
-        try {
-          let _paneLabel = 'labelLayer' + i + '_' + this.get('layerModel.id') + layerId;
-          const _getContainerPaneLabel = function () {
-            let className = 'leaflet-' + _paneLabel + '-pane';
-            let container = Ember.$(`.${className}`);
-            return container[0];
-          };
-
-          let labelLayer = L.featureGroup();
-          labelLayer.minZoom = zoomSettings.minZoom;
-          labelLayer.maxZoom = zoomSettings.maxZoom;
-          labelLayer.check = zoomSettings.check;
-          labelLayer.settings = Object.assign({}, this.get('labelSettings'));
-          labelLayer.settings.multi = zoomSettings.check === 'multi';
-          labelLayer.leafletMap = leafletMap;
-          labelLayer.getContainer = _getContainerPaneLabel.bind(this);
-          labelLayer._paneLabel = _paneLabel;
-          labelsLayersArray.addObject(labelLayer);
-        } catch (e) {
-          console.error(e);
-        }
+        let labelLayer = this._commonSettingsLabelsLayer(i);
+        labelLayer.minZoom = zoomSettings.minZoom;
+        labelLayer.maxZoom = zoomSettings.maxZoom;
+        labelLayer.check = zoomSettings.check;
+        labelLayer.settings = Object.assign({}, this.get('labelSettings'));
+        labelLayer.settings.multi = zoomSettings.check === 'multi';
+        labelsLayersArray.addObject(labelLayer);
 
         i++;
       });
@@ -1178,28 +1153,33 @@ export default Ember.Mixin.create({
   },
 
   _createLabelsLayer(labelsLayersArray) {
-    let leafletMap = this.get('leafletMap');
     let labelSettings = this.get('labelSettings.rules');
     let i = 0;
     labelSettings.forEach(settings => {
-      let labelsLayer = L.featureGroup();
+      let labelsLayer = this._commonSettingsLabelsLayer(i);
       labelsLayer.minZoom = settings.scaleRange.minScaleRange;
       labelsLayer.maxZoom = settings.scaleRange.maxScaleRange;
       labelsLayer.settings = settings;
-      labelsLayer.leafletMap = leafletMap;
-      let layerId = !Ember.isNone(this.get('layerId')) ? this.get('layerId') : '';
-      let _paneLabel = 'labelLayer' + i + '_' + this.get('layerModel.id') + layerId;
-      const _getContainerPaneLabel = function () {
-        let className = 'leaflet-' + _paneLabel + '-pane';
-        let container = Ember.$(`.${className}`);
-        return container[0];
-      };
-
-      labelsLayer.getContainer = _getContainerPaneLabel.bind(this);
-      labelsLayer._paneLabel = _paneLabel;
       labelsLayersArray.addObject(labelsLayer);
       i++;
     });
+  },
+
+  _commonSettingsLabelsLayer(i) {
+    let labelsLayer = L.featureGroup();
+    labelsLayer.leafletMap = leafletMap;
+    let layerId = !Ember.isNone(this.get('layerId')) ? this.get('layerId') : '';
+    let _paneLabel = 'labelLayer' + i + '_' + this.get('layerModel.id') + layerId;
+    const _getContainerPaneLabel = function () {
+      let className = 'leaflet-' + _paneLabel + '-pane';
+      let container = Ember.$(`.${className}`);
+      return container[0];
+    };
+
+    labelsLayer.getContainer = _getContainerPaneLabel.bind(this);
+    labelsLayer._paneLabel = _paneLabel;
+
+    return labelsLayer;
   },
 
   /**
@@ -1282,6 +1262,8 @@ export default Ember.Mixin.create({
       leafletObject = this.returnLeafletObject();
     }
 
+    let notInMapLabels = this._containerHasLabelsLayers();
+
     if (Ember.isNone(labelsLayers)) {
       this._showLabels(layers, leafletObject);
       labelsLayers = this.get('labelsLayers');
@@ -1291,7 +1273,10 @@ export default Ember.Mixin.create({
           leafletContainer.addLayer(labelLayer);
         });
       }
-    } else if (!this._containerHasLabelsLayers()) {
+    } else if (notInMapLabels.length > 0) {
+      notInMapLabels.forEach(labelLayer => {
+        leafletContainer.addLayer(labelLayer);
+      });
     } else {
       this._showLabels(layers, leafletObject);
       this._additionalZoomLabelPane();
@@ -1299,21 +1284,18 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Check label layer in continer and add it if necessary.
+    Check label layer in continer.
 
     @method _checkLabelsLayers
     @private
   */
   _containerHasLabelsLayers() {
-    let check = true;
+    let check = [];
     let labelsLayers = this.get('labelsLayers');
     let leafletContainer = this.get('leafletContainer');
     if (labelsLayers && labelsLayers.length > 0) {
-      labelsLayers.forEach(labelLayer => {
-        if (labelLayer && !leafletContainer.hasLayer(labelLayer)) {
-          leafletContainer.addLayer(labelLayer);
-          check &= false;
-        }
+      check = labelsLayers.filter(labelLayer => {
+        return labelLayer && !leafletContainer.hasLayer(labelLayer);
       });
     }
 
