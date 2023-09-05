@@ -136,23 +136,21 @@ export default Ember.Mixin.create({
   _checkZoomPaneLabel(leafletObject) {
     let leafletMap = this.get('leafletMap');
     let labelsLayers = this.get('labelsLayers');
-    if (labelsLayers) {
-      labelsLayers.forEach(labelsLayer => {
-        let _paneLabel = labelsLayer._paneLabel;
-        if (this.get('labelSettings.signMapObjects') && !Ember.isNone(leafletMap) && _paneLabel && !Ember.isNone(leafletObject)) {
-          let pane = leafletMap.getPane(_paneLabel);
-          let mapPane = leafletMap._mapPane;
-          if (!Ember.isNone(mapPane) && !Ember.isNone(pane) && !Ember.isNone(labelsLayer)) {
-            let existPaneDomElem = Ember.$(mapPane).children(`[class*='${_paneLabel}']`).length;
-            if (existPaneDomElem > 0 && !checkMapZoom(labelsLayer)) {
-              L.DomUtil.remove(pane);
-            } else if (existPaneDomElem === 0 && checkMapZoom(labelsLayer)) {
-              mapPane.appendChild(pane);
-            }
+    labelsLayers && labelsLayers.forEach(labelsLayer => {
+      let _paneLabel = labelsLayer && labelsLayer._paneLabel;
+      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(leafletMap) && _paneLabel && !Ember.isNone(leafletObject)) {
+        let pane = leafletMap.getPane(_paneLabel);
+        let mapPane = leafletMap._mapPane;
+        if (!Ember.isNone(mapPane) && !Ember.isNone(pane)) {
+          let existPaneDomElem = Ember.$(mapPane).children(`[class*='${_paneLabel}']`).length;
+          if (existPaneDomElem > 0 && !checkMapZoom(labelsLayer)) {
+            L.DomUtil.remove(pane);
+          } else if (existPaneDomElem === 0 && checkMapZoom(labelsLayer)) {
+            mapPane.appendChild(pane);
           }
         }
-      });
-    }
+      }
+    });
   },
 
   /**
@@ -225,7 +223,7 @@ export default Ember.Mixin.create({
     }
 
     if (propName.length > 0) {
-      for (var prop of propName) {
+      for (let prop of propName) {
         let property = prop.innerHTML;
         if (prop.localName !== 'propertyname') {
           property = prop.innerText;
@@ -289,22 +287,19 @@ export default Ember.Mixin.create({
     }
 
     if (func.length > 0) {
-      for (var item of func) {
+      for (let item of func) {
         let nameFunc = Ember.$(item).attr('name');
         if (!Ember.isNone(nameFunc)) {
           nameFunc = Ember.$(item).attr('name').replaceAll('\\"', '');
-          switch (nameFunc) {
-            case 'toFixed':
-              let attr = Ember.$(item).attr('attr').replaceAll('\\"', '');
-              let property = item.innerHTML;
-              let numProp = Number.parseFloat(property);
-              let numAttr = Number.parseFloat(attr);
-              if (!Ember.isNone(attr) && !Ember.isNone(property) && !Number.isNaN(numProp) && !Number.isNaN(numAttr)) {
-                let newStr = numProp.toFixed(numAttr);
-                str = str.replace(item.outerHTML, newStr);
-              }
-
-              break;
+          if (nameFunc === 'toFixed') {
+            let attr = Ember.$(item).attr('attr').replaceAll('\\"', '');
+            let property = item.innerHTML;
+            let numProp = Number.parseFloat(property);
+            let numAttr = Number.parseFloat(attr);
+            if (!Ember.isNone(attr) && !Ember.isNone(property) && !Number.isNaN(numProp) && !Number.isNaN(numAttr)) {
+              let newStr = numProp.toFixed(numAttr);
+              str = str.replace(item.outerHTML, newStr);
+            }
           }
         }
       }
@@ -417,8 +412,16 @@ export default Ember.Mixin.create({
     let className = 'label';
     className += ' point ' + positionPoint.cssClass;
     let html = '<div style="' + style + positionPoint.style + '">' + text + '</div>';
+    let optionsMarker = {
+      latlng,
+      className,
+      html,
+      iconWidth,
+      iconHeight,
+      anchor
+    };
 
-    let label = this._createLabelMarker(layer, latlng, className, html, iconWidth, iconHeight, anchor, labelsLayerZoom._paneLabel);
+    let label = this._createLabelMarker(layer, optionsMarker, labelsLayerZoom._paneLabel);
     label.minZoom = labelsLayerZoom.minZoom;
     label.maxZoom = labelsLayerZoom.maxZoom;
 
@@ -462,8 +465,16 @@ export default Ember.Mixin.create({
             let centroidN = geojsonWriter.write(centroidNJsts);
             latlng = L.latLng(centroidN.coordinates[1], centroidN.coordinates[0]);
             html = '<div style="' + style + '">' + text + '</div>';
+            let optionsMarker = {
+              latlng,
+              className,
+              html,
+              iconWidth,
+              iconHeight,
+              anchor
+            };
 
-            let labelN = this._createLabelMarker(layer, latlng, className, html, iconWidth, iconHeight, anchor, labelsLayerZoom._paneLabel);
+            let labelN = this._createLabelMarker(layer, optionsMarker, labelsLayerZoom._paneLabel);
             label.addLayer(labelN);
           }
 
@@ -480,9 +491,17 @@ export default Ember.Mixin.create({
         html = '<div style="' + style + '">' + text + '</div>';
 
         let paneLabel = labelsLayerZoom._paneLabel;
+        let optionsMarker = {
+          latlng,
+          className,
+          html,
+          iconWidth,
+          iconHeight,
+          anchor
+        };
 
         // возможно тут тоже надо будет сделать L.featureGroup()
-        label = this._createLabelMarker(layer, latlng, className, html, iconWidth, iconHeight, anchor, paneLabel);
+        label = this._createLabelMarker(layer, optionsMarker, paneLabel);
       }
     }
     catch (e) {
@@ -551,14 +570,22 @@ export default Ember.Mixin.create({
           iconWidth = 12;
           iconHeight = 12;
           html = Ember.$(layer._svgConteiner).html();
+          let optionsMarker = {
+            latlng,
+            className,
+            html,
+            iconWidth,
+            iconHeight,
+            anchor
+          };
 
           if (multi) {
-            let labelN = this._createLabelMarker(layer, latlng, className, html, iconWidth, iconHeight, anchor, labelsLayerZoom._paneLabel);
+            let labelN = this._createLabelMarker(layer, optionsMarker, labelsLayerZoom._paneLabel);
             labelN._parentLayer = partline;
 
             label.addLayer(labelN);
           } else {
-            label = this._createLabelMarker(layer, latlng, className, html, iconWidth, iconHeight, anchor, labelsLayerZoom._paneLabel);
+            label = this._createLabelMarker(layer,optionsMarker, labelsLayerZoom._paneLabel);
           }
         }
       } else {
@@ -574,7 +601,15 @@ export default Ember.Mixin.create({
         html = Ember.$(layer._svgConteiner).html();
 
         let paneLabel = labelsLayerZoom._paneLabel;
-        label = this._createLabelMarker(layer, latlng, className, html, iconWidth, iconHeight, anchor, paneLabel);
+        let optionsMarker = {
+          latlng,
+          className,
+          html,
+          iconWidth,
+          iconHeight,
+          anchor
+        };
+        label = this._createLabelMarker(layer, optionsMarker, paneLabel);
       }
     }
     catch (e) {
@@ -598,18 +633,21 @@ export default Ember.Mixin.create({
     this._addLabelsToLayers(labelsLayerZoom, label);
   },
 
-  _createLabelMarker(layer, latlng, className, html, iconWidth, iconHeight, anchor, pane) {
+  _createLabelMarker(layer, options, pane) {
     let leafletMap = this.get('leafletMap');
-    let label = L.marker(latlng, {
-      icon: L.divIcon({
-        className: className,
-        html: html,
-        iconSize: [iconWidth, iconHeight],
-        iconAnchor: anchor
-      }),
+    let paramsDivIcon = {
+      className: options.className,
+      html: options.html,
+      iconSize: [options.iconWidth, options.iconHeight],
+      iconAnchor: options.anchor
+    };
+    let icon = L.divIcon(paramsDivIcon);
+    let paramsMarker = {
+      icon: icon,
       zIndexOffset: 1000,
       pane: pane
-    });
+    }
+    let label = L.marker(options.latlng, paramsMarker);
 
     if (layer._path) {
       label._path = layer._path;
@@ -619,9 +657,9 @@ export default Ember.Mixin.create({
     }
 
     label.style = {
-      className: className,
-      html: html,
-      iconSize: [iconWidth, iconHeight]
+      className: options.className,
+      html: options.html,
+      iconSize: [options.iconWidth, options.iconHeight]
     };
     label.feature = layer.feature;
     label.leafletMap = leafletMap;
@@ -702,11 +740,6 @@ export default Ember.Mixin.create({
         anchor = [left + width, top + height];
         cssClass = 'over left';
         break;
-      case 'overMiddle':
-        style = 'text-align: center;';
-        anchor = [Math.round((width - (right - left)) / 2), top + height];
-        cssClass = 'over middle';
-        break;
       case 'overRight':
         style = 'text-align: left;';
         anchor = [-1 * right, top + height];
@@ -742,7 +775,7 @@ export default Ember.Mixin.create({
         anchor = [-1 * right, -1 * bottom];
         cssClass = 'under right';
         break;
-      default:
+      default: // and overMiddle
         style = 'text-align: center;';
         anchor = [Math.round((width - (right - left)) / 2), top + height];
         cssClass = 'over middle';
@@ -784,24 +817,11 @@ export default Ember.Mixin.create({
     return clientWidth;
   },
 
-  /**
-    Set label for line object
-
-    @method _setLabelLine
-    @param {Object} layer
-    @param {Object} svg
-  */
-  _setLabelLine(layer, svg, partline, text, settingsLabel) {
+  _getRings(lType, latlngArr) {
     let leafletMap = this.get('leafletMap');
-    let latlngArr = layer.getLatLngs();
-    if (partline) {
-      latlngArr = partline.getLatLngs();
-    }
-
     let rings = [];
     let begCoord;
     let endCoord;
-    let lType = (!partline) ? layer.toGeoJSON().geometry.type : partline.toGeoJSON().geometry.type;
     if (lType === 'LineString') {
       begCoord = leafletMap.latLngToLayerPoint(latlngArr[0]);
       endCoord = leafletMap.latLngToLayerPoint(latlngArr[latlngArr.length - 1]);
@@ -819,6 +839,21 @@ export default Ember.Mixin.create({
     if (begCoord.x > endCoord.x) {
       rings.reverse();
     }
+
+    return rings;
+  },
+
+  /**
+    Set label for line object
+
+    @method _setLabelLine
+    @param {Object} layer
+    @param {Object} svg
+  */
+  _setLabelLine(layer, svg, partline, text, settingsLabel) {
+    let latlngArr = partline ? partline.getLatLngs() : layer.getLatLngs();
+    let lType = (!partline) ? layer.toGeoJSON().geometry.type : partline.toGeoJSON().geometry.type;
+    let rings = this._getRings(lType, latlngArr);
 
     // зададим буферную зону вокруг path, чтобы надписи не обрезались
     let buffer = 100;
@@ -1257,8 +1292,6 @@ export default Ember.Mixin.create({
         });
       }
     } else if (!this._containerHasLabelsLayers()) {
-      // already done everything
-      labelsLayers = this.get('labelsLayers');
     } else {
       this._showLabels(layers, leafletObject);
       this._additionalZoomLabelPane();
@@ -1298,14 +1331,12 @@ export default Ember.Mixin.create({
     if (labelsLayers) {
       labelsLayers.forEach(labelLayers => {
         let thisPane = labelLayers._paneLabel;
-        if (thisPane) {
-          let leafletMap = this.get('leafletMap');
-          if (thisPane && !Ember.isNone(leafletMap)) {
-            let pane = leafletMap.getPane(thisPane);
-            if (!pane || Ember.isNone(pane)) {
-              this._createPane(thisPane);
-              this._setLayerZIndex();
-            }
+        let leafletMap = this.get('leafletMap');
+        if (thisPane && !Ember.isNone(leafletMap)) {
+          let pane = leafletMap.getPane(thisPane);
+          if (!pane || Ember.isNone(pane)) {
+            this._createPane(thisPane);
+            this._setLayerZIndex();
           }
         }
       });
