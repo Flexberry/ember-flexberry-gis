@@ -456,6 +456,7 @@ export default Ember.Mixin.create({
 
         let paneLabel = labelsLayerZoom._paneLabel;
         let optionsMarker = this._optionsMarker(latlng, className, html, iconWidth, iconHeight, anchor);
+
         // возможно тут тоже надо будет сделать L.featureGroup()
         label = this._createLabelMarker(layer, optionsMarker, paneLabel);
       }
@@ -566,7 +567,7 @@ export default Ember.Mixin.create({
 
             label.addLayer(labelN);
           } else {
-            label = this._createLabelMarker(layer,optionsMarker, labelsLayerZoom._paneLabel);
+            label = this._createLabelMarker(layer, optionsMarker, labelsLayerZoom._paneLabel);
           }
         }
       } else {
@@ -634,7 +635,7 @@ export default Ember.Mixin.create({
       icon: icon,
       zIndexOffset: 1000,
       pane: pane
-    }
+    };
     let label = L.marker(options.latlng, paramsMarker);
 
     if (layer._path) {
@@ -1102,15 +1103,15 @@ export default Ember.Mixin.create({
       // обновлять будем только то что видно
       this._checkLabelInView(leafletObject.getLayers(), labelsLayersZoom, false).forEach(layer => {
         if (!Ember.isNone(layer._path) && !Ember.isEmpty(layer._text) && !Ember.isNone(layer._label)) {
-            layer._label.forEach(zoomLabel => {
-              if (zoomLabel instanceof L.FeatureGroup) {
-                zoomLabel.getLayers().forEach((label) => {
-                  _this._updateAttributesSvg(layer, label._parentLayer, label._svg, label._path, labelsLayersZoom.settings);
-                });
-              } else {
-                _this._updateAttributesSvg(layer, null, zoomLabel._svg, zoomLabel._path, labelsLayersZoom.settings);
-              }
-            });
+          layer._label.forEach(zoomLabel => {
+            if (zoomLabel instanceof L.FeatureGroup) {
+              zoomLabel.getLayers().forEach((label) => {
+                _this._updateAttributesSvg(layer, label._parentLayer, label._svg, label._path, labelsLayersZoom.settings);
+              });
+            } else {
+              _this._updateAttributesSvg(layer, null, zoomLabel._svg, zoomLabel._path, labelsLayersZoom.settings);
+            }
+          });
         }
       });
     }
@@ -1151,7 +1152,7 @@ export default Ember.Mixin.create({
     labelLayer.settings = this.get('labelSettings');
     labelLayer.settings.multi = false;
     labelsLayersArray.addObject(labelLayer);
-    i++
+    i++;
 
     let additionalZoomSettings = this.get('labelSettings.scaleRange.additionalZoom');
     if (additionalZoomSettings) {
@@ -1184,7 +1185,7 @@ export default Ember.Mixin.create({
 
   _commonSettingsLabelsLayer(i) {
     let labelsLayer = L.featureGroup();
-    labelsLayer.leafletMap = leafletMap;
+    labelsLayer.leafletMap = this.get('leafletMap');
     let layerId = !Ember.isNone(this.get('layerId')) ? this.get('layerId') : '';
     let _paneLabel = 'labelLayer' + i + '_' + this.get('layerModel.id') + layerId;
     const _getContainerPaneLabel = function () {

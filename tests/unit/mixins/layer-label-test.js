@@ -15,38 +15,38 @@ test('test method _createStringLabel', function(assert) {
   let leafletMap = L.map(document.createElement('div'), {
     center: [51.505, -0.09],
     zoom: 13
-  })
+  });
   let subject = LayerLabelObject.create({
     leafletMap: leafletMap,
     showExisting: false
   });
   let settings = {
-    "options": {
-      "captionFontColor": "#000000FF",
-      "captionFontFamily": "Times New Roman",
-      "captionFontSize": "12",
-      "captionFontStyle": "normal",
-      "captionFontWeight": "normal",
-      "captionFontDecoration": "none"
+    'options': {
+      'captionFontColor': '#000000FF',
+      'captionFontFamily': 'Times New Roman',
+      'captionFontSize': '12',
+      'captionFontStyle': 'normal',
+      'captionFontWeight': 'normal',
+      'captionFontDecoration': 'none'
     },
-    "location": {
-      "locationPoint": "overRight",
-      "lineLocationSelect": "Over the line"
+    'location': {
+      'locationPoint': 'overRight',
+      'lineLocationSelect': 'Over the line'
     },
-    "scaleRange": {
-      "minScaleRange": 1,
-      "maxScaleRange": 19
+    'scaleRange': {
+      'minScaleRange': 1,
+      'maxScaleRange': 19
     },
-    "signMapObjects": true,
-    "labelSettingsString": "<propertyname>atr1</propertyname>"
-  }
+    'signMapObjects': true,
+    'labelSettingsString': '<propertyname>atr1</propertyname>'
+  };
   let labelsLayer = L.featureGroup();
-  labelsLayer.minZoom = settings.scaleRange.minScaleRange;;
+  labelsLayer.minZoom = settings.scaleRange.minScaleRange;
   labelsLayer.maxZoom = settings.scaleRange.maxScaleRange;
   labelsLayer.settings = settings;
   labelsLayer.leafletMap = leafletMap;
   let labelsLayers = Ember.A();
-  labelsLayers.addObject(labelsLayer)
+  labelsLayers.addObject(labelsLayer);
   let layers = [L.marker([59.23, 56.27])];
 
   let _applyFunctionStub = sinon.stub(subject, '_applyFunction');
@@ -55,7 +55,7 @@ test('test method _createStringLabel', function(assert) {
   _applyPropertyStub.returns('test');
   let _createLabelSpy = sinon.spy(subject, '_createLabel');
 
-  subject._createStringLabel(layers, labelsLayers)
+  subject._createStringLabel(layers, labelsLayers);
   assert.equal(_applyFunctionStub.callCount, 1);
   assert.equal(_applyPropertyStub.callCount, 1);
   assert.equal(_createLabelSpy.callCount, 1);
