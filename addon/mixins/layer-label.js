@@ -136,21 +136,23 @@ export default Ember.Mixin.create({
   _checkZoomPaneLabel(leafletObject) {
     let leafletMap = this.get('leafletMap');
     let labelsLayers = this.get('labelsLayers');
-    labelsLayers && labelsLayers.forEach(labelsLayer => {
-      let _paneLabel = labelsLayer && labelsLayer._paneLabel;
-      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(leafletMap) && _paneLabel && !Ember.isNone(leafletObject)) {
-        let pane = leafletMap.getPane(_paneLabel);
-        let mapPane = leafletMap._mapPane;
-        if (!Ember.isNone(mapPane) && !Ember.isNone(pane)) {
-          let existPaneDomElem = Ember.$(mapPane).children(`[class*='${_paneLabel}']`).length;
-          if (existPaneDomElem > 0 && !checkMapZoom(labelsLayer)) {
-            L.DomUtil.remove(pane);
-          } else if (existPaneDomElem === 0 && checkMapZoom(labelsLayer)) {
-            mapPane.appendChild(pane);
+    if (labelsLayers) {
+      labelsLayers.forEach(labelsLayer => {
+        let _paneLabel = labelsLayer && labelsLayer._paneLabel;
+        if (this.get('labelSettings.signMapObjects') && !Ember.isNone(leafletMap) && _paneLabel && !Ember.isNone(leafletObject)) {
+          let pane = leafletMap.getPane(_paneLabel);
+          let mapPane = leafletMap._mapPane;
+          if (!Ember.isNone(mapPane) && !Ember.isNone(pane)) {
+            let existPaneDomElem = Ember.$(mapPane).children(`[class*='${_paneLabel}']`).length;
+            if (existPaneDomElem > 0 && !checkMapZoom(labelsLayer)) {
+              L.DomUtil.remove(pane);
+            } else if (existPaneDomElem === 0 && checkMapZoom(labelsLayer)) {
+              mapPane.appendChild(pane);
+            }
           }
         }
-      }
-    });
+      });
+    }
   },
 
   /**
@@ -337,9 +339,8 @@ export default Ember.Mixin.create({
 
     @method _createStringLabel
     @param {Array} layers new layers for add labels
-    @param {Object} labelsLayers Array with labels layers
   */
-  _createStringLabel(layers, labelsLayers) {
+  _createStringLabel(layers) {
     if (layers) {
       let labelsLayerZoom = this._getLabelsLayersZoom();
       if (labelsLayerZoom) {

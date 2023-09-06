@@ -11,14 +11,10 @@ test('it works', function(assert) {
 });
 
 test('test method _createStringLabel', function(assert) {
-  assert.expect(7);
+  assert.expect(11);
   let leafletMap = L.map(document.createElement('div'), {
     center: [51.505, -0.09],
     zoom: 13
-  });
-  let subject = LayerLabelObject.create({
-    leafletMap: leafletMap,
-    showExisting: false
   });
   let settings = {
     'options': {
@@ -48,14 +44,25 @@ test('test method _createStringLabel', function(assert) {
   let labelsLayers = Ember.A();
   labelsLayers.addObject(labelsLayer);
   let layers = [L.marker([59.23, 56.27])];
+  let subject = LayerLabelObject.create({
+    leafletMap: leafletMap,
+    showExisting: false,
+    labelsLayers: [labelsLayer]
+  });
 
   let _applyFunctionStub = sinon.stub(subject, '_applyFunction');
   _applyFunctionStub.returns('test');
   let _applyPropertyStub = sinon.stub(subject, '_applyProperty');
   _applyPropertyStub.returns('test');
   let _createLabelSpy = sinon.spy(subject, '_createLabel');
+  let _getLabelsLayersZoomSpy = sinon.spy(subject, '_getLabelsLayersZoom');
+  let _checkLabelInViewSpy = sinon.spy(subject, '_checkLabelInView');
 
-  subject._createStringLabel(layers, labelsLayers);
+  subject._createStringLabel(layers);
+  assert.equal(_getLabelsLayersZoomSpy.callCount, 1);
+  assert.equal(_checkLabelInViewSpy.callCount, 1);
+  assert.deepEqual(_checkLabelInViewSpy.getCalls()[0].args[0], layers);
+  assert.deepEqual(_checkLabelInViewSpy.getCalls()[0].args[1], labelsLayer);
   assert.equal(_applyFunctionStub.callCount, 1);
   assert.equal(_applyPropertyStub.callCount, 1);
   assert.equal(_createLabelSpy.callCount, 1);
@@ -68,5 +75,7 @@ test('test method _createStringLabel', function(assert) {
   _applyFunctionStub.restore();
   _applyPropertyStub.restore();
   _createLabelSpy.restore();
+  _getLabelsLayersZoomSpy.restore();
+  _checkLabelInViewSpy.restore();
 });
 
