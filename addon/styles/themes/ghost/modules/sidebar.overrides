@@ -462,7 +462,7 @@
         border: none;
       }
     }
-    &.ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).active.title .button {
+    &.ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).active.title .more.submenu .button {
       margin: 0;
     }
     .flexberry-treenode-buttons-block {
