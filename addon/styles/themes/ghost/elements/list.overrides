@@ -17,12 +17,12 @@
   }
   .feature-result-item-buttons {
     position: absolute;
-    left: 30px;
-    width: 300px;
+    right: 0;
     margin-left: 7px;
     display: flex;
     align-items: start;
-    gap: 0.75rem;
+    gap: 0.3125em;
+    justify-content: end;
   }
   .feature-result-item-list+.layer-result-list-toggler,.feature-result-item-upload+.layer-result-list-toggler {
     .title .flexberry-toggler-caption {
@@ -41,6 +41,7 @@
 .layer-result-list {
   padding-top: 0px;
   overscroll-behavior: contain;
+
   .ui.fluid.accordion.flexberry-toggler .accordion.flexberry-toggler {
     border: none;
   }
@@ -55,10 +56,6 @@
     font-size: 16px;
   }
 
-  .feature-result-item-toolbar .icon-guideline-points {
-    font-size: 20px;
-  }
-
   .item.active {
     border: none;
   }
@@ -67,7 +64,12 @@
     i.icon:before {
       font-size: 16px;
     }
-    z-index: 100;
+    a.item {
+      opacity: 0.4;
+      &:hover {
+        opacity: 1;
+      }
+    }
     .icon.item {
       margin: 0 !important;
       &.feature-result-item-select,
@@ -103,7 +105,7 @@
       margin: 0;
 
       .feature-result-item-title {
-        padding: 6px 0;
+        padding: 5px 0;
         align-items: center;
         a.item.title {
           align-self: center;
@@ -120,26 +122,35 @@
         }
 
         .feature-result-item-toolbar {
-          z-index: 100;
-          left: 28px;
-          gap: 4px;
+          gap: 5px;
           align-items: baseline;
 
-          [class^="icon-guideline-"] {
-            margin-right: 4px;
-          }
           a.icon.item.more {
             color: @textColor;
           }
+
+          a.item {
+            opacity: 0.4;
+            &:hover {
+              opacity: 1;
+            }
+          }
+
           .more.submenu {
-            top: 7px;
-            left: 41px;
+            top: 1.5rem;
+            left: auto;
+            right: 0;
             height: auto;
-            width: 158px;
+            width: auto;
+            min-width: 165px;
             background-color: @inputBackground;
+            padding: 8px 5px 8px 10px;
+            box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
             a.icon.item {
               position: static;
-              font-size: 11px;
+            }
+            a.icon.item i {
+              margin-right: 3px;
             }
             a {
               opacity: 0.75;
@@ -154,12 +165,11 @@
             }
 
             div {
-              margin-bottom: 6px;
-              &:not(:first-child) {
-                margin-left: 7px;
-              }
-              &:first-child {
-                margin-left: 4px;
+              margin-bottom: 10px;
+              line-height: 1em;
+              font-size: 12px;
+              &:last-child {
+                margin-bottom: 0;
               }
               i.icon:before {
                 font-size: 12px
@@ -169,25 +179,15 @@
             &.reversed {
               display: flex;
               flex-direction: column-reverse;
-
-              div {
-                margin-bottom: 4px;
-                &:first-child {
-                  margin-left: 4px;
-                  margin-bottom: 0;
-                }
-              }
+              bottom: 1.5rem;
+              top: auto;
             }
           }
           .feature-result-item-object {
             margin-left: 2px;
           }
           &.favorite {
-            left: 48px;
             align-items: center;
-          }
-          > a.icon.item {
-            padding: 5px;
           }
         }
         .feature-result-item-toolbar .feature-result-item-edit-forms~.more.submenu {
@@ -212,9 +212,9 @@
       }
     }
     .feature-result-item-content {
-      padding-bottom: 8px;
+      padding-bottom: 15px;
       .feature-div-property-name:first-child {
-        padding-top: 6px;
+        padding-top: 0;
       }
     }
   }
@@ -223,6 +223,8 @@
     .layer-result-list-toggler {
       margin-bottom: 0px;
       padding-bottom: 0px;
+      padding-left: 0;
+
     }
   }
   .feature-result-item-group:not(:first-child) {
