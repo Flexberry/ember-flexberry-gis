@@ -985,7 +985,7 @@ test('test method save() with objects', function(assert) {
         assert.equal(data.layers.length, 1);
         assert.equal(realCountArr(leafletObject.models), 0);
         assert.equal(leafletObject.getLayers().length, 1);
-        assert.equal(leafletObject._labelsLayer.getLayers().length, 0);
+        assert.equal(leafletObject._labelsLayer.getLayers().length, 1);
         assert.equal(leafletObject.getLayers()[0].state, 'exist');
 
         spyBatchUpdate.restore();
