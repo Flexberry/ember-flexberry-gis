@@ -31,6 +31,18 @@ export default Ember.Component.extend({
   _availableCoordinateReferenceSystemsCodes: null,
 
   /**
+   * Custom array containing user friendly coordinate reference systems (CRS) codes.
+   * @type Object {crs:caption} | String[]
+   * @default null
+   */
+  availableCoordinateReferenceSystemsCodes: null,
+
+  /**
+   * Display captions dropdown
+   */
+  displayCaptionsDD: false,
+
+  /**
     User friendly coordinate reference system (CRS) code.
     For example 'ESPG:4326'.
 
@@ -60,7 +72,11 @@ export default Ember.Component.extend({
   */
   _createInnerCoordinateReferenceSystems() {
     let coordinateReferenceSystems = {};
-    Ember.A(this.get('_availableCoordinateReferenceSystemsCodes') || []).forEach((code) => {
+    let crs = this.get('_availableCoordinateReferenceSystemsCodes') || [];
+    if (!Array.isArray(crs)) {
+      crs = Object.keys(crs);
+    }
+    Ember.A(crs).forEach((code) => {
       coordinateReferenceSystems[code] = {
         code: code === proj4CrsCode ? null : code,
         definition: null
@@ -126,7 +142,11 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     // Available CRS codes for related dropdown.
-    this.set('_availableCoordinateReferenceSystemsCodes', getAvailableCoordinateReferenceSystemsCodes(this));
+    if (Ember.isNone(this.get('availableCoordinateReferenceSystemsCodes'))) {
+      this.set('_availableCoordinateReferenceSystemsCodes', getAvailableCoordinateReferenceSystemsCodes(this));
+    } else {
+      this.set('_availableCoordinateReferenceSystemsCodes', this.get('availableCoordinateReferenceSystemsCodes'));
+    }
 
     let crs = this.get('coordinateReferenceSystem');
     let crsCode = getCrsCode(crs, this);
