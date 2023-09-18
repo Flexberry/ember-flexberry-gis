@@ -5,17 +5,11 @@
 import Ember from 'ember';
 import BaseLayer from './base-layer';
 import { setLeafletLayerOpacity } from '../utils/leaflet-opacity';
-<<<<<<< HEAD
-import jsts from 'npm:jsts';
 import { checkMapZoom, checkMapZoomStyle } from '../utils/check-zoom';
+import layerLabel from '../mixins/layer-label';
 import featureWithAreaIntersect from '../utils/feature-with-area-intersect';
 import { translationMacro as t } from 'ember-i18n';
 
-=======
-import { checkMapZoom } from '../utils/check-zoom';
-import layerLabel from '../mixins/layer-label';
-import featureWithAreaIntersect from '../utils/feature-with-area-intersect';
->>>>>>> rgis-develop
 const { assert } = Ember;
 
 /**
