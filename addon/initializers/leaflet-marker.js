@@ -58,9 +58,10 @@ export function initialize() {
       return this;
     },
 
-
-    // @method baseSetIcon(icon: Icon): this
-    // Original code
+    /**
+      @method baseSetIcon(icon: Icon): this
+      Original code
+    */
     baseSetIcon(icon) {
       this.options.icon = icon;
 
@@ -76,8 +77,10 @@ export function initialize() {
       return this;
     },
 
-    // @method onAdd(map)
-    // Add marker in map. Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L115
+    /**
+      @method onAdd(map)
+      Add marker in map. Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L115
+    */
     onAdd(map) {
       this._zoomAnimated = this._zoomAnimated && map.options.markerZoomAnimation;
 
@@ -97,8 +100,10 @@ export function initialize() {
       }
     },
 
-    // @method setIcon(icon: Icon): this
-	  // Changes the marker icon. Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L181
+    /**
+      @method setIcon(icon: Icon): this
+	    Changes the marker icon. Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L181
+    */
     setIcon(icon) {
       if (!Ember.isArray(icon)) {
         this.baseSetIcon(icon);
@@ -111,8 +116,8 @@ export function initialize() {
         this._icon = Ember.A();
         icon.forEach(iconOptions => {
           if (this._map) {
-           this._initIcon(iconOptions);
-           this.update();
+            this._initIcon(iconOptions);
+            this.update();
           }
 
           if (this._popup) {
@@ -123,8 +128,10 @@ export function initialize() {
       }
     },
 
-    // @method _initIcon(iconOptions)
-    // Add marker on DOM. Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L211
+    /**
+      @method _initIcon(iconOptions)
+      Add marker on DOM. Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L211
+    */
     _initIcon(iconOptions) {
       let options = this.options;
       let addIcon = false;
@@ -133,6 +140,7 @@ export function initialize() {
         options.icon = iconOptions;
         addIcon = true;
       }
+
       const classToAdd = `leaflet-zoom-${this._zoomAnimated ? 'animated' : 'hide'}`;
 
       const icon = options.icon.createIcon(this._icon);
@@ -142,6 +150,7 @@ export function initialize() {
         if (this._icon) {
           this._removeIcon();
         }
+
         addIcon = true;
 
         if (options.title) {
@@ -174,7 +183,7 @@ export function initialize() {
       }
 
       if (this.options.autoPanOnFocus) {
-        DomEvent.on(icon, 'focus', this._panOnFocus, this);
+        L.DomEvent.on(icon, 'focus', this._panOnFocus, this);
       }
 
       const newShadow = options.icon.createShadow(this._shadow);
@@ -189,25 +198,27 @@ export function initialize() {
         newShadow.classList.add(classToAdd);
         newShadow.alt = '';
       }
-      this._shadow = newShadow;
 
+      this._shadow = newShadow;
 
       if (options.opacity < 1) {
         this._updateOpacity();
       }
 
-
       if (addIcon) {
         this.getPane().appendChild(icon);
       }
+
       this._initInteraction(icon);
       if (newShadow && addShadow) {
         this.getPane(options.shadowPane).appendChild(this._shadow);
       }
     },
 
-    // @method _initInteraction(icon)
-    // Makes the marker interactive. Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L335
+    /**
+      @method _initInteraction(icon)
+      Makes the marker interactive. Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L335
+    */
     _initInteraction(icon) {
 
       if (!this.options.interactive) { return; }
@@ -231,8 +242,10 @@ export function initialize() {
       }
     },
 
-    // @method _setPos(pos)
-    // Set position. Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L308
+    /**
+      @method _setPos(pos)
+      Set position. Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L308
+    */
     _setPos(pos) {
 
       if (this._icon) {
@@ -252,8 +265,10 @@ export function initialize() {
       this._resetZIndex();
     },
 
-    // @method _updateZIndex(offset)
-    // Update z-index. Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L323
+    /**
+      @method _updateZIndex(offset)
+      Update z-index. Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L323
+    */
     _updateZIndex(offset) {
       if (this._icon) {
         if (Ember.isArray(this._icon)) {
@@ -264,8 +279,10 @@ export function initialize() {
       }
     },
 
-    // @method _updateOpacity()
-    // Update opacity. Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L369
+    /**
+      @method _updateOpacity()
+      Update opacity. Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L369
+    */
     _updateOpacity() {
       const opacity = this.options.opacity;
 
@@ -283,8 +300,10 @@ export function initialize() {
       }
     },
 
-    // @method _removeIcon()
-    // Remove icon from DOM. Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L283
+    /**
+      @method _removeIcon()
+      Remove icon from DOM. Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L283
+    */
     _removeIcon() {
       if (this.options.riseOnHover) {
         this.off({
@@ -356,30 +375,6 @@ export function initialize() {
     }
   });
 };
-
-/*export function initialize() {
-  let baseSetIcon = {
-    baseSetIcon: function (icon) {
-      L.Marker.prototype.setIcon.call(this, icon);
-    }
-  };
-  let setIcon = {
-    setIcon: function (icon) {
-      if (!Ember.isArray(icon)) {
-        L.Marker.prototype.baseSetIcon.call(this, icon);
-      } else {
-        icon.forEach(i => {
-          L.Marker.prototype.baseSetIcon.call(this, i);
-        });
-      }
-      return this;
-    }
-  };
-
-
-  L.Marker.include(baseSetIcon);
-  L.Marker.include(setIcon);
-}*/
 
 export default {
   name: 'leaflet-marker',

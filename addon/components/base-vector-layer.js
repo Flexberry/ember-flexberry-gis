@@ -756,7 +756,7 @@ export default BaseLayer.extend(layerLabel, {
         vectorLayer._setVisibilityObjects = this.get('_setVisibilityObjects').bind(this);
 
         // change style by change zoom
-        let styleRules = this.get('layerModel.settingsAsObject.styleRules')
+        let styleRules = this.get('layerModel.settingsAsObject.styleRules');
         if (styleRules.length > 0) {
           this.set('styleRules', styleRules);
           this.set('layerModel.styleRules', styleRules);
@@ -797,7 +797,7 @@ export default BaseLayer.extend(layerLabel, {
               }
             });
             resolve(resultLayer);
-          })
+          });
         } else {
           resolve(resultLayer);
         }
@@ -856,8 +856,9 @@ export default BaseLayer.extend(layerLabel, {
     let leafletMap = this.get('leafletMap');
     styleRules.forEach(styleRule => {
       let rule = styleRule.rule;
-      let caption = `${this.get('i18n').t("components.base-vector-layer.zoomFrom")} ${rule.minZoom} ${this.get('i18n').t("components.base-vector-layer.zoomTo")} ${rule.maxZoom}`;
-      rule.caption = caption;
+      let caption = `${this.get('i18n').t('components.base-vector-layer.zoomFrom')} ${rule.minZoom}
+        ${this.get('i18n').t('components.base-vector-layer.zoomTo')} ${rule.maxZoom}`;
+      Ember.set(rule, 'caption', caption);
       if (checkMapZoomStyle(leafletMap, styleRule.rule) && this.get('styleSettings') !== styleRule.styleSettings) {
         this.set('styleSettings', styleRule.styleSettings);
       }
@@ -883,8 +884,10 @@ export default BaseLayer.extend(layerLabel, {
           inner[i] = this;
           result[index] = inner;
         }
+
         return resolve(result);
       };
+
       image.src = style.fillPattern;
     });
   },
@@ -1238,7 +1241,7 @@ export default BaseLayer.extend(layerLabel, {
         leafletMap.off('moveend', this._showLabelsMovingMap, this);
       }
 
-      let styleRules = this.get('layerModel.settingsAsObject.styleRules')
+      let styleRules = this.get('layerModel.settingsAsObject.styleRules');
       if (styleRules.length > 0) {
         leafletMap.off('zoomend', this._updateStyleRules, this);
       }

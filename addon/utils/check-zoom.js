@@ -23,7 +23,6 @@ let checkMapZoomStyle = (leafletMap, rule) => {
   return !mapZoom || !minZoom || !maxZoom || minZoom <= mapZoom && mapZoom <= maxZoom;
 };
 
-
 let _getMapZoom = (map) => {
   if (map && map.getZoom) {
     let _mapZoom = map.getZoom();

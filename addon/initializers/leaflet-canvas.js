@@ -16,10 +16,13 @@ export function initialize() {
       }
 
       const _ctx = canvas.getContext("2d");*/
-      let i, j, len2, p;
-      const parts = layer._parts,
-            len = parts.length,
-            ctx = this._ctx;
+      let i;
+      let j;
+      let len2;
+      let p;
+      const parts = layer._parts;
+      const len = parts.length;
+      const ctx = this._ctx;
 
       if (!len) { return; }
 
@@ -29,20 +32,18 @@ export function initialize() {
         for (j = 0, len2 = parts[i].length; j < len2; j++) {
           p = parts[i][j];
           ctx[j ? 'lineTo' : 'moveTo'](p.x, p.y);
-          //_ctx[j ? 'lineTo' : 'moveTo'](p.x, p.y);
         }
         if (closed) {
           ctx.closePath();
-          //_ctx.closePath();
         }
       }
 
       if (layer.options.count) {
         for (let i = 0; i < layer.options.count; i++) {
-          this._fillStroke(ctx, layer.options[i])
+          this._fillStroke(ctx, layer.options[i]);
         }
       } else {
-        this._fillStroke(ctx, layer.options)
+        this._fillStroke(ctx, layer.options);
       }
     },
 
@@ -62,6 +63,7 @@ export function initialize() {
         if (ctx.setLineDash) {
           ctx.setLineDash(options && options._dashArray || []);
         }
+
         ctx.globalAlpha = options.opacity;
         ctx.lineWidth = options.weight;
         ctx.strokeStyle = options.color;

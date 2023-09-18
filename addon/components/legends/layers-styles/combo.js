@@ -1,5 +1,4 @@
 import Ember from 'ember';
-//import BaseLayerStyleLegendComponent from './-private/base';
 import layout from '../../../templates/components/legends/layers-styles/simple';
 import SimpleLayerStyleLegendComponent from './simple';
 
