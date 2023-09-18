@@ -374,7 +374,7 @@ export function initialize() {
       return label;
     }
   });
-};
+}
 
 export default {
   name: 'leaflet-marker',

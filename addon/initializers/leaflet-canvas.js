@@ -1,5 +1,3 @@
-import Ember from 'ember';
-
 export function initialize() {
   L.Canvas.include({
     _updatePoly: function (layer, closed) {
@@ -33,6 +31,7 @@ export function initialize() {
           p = parts[i][j];
           ctx[j ? 'lineTo' : 'moveTo'](p.x, p.y);
         }
+
         if (closed) {
           ctx.closePath();
         }

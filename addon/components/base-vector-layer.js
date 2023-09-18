@@ -8,7 +8,6 @@ import { setLeafletLayerOpacity } from '../utils/leaflet-opacity';
 import { checkMapZoom, checkMapZoomStyle } from '../utils/check-zoom';
 import layerLabel from '../mixins/layer-label';
 import featureWithAreaIntersect from '../utils/feature-with-area-intersect';
-import { translationMacro as t } from 'ember-i18n';
 
 const { assert } = Ember;
 
@@ -757,7 +756,7 @@ export default BaseLayer.extend(layerLabel, {
 
         // change style by change zoom
         let styleRules = this.get('layerModel.settingsAsObject.styleRules');
-        if (styleRules.length > 0) {
+        if (styleRules && styleRules.length > 0) {
           this.set('styleRules', styleRules);
           this.set('layerModel.styleRules', styleRules);
           this._updateStyleRules();
@@ -767,7 +766,7 @@ export default BaseLayer.extend(layerLabel, {
         // load images for style
         let imagePromises = Ember.A();
         let styleSettings = this.get('layerModel.settingsAsObject.styleSettings');
-        if (styleRules.length === 0) {
+        if (styleSettings && styleRules.length === 0) {
           this._imageFromStyleSettings(imagePromises, styleSettings);
         } else {
           this._imageFromStyleRules(imagePromises);
@@ -821,7 +820,7 @@ export default BaseLayer.extend(layerLabel, {
           }
         });
       } else if (styleSettings.style.path.fillStyle === 'pattern') {
-        imagePromises.addObject(this._setPattern(style, 0, index));
+        imagePromises.addObject(this._setPattern(styleSettings.style.path, 0, index));
       }
     }
   },
