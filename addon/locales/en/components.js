@@ -80,5 +80,9 @@ export default {
     'clear': {
       'tooltip': 'Clear selection'
     }
+  },
+  'base-vector-layer': {
+    'zoomFrom': 'Zoom from',
+    'zoomTo': 'to'
   }
 };

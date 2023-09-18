@@ -17,7 +17,8 @@ import layout from '../../../../templates/components/legends/layers-styles/-priv
 const flexberryClassNames = {
   imageWrapper: 'layer-legend-image-wrapper',
   image: 'layer-legend-image',
-  caption: 'layer-legend-caption'
+  caption: 'layer-legend-caption',
+  zoom: 'layer-legend-zoom'
 };
 
 /**

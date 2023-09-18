@@ -129,15 +129,31 @@ export default Ember.Service.extend({
   renderOnCanvas({ canvas, styleSettings, target }) {
     target = target || 'preview';
 
-    let type = Ember.get(styleSettings, 'type');
-    let style = Ember.get(styleSettings, 'style');
+    if (Ember.isArray(styleSettings)) {
+      styleSettings.forEach(settings => {
+        let type = Ember.get(settings, 'type');
+        let style = Ember.get(settings, 'style');
 
-    let markerStyle = this._getMarkerStyle(type);
-    if (Ember.isNone(markerStyle)) {
-      Ember.Logger.error(`Service 'markers-styles-renderer' can't render '${type}' markers-style on canvas.`);
-      return;
+        let markerStyle = this._getMarkerStyle(type);
+        if (Ember.isNone(markerStyle)) {
+          Ember.Logger.error(`Service 'markers-styles-renderer' can't render '${type}' markers-style on canvas.`);
+          return;
+        }
+
+        markerStyle.renderOnCanvas({ canvas, style, target });
+      });
+    } else {
+      let type = Ember.get(styleSettings, 'type');
+      let style = Ember.get(styleSettings, 'style');
+
+      let markerStyle = this._getMarkerStyle(type);
+      if (Ember.isNone(markerStyle)) {
+        Ember.Logger.error(`Service 'markers-styles-renderer' can't render '${type}' markers-style on canvas.`);
+        return;
+      }
+
+      markerStyle.renderOnCanvas({ canvas, style, target });
     }
 
-    markerStyle.renderOnCanvas({ canvas, style, target });
   }
 });
