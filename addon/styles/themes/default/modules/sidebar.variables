@@ -78,8 +78,8 @@
 @flexberryMaplayerOpacitiLabelColor: @darkbluecolor;
 @flexberryMaplayerOpacitiLabelBackgroundColor: @whitecolor;
 @flexberryMaplayerOpacitiLabelBoxShadow: @darkBoxShadow;
-@flexberryMaplayerOpacitiLabelPadding: 7px 5px;
-@flexberryMaplayerOpacitiLabelMargin: 3px 5px 2px 0px;
+@flexberryMaplayerOpacitiLabelPadding: 0;
+@flexberryMaplayerOpacitiLabelMargin: 0 5px 0 0;
 @flexberryMaplayerOpacitiLabelHoveredBackground: @lightbluecolor;
 
 @layerLegendProgressbarLabelColor: @darkbluecolor;

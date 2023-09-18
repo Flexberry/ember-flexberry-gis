@@ -70,6 +70,10 @@
     z-index: 100;
     .icon.item {
       margin: 0 !important;
+      opacity: 0.75;
+      &:hover {
+        opacity: 1;
+      }
       &.feature-result-item-select {
         left: 0px;
       }

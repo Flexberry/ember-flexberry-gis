@@ -884,7 +884,7 @@ div.measure-drag-panel {
         flex-direction: row;
     }
     &-caption {
-        padding-left: 8px;
+        padding-left: 5px;
         text-overflow: ellipsis;
         max-width: 80%;
         min-width: 350px;
@@ -901,7 +901,6 @@ div.measure-drag-panel {
     a.icon.item {
       &.more {
         line-height: 5px;
-        z-index: 100;
       }
       &.disabled-link {
         pointer-events: none;
@@ -924,12 +923,6 @@ div.measure-drag-panel {
         padding-left: 7px;
         line-height: 1px;
       }
-      div {
-        margin-bottom: 10px;
-      }
-    }
-    .icon.item.more {
-      width: 300px;
     }
   }
   .feature-result-item-toolbar .feature-result-item-edit-forms~.more.submenu {
@@ -939,10 +932,10 @@ div.measure-drag-panel {
     min-height: 24px;
     position: relative;
     .ui.checkbox {
-      margin: 0.25rem 0;
+      margin: 0.25rem;
     }
     .ui.checkbox label {
-      padding-left: 26px;
+      padding-left: 1rem;
     }
   }
   .feature-result-item-caption {
@@ -952,9 +945,6 @@ div.measure-drag-panel {
     font-size: 14px;
     color: @darkbluecolor;
     align-self: center;
-  }
-  .feature-result-item-select.icon.item, .feature-result-item-upload.icon.item {
-    font-size: 1.4em;
   }
   .feature-result-item-list.icon.item {
     font-size: 1.35em;
@@ -976,12 +966,9 @@ div.measure-drag-panel {
   .feature-result-item-toolbar {
     position: absolute;
     display: flex;
-    flex-direction: row;
-    width: 300px;
-    left: 28px;
-    &>.icon.item {
-      font-size: 1.15em;
-    }
+    justify-content: flex-end;
+    right: 0;
+
     .icon.favorites:before {
       font-family: Icons;
       content: "\f006";
@@ -995,6 +982,9 @@ div.measure-drag-panel {
     padding: 0 !important;
     display: block;
     float: left;
+    width: auto;
+    height: auto;
+    margin: 0;
   }
 
   .layer-result-list-toggler {
@@ -1002,17 +992,18 @@ div.measure-drag-panel {
       display: flex;
       align-items: start;
       .flexberry-toggler-caption {
-        margin-left: 6px;
+        margin: 2px 0 0 5px;
         display: block;
         float: left;
         max-width: 80%;
         font-size: 14px;
+        line-height: 20px;
       }
     }
   }
 
   .flexberry-toggler {
-    padding: 5px;
+    padding-left: 4px;
     margin-bottom: 5px;
     margin-top: 5px;
   }
@@ -1078,11 +1069,13 @@ div.measure-drag-panel {
   .feature-div-property-name {
     font-size: 12px;
     color: #8F928F;
-    padding: 10px 0px 5px 0px;
+    padding: 15px 0px 4px 0px;
+    line-height: normal;
   }
   .feature-div-property-value {
     font-size: 12px;
-    color: #343A32;
+    color: @textColor;
+    line-height: normal;
     .table {
       width: 400px;
       border: none;
@@ -1095,7 +1088,7 @@ div.measure-drag-panel {
     }
   }
   .feature-result-item-content {
-    padding-left: 32px;
+    padding-left: 34px;
   }
 }
 

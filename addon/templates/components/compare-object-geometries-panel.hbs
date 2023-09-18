@@ -9,7 +9,7 @@
     {{#flexberry-toggler caption=(t "components.compare-object-geometries.object-info-caption") expanded=true}}
     <div class="text-line">
       <div class="object-value">{{firstObjectDisplayValue}}</div>
-      <div class="result-toolbar hidden">
+      <div class="result-toolbar">
         <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomTo" firstObject}}>
           <i class="icon-guideline-marker"></i>
         </a>
@@ -21,7 +21,7 @@
     </div>
     <div class="text-line">
       <div class="object-value">{{secondObjectDisplayValue}}</div>
-      <div class="result-toolbar hidden">
+      <div class="result-toolbar">
         <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomTo" secondObject}}>
           <i class="icon-guideline-marker"></i>
         </a>
@@ -37,7 +37,7 @@
     {{/flexberry-toggler}}
 
     <div class="intersection-toggler">
-      <div class="result-toolbar hidden">
+      <div class="result-toolbar">
         <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomToIntersection" intersection}}>
           <i class="icon-guideline-marker"></i>
         </a>
@@ -50,7 +50,7 @@
           <label class="intersection-label">{{t "components.compare-object-geometries.object-area"}}</label> {{intersection.area}} {{t "components.compare-object-geometries.m2"}}
         </div>
         <div class="text-line">
-          <label class="label">{{t "components.compare-object-geometries.cords"}}</label>
+          <label class="intersection-label">{{t "components.compare-object-geometries.cords"}}</label>
           <div class="coordinates">
             {{flexberry-textarea value=intersection.intersectionCoordsText readonly=true placeholder=""}}
           </div>
@@ -59,7 +59,7 @@
     </div>
 
     <div class="intersection-toggler">
-      <div class="result-toolbar hidden">
+      <div class="result-toolbar">
         <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomToIntersection" nonIntersection}}>
           <i class="icon-guideline-marker"></i>
         </a>
@@ -72,7 +72,7 @@
         <label class="intersection-label">{{t "components.compare-object-geometries.object-area"}}</label> {{nonIntersection.area}}  {{t "components.compare-object-geometries.m2"}}
       </div>
       <div class="text-line">
-        <label class="label">{{t "components.compare-object-geometries.cords"}}</label>
+        <label class="intersection-label">{{t "components.compare-object-geometries.cords"}}</label>
         <div class="coordinates">
           {{flexberry-textarea value=nonIntersection.intersectionCoordsText readonly=true placeholder=""}}
         </div>

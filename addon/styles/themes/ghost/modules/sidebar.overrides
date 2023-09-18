@@ -334,13 +334,14 @@
   font-size: 14px;
   margin-top: 2px;
   width: 100%;
+  line-height: 20px;
 }
 
 .ui.right.sidebar {
   .treeview {
     overflow-x: hidden;
     overflow-y: hidden !important;
-	.ui.styled.accordion {
+    &.ui.tab > .flexberry-maplayers.ui.styled.accordion {
       height: ~"calc(100% - 70px)" !important;
       width: 1000px;
       .accordion:first-child .title {
@@ -408,7 +409,7 @@
       }
     }
     .content .flexberry-maplayers.accordion {
-      overflow-y: hidden;
+      overflow-y: visible;
       margin-top: 0px;
     }
   }
@@ -416,12 +417,18 @@
     padding: 6px 0;
   }
 
-  &.treeview .flexberry-maplayers {
+  &.treeview .ui.tab > .flexberry-maplayers {
     overflow-y: auto;
     overflow-x: hidden;
     margin-top: 5px;
-    margin-left: -13px;
     height: ~"calc(100% - 120px)" !important;
+    scrollbar-gutter: stable;
+  }
+
+  &.treeview .flexberry-maplayers {
+    > .flexberry-treenode {
+      margin-left: -13px;
+    }
 
     .ui.icon.button:not(.fluid) {
       padding: 6px 0;
@@ -446,11 +453,6 @@
       }
     }
 
-    .flexberry-maplayer-type-icon.without-folder~.flexberry-treenode-buttons-block .allmore .more.submenu {
-      width: 210px;
-      left: 5px;
-    }
-
     .flexberry-maplayer-type-icon:not(.without-folder)~.flexberry-treenode-buttons-block .allmore .more.submenu {
       height: auto;
     }
@@ -460,13 +462,18 @@
         border: none;
       }
     }
+    &.ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).active.title .more.submenu .button {
+      margin: 0;
+    }
     .flexberry-treenode-buttons-block {
-      left: 40px;
-      width: 100%;
+      width: auto;
       font-size: 0;
+      text-align: end;
+      text-wrap: nowrap;
+      line-height: 24px;
 
       [class^="icon-guideline-"] {
-        font-size: 20px;
+        font-size: 1rem;
         color: @textColor;
       }
       a.icon.item.more {
@@ -480,22 +487,15 @@
         top: 10px;
         left: 90px;
         width: 210px;
-        padding: 0 0 11px 7px;
+        padding: 0 5px 6px 10px;
         text-align: left;
         &.reversed {
           display: flex;
           flex-direction: column-reverse;
-          padding: 0 0 0 7px;
         }
         label.ui.button {
-          width: auto !important;
-          color: @textColor;
           border: none;
-          padding: 10px 0px 0px 0px;
-          height: 25px;
-        }
-        .flexberry-maplayer-bounds-button {
-          padding-top: 12px !important;
+          margin: 0;
         }
         .button-more-submenu label.more.submenu {
           left: -10px;
@@ -509,6 +509,7 @@
 
         [class^="icon-guideline-"] {
           font-size: 16px;
+          margin-right: 3px;
         }
       }
     }
@@ -522,11 +523,11 @@
     .flexberry-treenode-header {
       align-items: flex-start;
       .flexberry-treenode-caption-block {
-        align-items: flex-start;
+        align-items: stretch;
         width: 100%;
       }
       .flexberry-treenode-prevent-expand-collapse {
-        margin: 0 15px;
+        margin: 0.25em 0.5625em 0.25em 0.25em;
         width: 17px;
       }
       &:not(.flexberry-checkbox) {
@@ -534,17 +535,14 @@
         &.active.title {
           color: @flexberryTreenodeHeaderColor;
           .flexberry-treenode-expand-collapse-icon {
-            width: 25px;
-            height: 25px;
+            width: auto;
+            height: auto;
             margin: 0;
             padding: 0;
-            position: relative;
-            bottom: 4px;
           }
 
           .button {
             box-shadow:none;
-            margin: 0;
 
             &:hover {
               border: @flexberryMaplayerOpacitiLabelHoveredBorder;
@@ -573,21 +571,17 @@
           &:hover {
             color: @textColor;
           }
-          .flexberry-treenode-buttons-block {
-            height: 37px;
-            .button {
-              opacity: 0.75;
-              background-color: rgba(255, 255, 255, 0);
-              &.more {
-                padding: 0;
-                height: auto;
-                margin-top: -2px;
-                margin-left: -3px;
-              }
-            }
-            .button:hover {
+          .flexberry-treenode-buttons-block .button {
+            background-color: transparent;
+            &:hover {
               border: none;
               opacity: 1;
+            }
+            &.more {
+              padding: 0;
+              height: auto;
+              margin-top: -2px;
+              margin-left: -3px;
             }
           }
         }
@@ -714,7 +708,7 @@
     transition: left 0.5s;
 
     .ui.tab {
-      padding: 10px 10px 10px 30px;
+      padding: 10px 0 10px 30px;
       color: @textColor;
 
       h3 {
@@ -748,16 +742,23 @@
   .compare-geometries-panel > div,
   .bottom-compare-panel {
     height: 100%;
-
+    .result-toolbar a {
+      color: @activeItemColor;
+      opacity: 0.4;
+      &:hover {
+        opacity: 1;
+      }
+    }
     .result-toolbar a i {
       font-size: 16px;
-      color: @activeItemColor;
     }
   }
   .compare-main-panel {
     height: ~"calc(100% - 30px)";
     overflow: auto;
     font-size: 14px;
+    margin-left: -6px;
+    scrollbar-gutter: stable;
   }
 }
 
@@ -819,7 +820,8 @@
   .ui.right.sidebar.tabbar {
     .ui.tab.bookmarks,
     .ui.tab.favorites {
-      padding: 0 0 30px;
+      padding: 0 0 40px;
+      height: 100%;
     }
 
     /**
@@ -848,7 +850,6 @@
           border-radius: @defaultBorderRadius;
           border: 1px solid @controlBorderColor;
           box-shadow: @defaultFieldBoxShadow;
-          max-width: 256px;
         }
       }
       .bookmark-item {
@@ -858,7 +859,6 @@
       .bmrk-add-block-buttons {
         .ui.icon.button {
           height: 33px;
-          min-width: 30px;
         }
       }
       .bmrk-add-block-buttons .ui.icon.button {
@@ -875,7 +875,8 @@
           padding: 0;
           line-height: 33px;
           float: left;
-          width: ~'calc(100% - 80px)'
+          width: ~'calc(100% - 80px)';
+          margin-right: 5px;
         }
 
         .bookmark-item-title {
@@ -890,7 +891,7 @@
 
           .ui.icon.button {
             margin: 0;
-            padding: 3px 7px;
+            padding: 3px 5px;
             i {
               vertical-align: inherit;
             }
@@ -1030,10 +1031,12 @@
     flex-direction: column;
   }
   .layer-result-list {
-    padding: 0 20px;
+    padding: 0 18px 0 20px;
     overflow-y: auto;
     overflow-x: hidden;
     flex: 1;
+    scrollbar-gutter: stable;
+
     &.buffer {
       height: ~"calc(100vh - 305px)" !important;
     }
