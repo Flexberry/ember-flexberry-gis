@@ -128,6 +128,11 @@ export default Ember.Mixin.create({
       this.set('_showError', false);
       this.set('geometryType', null);
 
+      let geometryField1 = this.get('geometryField1');
+      let geometryField2 = this.get('geometryField2');
+      let geometryFieldFile = Ember.isNone(geometryField1) ? '' : geometryField1 + (!Ember.isNone(geometryField2) ? ',' + geometryField2 : '');
+      data.append('geometryFieldFile', geometryFieldFile);
+
       this.set('fileLoadAjax',
         Ember.$.ajax({
           url: url,

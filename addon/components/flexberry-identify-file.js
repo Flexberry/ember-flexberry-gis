@@ -1,4 +1,5 @@
 import Ember from 'ember';
+//import { get, observer, set } from '@ember/object';
 import layout from '../templates/components/flexberry-identify-file';
 import CheckFileMixin from '../mixins/flexberry-check-file';
 import { availableCoordinateReferenceSystemsCodesWithCaptions } from '../utils/available-coordinate-reference-systems-for-dropdown';
@@ -9,6 +10,26 @@ export default Ember.Component.extend(CheckFileMixin, {
 
   filePreview: false,
   systemCoordinates: null,
+
+  /**
+    Geometry field for csv/xls.
+
+    @property geometryField1
+    @type String
+    @default null
+  */
+  geometryField1: null,
+
+  /**
+    Geometry field for csv/xls.
+
+    @property geometryField2
+    @type String
+    @default null
+  */
+  geometryField2: null,
+
+  needGeometryFieldName: null,
 
   /**
    * We need to differentiate events from different instances, because we don't turn off event subscriptions
@@ -61,6 +82,61 @@ export default Ember.Component.extend(CheckFileMixin, {
     });
   },
 
+  /**
+    Observer that checks filling in the required fields.
+
+    @method fielsSet
+  */
+  // fielsSet: observer('file', '_coordinateReferenceSystemCode', 'needGeometryFieldName', 'geometryField1', function() {
+  //   let file = this.get('file');
+  //   let _coordinateReferenceSystemCode = this.get('_coordinateReferenceSystemCode');
+  //   let geometryField1 = this.get('geometryField1');
+  //   let needGeometryFieldName = this.get('needGeometryFieldName') ? !isNone(geometryField1) && !isEmpty(geometryField1) : true;
+  //   // eslint-disable-next-line ember/closure-actions
+  //   this.sendAction('onUploadFile', !isNone(file) && !isNone(_coordinateReferenceSystemCode) && needGeometryFieldName);
+  // }),
+
+  /**
+    Get headers fields from csv or xls file.
+
+    @method getFieldsFromCsv
+  */
+  getFieldsFromCsv() {
+    this.set('_showError', false);
+    this.set('_importInProcess', true);
+    let _this = this;
+    let config = Ember.getOwner(this).resolveRegistration('config:environment');
+    let data = new FormData();
+    let file = this.get('file');
+    if (!Ember.isNone(file)) {
+      data.append(file.name, file);
+      // /controls/GetFieldsHandler.ashx
+      $.ajax({
+        url: `${config.APP.backendUrls.getFieldsUrl}`,
+        type: 'POST',
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+      }).done((response) => {
+        if (response && response.length) {
+          const items = response.split(',');
+          this.set('_availableFields', Ember.A(items));
+          this.set('needGeometryFieldName', true);
+        } else {
+          //_this.set('_errorMessage', this.get('importErrorMessage') + this.get('emptyHeaderErrorMessage'));
+          _this.set('_showError', true);
+        }
+      }).fail(() => {
+        //let message = this.get('badFileMessage');
+        //_this.set('_errorMessage', this.get('importErrorMessage') + message);
+        _this.set('_showError', true);
+      }).always(() => {
+        _this.set('_importInProcess', false);
+      });
+    }
+  },
+
   actions: {
     onCoordinateChange() {
       this.set('_showError', false);
@@ -85,7 +161,15 @@ export default Ember.Component.extend(CheckFileMixin, {
 
     clickFile(e) {
       let file = e.target.files[0];
+      let fileName = file.name;
+      let ext = fileName.substring(fileName.indexOf('.'), fileName.length);
       this.set('file', file);
+
+      if (ext.toLowerCase() === '.csv' || ext.toLowerCase() === '.xls' || ext.toLowerCase() === '.xlsx') {
+        this.getFieldsFromCsv();
+        //this.set('warningMessage', this.get('warningMessageSRS'));
+      }
+
       this.clearAjax();
       this.$('.ui.button.upload').addClass('hidden');
       this.$('.ui.button.remove').removeClass('hidden');
