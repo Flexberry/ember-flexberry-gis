@@ -29,21 +29,24 @@
       }}
     </div>
     {{flexberry-dropdown
-      class=(concat "fluid geometryField2" (if disableCrs " disabled" ""))
+      class=(concat "field fluid geometryField2" (if disableCrs " disabled" ""))
       items=_availableFields
       value=geometryField2
     }}
   {{/if}}
+
+  <div class="field">
+    <label class="label">{{t "components.flexberry-identify-panel.file.form-caption-sk"}}</label>
+    {{flexberry-dropdown
+      items=systemCoordinates
+      value=coordinate
+      displayCaptions=true
+      onChange=(action 'onCoordinateChange')
+      class="scale-value fluid"
+    }}
+  </div>
 </div>
 
-<label class="label">{{t "components.flexberry-identify-panel.file.form-caption-sk"}}</label>
-{{flexberry-dropdown
-  items=systemCoordinates
-  value=coordinate
-  displayCaptions=true
-  onChange=(action 'onCoordinateChange')
-  class="scale-value fluid"
-}}
 
 <div class="d-flex justify-content-center identify-file-buttons">
   {{flexberry-button

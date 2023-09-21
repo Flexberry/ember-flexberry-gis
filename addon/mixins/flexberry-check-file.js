@@ -125,13 +125,12 @@ export default Ember.Mixin.create({
       let data = new FormData();
       data.append(file.name, file);
       data.append('crs', this.get('coordinate'));
+
+      if (this.get('needGeometryFieldName')) {
+        data.append('geometryFieldFile', this.get('geometryFieldFile'));
+      }
       this.set('_showError', false);
       this.set('geometryType', null);
-
-      let geometryField1 = this.get('geometryField1');
-      let geometryField2 = this.get('geometryField2');
-      let geometryFieldFile = Ember.isNone(geometryField1) ? '' : geometryField1 + (!Ember.isNone(geometryField2) ? ',' + geometryField2 : '');
-      data.append('geometryFieldFile', geometryFieldFile);
 
       this.set('fileLoadAjax',
         Ember.$.ajax({

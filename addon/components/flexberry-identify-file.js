@@ -1,5 +1,4 @@
 import Ember from 'ember';
-//import { get, observer, set } from '@ember/object';
 import layout from '../templates/components/flexberry-identify-file';
 import CheckFileMixin from '../mixins/flexberry-check-file';
 import { availableCoordinateReferenceSystemsCodesWithCaptions } from '../utils/available-coordinate-reference-systems-for-dropdown';
@@ -29,7 +28,23 @@ export default Ember.Component.extend(CheckFileMixin, {
   */
   geometryField2: null,
 
-  needGeometryFieldName: null,
+  needGeometryFieldName: false,
+
+  importErrorMessage: 'Загруженный файл не соответствует требованиям: ',
+
+  emptyErrorMessage: 'Файл не содержит геометрических объектов',
+
+  badFileMessage: 'Сервер недоступен или импортируемый файл некорректен',
+
+  emptyHeaderErrorMessage: 'Файл не содержит заголовков',
+
+  typeGeometryErrorMessage: 'Указанный тип геометрии противоречит объектам в файле',
+
+  warningMessageSRS: 'Укажите верную систему координат, указанную в загружаемом файле. При выборе ошибочной системы координат слой может некорректно отображаться на карте',
+
+  warningMessageEmptyGeometry: 'В файле обнаружены объекты без геометрии. Дальнейшая загрузка будет осуществлена без них',
+
+  emptyGeometryField: 'Укажите название поля с геометрией в файле (WKT/X,Y)',
 
   /**
    * We need to differentiate events from different instances, because we don't turn off event subscriptions
@@ -87,14 +102,17 @@ export default Ember.Component.extend(CheckFileMixin, {
 
     @method fielsSet
   */
-  // fielsSet: observer('file', '_coordinateReferenceSystemCode', 'needGeometryFieldName', 'geometryField1', function() {
-  //   let file = this.get('file');
-  //   let _coordinateReferenceSystemCode = this.get('_coordinateReferenceSystemCode');
-  //   let geometryField1 = this.get('geometryField1');
-  //   let needGeometryFieldName = this.get('needGeometryFieldName') ? !isNone(geometryField1) && !isEmpty(geometryField1) : true;
-  //   // eslint-disable-next-line ember/closure-actions
-  //   this.sendAction('onUploadFile', !isNone(file) && !isNone(_coordinateReferenceSystemCode) && needGeometryFieldName);
-  // }),
+  fielsSet: Ember.observer('file', 'needGeometryFieldName', 'geometryField1', 'geometryField2', function() {
+    let file = this.get('file');
+    if (this.get('needGeometryFieldName') && !Ember.isNone(file)) {
+      let geometryField1 = this.get('geometryField1');
+      let geometryField2 = this.get('geometryField2');
+      let geometryFieldFile = Ember.isNone(geometryField1) ? '' : geometryField1 + (!Ember.isNone(geometryField2) ? ',' + geometryField2 : '');
+      this.set('geometryFieldFile', geometryFieldFile);
+    } else {
+      this.set('geometryFieldFile', null);
+    }
+  }),
 
   /**
     Get headers fields from csv or xls file.
@@ -110,7 +128,6 @@ export default Ember.Component.extend(CheckFileMixin, {
     let file = this.get('file');
     if (!Ember.isNone(file)) {
       data.append(file.name, file);
-      // /controls/GetFieldsHandler.ashx
       $.ajax({
         url: `${config.APP.backendUrls.getFieldsUrl}`,
         type: 'POST',
@@ -124,12 +141,12 @@ export default Ember.Component.extend(CheckFileMixin, {
           this.set('_availableFields', Ember.A(items));
           this.set('needGeometryFieldName', true);
         } else {
-          //_this.set('_errorMessage', this.get('importErrorMessage') + this.get('emptyHeaderErrorMessage'));
+          _this.set('_errorMessage', this.get('importErrorMessage') + this.get('emptyHeaderErrorMessage'));
           _this.set('_showError', true);
         }
       }).fail(() => {
-        //let message = this.get('badFileMessage');
-        //_this.set('_errorMessage', this.get('importErrorMessage') + message);
+        let message = this.get('badFileMessage');
+        _this.set('_errorMessage', this.get('importErrorMessage') + message);
         _this.set('_showError', true);
       }).always(() => {
         _this.set('_importInProcess', false);
@@ -146,7 +163,12 @@ export default Ember.Component.extend(CheckFileMixin, {
     clearFile() {
       this.set('file', null);
       this.set('coordinate', 'auto');
+      this.set('needGeometryFieldName', false);
+      this.set('geometryField1', null);
+      this.set('geometryField2', null);
+      this.set('geometryFieldFile', null);
       this.set('_showError', false);
+      this.set('_errorMessage', '');
 
       this.clearAjax();
       if (this.get('filePreview')) {
@@ -167,7 +189,7 @@ export default Ember.Component.extend(CheckFileMixin, {
 
       if (ext.toLowerCase() === '.csv' || ext.toLowerCase() === '.xls' || ext.toLowerCase() === '.xlsx') {
         this.getFieldsFromCsv();
-        //this.set('warningMessage', this.get('warningMessageSRS'));
+        this.set('warningMessage', this.get('warningMessageSRS'));
       }
 
       this.clearAjax();
@@ -193,15 +215,20 @@ export default Ember.Component.extend(CheckFileMixin, {
     },
 
     identificationFile() {
-      this.validateFileAndGetFeatures().then((response) => {
-        if (response) {
-          let layer = this.createLayer(response);
-          if (layer) {
-            let leafletMap = this.get('mapApi').getFromApi('leafletMap');
-            leafletMap.fire(`flexberry-map-loadfile${this.get('suffix')}:identification`, { layer, geometryType: this.get('geometryType') });
+      if (this.get('needGeometryFieldName') && Ember.isEmpty(this.get('geometryFieldFile'))) {
+        this.set('_errorMessage', this.get('emptyGeometryField'));
+        this.set('_showError', true);
+      } else {
+        this.validateFileAndGetFeatures().then((response) => {
+          if (response) {
+            let layer = this.createLayer(response);
+            if (layer) {
+              let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+              leafletMap.fire(`flexberry-map-loadfile${this.get('suffix')}:identification`, { layer, geometryType: this.get('geometryType') });
+            }
           }
-        }
-      }, (error) => this.showError(error));
+        }, (error) => this.showError(error));
+      }
     },
 
     createLayerByFile() {
