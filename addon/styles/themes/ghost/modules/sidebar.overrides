@@ -471,6 +471,7 @@
       text-align: end;
       text-wrap: nowrap;
       line-height: 24px;
+      min-width: 3.875rem;
 
       [class^="icon-guideline-"] {
         font-size: 1rem;
