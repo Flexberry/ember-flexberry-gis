@@ -1004,7 +1004,7 @@ export default Ember.Mixin.create({
     @param {String} size
   */
   _haloRadiusByFontSize(size) {
-    switch(size) {
+    switch (size) {
       case '8':
       case '9':
       case '10':
