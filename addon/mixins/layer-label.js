@@ -355,8 +355,7 @@ export default Ember.Mixin.create({
           `font-style: ${Ember.get(optionsLabel, 'captionFontStyle')}; ` +
           `text-decoration: ${Ember.get(optionsLabel, 'captionFontDecoration')}; ` +
           `color: ${Ember.get(optionsLabel, 'captionFontColor')}; ` +
-          `text-align: ${Ember.get(optionsLabel, 'captionFontAlign')};
-          ${halo}`);
+          `text-align: ${Ember.get(optionsLabel, 'captionFontAlign')};${halo}`);
 
         this._checkLabelInView(layers, labelsLayerZoom).forEach(layer => {
           let label = layer.labelValue || this._applyFunction(this._applyProperty(labelSettingsString, layer));
