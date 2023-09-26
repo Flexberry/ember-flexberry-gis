@@ -90,11 +90,11 @@
 
     .item:not(.icon).feature-result-item.highlight {
       background: @highlightBackgroundColor;
-      margin-left: -50px;
-      width: ~"calc(100% + 90px)";
-      padding: 0 50px;
+      margin-left: -40px;
+      width: ~"calc(100% + 80px)";
+      padding: 0 40px;
 
-      .feature-result-item-title {
+      .feature-result-item-caption {
         font-size: 14px;
         font-weight: bold;
       }
@@ -106,7 +106,7 @@
 
       .feature-result-item-title {
         padding: 5px 0;
-        align-items: center;
+        align-items: start;
         a.item.title {
           align-self: center;
         }
@@ -124,6 +124,7 @@
         .feature-result-item-toolbar {
           gap: 5px;
           align-items: baseline;
+          padding-top: 2px;
 
           a.icon.item.more {
             color: @textColor;
