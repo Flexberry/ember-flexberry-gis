@@ -16,16 +16,13 @@ export function initialize() {
         styleRules.forEach(rule => {
           let minZoom = rule.rule.minZoom;
           let maxZoom = rule.rule.maxZoom;
-          if (minZoom <= zoom || maxZoom >= zoom) {
-            //let part = minZoom - Math.trunc(minZoom);
-            zoom = Number(zoom.toFixed(1));
-            if (minZoom <= zoom && Math.ceil(minZoom) >= zoom) {
-              tileZoom = Math.ceil(zoom);
-            } else if (maxZoom >= zoom && Math.floor(maxZoom) <= zoom) {
-              tileZoom = Math.floor(zoom);
-            } else {
-              tileZoom = this._clampZoom(tileZoom);
-            }
+          zoom = Number(zoom.toFixed(1));
+          if (minZoom <= zoom && Math.ceil(minZoom) >= zoom) {
+            tileZoom = Math.ceil(zoom);
+          } else if (maxZoom >= zoom && Math.floor(maxZoom) <= zoom) {
+            tileZoom = Math.floor(zoom);
+          } else {
+            tileZoom = this._clampZoom(tileZoom);
           }
         });
       } else {

@@ -786,7 +786,7 @@ export default BaseLayer.extend(layerLabel, {
           Ember.RSVP.allSettled(imagePromises).then((styles) => {
             styles.forEach(style => {
               for (let property in style.value) {
-                if (style.value[property].toString() !== '[object Object]') {
+                if (!Ember.isNone(style.value[property].tagName)) {
                   styleSettings.style.path[property].imagePattern = style.value[property];
                 } else {
                   for (let propertyInner in style.value[property]) {
