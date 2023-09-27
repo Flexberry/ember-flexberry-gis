@@ -100,9 +100,9 @@ export default Ember.Component.extend(CheckFileMixin, {
   /**
     Observer that checks filling in the required fields.
 
-    @method fielsSet
+    @method fieldsSet
   */
-  fielsSet: Ember.observer('file', 'needGeometryFieldName', 'geometryField1', 'geometryField2', function() {
+  fieldsSet: Ember.observer('file', 'needGeometryFieldName', 'geometryField1', 'geometryField2', function() {
     let file = this.get('file');
     if (this.get('needGeometryFieldName') && !Ember.isNone(file)) {
       let geometryField1 = this.get('geometryField1');
@@ -122,7 +122,6 @@ export default Ember.Component.extend(CheckFileMixin, {
   getFieldsFromCsv() {
     this.set('_showError', false);
     this.set('_importInProcess', true);
-    let _this = this;
     let config = Ember.getOwner(this).resolveRegistration('config:environment');
     let data = new FormData();
     let file = this.get('file');
@@ -141,15 +140,15 @@ export default Ember.Component.extend(CheckFileMixin, {
           this.set('_availableFields', Ember.A(items));
           this.set('needGeometryFieldName', true);
         } else {
-          _this.set('_errorMessage', this.get('importErrorMessage') + this.get('emptyHeaderErrorMessage'));
-          _this.set('_showError', true);
+          this.set('_errorMessage', this.get('importErrorMessage') + this.get('emptyHeaderErrorMessage'));
+          this.set('_showError', true);
         }
       }).fail(() => {
         let message = this.get('badFileMessage');
-        _this.set('_errorMessage', this.get('importErrorMessage') + message);
-        _this.set('_showError', true);
+        this.set('_errorMessage', this.get('importErrorMessage') + message);
+        this.set('_showError', true);
       }).always(() => {
-        _this.set('_importInProcess', false);
+        this.set('_importInProcess', false);
       });
     }
   },
