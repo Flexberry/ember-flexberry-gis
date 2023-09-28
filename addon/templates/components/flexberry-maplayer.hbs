@@ -65,7 +65,7 @@
                 click=(action "onAttributesButtonClick" readonlyData)
               }}
             {{/if}}
-            {{#if (and (not readonly) (or _fitBoundsOperationIsAvailable (not readonlyModel) createNewLayerAccess))}}
+            {{#if (and (not readonly) (or _fitBoundsOperationIsAvailable (not readonlyModel) createNewLayerAccess) (not layer.temp))}}
               <div class="allmore floated flexberry-button ui button icon {{flexberryClassNames.preventExpandCollapse}}">
                 {{flexberry-button
                   class=(concat "more floated " flexberryClassNames.preventExpandCollapse)
