@@ -5,9 +5,10 @@
 import Ember from 'ember';
 import BaseLayer from './base-layer';
 import { setLeafletLayerOpacity } from '../utils/leaflet-opacity';
-import { checkMapZoom } from '../utils/check-zoom';
+import { checkMapZoom, checkMapZoomStyle } from '../utils/check-zoom';
 import layerLabel from '../mixins/layer-label';
 import featureWithAreaIntersect from '../utils/feature-with-area-intersect';
+
 const { assert } = Ember;
 
 /**
@@ -402,6 +403,10 @@ export default BaseLayer.extend(layerLabel, {
     let leafletMap = this.get('leafletMap');
     let layerLabel = e.layer._label;
 
+    if (e.type === 'layeradd') {
+      this._setLayerStyle();
+    }
+
     if (layerLabel) {
       if (e.type === 'layeradd') {
         layerLabel.forEach(label => {
@@ -749,19 +754,140 @@ export default BaseLayer.extend(layerLabel, {
         vectorLayer.hideAllLayerObjects = this.get('hideAllLayerObjects').bind(this);
         vectorLayer._setVisibilityObjects = this.get('_setVisibilityObjects').bind(this);
 
+        // change style by change zoom
+        let styleRules = this.get('layerModel.settingsAsObject.styleRules');
+        if (styleRules && styleRules.length > 0) {
+          this.set('styleRules', styleRules);
+          this.set('layerModel.styleRules', styleRules);
+          this._updateStyleRules();
+          this.get('leafletMap').on('zoomend', this._updateStyleRules, this);
+        }
+
+        // load images for style
+        let imagePromises = Ember.A();
+        let styleSettings = this.get('layerModel.settingsAsObject.styleSettings');
+        if (styleSettings && styleRules.length === 0) {
+          this._imageFromStyleSettings(imagePromises, styleSettings);
+        } else {
+          this._imageFromStyleRules(imagePromises);
+        }
+
         if (Ember.isNone(vectorLayer.loadLayerFeatures)) {
           Ember.set(vectorLayer, 'loadLayerFeatures', this.loadLayerFeatures.bind(this));
         }
 
+        let resultLayer = vectorLayer;
         if (this.get('clusterize')) {
           let clusterLayer = this.createClusterLayer(vectorLayer);
-          resolve(clusterLayer);
+          resultLayer = clusterLayer;
+        }
+
+        if (imagePromises.length > 0) {
+          Ember.RSVP.allSettled(imagePromises).then((styles) => {
+            styles.forEach(style => {
+              for (let property in style.value) {
+                if (!Ember.isNone(style.value[property].tagName)) {
+                  styleSettings.style.path[property].imagePattern = style.value[property];
+                } else {
+                  for (let propertyInner in style.value[property]) {
+                    styleRules[property].styleSettings.style.path[propertyInner].imagePattern = style.value[property][propertyInner];
+                  }
+                }
+              }
+            });
+            resolve(resultLayer);
+          });
         } else {
-          resolve(vectorLayer);
+          resolve(resultLayer);
         }
       }).catch((e) => {
         reject(e);
       });
+    });
+  },
+
+  /**
+    Add in array promise which load pattern from styleSettings.
+
+    @method _imageFromStyleSettings
+  */
+  _imageFromStyleSettings(imagePromises, styleSettings, index) {
+    if (styleSettings.style.path) {
+      if (Ember.isArray(styleSettings.style.path)) {
+        styleSettings.style.path.forEach((style, i) => {
+          if (style.fillStyle === 'pattern') {
+            imagePromises.addObject(this._setPattern(style, i, index));
+          }
+        });
+      } else if (styleSettings.style.path.fillStyle === 'pattern') {
+        imagePromises.addObject(this._setPattern(styleSettings.style.path, 0, index));
+      }
+    }
+  },
+
+  /**
+    For each styleRules load pattern.
+
+    @method _imageFromStyleRules
+  */
+  _imageFromStyleRules(imagePromises) {
+    let styleRules = this.get('styleRules');
+    if (Ember.isNone(styleRules)) {
+      return;
+    }
+
+    styleRules.forEach((styleRule, i) => {
+      this._imageFromStyleSettings(imagePromises, styleRule.styleSettings, i);
+    });
+  },
+
+  /**
+    Change styleSettings depending on the zoom.
+
+    @method _updateStyleRules
+  */
+  _updateStyleRules() {
+    let styleRules = this.get('styleRules');
+    if (Ember.isNone(styleRules)) {
+      return;
+    }
+
+    let leafletMap = this.get('leafletMap');
+    styleRules.forEach(styleRule => {
+      let rule = styleRule.rule;
+      let caption = `${this.get('i18n').t('components.base-vector-layer.zoomFrom')} ${rule.minZoom}
+        ${this.get('i18n').t('components.base-vector-layer.zoomTo')} ${rule.maxZoom}`;
+      Ember.set(rule, 'caption', caption);
+      if (checkMapZoomStyle(leafletMap, styleRule.rule) && this.get('styleSettings') !== styleRule.styleSettings) {
+        this.set('styleSettings', styleRule.styleSettings);
+      }
+    });
+  },
+
+  /**
+    Load image for pattern.
+
+    @method _setPattern
+  */
+  _setPattern(style, i, index = null) {
+    return new Ember.RSVP.Promise((resolve) => {
+      let image = new Image();
+      Ember.set(style, 'pattern', true);
+      image.onload = function() {
+        Ember.set(style, 'imagePattern', this);
+        let result = {};
+        if (!index) {
+          result[i] = this;
+        } else {
+          let inner = {};
+          inner[i] = this;
+          result[index] = inner;
+        }
+
+        return resolve(result);
+      };
+
+      image.src = style.fillPattern;
     });
   },
 
@@ -1106,6 +1232,19 @@ export default BaseLayer.extend(layerLabel, {
     if (!Ember.isNone(leafletMap)) {
       leafletMap.off('flexberry-map:getOrLoadLayerFeatures', this._getOrLoadLayerFeatures, this);
 
+      if (this.get('typeGeometry') === 'polyline') {
+        leafletMap.off('zoomend', this._updatePositionLabelForLine, this);
+      }
+
+      if (this.get('showExisting') !== false) {
+        leafletMap.off('moveend', this._showLabelsMovingMap, this);
+      }
+
+      let styleRules = this.get('layerModel.settingsAsObject.styleRules');
+      if (styleRules.length > 0) {
+        leafletMap.off('zoomend', this._updateStyleRules, this);
+      }
+
       this.willDestroyElementLabel(leafletMap);
     }
   },
@@ -1127,6 +1266,9 @@ export default BaseLayer.extend(layerLabel, {
   _setLayerVisibility() {
     if (this.get('visibility')) {
       this._addLayerToLeafletContainer();
+      if (this.typeGeometry === 'marker' && !this.clusterize) {
+        this._setLayerStyle();
+      }
 
       let leafletObject = this.returnLeafletObject();
       this._setLayerVisibilityLabel(leafletObject);

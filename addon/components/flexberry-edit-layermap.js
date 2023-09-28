@@ -441,7 +441,7 @@ export default Ember.Component.extend(
         Ember.getOwner(this).knownForType('layer', className);
 
       // Style settings are available only for vector layers.
-      return !Ember.isNone(layerClass) && layerClass.isVectorType(this.get('layer'));
+      return !Ember.isNone(layerClass) && layerClass.isVectorType(this.get('layer')) && false;
     }),
 
     /**
@@ -455,7 +455,7 @@ export default Ember.Component.extend(
     _labelsSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
       let className = this.get('_layer.type');
 
-      return Ember.getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
+      return Ember.getOwner(this).isKnownNameForType('layer', className) && className !== 'group' && false;
     }),
 
     /**

@@ -69,7 +69,7 @@ test('test method _createStringLabel', function(assert) {
   assert.equal(_createLabelSpy.getCalls()[0].args[0], 'test');
   assert.deepEqual(_createLabelSpy.getCalls()[0].args[1], layers[0]);
   assert.deepEqual(_createLabelSpy.getCalls()[0].args[2].string,
-  'font-family: Times New Roman; font-size: 12px; font-weight: normal; font-style: normal; text-decoration: none; color: #000000FF; text-align: undefined; ');
+  'font-family: Times New Roman; font-size: 12px; font-weight: normal; font-style: normal; text-decoration: none; color: #000000FF; text-align: undefined;');
   assert.deepEqual(_createLabelSpy.getCalls()[0].args[3], labelsLayer);
 
   _applyFunctionStub.restore();

@@ -346,6 +346,8 @@ export default Ember.Mixin.create({
       if (labelsLayerZoom) {
         let optionsLabel = labelsLayerZoom.settings.options;
         let labelSettingsString = labelsLayerZoom.settings.labelSettingsString;
+        let haloColor = Ember.get(optionsLabel, 'haloColor');
+        let halo = !Ember.isNone(haloColor) ? `-webkit-text-stroke: 1px ${haloColor}; text-stroke: 1px ${haloColor};` : '';
         let style = Ember.String.htmlSafe(
           `font-family: ${Ember.get(optionsLabel, 'captionFontFamily')}; ` +
           `font-size: ${Ember.get(optionsLabel, 'captionFontSize')}px; ` +
@@ -353,7 +355,7 @@ export default Ember.Mixin.create({
           `font-style: ${Ember.get(optionsLabel, 'captionFontStyle')}; ` +
           `text-decoration: ${Ember.get(optionsLabel, 'captionFontDecoration')}; ` +
           `color: ${Ember.get(optionsLabel, 'captionFontColor')}; ` +
-          `text-align: ${Ember.get(optionsLabel, 'captionFontAlign')}; `);
+          `text-align: ${Ember.get(optionsLabel, 'captionFontAlign')};${halo}`);
 
         this._checkLabelInView(layers, labelsLayerZoom).forEach(layer => {
           let label = layer.labelValue || this._applyFunction(this._applyProperty(labelSettingsString, layer));
@@ -529,6 +531,13 @@ export default Ember.Mixin.create({
 
     let multi = labelsLayerZoom.settings.multi;
 
+    let options = {
+      fillColor: Ember.get(optionsLabel, 'captionFontColor'),
+      align: Ember.get(optionsLabel, 'captionFontAlign'),
+      haloColor: Ember.get(optionsLabel, 'haloColor'),
+      fontSize: Ember.get(optionsLabel, 'captionFontSize')
+    };
+
     try {
       let objJsts = layer.toJsts(L.CRS.EPSG4326);
       let countGeometries = objJsts.getNumGeometries();
@@ -550,11 +559,6 @@ export default Ember.Mixin.create({
           let bbox = L.geoJSON(bboxGeoJsonN).getLayers()[0];
           latlng = L.latLng(bbox._bounds._northEast.lat, bbox._bounds._southWest.lng);
 
-          let options = {
-            fillColor: Ember.get(optionsLabel, 'captionFontColor'),
-            align: Ember.get(optionsLabel, 'captionFontAlign')
-          };
-
           layer._svgConteiner = null;
           this._addTextForLine(layer, text, options, style, partline, labelsLayerZoom.settings);
           iconWidth = 12;
@@ -573,10 +577,6 @@ export default Ember.Mixin.create({
         }
       } else {
         latlng = L.latLng(layer._bounds._northEast.lat, layer._bounds._southWest.lng);
-        let options = {
-          fillColor: Ember.get(optionsLabel, 'captionFontColor'),
-          align: Ember.get(optionsLabel, 'captionFontAlign')
-        };
 
         this._addTextForLine(layer, text, options, style, null, labelsLayerZoom.settings);
         iconWidth = 12;
@@ -997,6 +997,39 @@ export default Ember.Mixin.create({
   },
 
   /**
+    Calculate radius for halo by font size.
+
+    @method _haloRadiusByFontSize
+    @param {String} size
+  */
+  _haloRadiusByFontSize(size) {
+    switch (size) {
+      case '8':
+      case '9':
+      case '10':
+        return '0.02%';
+      case '11':
+      case '12':
+        return '0.03%';
+      case '14':
+      case '15':
+      case '16':
+        return '0.04%';
+      case '18':
+      case '20':
+        return '0.06%';
+      case '22':
+      case '24':
+        return '0.08%';
+      case '26':
+      case '28':
+        return '0.1%';
+      case '36':
+        return '0.15%';
+    }
+  },
+
+  /**
     Add text for line object
 
     @method _addTextForLine
@@ -1054,6 +1087,12 @@ export default Ember.Mixin.create({
 
     textPath.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#' + id);
     textNode.setAttribute('fill', options.fillColor);
+    if (options.haloColor) {
+      let size = this._haloRadiusByFontSize(options.fontSize);
+      textNode.setAttribute('stroke-width', size);
+      textNode.setAttribute('stroke', options.haloColor);
+    }
+
     textNode.setAttribute('style', style);
     textNode.setAttribute('id', 'text-' + id);
     textNode.setAttribute('dy', dy);

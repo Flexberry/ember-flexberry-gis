@@ -274,6 +274,13 @@
                 display: flex;
                 margin-bottom: 5px;
                 align-items: center;
+                flex-direction: column;
+                align-items: flex-start;
+
+                .layer-legend-zoom {
+                  width: 100%;
+                  padding: 2px;
+                }
 
                 .layer-legend-image,
                 .layer-legend-caption {
