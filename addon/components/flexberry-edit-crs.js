@@ -76,6 +76,7 @@ export default Ember.Component.extend({
     if (!Array.isArray(crs)) {
       crs = Object.keys(crs);
     }
+
     Ember.A(crs).forEach((code) => {
       coordinateReferenceSystems[code] = {
         code: code === proj4CrsCode ? null : code,
