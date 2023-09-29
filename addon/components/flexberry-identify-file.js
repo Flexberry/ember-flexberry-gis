@@ -122,7 +122,6 @@ export default Ember.Component.extend(CheckFileMixin, {
   */
   getFieldsFromCsv() {
     this.set('_showError', false);
-    this.set('_importInProcess', true);
     let config = Ember.getOwner(this).resolveRegistration('config:environment');
     let data = new FormData();
     let file = this.get('file');
@@ -148,8 +147,6 @@ export default Ember.Component.extend(CheckFileMixin, {
         let message = this.get('badFileMessage');
         this.set('_errorMessage', this.get('importErrorMessage') + message);
         this.set('_showError', true);
-      }).always(() => {
-        this.set('_importInProcess', false);
       });
     }
   },
@@ -188,6 +185,7 @@ export default Ember.Component.extend(CheckFileMixin, {
       this.set('file', file);
 
       if (ext.toLowerCase() === '.csv' || ext.toLowerCase() === '.xls' || ext.toLowerCase() === '.xlsx') {
+        this.set('needGeometryFieldName', false);
         this.getFieldsFromCsv();
         this.set('warningMessage', this.get('warningMessageSRS'));
       }
