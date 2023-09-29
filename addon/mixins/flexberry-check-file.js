@@ -129,6 +129,7 @@ export default Ember.Mixin.create({
       if (this.get('needGeometryFieldName')) {
         data.append('geometryFieldFile', this.get('geometryFieldFile'));
       }
+
       this.set('_showError', false);
       this.set('geometryType', null);
 

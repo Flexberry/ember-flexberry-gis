@@ -40,7 +40,8 @@ export default Ember.Component.extend(CheckFileMixin, {
 
   typeGeometryErrorMessage: 'Указанный тип геометрии противоречит объектам в файле',
 
-  warningMessageSRS: 'Укажите верную систему координат, указанную в загружаемом файле. При выборе ошибочной системы координат слой может некорректно отображаться на карте',
+  warningMessageSRS: 'Укажите верную систему координат, указанную в загружаемом файле. ' +
+  'При выборе ошибочной системы координат слой может некорректно отображаться на карте',
 
   warningMessageEmptyGeometry: 'В файле обнаружены объекты без геометрии. Дальнейшая загрузка будет осуществлена без них',
 
@@ -127,7 +128,7 @@ export default Ember.Component.extend(CheckFileMixin, {
     let file = this.get('file');
     if (!Ember.isNone(file)) {
       data.append(file.name, file);
-      $.ajax({
+      Ember.$.ajax({
         url: `${config.APP.backendUrls.getFieldsUrl}`,
         type: 'POST',
         data: data,
