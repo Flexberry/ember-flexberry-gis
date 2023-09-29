@@ -16,5 +16,5 @@
   "disallowQuotedKeysInObjects": false,
   "safeContextKeyword": null,
   "disallowArrayDestructuringReturn": false,
-  "validateLineBreaks":"CRLF",
+  "validateLineBreaks": null
 }
