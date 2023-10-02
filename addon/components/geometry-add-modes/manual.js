@@ -7,7 +7,7 @@ import layout from '../../templates/components/geometry-add-modes/manual';
 import LeafletZoomToFeatureMixin from '../../mixins/leaflet-zoom-to-feature';
 import { translationMacro as t } from 'ember-i18n';
 import { coordinatesToString } from '../../utils/coordinates-to';
-import { getCrsCode } from '../../utils/get-crs-by-name';
+import { getCrsCode, getCrsByName } from '../../utils/get-crs-by-name';
 
 /**
   Component's CSS-classes names.
@@ -186,6 +186,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
     if (!Ember.isNone(_layerCrsCode)) {
       baseCrs = getCrsByName(_layerCrsCode, this).get('crs');
     }
+
     let coordinates = layer.toProjectedGeoJSON(baseCrs).geometry.coordinates;
 
     const str = coordinatesToString(coordinates);
