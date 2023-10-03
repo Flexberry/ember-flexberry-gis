@@ -89,6 +89,7 @@ export function initialize() {
         next: null
       };
       if (this._drawLast) { this._drawLast.next = order; }
+
       this._drawLast = order;
       this._drawFirst = this._drawFirst || this._drawLast;
     },
@@ -107,16 +108,19 @@ export function initialize() {
 
     _updateDashArray(options) {
       if (typeof options.dashArray === 'string') {
-        const parts = options.dashArray.split(/[, ]+/),
-              dashArray = [];
-        let dashValue,
-            i;
+        const parts = options.dashArray.split(/[, ]+/);
+        const dashArray = [];
+        let dashValue;
+        let i;
         for (i = 0; i < parts.length; i++) {
           dashValue = Number(parts[i]);
+
           // Ignore dash array containing invalid lengths
           if (isNaN(dashValue)) { return; }
+
           dashArray.push(dashValue);
         }
+
         options._dashArray = dashArray;
       } else {
         options._dashArray = options.dashArray;
@@ -125,7 +129,7 @@ export function initialize() {
 
     _extendRedrawBounds(layer) {
       if (layer._pxBounds) {
-        let maxWeight = 0
+        let maxWeight = 0;
         if (layer.options.count) {
           for (let i = 0; i < layer.options.count; i++) {
             if (layer.options[i].weight >= maxWeight) {
@@ -133,7 +137,7 @@ export function initialize() {
             }
           }
         } else {
-          maxWeight = layer.options.weight
+          maxWeight = layer.options.weight;
         }
 
         const padding = (maxWeight || 0) + 1;

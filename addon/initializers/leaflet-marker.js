@@ -415,22 +415,22 @@ export function initialize() {
     },
 
     _adjustPan: function (e) {
-      var marker = this._marker,
-          map = marker._map,
-          speed = this._marker.options.autoPanSpeed,
-          padding = this._marker.options.autoPanPadding,
-          iconPos = L.DomUtil.getPosition(marker._icon),
-          bounds = map.getPixelBounds(),
-          origin = map.getPixelOrigin();
+      let marker = this._marker;
+      let map = marker._map;
+      let speed = this._marker.options.autoPanSpeed;
+      let padding = this._marker.options.autoPanPadding;
+      let iconPos = L.DomUtil.getPosition(marker._icon);
+      let bounds = map.getPixelBounds();
+      let origin = map.getPixelOrigin();
 
-      var panBounds = toBounds(
+      var panBounds = this.toBounds(
         bounds.min._subtract(origin).add(padding),
         bounds.max._subtract(origin).subtract(padding)
       );
 
       if (!panBounds.contains(iconPos)) {
         // Compute incremental movement
-        var movement = toPoint(
+        var movement = this.toPoint(
           (Math.max(panBounds.max.x, iconPos.x) - panBounds.max.x) / (bounds.max.x - panBounds.max.x) -
           (Math.min(panBounds.min.x, iconPos.x) - panBounds.min.x) / (bounds.min.x - panBounds.min.x),
 
@@ -438,7 +438,7 @@ export function initialize() {
           (Math.min(panBounds.min.y, iconPos.y) - panBounds.min.y) / (bounds.min.y - panBounds.min.y)
         ).multiplyBy(speed);
 
-        map.panBy(movement, {animate: false});
+        map.panBy(movement, { animate: false });
 
         this._draggable._newPos._add(movement);
         this._draggable._startPos._add(movement);
@@ -448,6 +448,29 @@ export function initialize() {
 
         this._panRequest = L.Util.requestAnimFrame(this._adjustPan.bind(this, e));
       }
+    },
+
+    toBounds: function (a, b) {
+      if (!a || a instanceof L.Bounds) {
+        return a;
+      }
+      return new L.Bounds(a, b);
+    },
+
+    toPoint: function (x, y, round) {
+      if (x instanceof Point) {
+        return x;
+      }
+      if (Array.isArray(x)) {
+        return new Point(x[0], x[1]);
+      }
+      if (x === undefined || x === null) {
+        return x;
+      }
+      if (typeof x === 'object' && 'x' in x && 'y' in x) {
+        return new Point(x.x, x.y);
+      }
+      return new Point(x, y, round);
     },
 
     _onDragStart: function () {
@@ -476,10 +499,10 @@ export function initialize() {
     },
 
     _onDrag: function (e) {
-      var marker = this._marker,
-          shadow = marker._shadow,
-          iconPos = L.DomUtil.getPosition(marker._icon),
-          latlng = marker._map.layerPointToLatLng(iconPos);
+      let marker = this._marker;
+      let shadow = marker._shadow;
+      let iconPos = L.DomUtil.getPosition(marker._icon);
+      let latlng = marker._map.layerPointToLatLng(iconPos);
 
       // update shadow position
       if (shadow) {
@@ -501,7 +524,7 @@ export function initialize() {
       // @event dragend: DragEndEvent
       // Fired when the user stops dragging the marker.
 
-       L.Util.cancelAnimFrame(this._panRequest);
+      L.Util.cancelAnimFrame(this._panRequest);
 
       // @event moveend: Event
       // Fired when the marker stops moving (because of dragging).

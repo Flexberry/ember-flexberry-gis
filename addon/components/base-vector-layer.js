@@ -5,10 +5,9 @@
 import Ember from 'ember';
 import BaseLayer from './base-layer';
 import { setLeafletLayerOpacity } from '../utils/leaflet-opacity';
-import { checkMapZoom, checkMapZoomStyle } from '../utils/check-zoom';
+import { checkMapZoomStyle } from '../utils/check-zoom';
 import layerLabel from '../mixins/layer-label';
 import featureWithAreaIntersect from '../utils/feature-with-area-intersect';
-import { translationMacro as t } from 'ember-i18n';
 
 const { assert } = Ember;
 

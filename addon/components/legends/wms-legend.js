@@ -83,7 +83,10 @@ export default BaseLegendComponent.extend({
             } else {
               let legendUrl = `${url}${L.Util.getParamString(parameters)}`;
               Ember.$.ajax(legendUrl, {
-                method: 'GET'
+                method: 'GET',
+                xhrFields: {
+                  withCredentials: true
+                }
               })
                 .fail(() => resolve(null))
                 .done((response) => {
