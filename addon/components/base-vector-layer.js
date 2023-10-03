@@ -24,6 +24,7 @@ export const begIndex = 300;
   @extends BaseLayerComponent
  */
 export default BaseLayer.extend(layerLabel, {
+  i18n: Ember.inject.service(),
   /**
     Property flag indicates than result layer will be showed as cluster layer.
 
@@ -766,10 +767,10 @@ export default BaseLayer.extend(layerLabel, {
         // load images for style
         let imagePromises = Ember.A();
         let styleSettings = this.get('layerModel.settingsAsObject.styleSettings');
-        if (styleSettings && styleRules.length === 0) {
-          this._imageFromStyleSettings(imagePromises, styleSettings);
-        } else {
+        if (!Ember.isNone(styleRules) && styleRules.length > 0) {
           this._imageFromStyleRules(imagePromises);
+        } else if (!Ember.isNone(styleSettings)) {
+          this._imageFromStyleSettings(imagePromises, styleSettings);
         }
 
         if (Ember.isNone(vectorLayer.loadLayerFeatures)) {
@@ -855,8 +856,8 @@ export default BaseLayer.extend(layerLabel, {
     let leafletMap = this.get('leafletMap');
     styleRules.forEach(styleRule => {
       let rule = styleRule.rule;
-      let caption = `${this.get('i18n').t('components.base-vector-layer.zoomFrom')} ${rule.minZoom}
-        ${this.get('i18n').t('components.base-vector-layer.zoomTo')} ${rule.maxZoom}`;
+      let caption = `${this.get('i18n').t('components.base-vector-layer.zoomFrom').string} ${rule.minZoom}
+        ${this.get('i18n').t('components.base-vector-layer.zoomTo').string} ${rule.maxZoom}`;
       Ember.set(rule, 'caption', caption);
       if (checkMapZoomStyle(leafletMap, styleRule.rule) && this.get('styleSettings') !== styleRule.styleSettings) {
         this.set('styleSettings', styleRule.styleSettings);
@@ -876,7 +877,7 @@ export default BaseLayer.extend(layerLabel, {
       image.onload = function() {
         Ember.set(style, 'imagePattern', this);
         let result = {};
-        if (!index) {
+        if (Ember.isNone(index)) {
           result[i] = this;
         } else {
           let inner = {};
@@ -1210,10 +1211,23 @@ export default BaseLayer.extend(layerLabel, {
       let pane = leafletMap.getPane(thisPane);
       let mapPane = leafletMap._mapPane;
       if (!Ember.isNone(mapPane) && !Ember.isNone(pane)) {
+
+        let styleRules = this.get('styleRules');
+        let styleZoom = Ember.A();
+        if (!Ember.isNone(styleRules)) {
+          styleZoom = styleRules.filter(styleRule => {
+            return checkMapZoomStyle(leafletMap, styleRule.rule);
+          });
+        } else {
+          if (checkMapZoom(leafletObject)) {
+            styleZoom.addObject({});
+          }
+        }
+
         let existPaneDomElem = Ember.$(mapPane).children(`[class*='${thisPane}']`).length;
-        if (existPaneDomElem > 0 && !checkMapZoom(leafletObject)) {
+        if (existPaneDomElem > 0 && styleZoom.length === 0) {
           L.DomUtil.remove(pane);
-        } else if (existPaneDomElem === 0 && checkMapZoom(leafletObject)) {
+        } else if (existPaneDomElem === 0 && styleZoom.length > 0) {
           mapPane.appendChild(pane);
         }
       }

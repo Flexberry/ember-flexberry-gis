@@ -208,7 +208,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
             let label = Ember.get(layer, '_label');
             if (label) {
               // возьмем только нужную надпись
-              let zoom = this.get('leafletMap').getZoom();
+              let zoom = Number(this.get('leafletMap').getZoom().toFixed(1));
               let labelZooms = label.filter(l => { return (l.minZoom == null || l.minZoom <= zoom) && (l.maxZoom == null || l.maxZoom >= zoom); });
               if (labelZooms.length > 0) {
                 let labelZoom = labelZooms[0];
@@ -743,7 +743,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
             }
 
             let label = Ember.get(layer, '_label');
-            let zoom = this.get('leafletMap').getZoom();
+            let zoom = Number(this.get('leafletMap').getZoom().toFixed(1));
             let labelZooms = label.filter(l => { return (l.minZoom == null || l.minZoom <= zoom) && (l.maxZoom == null || l.maxZoom >= zoom); });
             if (labelZooms.length > 0) {
               let labelZoom = labelZooms[0];

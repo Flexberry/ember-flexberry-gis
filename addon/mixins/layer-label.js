@@ -346,7 +346,7 @@ export default Ember.Mixin.create({
       if (labelsLayerZoom) {
         let optionsLabel = labelsLayerZoom.settings.options;
         let labelSettingsString = labelsLayerZoom.settings.labelSettingsString;
-        let haloColor = Ember.get(optionsLabel, 'haloColor');
+        let haloColor = Ember.get(optionsLabel, 'captionFontHalo');
         let halo = !Ember.isNone(haloColor) ? `-webkit-text-stroke: 1px ${haloColor}; text-stroke: 1px ${haloColor};` : '';
         let style = Ember.String.htmlSafe(
           `font-family: ${Ember.get(optionsLabel, 'captionFontFamily')}; ` +
@@ -369,7 +369,7 @@ export default Ember.Mixin.create({
     let leafletMap = this.get('leafletMap');
     let currentLabelExists = false;
     let bbox = leafletMap.getBounds();
-    let zoom = leafletMap.getZoom();
+    let zoom = Number(leafletMap.getZoom().toFixed(1));
     return layers.filter((layer) => {
       if (labelsLayerZoom && layer._label) {
         currentLabelExists = layer._label.filter(l => {
@@ -534,7 +534,7 @@ export default Ember.Mixin.create({
     let options = {
       fillColor: Ember.get(optionsLabel, 'captionFontColor'),
       align: Ember.get(optionsLabel, 'captionFontAlign'),
-      haloColor: Ember.get(optionsLabel, 'haloColor'),
+      haloColor: Ember.get(optionsLabel, 'captionFontHalo'),
       fontSize: Ember.get(optionsLabel, 'captionFontSize')
     };
 
@@ -1117,7 +1117,7 @@ export default Ember.Mixin.create({
   _getLabelsLayersZoom() {
     let labelsLayers = this.get('labelsLayers');
     let labelsLayersZoom = null;
-    let zoom =  this.get('leafletMap').getZoom();
+    let zoom =  Number(this.get('leafletMap').getZoom().toFixed(1));
     if (labelsLayers) {
       let aLayers = labelsLayers.filter(l => { return (l.minZoom == null || l.minZoom <= zoom) && (l.maxZoom == null || l.maxZoom >= zoom); });
 
@@ -1180,6 +1180,13 @@ export default Ember.Mixin.create({
 
     this._setAlignForLine(layer, text, options.align, textNode, settingsLabel);
     Ember.$('text#text-' + id).attr('dx', textNode.getAttribute('dx'));
+
+    let buffer = 150;
+    let bbox = document.getElementById(id).getBBox();
+    layer._svg.setAttribute('height', bbox.height + buffer);
+    layer._svg.setAttribute('width', bbox.width + buffer);
+    document.getElementById(Ember.$(layer._svg)[0].getAttribute('id')).setAttribute('height', bbox.height + buffer);
+    document.getElementById(Ember.$(layer._svg)[0].getAttribute('id')).setAttribute('width', bbox.width + buffer);
   },
 
   _createLabelsLayerOldSettings(labelsLayersArray) {
@@ -1332,8 +1339,16 @@ export default Ember.Mixin.create({
       labelsLayers = this.get('labelsLayers');
       if (labelsLayers && labelsLayers.length > 0) {
         this._additionalZoomLabelPane();
+        let buffer = 150;
         labelsLayers.forEach(labelLayer => {
           leafletContainer.addLayer(labelLayer);
+          labelLayer.eachLayer(layer => {
+            let bbox = document.getElementById(Ember.$(layer._path)[0].getAttribute('id')).getBBox();
+            layer._svg.setAttribute('height', bbox.height + buffer);
+            layer._svg.setAttribute('width', bbox.width + buffer);
+            document.getElementById(Ember.$(layer._svg)[0].getAttribute('id')).setAttribute('height', bbox.height + buffer);
+            document.getElementById(Ember.$(layer._svg)[0].getAttribute('id')).setAttribute('width', bbox.width + buffer);
+          });
         });
       }
     } else if (notInMapLabels.length > 0) {

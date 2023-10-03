@@ -23,12 +23,17 @@ export default function createLeafletMap() {
     return {};
   };
 
+  let getZoom = function() {
+    return 10;
+  };
+
   let leafletMap = L.map(document.createElement('div'));
   leafletMap.getBounds = getBounds;
   leafletMap.getPane = getPane;
   leafletMap.createPane = createPane;
   leafletMap.removeLayer = removeLayer;
   leafletMap.hasLayer = hasLayer;
+  leafletMap.getZoom = getZoom;
   let editTools = new L.Editable(leafletMap);
   Ember.set(leafletMap, 'editTools', editTools);
 
