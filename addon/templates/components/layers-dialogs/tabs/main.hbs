@@ -42,9 +42,7 @@
       {{#if _crsSettingsAreAvailableForType}}
         <div class="ui bottom attached tab segment {{if (eq _activeTab "crs-tab") "active"}}" data-tab="crs-tab">
           {{flexberry-edit-crs
-            coordinateReferenceSystem=_layer.coordinateReferenceSystem
-            availableCoordinateReferenceSystemsCodes=availableCoordinateReferenceSystemsCodes
-            displayCaptionsDD=true
+            coordinateReferenceSystem=_layer.coordinateReferenceSystem            
           }}
         </div>
       {{/if}}
