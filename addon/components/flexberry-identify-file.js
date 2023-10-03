@@ -142,11 +142,13 @@ export default Ember.Component.extend(CheckFileMixin, {
         } else {
           this.set('_errorMessage', this.get('importErrorMessage') + this.get('emptyHeaderErrorMessage'));
           this.set('_showError', true);
+          this.set('needGeometryFieldName', false);
         }
       }).fail(() => {
         let message = this.get('badFileMessage');
         this.set('_errorMessage', this.get('importErrorMessage') + message);
         this.set('_showError', true);
+        this.set('needGeometryFieldName', false);
       });
     }
   },
@@ -185,7 +187,7 @@ export default Ember.Component.extend(CheckFileMixin, {
       this.set('file', file);
 
       if (ext.toLowerCase() === '.csv' || ext.toLowerCase() === '.xls' || ext.toLowerCase() === '.xlsx') {
-        this.set('needGeometryFieldName', false);
+        this.set('needGeometryFieldName', true);
         this.getFieldsFromCsv();
         this.set('warningMessage', this.get('warningMessageSRS'));
       }

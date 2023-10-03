@@ -15,6 +15,5 @@
   },
   "disallowQuotedKeysInObjects": false,
   "safeContextKeyword": null,
-  "disallowArrayDestructuringReturn": false,
-  "validateLineBreaks": null
+  "disallowArrayDestructuringReturn": false
 }
