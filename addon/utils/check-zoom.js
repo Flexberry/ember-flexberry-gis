@@ -28,10 +28,10 @@ let _getMapZoom = (map) => {
     let _mapZoom = map.getZoom();
     let _animZoom = map._animateToZoom;
     if (map._animatingZoom && !isNaN(_animZoom) && _animZoom !== _mapZoom) {
-      return _animZoom;
+      return Number(_animZoom.toFixed(1));
     }
 
-    return _mapZoom;
+    return Number(_mapZoom.toFixed(1));
   }
 
   return null;

@@ -227,14 +227,14 @@ export function initialize() {
 
       L.Marker.prototype.addInteractiveTarget.call(this, icon);
 
-      if (L.Marker.prototype.MarkerDrag) {
+      if (MarkerDrag) {
         let draggable = this.options.draggable;
         if (this.dragging) {
           draggable = this.dragging.enabled();
           this.dragging.disable();
         }
 
-        this.dragging = new L.Marker.prototype.MarkerDrag.call(this);
+        this.dragging = new MarkerDrag(this);
 
         if (draggable) {
           this.dragging.enable();
@@ -372,6 +372,143 @@ export function initialize() {
       });
 
       return label;
+    }
+  });
+
+  let MarkerDrag = L.Handler.extend({
+    initialize: function (marker) {
+      this._marker = marker;
+    },
+
+    addHooks: function () {
+      var icon = this._marker._icon;
+
+      if (!this._draggable) {
+        this._draggable = new L.Draggable(icon, icon, true);
+      }
+
+      this._draggable.on({
+        dragstart: this._onDragStart,
+        predrag: this._onPreDrag,
+        drag: this._onDrag,
+        dragend: this._onDragEnd
+      }, this).enable();
+
+      L.DomUtil.addClass(icon, 'leaflet-marker-draggable');
+    },
+
+    removeHooks: function () {
+      this._draggable.off({
+        dragstart: this._onDragStart,
+        predrag: this._onPreDrag,
+        drag: this._onDrag,
+        dragend: this._onDragEnd
+      }, this).disable();
+
+      if (this._marker._icon) {
+        L.DomUtil.removeClass(this._marker._icon, 'leaflet-marker-draggable');
+      }
+    },
+
+    moved: function () {
+      return this._draggable && this._draggable._moved;
+    },
+
+    _adjustPan: function (e) {
+      var marker = this._marker,
+          map = marker._map,
+          speed = this._marker.options.autoPanSpeed,
+          padding = this._marker.options.autoPanPadding,
+          iconPos = L.DomUtil.getPosition(marker._icon),
+          bounds = map.getPixelBounds(),
+          origin = map.getPixelOrigin();
+
+      var panBounds = toBounds(
+        bounds.min._subtract(origin).add(padding),
+        bounds.max._subtract(origin).subtract(padding)
+      );
+
+      if (!panBounds.contains(iconPos)) {
+        // Compute incremental movement
+        var movement = toPoint(
+          (Math.max(panBounds.max.x, iconPos.x) - panBounds.max.x) / (bounds.max.x - panBounds.max.x) -
+          (Math.min(panBounds.min.x, iconPos.x) - panBounds.min.x) / (bounds.min.x - panBounds.min.x),
+
+          (Math.max(panBounds.max.y, iconPos.y) - panBounds.max.y) / (bounds.max.y - panBounds.max.y) -
+          (Math.min(panBounds.min.y, iconPos.y) - panBounds.min.y) / (bounds.min.y - panBounds.min.y)
+        ).multiplyBy(speed);
+
+        map.panBy(movement, {animate: false});
+
+        this._draggable._newPos._add(movement);
+        this._draggable._startPos._add(movement);
+
+        L.DomUtil.setPosition(marker._icon, this._draggable._newPos);
+        this._onDrag(e);
+
+        this._panRequest = L.Util.requestAnimFrame(this._adjustPan.bind(this, e));
+      }
+    },
+
+    _onDragStart: function () {
+      // @section Dragging events
+      // @event dragstart: Event
+      // Fired when the user starts dragging the marker.
+
+      // @event movestart: Event
+      // Fired when the marker starts moving (because of dragging).
+
+      this._oldLatLng = this._marker.getLatLng();
+
+      // When using ES6 imports it could not be set when `Popup` was not imported as well
+      this._marker.closePopup && this._marker.closePopup();
+
+      this._marker
+        .fire('movestart')
+        .fire('dragstart');
+    },
+
+    _onPreDrag: function (e) {
+      if (this._marker.options.autoPan) {
+        L.Util.cancelAnimFrame(this._panRequest);
+        this._panRequest = L.Util.requestAnimFrame(this._adjustPan.bind(this, e));
+      }
+    },
+
+    _onDrag: function (e) {
+      var marker = this._marker,
+          shadow = marker._shadow,
+          iconPos = L.DomUtil.getPosition(marker._icon),
+          latlng = marker._map.layerPointToLatLng(iconPos);
+
+      // update shadow position
+      if (shadow) {
+        L.DomUtil.setPosition(shadow, iconPos);
+      }
+
+      marker._latlng = latlng;
+      e.latlng = latlng;
+      e.oldLatLng = this._oldLatLng;
+
+      // @event drag: Event
+      // Fired repeatedly while the user drags the marker.
+      marker
+          .fire('move', e)
+          .fire('drag', e);
+    },
+
+    _onDragEnd: function (e) {
+      // @event dragend: DragEndEvent
+      // Fired when the user stops dragging the marker.
+
+       L.Util.cancelAnimFrame(this._panRequest);
+
+      // @event moveend: Event
+      // Fired when the marker stops moving (because of dragging).
+      delete this._oldLatLng;
+      this._marker
+          .fire('moveend')
+          .fire('dragend', e);
     }
   });
 }

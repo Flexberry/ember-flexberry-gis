@@ -70,7 +70,78 @@ export function initialize() {
         ctx.lineJoin = options.lineJoin;
         ctx.stroke();
       }
-    }
+    },
+
+    _initPath(layer) {
+      if (layer.options.count) {
+        for (let i = 0; i < layer.options.count; i++) {
+          this._updateDashArray(layer.options[i]);
+        }
+      } else {
+        this._updateDashArray(layer.options);
+      }
+
+      this._layers[L.Util.stamp(layer)] = layer;
+
+      const order = layer._order = {
+        layer,
+        prev: this._drawLast,
+        next: null
+      };
+      if (this._drawLast) { this._drawLast.next = order; }
+      this._drawLast = order;
+      this._drawFirst = this._drawFirst || this._drawLast;
+    },
+
+    _updateStyle(layer) {
+      if (layer.options.count) {
+        for (let i = 0; i < layer.options.count; i++) {
+          this._updateDashArray(layer.options[i]);
+          this._requestRedraw(layer);
+        }
+      } else {
+        this._updateDashArray(layer.options);
+        this._requestRedraw(layer);
+      }
+    },
+
+    _updateDashArray(options) {
+      if (typeof options.dashArray === 'string') {
+        const parts = options.dashArray.split(/[, ]+/),
+              dashArray = [];
+        let dashValue,
+            i;
+        for (i = 0; i < parts.length; i++) {
+          dashValue = Number(parts[i]);
+          // Ignore dash array containing invalid lengths
+          if (isNaN(dashValue)) { return; }
+          dashArray.push(dashValue);
+        }
+        options._dashArray = dashArray;
+      } else {
+        options._dashArray = options.dashArray;
+      }
+    },
+
+    _extendRedrawBounds(layer) {
+      if (layer._pxBounds) {
+        let maxWeight = 0
+        if (layer.options.count) {
+          for (let i = 0; i < layer.options.count; i++) {
+            if (layer.options[i].weight >= maxWeight) {
+              maxWeight = layer.options[i].weight;
+            }
+          }
+        } else {
+          maxWeight = layer.options.weight
+        }
+
+        const padding = (maxWeight || 0) + 1;
+        this._redrawBounds = this._redrawBounds || new L.Bounds();
+        this._redrawBounds.extend(layer._pxBounds.min.subtract([padding, padding]));
+        this._redrawBounds.extend(layer._pxBounds.max.add([padding, padding]));
+      }
+    },
   });
 }
 

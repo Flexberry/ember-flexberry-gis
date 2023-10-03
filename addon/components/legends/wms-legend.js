@@ -112,11 +112,6 @@ export default BaseLegendComponent.extend({
                       });
                     });
 
-                    // hide legend rule name if only one is available
-                    if (legendsContainer.length === 1) {
-                      Ember.set(legendsContainer[0], 'useLayerName', false);
-                    }
-
                     resolve(legendsContainer);
                   } else {
                     resolve(null);
