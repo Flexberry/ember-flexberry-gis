@@ -2,7 +2,7 @@
   <div class="field upload flexberry-file">
     <label class="label">Файл {{#if (not file.name)}}*{{/if}}</label>
     <div class="ui action input upload">
-      <input type="file" accept=".zip,.GEOJSON,.gml" class="hidden" onchange={{action "clickFile"}} id="{{idfile}}"/>
+      <input type="file" accept=".zip,.GEOJSON,.gml,.xls,.xlsx,.csv,.xml,.gps,.kml" class="hidden" onchange={{action "clickFile"}} id="{{idfile}}"/>
       <input class="flexberry-file-filename-input" readonly="readonly" value={{file.name}}/>
       <label for="{{idfile}}" class="ui icon button upload flexberry-file-add-button">
         <i class="ui upload icon" title="Прикрепить файл"></i>
@@ -18,16 +18,35 @@
       small=true
     }}
   </div>
+
+  {{#if needGeometryFieldName}}
+    <div class="field geometryField">
+      <label>Название полей с геометрией в файле*</label>
+      {{flexberry-dropdown
+        class=(concat "fluid geometryField1")
+        items=_availableFields
+        value=geometryField1
+      }}
+    </div>
+    {{flexberry-dropdown
+      class=(concat "field fluid geometryField2" (if disableCrs " disabled" ""))
+      items=_availableFields
+      value=geometryField2
+    }}
+  {{/if}}
+
+  <div class="field">
+    <label class="label">{{t "components.flexberry-identify-panel.file.form-caption-sk"}}</label>
+    {{flexberry-dropdown
+      items=systemCoordinates
+      value=coordinate
+      displayCaptions=true
+      onChange=(action 'onCoordinateChange')
+      class="scale-value fluid"
+    }}
+  </div>
 </div>
 
-<label class="label">{{t "components.flexberry-identify-panel.file.form-caption-sk"}}</label>
-{{flexberry-dropdown
-  items=systemCoordinates
-  value=coordinate
-  displayCaptions=true
-  onChange=(action 'onCoordinateChange')
-  class="scale-value fluid"
-}}
 
 <div class="d-flex justify-content-center identify-file-buttons">
   {{flexberry-button
