@@ -32518,7 +32518,47 @@
         {
             "file": "addon/components/flexberry-identify-file.js",
             "line": 13,
+            "description": "Geometry field for csv/xls.",
+            "itemtype": "property",
+            "name": "geometryField1",
+            "type": "String",
+            "default": "null",
+            "class": "FlexberryIdentifyPanelComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-identify-file.js",
+            "line": 22,
+            "description": "Geometry field for csv/xls.",
+            "itemtype": "property",
+            "name": "geometryField2",
+            "type": "String",
+            "default": "null",
+            "class": "FlexberryIdentifyPanelComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-identify-file.js",
+            "line": 50,
             "description": "We need to differentiate events from different instances, because we don't turn off event subscriptions",
+            "class": "FlexberryIdentifyPanelComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-identify-file.js",
+            "line": 101,
+            "description": "Observer that checks filling in the required fields.",
+            "itemtype": "method",
+            "name": "fieldsSet",
+            "class": "FlexberryIdentifyPanelComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-identify-file.js",
+            "line": 118,
+            "description": "Get headers fields from csv or xls file.",
+            "itemtype": "method",
+            "name": "getFieldsFromCsv",
             "class": "FlexberryIdentifyPanelComponent",
             "module": "ember-flexberry-gis"
         },
@@ -54222,7 +54262,7 @@
         },
         {
             "message": "Missing item type\nWe need to differentiate events from different instances, because we don't turn off event subscriptions",
-            "line": " addon/components/flexberry-identify-file.js:13"
+            "line": " addon/components/flexberry-identify-file.js:50"
         },
         {
             "message": "Missing item type\nReference to component's template.",

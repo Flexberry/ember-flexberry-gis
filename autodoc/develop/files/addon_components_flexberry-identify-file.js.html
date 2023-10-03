@@ -427,6 +427,43 @@ export default Ember.Component.extend(CheckFileMixin, {
   systemCoordinates: null,
 
   /**
+    Geometry field for csv/xls.
+
+    @property geometryField1
+    @type String
+    @default null
+  */
+  geometryField1: null,
+
+  /**
+    Geometry field for csv/xls.
+
+    @property geometryField2
+    @type String
+    @default null
+  */
+  geometryField2: null,
+
+  needGeometryFieldName: false,
+
+  importErrorMessage: &#x27;Загруженный файл не соответствует требованиям: &#x27;,
+
+  emptyErrorMessage: &#x27;Файл не содержит геометрических объектов&#x27;,
+
+  badFileMessage: &#x27;Сервер недоступен или импортируемый файл некорректен&#x27;,
+
+  emptyHeaderErrorMessage: &#x27;Файл не содержит заголовков&#x27;,
+
+  typeGeometryErrorMessage: &#x27;Указанный тип геометрии противоречит объектам в файле&#x27;,
+
+  warningMessageSRS: &#x27;Укажите верную систему координат, указанную в загружаемом файле. &#x27; +
+  &#x27;При выборе ошибочной системы координат слой может некорректно отображаться на карте&#x27;,
+
+  warningMessageEmptyGeometry: &#x27;В файле обнаружены объекты без геометрии. Дальнейшая загрузка будет осуществлена без них&#x27;,
+
+  emptyGeometryField: &#x27;Укажите название поля с геометрией в файле (WKT/X,Y)&#x27;,
+
+  /**
    * We need to differentiate events from different instances, because we don&#x27;t turn off event subscriptions
    *
   */
@@ -477,6 +514,61 @@ export default Ember.Component.extend(CheckFileMixin, {
     });
   },
 
+  /**
+    Observer that checks filling in the required fields.
+
+    @method fieldsSet
+  */
+  fieldsSet: Ember.observer(&#x27;file&#x27;, &#x27;needGeometryFieldName&#x27;, &#x27;geometryField1&#x27;, &#x27;geometryField2&#x27;, function() {
+    let file = this.get(&#x27;file&#x27;);
+    if (this.get(&#x27;needGeometryFieldName&#x27;) &amp;&amp; !Ember.isNone(file)) {
+      let geometryField1 = this.get(&#x27;geometryField1&#x27;);
+      let geometryField2 = this.get(&#x27;geometryField2&#x27;);
+      let geometryFieldFile = Ember.isNone(geometryField1) ? &#x27;&#x27; : geometryField1 + (!Ember.isNone(geometryField2) ? &#x27;,&#x27; + geometryField2 : &#x27;&#x27;);
+      this.set(&#x27;geometryFieldFile&#x27;, geometryFieldFile);
+    } else {
+      this.set(&#x27;geometryFieldFile&#x27;, null);
+    }
+  }),
+
+  /**
+    Get headers fields from csv or xls file.
+
+    @method getFieldsFromCsv
+  */
+  getFieldsFromCsv() {
+    this.set(&#x27;_showError&#x27;, false);
+    let config = Ember.getOwner(this).resolveRegistration(&#x27;config:environment&#x27;);
+    let data = new FormData();
+    let file = this.get(&#x27;file&#x27;);
+    if (!Ember.isNone(file)) {
+      data.append(file.name, file);
+      Ember.$.ajax({
+        url: &#x60;${config.APP.backendUrls.getFieldsUrl}&#x60;,
+        type: &#x27;POST&#x27;,
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+      }).done((response) =&gt; {
+        if (response &amp;&amp; response.length) {
+          const items = response.split(&#x27;,&#x27;);
+          this.set(&#x27;_availableFields&#x27;, Ember.A(items));
+          this.set(&#x27;needGeometryFieldName&#x27;, true);
+        } else {
+          this.set(&#x27;_errorMessage&#x27;, this.get(&#x27;importErrorMessage&#x27;) + this.get(&#x27;emptyHeaderErrorMessage&#x27;));
+          this.set(&#x27;_showError&#x27;, true);
+          this.set(&#x27;needGeometryFieldName&#x27;, false);
+        }
+      }).fail(() =&gt; {
+        let message = this.get(&#x27;badFileMessage&#x27;);
+        this.set(&#x27;_errorMessage&#x27;, this.get(&#x27;importErrorMessage&#x27;) + message);
+        this.set(&#x27;_showError&#x27;, true);
+        this.set(&#x27;needGeometryFieldName&#x27;, false);
+      });
+    }
+  },
+
   actions: {
     onCoordinateChange() {
       this.set(&#x27;_showError&#x27;, false);
@@ -486,7 +578,12 @@ export default Ember.Component.extend(CheckFileMixin, {
     clearFile() {
       this.set(&#x27;file&#x27;, null);
       this.set(&#x27;coordinate&#x27;, &#x27;auto&#x27;);
+      this.set(&#x27;needGeometryFieldName&#x27;, false);
+      this.set(&#x27;geometryField1&#x27;, null);
+      this.set(&#x27;geometryField2&#x27;, null);
+      this.set(&#x27;geometryFieldFile&#x27;, null);
       this.set(&#x27;_showError&#x27;, false);
+      this.set(&#x27;_errorMessage&#x27;, &#x27;&#x27;);
 
       this.clearAjax();
       if (this.get(&#x27;filePreview&#x27;)) {
@@ -501,7 +598,16 @@ export default Ember.Component.extend(CheckFileMixin, {
 
     clickFile(e) {
       let file = e.target.files[0];
+      let fileName = file.name;
+      let ext = fileName.substring(fileName.indexOf(&#x27;.&#x27;), fileName.length);
       this.set(&#x27;file&#x27;, file);
+
+      if (ext.toLowerCase() === &#x27;.csv&#x27; || ext.toLowerCase() === &#x27;.xls&#x27; || ext.toLowerCase() === &#x27;.xlsx&#x27;) {
+        this.set(&#x27;needGeometryFieldName&#x27;, true);
+        this.getFieldsFromCsv();
+        this.set(&#x27;warningMessage&#x27;, this.get(&#x27;warningMessageSRS&#x27;));
+      }
+
       this.clearAjax();
       this.$(&#x27;.ui.button.upload&#x27;).addClass(&#x27;hidden&#x27;);
       this.$(&#x27;.ui.button.remove&#x27;).removeClass(&#x27;hidden&#x27;);
@@ -525,15 +631,20 @@ export default Ember.Component.extend(CheckFileMixin, {
     },
 
     identificationFile() {
-      this.validateFileAndGetFeatures().then((response) =&gt; {
-        if (response) {
-          let layer = this.createLayer(response);
-          if (layer) {
-            let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
-            leafletMap.fire(&#x60;flexberry-map-loadfile${this.get(&#x27;suffix&#x27;)}:identification&#x60;, { layer, geometryType: this.get(&#x27;geometryType&#x27;) });
+      if (this.get(&#x27;needGeometryFieldName&#x27;) &amp;&amp; Ember.isEmpty(this.get(&#x27;geometryFieldFile&#x27;))) {
+        this.set(&#x27;_errorMessage&#x27;, this.get(&#x27;emptyGeometryField&#x27;));
+        this.set(&#x27;_showError&#x27;, true);
+      } else {
+        this.validateFileAndGetFeatures().then((response) =&gt; {
+          if (response) {
+            let layer = this.createLayer(response);
+            if (layer) {
+              let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
+              leafletMap.fire(&#x60;flexberry-map-loadfile${this.get(&#x27;suffix&#x27;)}:identification&#x60;, { layer, geometryType: this.get(&#x27;geometryType&#x27;) });
+            }
           }
-        }
-      }, (error) =&gt; this.showError(error));
+        }, (error) =&gt; this.showError(error));
+      }
     },
 
     createLayerByFile() {
