@@ -5,7 +5,7 @@
 import Ember from 'ember';
 import BaseLayer from './base-layer';
 import { setLeafletLayerOpacity } from '../utils/leaflet-opacity';
-import { checkMapZoomStyle } from '../utils/check-zoom';
+import { checkMapZoom, checkMapZoomStyle } from '../utils/check-zoom';
 import layerLabel from '../mixins/layer-label';
 import featureWithAreaIntersect from '../utils/feature-with-area-intersect';
 
@@ -767,9 +767,9 @@ export default BaseLayer.extend(layerLabel, {
         // load images for style
         let imagePromises = Ember.A();
         let styleSettings = this.get('layerModel.settingsAsObject.styleSettings');
-        if (styleRules && styleRules.length > 0) {
+        if (!Ember.isNone(styleRules) && styleRules.length > 0) {
           this._imageFromStyleRules(imagePromises);
-        } else {
+        } else if (!Ember.isNone(styleSettings)) {
           this._imageFromStyleSettings(imagePromises, styleSettings);
         }
 
@@ -1213,9 +1213,17 @@ export default BaseLayer.extend(layerLabel, {
       if (!Ember.isNone(mapPane) && !Ember.isNone(pane)) {
 
         let styleRules = this.get('styleRules');
-        let styleZoom = styleRules.filter(styleRule => {
-          return checkMapZoomStyle(leafletMap, styleRule.rule);
-        });
+        let styleZoom = Ember.A();
+        if (!Ember.isNone(styleRules)) {
+          styleZoom = styleRules.filter(styleRule => {
+            return checkMapZoomStyle(leafletMap, styleRule.rule);
+          });
+        } else {
+          if (checkMapZoom(leafletObject)) {
+            styleZoom.addObject({});
+          }
+        }
+
         let existPaneDomElem = Ember.$(mapPane).children(`[class*='${thisPane}']`).length;
         if (existPaneDomElem > 0 && styleZoom.length === 0) {
           L.DomUtil.remove(pane);

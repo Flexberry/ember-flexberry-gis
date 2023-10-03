@@ -454,23 +454,28 @@ export function initialize() {
       if (!a || a instanceof L.Bounds) {
         return a;
       }
+
       return new L.Bounds(a, b);
     },
 
     toPoint: function (x, y, round) {
-      if (x instanceof Point) {
+      if (x instanceof L.Point) {
         return x;
       }
+
       if (Array.isArray(x)) {
-        return new Point(x[0], x[1]);
+        return new L.Point(x[0], x[1]);
       }
+
       if (x === undefined || x === null) {
         return x;
       }
+
       if (typeof x === 'object' && 'x' in x && 'y' in x) {
-        return new Point(x.x, x.y);
+        return new L.Point(x.x, x.y);
       }
-      return new Point(x, y, round);
+
+      return new L.Point(x, y, round);
     },
 
     _onDragStart: function () {
@@ -484,7 +489,9 @@ export function initialize() {
       this._oldLatLng = this._marker.getLatLng();
 
       // When using ES6 imports it could not be set when `Popup` was not imported as well
-      this._marker.closePopup && this._marker.closePopup();
+      if (this._marker.closePopup) {
+        this._marker.closePopup();
+      }
 
       this._marker
         .fire('movestart')

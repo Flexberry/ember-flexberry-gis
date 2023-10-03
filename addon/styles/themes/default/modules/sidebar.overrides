@@ -274,10 +274,10 @@
                 display: flex;
                 margin-bottom: 5px;
                 align-items: center;
-                /*&:not(.wms) {
+                &:not(.wms) {
                   flex-direction: column;
                   align-items: flex-start;
-                }*/
+                }
 
                 .layer-legend-zoom {
                   width: 100%;
