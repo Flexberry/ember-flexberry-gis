@@ -1151,9 +1151,9 @@
   }
 }
 .ui.popup.help-popup {
-  padding: 15px 25px 15px 45px;
-  max-width: 552px;
-  margin-top: -48px;
+  padding: 1rem 1.5625rem 1rem 2.8125rem;
+  max-width: 34.5rem;
+  margin-top: -3rem;
   text-align:justify;
 }
 .ui.bottom.left.popup.small.help-popup {

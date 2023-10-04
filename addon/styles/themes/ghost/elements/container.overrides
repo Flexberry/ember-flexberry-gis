@@ -38,7 +38,7 @@
   }
 
   .leaflet-left.leaflet-top {
-    right: 29px;
+    right: 30px;
     left: initial;
     top: 90px;
 

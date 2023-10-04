@@ -92,16 +92,16 @@
 
   .flexberry-zoom-in-map-tool {
     position: absolute;
-    top: 190px;
+    top: 212px;
   }
 
   .flexberry-share-location-map-tool {
       position:absolute;
-      top: 250px;
+      top: 272px;
     }
   .ui.dropdown.flexberry-more-map-command {
     position: absolute;
-    top: 310px;
+    top: 332px;
     padding: 7px;
 
     .flexberry-map-command-submenu.menu {

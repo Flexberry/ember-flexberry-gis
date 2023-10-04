@@ -115,7 +115,6 @@
         }
         .leaflet-control-zoom.leaflet-bar {
             margin-top: 5px;
-            top: -11px !important;
             .leaflet-control-zoom-view {
               padding: 3px 4px;
               font-size: 14px;
