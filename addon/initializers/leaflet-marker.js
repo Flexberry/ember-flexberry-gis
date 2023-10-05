@@ -397,7 +397,13 @@ export function initialize() {
       var icon = this._marker._icon;
 
       if (!this._draggable) {
-        this._draggable = new L.Draggable(icon, icon, true);
+        if (Ember.isArray(icon)) {
+          icon.forEach(_icon => {
+            this._draggable = new L.Draggable(_icon, _icon, true);
+          });
+        } else {
+          this._draggable = new L.Draggable(icon, icon, true);
+        }
       }
 
       this._draggable.on({
@@ -407,7 +413,13 @@ export function initialize() {
         dragend: this._onDragEnd
       }, this).enable();
 
-      L.DomUtil.addClass(icon, 'leaflet-marker-draggable');
+      if (Ember.isArray(icon)) {
+        icon.forEach(_icon => {
+          L.DomUtil.addClass(_icon, 'leaflet-marker-draggable');
+        });
+      } else {
+        L.DomUtil.addClass(icon, 'leaflet-marker-draggable');
+      }
     },
 
     removeHooks: function () {
@@ -419,7 +431,13 @@ export function initialize() {
       }, this).disable();
 
       if (this._marker._icon) {
-        L.DomUtil.removeClass(this._marker._icon, 'leaflet-marker-draggable');
+        if (Ember.isArray(this._marker._icon)) {
+          this._marker._icon.forEach(_icon => {
+            L.DomUtil.removeClass(_icon, 'leaflet-marker-draggable');
+          });
+        } else {
+          L.DomUtil.removeClass(this._marker._icon, 'leaflet-marker-draggable');
+        }
       }
     },
 
@@ -433,6 +451,10 @@ export function initialize() {
       let speed = this._marker.options.autoPanSpeed;
       let padding = this._marker.options.autoPanPadding;
       let iconPos = L.DomUtil.getPosition(marker._icon);
+      if (Ember.isArray(this._marker._icon)) {
+        iconPos = L.DomUtil.getPosition(marker._icon[0]);
+      }
+
       let bounds = map.getPixelBounds();
       let origin = map.getPixelOrigin();
 
@@ -456,7 +478,14 @@ export function initialize() {
         this._draggable._newPos._add(movement);
         this._draggable._startPos._add(movement);
 
-        L.DomUtil.setPosition(marker._icon, this._draggable._newPos);
+        if (Ember.isArray(marker._icon)) {
+          marker._icon.forEach(icon => {
+            L.DomUtil.setPosition(icon, this._draggable._newPos);
+          });
+        } else {
+          L.DomUtil.setPosition(marker._icon, this._draggable._newPos);
+        }
+
         this._onDrag(e);
 
         this._panRequest = L.Util.requestAnimFrame(this._adjustPan.bind(this, e));
@@ -522,6 +551,10 @@ export function initialize() {
       let marker = this._marker;
       let shadow = marker._shadow;
       let iconPos = L.DomUtil.getPosition(marker._icon);
+      if (Ember.isArray(marker._icon)) {
+        iconPos = L.DomUtil.getPosition(marker._icon[0]);
+      }
+
       let latlng = marker._map.layerPointToLatLng(iconPos);
 
       // update shadow position
