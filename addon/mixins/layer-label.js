@@ -1343,11 +1343,15 @@ export default Ember.Mixin.create({
         labelsLayers.forEach(labelLayer => {
           leafletContainer.addLayer(labelLayer);
           labelLayer.eachLayer(layer => {
-            let bbox = document.getElementById(Ember.$(layer._path)[0].getAttribute('id')).getBBox();
-            layer._svg.setAttribute('height', bbox.height + buffer);
-            layer._svg.setAttribute('width', bbox.width + buffer);
-            document.getElementById(Ember.$(layer._svg)[0].getAttribute('id')).setAttribute('height', bbox.height + buffer);
-            document.getElementById(Ember.$(layer._svg)[0].getAttribute('id')).setAttribute('width', bbox.width + buffer);
+            if (this.get('typeGeometry') === 'polyline' && !Ember.isNone(layer._path) && !Ember.isNone(layer._svg)) {
+              let bbox = document.getElementById(Ember.$(layer._path)[0].getAttribute('id')).getBBox();
+              if (!Ember.isNone(bbox)) {
+                layer._svg.setAttribute('height', bbox.height + buffer);
+                layer._svg.setAttribute('width', bbox.width + buffer);
+                document.getElementById(Ember.$(layer._svg)[0].getAttribute('id')).setAttribute('height', bbox.height + buffer);
+                document.getElementById(Ember.$(layer._svg)[0].getAttribute('id')).setAttribute('width', bbox.width + buffer);
+              }
+            }
           });
         });
       }
