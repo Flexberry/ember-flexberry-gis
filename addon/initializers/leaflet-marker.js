@@ -60,7 +60,7 @@ export function initialize() {
 
     /**
       @method baseSetIcon(icon: Icon): this
-      Original code
+      Original code https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L181
     */
     baseSetIcon(icon) {
       this.options.icon = icon;
@@ -79,7 +79,8 @@ export function initialize() {
 
     /**
       @method onAdd(map)
-      Add marker in map. Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L115
+      Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L115
+      Add marker in map for each styles options.
     */
     onAdd(map) {
       this._zoomAnimated = this._zoomAnimated && map.options.markerZoomAnimation;
@@ -102,7 +103,8 @@ export function initialize() {
 
     /**
       @method setIcon(icon: Icon): this
-	    Changes the marker icon. Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L181
+	    Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L181
+      Changes the marker icon. If style one call base method. Otherwise call method for each styles.
     */
     setIcon(icon) {
       if (!Ember.isArray(icon)) {
@@ -130,7 +132,8 @@ export function initialize() {
 
     /**
       @method _initIcon(iconOptions)
-      Add marker on DOM. Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L211
+      Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L211
+      Add marker on DOM. Accepts input options unlike the original method.
     */
     _initIcon(iconOptions) {
       let options = this.options;
@@ -217,7 +220,8 @@ export function initialize() {
 
     /**
       @method _initInteraction(icon)
-      Makes the marker interactive. Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L335
+      Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L335
+      Makes the marker interactive. Accepts input icon unlike the original method.
     */
     _initInteraction(icon) {
 
@@ -244,7 +248,8 @@ export function initialize() {
 
     /**
       @method _setPos(pos)
-      Set position. Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L308
+      Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L308
+      Set position for each icon.
     */
     _setPos(pos) {
 
@@ -267,7 +272,8 @@ export function initialize() {
 
     /**
       @method _updateZIndex(offset)
-      Update z-index. Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L323
+      Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L323
+      Update z-index for each icon.
     */
     _updateZIndex(offset) {
       if (this._icon) {
@@ -281,7 +287,8 @@ export function initialize() {
 
     /**
       @method _updateOpacity()
-      Update opacity. Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L369
+      Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L369
+      Update opacity for each icon.
     */
     _updateOpacity() {
       const opacity = this.options.opacity;
@@ -302,7 +309,8 @@ export function initialize() {
 
     /**
       @method _removeIcon()
-      Remove icon from DOM. Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L283
+      Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.js#L283
+      Remove all icon from DOM.
     */
     _removeIcon() {
       if (this.options.riseOnHover) {
@@ -375,6 +383,11 @@ export function initialize() {
     }
   });
 
+  /*
+    https://github.com/Leaflet/Leaflet/blob/main/src/layer/marker/Marker.Drag.js
+    L.Handler.MarkerDrag is used internally by L.Marker to make the markers draggable.
+    Original handler because it not in outside.
+  */
   let MarkerDrag = L.Handler.extend({
     initialize: function (marker) {
       this._marker = marker;

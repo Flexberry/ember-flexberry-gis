@@ -1,19 +1,12 @@
 export function initialize() {
   L.Canvas.include({
+    /**
+      @method _updatePoly
+      Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/vector/Canvas.js#L275
+      Get ctx and call drawing for each style options.
+    */
     _updatePoly: function (layer, closed) {
       if (!this._drawing) { return; }
-      /* other canvas for fill
-      const canvas = document.createElement('canvas');
-      canvas.setAttribute('height', 1256);
-      canvas.setAttribute('width', 4096);
-      canvas.setAttribute('class', layer.options.pane);
-      let parent = $(`.leaflet-${layer.options.pane}-pane`)[0];
-      let canvasPane = $(`canvas.${layer.options.pane}`);
-      if (parent && canvasPane.length === 0) {
-        parent.appendChild(canvas);
-      }
-
-      const _ctx = canvas.getContext("2d");*/
       let i;
       let j;
       let len2;
@@ -46,6 +39,11 @@ export function initialize() {
       }
     },
 
+    /**
+      @method _fillStroke
+      Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/vector/Canvas.js#L326
+      If fillStyle is pattern, create pattern for ctx. Otherwise set color for fill.
+    */
     _fillStroke(ctx, options) {
       if (options.fill) {
         let fillStyle = options.fillColor || options.color;
@@ -72,6 +70,11 @@ export function initialize() {
       }
     },
 
+    /**
+      @method _initPath
+      Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/vector/Canvas.js#L132
+      Update dash array for all styles.
+    */
     _initPath(layer) {
       if (layer.options.count) {
         for (let i = 0; i < layer.options.count; i++) {
@@ -94,6 +97,11 @@ export function initialize() {
       this._drawFirst = this._drawFirst || this._drawLast;
     },
 
+    /**
+      @method _updateStyle
+      Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/vector/Canvas.js#L184
+      Update style for each layer styles.
+    */
     _updateStyle(layer) {
       if (layer.options.count) {
         for (let i = 0; i < layer.options.count; i++) {
@@ -106,6 +114,11 @@ export function initialize() {
       }
     },
 
+    /**
+      @method _updateDashArray
+      Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/vector/Canvas.js#L189
+      Accepts options, not a layer as in original method.
+    */
     _updateDashArray(options) {
       if (typeof options.dashArray === 'string') {
         const parts = options.dashArray.split(/[, ]+/);
@@ -127,6 +140,11 @@ export function initialize() {
       }
     },
 
+    /**
+      @method _extendRedrawBounds
+      Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/vector/Canvas.js#L214
+      Calculate max weight from all styles to draw within the correct bounds.
+    */
     _extendRedrawBounds(layer) {
       if (layer._pxBounds) {
         let maxWeight = 0;
