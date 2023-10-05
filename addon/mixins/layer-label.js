@@ -1339,19 +1339,10 @@ export default Ember.Mixin.create({
       labelsLayers = this.get('labelsLayers');
       if (labelsLayers && labelsLayers.length > 0) {
         this._additionalZoomLabelPane();
-        let buffer = 150;
         labelsLayers.forEach(labelLayer => {
           leafletContainer.addLayer(labelLayer);
           labelLayer.eachLayer(layer => {
-            if (this.get('typeGeometry') === 'polyline' && !Ember.isNone(layer._path) && !Ember.isNone(layer._svg)) {
-              let bbox = document.getElementById(Ember.$(layer._path)[0].getAttribute('id')).getBBox();
-              if (!Ember.isNone(bbox)) {
-                layer._svg.setAttribute('height', bbox.height + buffer);
-                layer._svg.setAttribute('width', bbox.width + buffer);
-                document.getElementById(Ember.$(layer._svg)[0].getAttribute('id')).setAttribute('height', bbox.height + buffer);
-                document.getElementById(Ember.$(layer._svg)[0].getAttribute('id')).setAttribute('width', bbox.width + buffer);
-              }
-            }
+            this._setOptionsForSvg(layer);
           });
         });
       }
@@ -1362,6 +1353,19 @@ export default Ember.Mixin.create({
     } else {
       this._showLabels(layers, leafletObject);
       this._additionalZoomLabelPane();
+    }
+  },
+
+  _setOptionsForSvg(layer) {
+    let buffer = 150;
+    if (this.get('typeGeometry') === 'polyline' && !Ember.isNone(layer._path) && !Ember.isNone(layer._svg)) {
+      let bbox = document.getElementById(Ember.$(layer._path)[0].getAttribute('id')).getBBox();
+      if (!Ember.isNone(bbox)) {
+        layer._svg.setAttribute('height', bbox.height + buffer);
+        layer._svg.setAttribute('width', bbox.width + buffer);
+        document.getElementById(Ember.$(layer._svg)[0].getAttribute('id')).setAttribute('height', bbox.height + buffer);
+        document.getElementById(Ember.$(layer._svg)[0].getAttribute('id')).setAttribute('width', bbox.width + buffer);
+      }
     }
   },
 
