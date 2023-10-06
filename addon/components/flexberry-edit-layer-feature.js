@@ -743,15 +743,17 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
             }
 
             let label = Ember.get(layer, '_label');
-            let zoom = Number(this.get('leafletMap').getZoom().toFixed(1));
-            let labelZooms = label.filter(l => { return (l.minZoom == null || l.minZoom <= zoom) && (l.maxZoom == null || l.maxZoom >= zoom); });
-            if (labelZooms.length > 0) {
-              let labelZoom = labelZooms[0];
-              if (latlng.label) {
-                if (latlng.label instanceof L.FeatureGroup) {
-                  labelZoom = latlng.label;
-                } else {
-                  labelZoom.setLatLng(latlng.label);
+            if (label) {
+              let zoom = Number(this.get('leafletMap').getZoom().toFixed(1));
+              let labelZooms = label.filter(l => { return (l.minZoom == null || l.minZoom <= zoom) && (l.maxZoom == null || l.maxZoom >= zoom); });
+              if (labelZooms.length > 0) {
+                let labelZoom = labelZooms[0];
+                if (latlng.label) {
+                  if (latlng.label instanceof L.FeatureGroup) {
+                    labelZoom = latlng.label;
+                  } else {
+                    labelZoom.setLatLng(latlng.label);
+                  }
                 }
               }
             }
