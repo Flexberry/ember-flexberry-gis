@@ -7,6 +7,7 @@ export function initialize() {
     */
     _updatePoly: function (layer, closed) {
       if (!this._drawing) { return; }
+
       let i;
       let j;
       let len2;

@@ -1214,7 +1214,7 @@ export default BaseLayer.extend(layerLabel, {
 
         let styleRules = this.get('styleRules');
         let styleZoom = Ember.A();
-        if (!Ember.isNone(styleRules)) {
+        if (!Ember.isNone(styleRules) && styleRules.length > 0) {
           styleZoom = styleRules.filter(styleRule => {
             return checkMapZoomStyle(leafletMap, styleRule.rule);
           });
