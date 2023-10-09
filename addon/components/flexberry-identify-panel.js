@@ -594,13 +594,15 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     if (Ember.isEmpty(this.get('customToolsButton'))) {
       toolsButton = allToolsButton;
     } else {
-      if (!Ember.isArray())
+      if (!Ember.isArray()) {
         customToolsButton = Ember.A(customToolsButton.split(' '));
+      }
 
       customToolsButton.forEach(element => {
         var layerMode = allToolsButton.findBy('layerMode', element);
-        if (layerMode)
+        if (layerMode) {
           toolsButton.pushObject(layerMode);
+        }
       });
     }
 
