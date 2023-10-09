@@ -13,18 +13,16 @@ export function initialize() {
         tileZoom = undefined;
       } else if (this.options.rules) {
         let styleRules = this.options.rules;
-        styleRules.forEach(rule => {
-          let minZoom = rule.rule.minZoom;
-          let maxZoom = rule.rule.maxZoom;
-          zoom = Number(zoom.toFixed(1));
-          if (minZoom <= zoom && Math.ceil(minZoom) >= zoom) {
-            tileZoom = Math.ceil(zoom);
-          } else if (maxZoom >= zoom && Math.floor(maxZoom) <= zoom) {
-            tileZoom = Math.floor(zoom);
-          } else {
-            tileZoom = this._clampZoom(tileZoom);
-          }
-        });
+        let labelRules = this.options.label;
+        let tileZoomStyle = this._zoomForStyleRules(styleRules, zoom);
+        let tileZoomLabel = this._zoomForLabelRules(labelRules, zoom);
+        if (!Ember.isNone(tileZoomStyle)) {
+          tileZoom = tileZoomStyle;
+        } else if (!Ember.isNone(tileZoomLabel)) {
+          tileZoom = tileZoomLabel;
+        } else {
+          tileZoom = this._clampZoom(tileZoom);
+        }
       } else {
         tileZoom = this._clampZoom(tileZoom);
       }
@@ -56,6 +54,70 @@ export function initialize() {
       }
 
       this._setZoomTransforms(center, zoom);
+    },
+
+    _zoomForStyleRules(styleRules, zoom) {
+      let tileZoom = null;
+      if (!Ember.isNone(styleRules) && Ember.isArray(styleRules)) {
+        let prevMaxZoom = null;
+        styleRules.forEach((rule, i) => {
+          let minZoom = rule.rule.minZoom;
+          let maxZoom = rule.rule.maxZoom;
+          if (i > 0) {
+            prevMaxZoom = styleRules[i-1].rule.maxZoom;
+          }
+
+          zoom = Number(zoom.toFixed(1));
+          if (minZoom <= zoom && Math.ceil(minZoom) >= zoom) {
+            tileZoom = Math.ceil(zoom);
+          } else if (maxZoom >= zoom && Math.floor(maxZoom) <= zoom) {
+            tileZoom = Math.floor(zoom);
+          }
+
+          // hole in zooms
+          if (!Ember.isNone(prevMaxZoom) && minZoom - prevMaxZoom > 0.2) {
+            if (prevMaxZoom < zoom && Math.ceil(prevMaxZoom) > zoom) {
+              tileZoom = Math.ceil(zoom);
+            } else if (minZoom > zoom && Math.floor(minZoom) < zoom) {
+              tileZoom = Math.floor(zoom);
+            }
+          }
+        });
+      }
+
+      return tileZoom;
+    },
+
+    _zoomForLabelRules(labelRules, zoom) {
+      let tileZoom = null;
+      if (!Ember.isNone(labelRules) && labelRules.signMapObjects && !Ember.isNone(labelRules.rules) && Ember.isArray(labelRules.rules)) {
+        let prevMaxZoom = null;
+        labelRules.rules.forEach((rule, i) => {
+          let minZoom = rule.scaleRange.minScaleRange;
+          let maxZoom = rule.scaleRange.maxScaleRange;
+          if (i > 0) {
+            prevMaxZoom = labelRules.rules[i-1].scaleRange.maxScaleRange;
+          }
+
+          zoom = Number(zoom.toFixed(1));
+          if (minZoom <= zoom && Math.ceil(minZoom) >= zoom) {
+            tileZoom = Math.ceil(zoom);
+          } else if (maxZoom >= zoom && Math.floor(maxZoom) <= zoom) {
+            tileZoom = Math.floor(zoom);
+          }
+
+          // hole in zooms
+          if (!Ember.isNone(prevMaxZoom) && minZoom - prevMaxZoom > 0.2) {
+            if (prevMaxZoom < zoom && Math.ceil(prevMaxZoom) > zoom) {
+              tileZoom = Math.ceil(zoom);
+            } else if (minZoom > zoom && Math.floor(minZoom) < zoom) {
+              tileZoom = Math.floor(zoom);
+            }
+          }
+        });
+      }
+
+      return tileZoom;
     },
   });
 }

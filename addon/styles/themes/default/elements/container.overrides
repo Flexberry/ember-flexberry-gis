@@ -121,6 +121,10 @@
               height: 22px;
               line-height: 14px;
               font-weight: 700;
+              &:hover {
+                border: none;
+                background: @buttonMenuHoveredBackground;
+              }
             }
             a {
                 padding-top: 3px;
