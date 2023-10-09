@@ -7,6 +7,7 @@ import layout from '../templates/components/layer-result-list';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
 import ResultFeatureInitializer from '../mixins/result-feature-initializer';
 import SlotsMixin from 'ember-block-slots';
+
 // Url key used to identify transitions from ember-flexberry-gis on other resources.
 const isMapLimitKey = 'GISLinked';
 
