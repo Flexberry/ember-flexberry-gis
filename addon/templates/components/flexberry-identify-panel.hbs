@@ -1,5 +1,6 @@
 <div class="{{flexberryClassNames.wrapper}} ui form">
   <div class="d-flex h-42">
+    layerMode={{layerModes}}
     {{#if (not geomOnly)}}
       {{flexberry-button-dropdown 
         class="flexberry-dropdown-button" 
@@ -12,7 +13,7 @@
     {{flexberry-button-dropdown 
       class="flexberry-dropdown-button ml-18" 
       clickButton=(action "onToolModeChange")
-      items=toolsButton 
+      items=toolsButton
       value=toolMode
     }}
 

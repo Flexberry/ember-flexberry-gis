@@ -610,6 +610,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
         }
       });
     }
+
     this.checkToolMode(toolsButton);
     return toolsButton;
   },
