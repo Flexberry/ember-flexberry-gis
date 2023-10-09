@@ -1,3 +1,4 @@
+{{yield}}
 {{#if _showLoader}}
   <div class="ui active inline loader"></div>{{t "components.layer-result-list.processing"}}
 {{else if _noData}}
@@ -110,7 +111,7 @@
                     accessibleMap=accessibleMap
                 }}
                 {{else}}
-                  {{feature-result-item
+                  {{#feature-result-item
                     feature=feature
                     resultObject=result
                     highlightable=enableHighlight
@@ -124,7 +125,6 @@
                     zoomTo=(action "zoomTo")
                     clearSelected=(action "clearSelected")
                     findIntersection=(action 'findIntersection')
-                    searchSatellites=(action "searchSatellites")
                     intersection=intersection
                     zoomToIntersection=(action 'zoomToIntersection')
                     panToIntersection=(action 'panToIntersection')
@@ -132,6 +132,8 @@
                     availableEdit=(and availableEdit (array-contains accessibleData result.layerModel.id))
                     accessibleMap=accessibleMap
                   }}
+                    {{yield}}
+                  {{/feature-result-item}}
                 {{/if}}
               {{/if}}
             {{/each}}
@@ -243,7 +245,7 @@
                 accessibleMap=accessibleMap
             }}
             {{else}}
-              {{feature-result-item
+              {{#feature-result-item
                 feature=feature
                 resultObject=result
                 displayProperty="displayValue"
@@ -256,7 +258,6 @@
                 zoomTo=(action "zoomTo")
                 clearSelected=(action "clearSelected")
                 findIntersection=(action 'findIntersection')
-                searchSatellites=(action "searchSatellites")
                 intersection=intersection
                 zoomToIntersection=(action 'zoomToIntersection')
                 panToIntersection=(action 'panToIntersection')
@@ -268,6 +269,8 @@
                 availableEdit=(and availableEdit (array-contains accessibleData result.layerModel.id))
                 accessibleMap=accessibleMap
               }}
+                {{yield}}
+              {{/feature-result-item}}
             {{/if}}
           {{/each}}
           {{#if result.maxResultsLimitOverage}}

@@ -8,13 +8,14 @@ import { translationMacro as t } from 'ember-i18n';
 import openCloseSubmenu from 'ember-flexberry-gis/utils/open-close-sub-menu';
 import { zoomToBounds } from '../utils/zoom-to-bounds';
 import ResultFeatureInitializer from '../mixins/result-feature-initializer';
+import SlotsMixin from 'ember-block-slots';
 /**
   Component for display GeoJSON feature object details
 
   @class FeatureResultItemComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
  */
-export default Ember.Component.extend(ResultFeatureInitializer, {
+export default Ember.Component.extend(SlotsMixin, ResultFeatureInitializer, {
 
   /**
     Service for managing map API.
@@ -598,15 +599,6 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
     findIntersection() {
       this.set('isSubmenu', false);
       this.sendAction('findIntersection', this.get('feature'));
-    },
-
-    /**
-     * Action for search satellites
-     * @method actions.searchSatellites
-     */
-    searchSatellites() {
-      this.set('isSubmenu', false);
-      this.sendAction('searchSatellites', this.get('feature'));
     },
 
     /**
