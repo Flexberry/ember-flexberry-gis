@@ -25,5 +25,8 @@ export default {
   },
   'load-button': {
     'tooltip': 'Перейти к загрузке данных'
-  }
+  },
+  'eraser-button': {
+    'tooltip': 'Очистить результаты идентификации'
+  },
 };

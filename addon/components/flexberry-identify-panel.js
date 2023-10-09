@@ -398,6 +398,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
   layersButton: [],
   toolsButton: [],
+  customToolsButton: null,
 
   /**
     identify-file properties block
@@ -539,7 +540,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
   init() {
     this._super(...arguments);
-    const layersButton = [
+    this.set('layersButton', [
       {
         iconClass: this.allIconClass,
         tooltip: this.get('i18n').t('components.flexberry-identify-panel.identify-all.caption').string,
@@ -555,8 +556,13 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
         tooltip: this.get('i18n').t('components.flexberry-identify-panel.identify-top-visible.caption').string,
         layerMode: 'top'
       },
-    ];
-    const toolsButton = [
+    ]);
+    this.set('toolsButton', this.getToolsButton());
+  },
+
+  getToolsButton() {
+    let toolsButton = Ember.A([]);
+    const allToolsButton = Ember.A([
       {
         iconClass: this.markerIconClass,
         tooltip: this.get('i18n').t('components.flexberry-identify-panel.marker.caption').string,
@@ -582,10 +588,23 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
         tooltip: this.get('i18n').t('components.flexberry-identify-panel.file.caption').string,
         layerMode: 'file'
       }
-    ];
+    ]);
 
-    this.set('layersButton', layersButton);
-    this.set('toolsButton', toolsButton);
+    let customToolsButton = this.get('customToolsButton');
+    if (Ember.isEmpty(this.get('customToolsButton'))) {
+      toolsButton = allToolsButton;
+    } else {
+      if (!Ember.isArray())
+        customToolsButton = Ember.A(customToolsButton.split(' '));
+
+      customToolsButton.forEach(element => {
+        var layerMode = allToolsButton.findBy('layerMode', element);
+        if (layerMode)
+          toolsButton.pushObject(layerMode);
+      });
+    }
+
+    return toolsButton;
   },
 
   didInsertElement() {
