@@ -560,9 +560,8 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     this.set('toolsButton', this.getToolsButton());
   },
 
-  getToolsButton() {
-    let toolsButton = Ember.A([]);
-    const allToolsButton = Ember.A([
+  getToolsButtonDefault() {
+    return Ember.A([
       {
         iconClass: this.markerIconClass,
         tooltip: this.get('i18n').t('components.flexberry-identify-panel.marker.caption').string,
@@ -582,19 +581,25 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
         iconClass: this.polygonIconClass,
         tooltip: this.get('i18n').t('components.flexberry-identify-panel.polygon.caption').string,
         layerMode: 'polygon'
-      },
-      {
+      }
+    ]);
+  },
+
+  getToolsButton() {
+    let toolsButton = Ember.A([]);
+    const allToolsButton = this.getToolsButtonDefault();
+    let customToolsButton = this.get('customToolsButton');
+
+    if (Ember.isEmpty(customToolsButton) || (Ember.isArray(customToolsButton) && !customToolsButton.length)) {
+      toolsButton = allToolsButton;
+    } else {
+      allToolsButton.pushObject({
         iconClass: this.fileIconClass,
         tooltip: this.get('i18n').t('components.flexberry-identify-panel.file.caption').string,
         layerMode: 'file'
-      }
-    ]);
+      });
 
-    let customToolsButton = this.get('customToolsButton');
-    if (Ember.isEmpty(this.get('customToolsButton'))) {
-      toolsButton = allToolsButton;
-    } else {
-      if (!Ember.isArray()) {
+      if (!Ember.isArray(customToolsButton)) {
         customToolsButton = Ember.A(customToolsButton.split(' '));
       }
 
@@ -605,8 +610,18 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
         }
       });
     }
-
+    this.checkToolMode(toolsButton);
     return toolsButton;
+  },
+
+  checkToolMode(toolsButton) {
+    const layerMode = 'identify-' + this.get('layerMode') + '-';
+    let toolMode = this.get('toolMode').replace(layerMode, '');
+    const isExist = toolsButton.any(mode => mode.layerMode === toolMode);
+    if (!isExist) {
+      toolMode = toolsButton.get('firstObject').layerMode;
+      this.set('toolMode', toolMode);
+    }
   },
 
   didInsertElement() {
