@@ -398,6 +398,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
   layersButton: [],
   toolsButton: [],
+  customToolsButton: [],
 
   /**
     identify-file properties block
@@ -539,7 +540,8 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
   init() {
     this._super(...arguments);
-    const layersButton = [
+
+    this.set('layersButton', [
       {
         iconClass: this.allIconClass,
         tooltip: this.get('i18n').t('components.flexberry-identify-panel.identify-all.caption').string,
@@ -555,8 +557,12 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
         tooltip: this.get('i18n').t('components.flexberry-identify-panel.identify-top-visible.caption').string,
         layerMode: 'top'
       },
-    ];
-    const toolsButton = [
+    ]);
+    this.set('toolsButton', this.getToolsButton());
+  },
+
+  getToolsButtonDefault() {
+    return Ember.A([
       {
         iconClass: this.markerIconClass,
         tooltip: this.get('i18n').t('components.flexberry-identify-panel.marker.caption').string,
@@ -582,10 +588,31 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
         tooltip: this.get('i18n').t('components.flexberry-identify-panel.file.caption').string,
         layerMode: 'file'
       }
-    ];
+    ]);
+  },
 
-    this.set('layersButton', layersButton);
-    this.set('toolsButton', toolsButton);
+  getCustomToolsButton() {
+    let customToolsButton = this.get('customToolsButton');
+
+    if (!customToolsButton || (customToolsButton && !customToolsButton.length)) {
+      customToolsButton = ['marker', 'polyline', 'rectangle', 'polygon'];
+    }
+
+    return Ember.A(customToolsButton);
+  },
+
+  getToolsButton() {
+    let toolsButton = Ember.A([]);
+    const allToolsButton = this.getToolsButtonDefault();
+    const customToolsButton = this.getCustomToolsButton();
+    customToolsButton.forEach(element => {
+      const layerMode = allToolsButton.findBy('layerMode', element);
+      if (layerMode) {
+        toolsButton.pushObject(layerMode);
+      }
+    });
+
+    return toolsButton;
   },
 
   didInsertElement() {

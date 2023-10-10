@@ -175,6 +175,10 @@ div.measure-drag-panel {
   }
 }
 
+.identify-tab .flexberry-identify-panel .field:not(last-child) {
+  margin-bottom: 0.5em;
+}
+
 /* Идентификация */
 .flexberry-identify-panel {
   background-color: @white;
