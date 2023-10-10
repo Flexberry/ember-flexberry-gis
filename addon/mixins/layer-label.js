@@ -679,6 +679,13 @@ export default Ember.Mixin.create({
     return minPosition;
   },
 
+  _defaultMarkerOptions() {
+    return {
+      iconSize: [25, 41],
+      iconAnchor: null
+    }
+  },
+
   _positionForComboStyle(stylesMarker) {
     let leftMin = 0;
     let rightMax = 0;
@@ -690,17 +697,24 @@ export default Ember.Mixin.create({
     let top = 0;
     let bottom = 0;
     stylesMarker.forEach(styleMarker => {
-      let iconSize = styleMarker.style.iconSize;
-      let iconAnchor = styleMarker.style.iconAnchor;
-      if (!Ember.isNone(iconAnchor) && iconAnchor.length === 2 && !Ember.isNone(iconSize) && iconSize.length === 2) {
-        left = iconAnchor[0] || 0;
-        right = (iconSize[0] || 0) - (iconAnchor[0] || 0);
-        top = iconAnchor[1] || 0;
-        bottom = (iconSize[1] || 0) - (iconAnchor[1] || 0);
-        leftMin = this._positionMin(leftMin, left);
-        rightMax = this._positionMax(rightMax, right);
-        topMin = this._positionMin(topMin, top);
-        bottomMax = this._positionMax(bottomMax, bottom);
+      let style = styleMarker.style;
+      if (styleMarker.type === 'default') {
+        style = this._defaultMarkerOptions;
+      }
+
+      if (!Ember.isNone(style)) {
+        let iconSize = style.iconSize;
+        let iconAnchor = style.iconAnchor;
+        if (!Ember.isNone(iconAnchor) && iconAnchor.length === 2 && !Ember.isNone(iconSize) && iconSize.length === 2) {
+          left = iconAnchor[0] || 0;
+          right = (iconSize[0] || 0) - (iconAnchor[0] || 0);
+          top = iconAnchor[1] || 0;
+          bottom = (iconSize[1] || 0) - (iconAnchor[1] || 0);
+          leftMin = this._positionMin(leftMin, left);
+          rightMax = this._positionMax(rightMax, right);
+          topMin = this._positionMin(topMin, top);
+          bottomMax = this._positionMax(bottomMax, bottom);
+        }
       }
     });
 
