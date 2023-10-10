@@ -398,7 +398,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
   layersButton: [],
   toolsButton: [],
-  customToolsButton: null,
+  customToolsButton: [],
 
   /**
     identify-file properties block
@@ -540,6 +540,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
   init() {
     this._super(...arguments);
+
     this.set('layersButton', [
       {
         iconClass: this.allIconClass,
@@ -581,35 +582,35 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
         iconClass: this.polygonIconClass,
         tooltip: this.get('i18n').t('components.flexberry-identify-panel.polygon.caption').string,
         layerMode: 'polygon'
+      },
+      {
+        iconClass: this.fileIconClass,
+        tooltip: this.get('i18n').t('components.flexberry-identify-panel.file.caption').string,
+        layerMode: 'file'
       }
     ]);
+  },
+
+  getCustomToolsButton() {
+    let customToolsButton = this.get('customToolsButton');
+
+    if (!customToolsButton || (customToolsButton && !customToolsButton.length)) {
+      customToolsButton = ['marker', 'polyline', 'rectangle', 'polygon'];
+    }
+
+    return Ember.A(customToolsButton);
   },
 
   getToolsButton() {
     let toolsButton = Ember.A([]);
     const allToolsButton = this.getToolsButtonDefault();
-    let customToolsButton = this.get('customToolsButton');
-
-    if (Ember.isEmpty(customToolsButton) || (Ember.isArray(customToolsButton) && !customToolsButton.length)) {
-      toolsButton = allToolsButton;
-    } else {
-      allToolsButton.pushObject({
-        iconClass: this.fileIconClass,
-        tooltip: this.get('i18n').t('components.flexberry-identify-panel.file.caption').string,
-        layerMode: 'file'
-      });
-
-      if (!Ember.isArray(customToolsButton)) {
-        customToolsButton = Ember.A(customToolsButton.split(' '));
+    const customToolsButton = this.getCustomToolsButton();
+    customToolsButton.forEach(element => {
+      const layerMode = allToolsButton.findBy('layerMode', element);
+      if (layerMode) {
+        toolsButton.pushObject(layerMode);
       }
-
-      customToolsButton.forEach(element => {
-        var layerMode = allToolsButton.findBy('layerMode', element);
-        if (layerMode) {
-          toolsButton.pushObject(layerMode);
-        }
-      });
-    }
+    });
 
     return toolsButton;
   },
