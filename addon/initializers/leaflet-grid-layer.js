@@ -1,3 +1,5 @@
+import Ember from 'ember';
+
 export function initialize() {
   L.GridLayer.include({
     /**
@@ -68,7 +70,8 @@ export function initialize() {
           let minZoom = rule.rule.minZoom;
           let maxZoom = rule.rule.maxZoom;
           if (i > 0) {
-            prevMaxZoom = styleRules[i-1].rule.maxZoom;
+            let k = i - 1;
+            prevMaxZoom = styleRules[k].rule.maxZoom;
           }
 
           let targetZoom = this._calcZoom(zoom, minZoom, maxZoom, prevMaxZoom);
@@ -93,7 +96,8 @@ export function initialize() {
           let minZoom = rule.scaleRange.minScaleRange;
           let maxZoom = rule.scaleRange.maxScaleRange;
           if (i > 0) {
-            prevMaxZoom = labelRules.rules[i-1].scaleRange.maxScaleRange;
+            let k = i - 1;
+            prevMaxZoom = labelRules.rules[k].scaleRange.maxScaleRange;
           }
 
           let targetZoom = this._calcZoom(zoom, minZoom, maxZoom, prevMaxZoom);
