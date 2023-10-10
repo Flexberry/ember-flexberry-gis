@@ -64,7 +64,7 @@ export default Ember.Component.extend(CheckFileMixin, {
 
   setAcceptFiles() {
     if (Ember.isEmpty(this.get('acceptFiles'))) {
-      this.set('acceptFiles', '.zip,.GEOJSON,.gml,.xls,.xlsx,.csv,.xml,.gps,.kml');
+      this.set('acceptFiles', '.zip,.GEOJSON,.gml,.xls,.xlsx,.csv,.xml,.gpx,.kml');
     }
   },
 
