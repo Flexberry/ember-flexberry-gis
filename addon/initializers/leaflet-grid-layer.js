@@ -56,6 +56,10 @@ export function initialize() {
       this._setZoomTransforms(center, zoom);
     },
 
+    /**
+      @method _zoomForStyleRules
+      Calculation tile zoom for style rules.
+    */
     _zoomForStyleRules(styleRules, zoom) {
       let tileZoom = null;
       if (!Ember.isNone(styleRules) && Ember.isArray(styleRules)) {
@@ -67,20 +71,9 @@ export function initialize() {
             prevMaxZoom = styleRules[i-1].rule.maxZoom;
           }
 
-          zoom = Number(zoom.toFixed(1));
-          if (minZoom <= zoom && Math.ceil(minZoom) >= zoom) {
-            tileZoom = Math.ceil(zoom);
-          } else if (maxZoom >= zoom && Math.floor(maxZoom) <= zoom) {
-            tileZoom = Math.floor(zoom);
-          }
-
-          // hole in zooms
-          if (!Ember.isNone(prevMaxZoom) && minZoom - prevMaxZoom > 0.2) {
-            if (prevMaxZoom < zoom && Math.ceil(prevMaxZoom) > zoom) {
-              tileZoom = Math.ceil(zoom);
-            } else if (minZoom > zoom && Math.floor(minZoom) < zoom) {
-              tileZoom = Math.floor(zoom);
-            }
+          let targetZoom = this._calcZoom(zoom, minZoom, maxZoom, prevMaxZoom);
+          if (!Ember.isNone(targetZoom)) {
+            tileZoom = targetZoom;
           }
         });
       }
@@ -88,6 +81,10 @@ export function initialize() {
       return tileZoom;
     },
 
+    /**
+      @method _zoomForLabelRules
+      Calculation tile zoom for label rules.
+    */
     _zoomForLabelRules(labelRules, zoom) {
       let tileZoom = null;
       if (!Ember.isNone(labelRules) && labelRules.signMapObjects && !Ember.isNone(labelRules.rules) && Ember.isArray(labelRules.rules)) {
@@ -99,26 +96,40 @@ export function initialize() {
             prevMaxZoom = labelRules.rules[i-1].scaleRange.maxScaleRange;
           }
 
-          zoom = Number(zoom.toFixed(1));
-          if (minZoom <= zoom && Math.ceil(minZoom) >= zoom) {
-            tileZoom = Math.ceil(zoom);
-          } else if (maxZoom >= zoom && Math.floor(maxZoom) <= zoom) {
-            tileZoom = Math.floor(zoom);
-          }
-
-          // hole in zooms
-          if (!Ember.isNone(prevMaxZoom) && minZoom - prevMaxZoom > 0.2) {
-            if (prevMaxZoom < zoom && Math.ceil(prevMaxZoom) > zoom) {
-              tileZoom = Math.ceil(zoom);
-            } else if (minZoom > zoom && Math.floor(minZoom) < zoom) {
-              tileZoom = Math.floor(zoom);
-            }
+          let targetZoom = this._calcZoom(zoom, minZoom, maxZoom, prevMaxZoom);
+          if (!Ember.isNone(targetZoom)) {
+            tileZoom = targetZoom;
           }
         });
       }
 
       return tileZoom;
     },
+
+    /**
+      @method _calcZoom
+      Calculation tile zoom.
+    */
+    _calcZoom(zoom, minZoom, maxZoom, prevMaxZoom) {
+      let tileZoom = null;
+      zoom = Number(zoom.toFixed(1));
+      if (minZoom <= zoom && Math.ceil(minZoom) >= zoom) {
+        tileZoom = Math.ceil(zoom);
+      } else if (maxZoom >= zoom && Math.floor(maxZoom) <= zoom) {
+        tileZoom = Math.floor(zoom);
+      }
+
+      // hole in zooms
+      if (!Ember.isNone(prevMaxZoom) && Number((minZoom - prevMaxZoom).toFixed(1)) > 0.2) {
+        if (prevMaxZoom < zoom && Math.ceil(prevMaxZoom) > zoom) {
+          tileZoom = Math.ceil(zoom);
+        } else if (minZoom > zoom && Math.floor(minZoom) < zoom) {
+          tileZoom = Math.floor(zoom);
+        }
+      }
+
+      return tileZoom;
+    }
   });
 }
 
