@@ -611,16 +611,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
       });
     }
 
-    this.checkToolMode(toolsButton);
     return toolsButton;
-  },
-
-  checkToolMode(toolsButton) {
-    let toolMode = this.get('toolMode');
-    const isExist = toolsButton.any(mode => mode.layerMode === toolMode);
-    if (!isExist) {
-      this.set('toolMode', toolsButton.get('firstObject').layerMode);
-    }
   },
 
   didInsertElement() {
