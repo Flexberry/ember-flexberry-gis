@@ -683,7 +683,7 @@ export default Ember.Mixin.create({
     return {
       iconSize: [25, 41],
       iconAnchor: [12, 41]
-    }
+    };
   },
 
   _positionForComboStyle(stylesMarker) {
