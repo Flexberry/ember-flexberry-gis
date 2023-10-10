@@ -682,7 +682,7 @@ export default Ember.Mixin.create({
   _defaultMarkerOptions() {
     return {
       iconSize: [25, 41],
-      iconAnchor: null
+      iconAnchor: [12, 41]
     }
   },
 
