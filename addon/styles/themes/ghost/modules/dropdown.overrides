@@ -157,7 +157,7 @@
   &,
   &.active,
   &:focus .menu {
-      border: none;
+    border-color: @borderColor;
   }
 }
 
