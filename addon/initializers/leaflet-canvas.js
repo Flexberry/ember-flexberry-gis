@@ -67,6 +67,7 @@ export function initialize() {
         ctx.strokeStyle = options.color;
         ctx.lineCap = options.lineCap;
         ctx.lineJoin = options.lineJoin;
+        ctx.lineDashOffset = options.dashOffset;
         ctx.stroke();
       }
     },
