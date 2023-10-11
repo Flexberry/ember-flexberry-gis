@@ -48,6 +48,7 @@ export default BaseLayer.extend({
 
       // Layer style 'simple' is default for vector layers (see ember-flexberry-gis/layers-styles/simple).
       styleSettings: layersStylesRenderer.getDefaultStyleSettings('simple'),
+      styleRules: [],
 
       legendSettings: {
         geometriesCanBeDisplayed: true,

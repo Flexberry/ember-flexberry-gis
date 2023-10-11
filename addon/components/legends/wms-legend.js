@@ -83,7 +83,10 @@ export default BaseLegendComponent.extend({
             } else {
               let legendUrl = `${url}${L.Util.getParamString(parameters)}`;
               Ember.$.ajax(legendUrl, {
-                method: 'GET'
+                method: 'GET',
+                xhrFields: {
+                  withCredentials: true
+                }
               })
                 .fail(() => resolve(null))
                 .done((response) => {
@@ -111,11 +114,6 @@ export default BaseLegendComponent.extend({
                         style: `height: ${this.get('height')}px;`
                       });
                     });
-
-                    // hide legend rule name if only one is available
-                    if (legendsContainer.length === 1) {
-                      Ember.set(legendsContainer[0], 'useLayerName', false);
-                    }
 
                     resolve(legendsContainer);
                   } else {

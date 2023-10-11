@@ -11,7 +11,7 @@
       change=(action 'addToCompareGeometries')
     }}
   {{/if}}
-  <div class="feature-result-item-toolbar {{if favoriteMode "favorite"}} {{if (gt feature.editForms.length 1) "links" ""}} hidden">
+  <div class="feature-result-item-toolbar {{if favoriteMode "favorite"}} {{if (gt feature.editForms.length 1) "links" ""}}">
     {{#if intersection}}
       <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panToIntersection" on="click"}}>
         <i class="icon-guideline-hand"></i>
@@ -89,15 +89,10 @@
           </a>
         {{/if}}
       {{/if}}
-      <a class="icon item more" {{action "onSubmenu" on="click"}}>
+      <a class="icon item more" onclick={{action "onSubmenu"}}>
         <i class="icon-guideline-points"></i>
       </a>
       <div class="more submenu {{if isSubmenu '' 'hidden'}}">
-        <div>
-          <a class="more-button" {{action "onSubmenu" on="click"}}>
-            <i class="icon-guideline-points"></i>
-          </a>
-        </div>
         <div>
           <a class="icon item" {{action "panTo" on="click"}}>
             <i class="icon-guideline-hand"></i>
@@ -118,14 +113,12 @@
             {{t "components.feature-result-item.find-intersection-caption"}}
           </a>
         </div>
-        {{#if accessibleMap}}
-          <div>
-            <a class="icon item"  {{action "searchSatellites" feature on="click"}}>
-              <i class="icon-guideline-earth"></i>
-              {{t "components.feature-result-item.search-satellite"}}
-            </a>
-          </div>
-        {{/if}}
+        <div title={{if session.isAuthenticated "" (t "components.feature-result-item.search-satellite-authenticated")}}>
+          <a class="icon item {{if session.isAuthenticated "" "disabled-link"}}"  {{action "searchSatellites" feature on="click"}}>
+            <i class="icon-guideline-earth"></i>
+            {{t "components.feature-result-item.search-satellite"}}
+          </a>
+        </div>
       </div>
     {{/if}}
   </div>

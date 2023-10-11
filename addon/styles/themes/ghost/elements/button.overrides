@@ -270,6 +270,15 @@
   .bmrk-add-block {
     .ui.button {
       border: none;
+      opacity: 0.4;
+      &:hover {
+        opacity: 1;
+      }
+
+      i {
+        font-size: 16px;
+        color: #3B4256;
+      }
     }
   }
 
@@ -425,5 +434,31 @@
     &:hover {
       background-color: @white;
     }
+  }
+}
+
+.favorites-block-buttons {
+  padding: 0 25px 10px 0;
+}
+.ui.icon.button.fav-list.clear {
+  background-color: @inputBackgroundColor;
+  border: 1px solid @inputBackgroundColor;
+  box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 0.15);
+  float: right;
+  &:hover {
+    border: 1px solid @primaryColor;
+  }
+}
+
+.ui.button.create-bookmark,
+.ui.button.compare {
+  background-color: @inputBackgroundColor;
+  border: 1px solid @inputBackgroundColor;
+  box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 0.15);
+  padding-top: 11px;
+  padding-bottom: 11px;
+  &:hover {
+    border: 1px solid @primaryColor;
+    color: @primaryColor;
   }
 }

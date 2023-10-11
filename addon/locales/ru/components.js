@@ -80,5 +80,9 @@ export default {
     'clear': {
       'tooltip': 'Очистить выделение на карте'
     }
+  },
+  'base-vector-layer': {
+    'zoomFrom': 'Зум от',
+    'zoomTo': 'до'
   }
 };

@@ -24,6 +24,14 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
   mapApi: Ember.inject.service(),
 
   /**
+    Injected ember session.
+
+    @property session
+    @type Ember.session
+  */
+  session: Ember.inject.service(),
+
+  /**
     Flag indicates whether to show all coordinates.
     @property mapApi
     @type MapApiService
@@ -303,30 +311,6 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
       this.set('featureId', shapeId);
       this.set('hasEditForm', hasEditForm);
     }
-
-    let _this = this;
-    let $caption = this.$('.feature-result-item-caption');
-    if ($caption.length > 0) {
-      $caption.hover(
-        function () {
-          const togglerCaptionElement = _this.$(this);
-          let $toolbar = togglerCaptionElement.parent().children('.feature-result-item-toolbar');
-          $toolbar.removeClass('hidden');
-          $toolbar[0].style.minHeight = `${togglerCaptionElement.height()}px`;
-          togglerCaptionElement.addClass('blur');
-        },
-        function () {
-          let $toolbar = _this.$(this).parent().children('.feature-result-item-toolbar');
-          $toolbar.hover(
-            () => { },
-            () => {
-              $toolbar.addClass('hidden');
-              _this.$(this).removeClass('blur');
-              _this.set('isSubmenu', false);
-            });
-        }
-      );
-    }
   },
 
   willDestroyElement() {
@@ -355,7 +339,12 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
     if (feature.geometry && feature.geometry.type &&
       (feature.geometry.type === 'Point' || feature.geometry.type === 'MultiPoint' ||
         feature.geometry.type === 'LineString' || feature.geometry.type === 'MultiLineString')) {
-      let leafletObject = feature.layerModel.returnLeafletObject();
+      let leafletObject = feature.layerModel.get('_leafletObject');
+
+      if (leafletObject instanceof L.MarkerClusterGroup) {
+        leafletObject = Ember.get(leafletObject, '_originalVectorLayer');
+      }
+
       let layerOptions = Ember.get(leafletObject, 'options.renderer.options');
       if (Ember.isPresent(layerOptions) && layerOptions.tolerance === 0) {
         Ember.set(layerOptions, 'tolerance', 3);
@@ -447,11 +436,12 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
 
       @method actions.onSubmenu
     */
-    onSubmenu() {
+    onSubmenu(e) {
+      e.stopPropagation();
       let component = this.get('element');
       let moreButton = component.getElementsByClassName('icon item more');
       let elements = component.getElementsByClassName('more submenu hidden');
-      openCloseSubmenu(this, moreButton, elements, 4, 0);
+      openCloseSubmenu(this, moreButton, elements);
     },
 
     /**

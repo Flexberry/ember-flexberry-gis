@@ -30,6 +30,8 @@ export default Ember.Component.extend(CheckFileMixin, {
 
   needGeometryFieldName: false,
 
+  acceptFiles: null,
+
   importErrorMessage: 'Загруженный файл не соответствует требованиям: ',
 
   emptyErrorMessage: 'Файл не содержит геометрических объектов',
@@ -61,11 +63,18 @@ export default Ember.Component.extend(CheckFileMixin, {
     this.set('_geometryTypes', ['point','polyline','polygon']);
   },
 
+  setAcceptFiles() {
+    if (Ember.isEmpty(this.get('acceptFiles'))) {
+      this.set('acceptFiles', '.zip,.GEOJSON,.gml,.xls,.xlsx,.csv,.xml,.gps,.kml');
+    }
+  },
+
   didInsertElement() {
     this._super(...arguments);
 
     this.set('systemCoordinates', this.get('systemCoordinates') || availableCoordinateReferenceSystemsCodesWithCaptions(this));
     this.set('coordinate', 'auto');
+    this.setAcceptFiles();
 
     this.send('clearFile');
   },

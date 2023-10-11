@@ -12,7 +12,7 @@
     {{flexberry-button-dropdown 
       class="flexberry-dropdown-button ml-18" 
       clickButton=(action "onToolModeChange")
-      items=toolsButton 
+      items=toolsButton
       value=toolMode
     }}
 
@@ -28,6 +28,7 @@
         class=flexberryClassNames.clearButton
         iconClass=clearIconClass
         click=(action "onIdentificationClear")
+        tooltip=(t "components.flexberry-maplayer.eraser-button.tooltip")
       }}
     </div>
   </div>
@@ -81,6 +82,7 @@
         _showError=_showError
         _errorMessage=_errorMessage
         filePreview=_filePreview
+        acceptFiles=acceptFiles
       }}
     </div>
   {{/if}} 

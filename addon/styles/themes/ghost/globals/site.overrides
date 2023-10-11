@@ -64,7 +64,7 @@
         font-size: 16px;
     }
     .text-line {
-        padding-top: 10px;
+        padding: 6px 0 10px;
     }
     .intersection-row {
         padding-top: 20px;
@@ -115,4 +115,17 @@ form.flexberry-geometry-add-mode-manual-form {
 
 .text-center {
   text-align: center;
+}
+
+
+body .ui.right.sidebar.tabbar ::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 10px 10px transparent;
+}
+
+body .ui.right.sidebar.tabbar ::-webkit-scrollbar-thumb,
+body .ui.right.sidebar.tabbar ::-webkit-scrollbar-thumb:window-inactive,
+body .ui.right.sidebar.tabbar ::-webkit-scrollbar-thumb:hover {
+  background: fade(@textColor, 40%);
+  background-clip: content-box;
+  border: 4px solid transparent;
 }

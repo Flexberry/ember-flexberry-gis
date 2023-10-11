@@ -38,7 +38,7 @@
   }
 
   .leaflet-left.leaflet-top {
-    right: 29px;
+    right: 30px;
     left: initial;
     top: 90px;
 
@@ -100,9 +100,11 @@
       a {
         border: @buttonMenuBorder;
         &:not(.leaflet-disabled).active,
+        &:not(.leaflet-disabled, .leaflet-control-zoom-view):hover {
+            border: @buttonMenuHoveredBorder;
+        }
         &:not(.leaflet-disabled):hover {
             background: @buttonMenuHoveredBackground;
-            border: @buttonMenuHoveredBorder;
         }
         &:first-child {
           border-radius: @defaultBorderRadius @defaultBorderRadius 0px 0px ;
@@ -306,9 +308,13 @@ div.measure-drag-panel {
     background: @layerResultListActiveBackground;
     color: @primaryColor;
   }
+  .ui.accordion:not(.styled) .title ~ .content:not(.ui).flexberry-toggler-content {
+    padding: 0 0 0 1.25rem ;
+  }
 
-  .flexberry-toggler-content {
-    padding-top: 0px !important;
+  a.icon.item.disabled-link {
+    pointer-events: none;
+    color: @tempItemColor;
   }
 }
 
