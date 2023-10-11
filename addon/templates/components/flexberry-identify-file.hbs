@@ -19,6 +19,16 @@
     }}
   </div>
 
+  {{#if needGeometryType}}
+    <div class="field geometryField">
+      <label>Тип геометрии*</label>
+      {{flexberry-dropdown
+        class=(concat "fluid geometryType")
+        items=_geometryTypes
+        value=_geometryType
+      }}
+    </div>
+  {{/if}}
   {{#if needGeometryFieldName}}
     <div class="field geometryField">
       <label>Название полей с геометрией в файле*</label>

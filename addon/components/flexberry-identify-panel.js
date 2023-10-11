@@ -539,6 +539,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
   init() {
     this._super(...arguments);
+    
     const layersButton = [
       {
         iconClass: this.allIconClass,

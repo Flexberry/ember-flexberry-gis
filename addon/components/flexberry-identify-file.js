@@ -56,6 +56,11 @@ export default Ember.Component.extend(CheckFileMixin, {
     return geomOnly ? '-geom' : '';
   }),
 
+  init() {
+    this._super(...arguments);
+    this.set('_geometryTypes', ['point','polyline','polygon']);
+  },
+
   didInsertElement() {
     this._super(...arguments);
 
@@ -143,12 +148,14 @@ export default Ember.Component.extend(CheckFileMixin, {
           this.set('_errorMessage', this.get('importErrorMessage') + this.get('emptyHeaderErrorMessage'));
           this.set('_showError', true);
           this.set('needGeometryFieldName', false);
+          this.set('needGeometryType', false);
         }
       }).fail(() => {
         let message = this.get('badFileMessage');
         this.set('_errorMessage', this.get('importErrorMessage') + message);
         this.set('_showError', true);
         this.set('needGeometryFieldName', false);
+        this.set('needGeometryType', false);
       });
     }
   },
@@ -163,6 +170,7 @@ export default Ember.Component.extend(CheckFileMixin, {
       this.set('file', null);
       this.set('coordinate', 'auto');
       this.set('needGeometryFieldName', false);
+      this.set('needGeometryType', false);
       this.set('geometryField1', null);
       this.set('geometryField2', null);
       this.set('geometryFieldFile', null);
@@ -190,6 +198,10 @@ export default Ember.Component.extend(CheckFileMixin, {
         this.set('needGeometryFieldName', true);
         this.getFieldsFromCsv();
         this.set('warningMessage', this.get('warningMessageSRS'));
+      }
+
+      if (ext.toLowerCase() === '.gpx') {
+        this.set('needGeometryType', true);
       }
 
       this.clearAjax();
