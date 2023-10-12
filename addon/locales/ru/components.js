@@ -22,7 +22,7 @@ import FlexberryLinksEditorComponent from './components/flexberry-links-editor';
 import FlexberryWfsFilterComponent from './components/flexberry-wfs-filter';
 import FlexberryBoundingboxComponent from './components/flexberry-boundingbox';
 import FlexberryEditCrsComponent from './components/flexberry-edit-crs';
-import FlexberryIdentifyFileField from './components/flexberry-identify-file';
+import FlexberryIdentifyFile from './components/flexberry-identify-file';
 import FlexberryIdentifyPanel from './components/flexberry-identify-panel';
 import FlexberryLayersAttributesPanel from './components/flexberry-layers-attributes-panel';
 import FlexberryLayersIntersectionPanel from './components/flexberry-layers-intersections-panel';
@@ -64,7 +64,7 @@ export default {
   'flexberry-wfs-filter': FlexberryWfsFilterComponent,
   'flexberry-boundingbox': FlexberryBoundingboxComponent,
   'flexberry-edit-crs': FlexberryEditCrsComponent,
-  'flexberry-identify-file': FlexberryIdentifyFileField,
+  'flexberry-identify-file': FlexberryIdentifyFile,
   'flexberry-identify-panel': FlexberryIdentifyPanel,
   'flexberry-layers-attributes-panel': FlexberryLayersAttributesPanel,
   'flexberry-layers-intersections-panel': FlexberryLayersIntersectionPanel,

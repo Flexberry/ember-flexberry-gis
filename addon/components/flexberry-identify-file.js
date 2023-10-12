@@ -2,7 +2,6 @@ import Ember from 'ember';
 import layout from '../templates/components/flexberry-identify-file';
 import CheckFileMixin from '../mixins/flexberry-check-file';
 import { availableCoordinateReferenceSystemsCodesWithCaptions } from '../utils/available-coordinate-reference-systems-for-dropdown';
-import { translationMacro as t } from 'ember-i18n';
 
 export default Ember.Component.extend(CheckFileMixin, {
   layout,
