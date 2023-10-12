@@ -51,33 +51,6 @@ export default Ember.Component.extend(CheckFileMixin, {
   emptyGeometryField: 'Укажите название поля с геометрией в файле (WKT/X,Y)',
 
   /**
-    Tools option's 'marker' mode's caption.
-
-    @property markerCaption
-    @type String
-    @default t('components.flexberry-identify-file.marker.caption')
-  */
-  markerCaption: t('components.flexberry-identify-file.marker'),
-
-  /**
-    Tools option's 'polyline' mode's caption.
-
-    @property polylineCaption
-    @type String
-    @default t('components.flexberry-identify-file.polyline.caption')
-  */
-  polylineCaption: t('components.flexberry-identify-file.polyline.caption'),
-
-  /**
-    Tools option's 'polyline' mode's caption.
-
-    @property polygonCaption
-    @type String
-    @default t('components.flexberry-identify-file.polygon.caption')
-  */
-  polygonCaption: t('components.flexberry-identify-file.polygon.caption'),
-
-  /**
    * We need to differentiate events from different instances, because we don't turn off event subscriptions
    *
   */
@@ -90,7 +63,7 @@ export default Ember.Component.extend(CheckFileMixin, {
     this._super(...arguments);
     this.set('_geometryTypes', {
       'point': 'Точка',
-      'polyline': 'Ломаная',
+      'polyline': 'Линия',
       'polygon': 'Полигон'
     });
   },
