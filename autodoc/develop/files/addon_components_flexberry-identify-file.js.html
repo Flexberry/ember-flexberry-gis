@@ -446,6 +446,8 @@ export default Ember.Component.extend(CheckFileMixin, {
 
   needGeometryFieldName: false,
 
+  acceptFiles: null,
+
   importErrorMessage: &#x27;Загруженный файл не соответствует требованиям: &#x27;,
 
   emptyErrorMessage: &#x27;Файл не содержит геометрических объектов&#x27;,
@@ -472,11 +474,27 @@ export default Ember.Component.extend(CheckFileMixin, {
     return geomOnly ? &#x27;-geom&#x27; : &#x27;&#x27;;
   }),
 
+  init() {
+    this._super(...arguments);
+    this.set(&#x27;_geometryTypes&#x27;, {
+      &#x27;point&#x27;: &#x27;Точка&#x27;,
+      &#x27;polyline&#x27;: &#x27;Линия&#x27;,
+      &#x27;polygon&#x27;: &#x27;Полигон&#x27;
+    });
+  },
+
+  setAcceptFiles() {
+    if (Ember.isEmpty(this.get(&#x27;acceptFiles&#x27;))) {
+      this.set(&#x27;acceptFiles&#x27;, &#x27;.zip,.GEOJSON,.gml,.xls,.xlsx,.csv,.xml,.gps,.kml&#x27;);
+    }
+  },
+
   didInsertElement() {
     this._super(...arguments);
 
     this.set(&#x27;systemCoordinates&#x27;, this.get(&#x27;systemCoordinates&#x27;) || availableCoordinateReferenceSystemsCodesWithCaptions(this));
     this.set(&#x27;coordinate&#x27;, &#x27;auto&#x27;);
+    this.setAcceptFiles();
 
     this.send(&#x27;clearFile&#x27;);
   },
@@ -559,12 +577,14 @@ export default Ember.Component.extend(CheckFileMixin, {
           this.set(&#x27;_errorMessage&#x27;, this.get(&#x27;importErrorMessage&#x27;) + this.get(&#x27;emptyHeaderErrorMessage&#x27;));
           this.set(&#x27;_showError&#x27;, true);
           this.set(&#x27;needGeometryFieldName&#x27;, false);
+          this.set(&#x27;needGeometryType&#x27;, false);
         }
       }).fail(() =&gt; {
         let message = this.get(&#x27;badFileMessage&#x27;);
         this.set(&#x27;_errorMessage&#x27;, this.get(&#x27;importErrorMessage&#x27;) + message);
         this.set(&#x27;_showError&#x27;, true);
         this.set(&#x27;needGeometryFieldName&#x27;, false);
+        this.set(&#x27;needGeometryType&#x27;, false);
       });
     }
   },
@@ -579,6 +599,7 @@ export default Ember.Component.extend(CheckFileMixin, {
       this.set(&#x27;file&#x27;, null);
       this.set(&#x27;coordinate&#x27;, &#x27;auto&#x27;);
       this.set(&#x27;needGeometryFieldName&#x27;, false);
+      this.set(&#x27;needGeometryType&#x27;, false);
       this.set(&#x27;geometryField1&#x27;, null);
       this.set(&#x27;geometryField2&#x27;, null);
       this.set(&#x27;geometryFieldFile&#x27;, null);
@@ -606,6 +627,10 @@ export default Ember.Component.extend(CheckFileMixin, {
         this.set(&#x27;needGeometryFieldName&#x27;, true);
         this.getFieldsFromCsv();
         this.set(&#x27;warningMessage&#x27;, this.get(&#x27;warningMessageSRS&#x27;));
+      }
+
+      if (ext.toLowerCase() === &#x27;.gpx&#x27;) {
+        this.set(&#x27;needGeometryType&#x27;, true);
       }
 
       this.clearAjax();

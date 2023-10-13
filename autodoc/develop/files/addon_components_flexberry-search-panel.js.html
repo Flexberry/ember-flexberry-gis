@@ -570,7 +570,7 @@ export default Ember.Component.extend({
     let degree = degMinSec.substring(0, degMinSec.indexOf(&#x27;°&#x27;));
     let min = degMinSec.substring(degMinSec.indexOf(&#x27;°&#x27;) + 1, degMinSec.indexOf(&#x27;\&#x27;&#x27;));
     let sec = degMinSec.substring(degMinSec.indexOf(&#x27;\&#x27;&#x27;) + 1, degMinSec.indexOf(&#x27;&quot;&#x27;));
-    let coord = Number(degree) + Number(min) / 60 + Number(sec) / 3600;
+    let coord = Number(degree) + Number(min) / 60 + Number(sec.replace(&#x27;,&#x27;, &#x27;.&#x27;)) / 3600;
     return coord.toFixed(5);
   },
 
@@ -615,18 +615,25 @@ export default Ember.Component.extend({
       this.set(&#x27;showErrorMessage&#x27;, false);
       let queryString = this.get(&#x27;queryString&#x27;);
       let leafletMap = this.get(&#x27;leafletMap&#x27;);
-      const regexDegree = /^([-]?[0-9]+[.]?[0-9]*) ([-]?[0-9]+[.]?[0-9]*)/;
-      const regexDegreeMinSec = /^([-]?[0-9]+[°][0-9]+[&#x27;][0-9]+[.]?[0-9]*[&quot;]) ([-]?[0-9]+[°][0-9]+[&#x27;][0-9]+[.]?[0-9]*[&quot;])/;
-      if (regexDegree.test(queryString)) {
+      let queryStringForRegex = queryString ? queryString.trim() : &#x27;&#x27;;
+
+      const regexDegreeNoDegreeSymbol = /^(-?\d+([.,]\d+)?),?\s+(-?\d+([.,]\d+)?)$/;
+      const regexDegreeWithDegreeSymbol = /^(-?\d+([.,]\d+)?)°,?\s+(-?\d+([.,]\d+)?)°$/;
+      const regexDegreeMinSec = /^(-?\d+°\d+&#x27;\d+([.,]\d+)?&quot;),?\s+(-?\d+°\d+&#x27;\d+([.,]\d+)?&quot;)$/;
+      if (regexDegreeWithDegreeSymbol.test(queryStringForRegex)) {
         // Go to coordinates
-        let coords = regexDegree.exec(queryString);
-        this.goTo(coords[1], coords[2]);
-      } else if (regexDegreeMinSec.test(queryString)) {
+        let coords = regexDegreeWithDegreeSymbol.exec(queryStringForRegex);
+        this.goTo(coords[1].replace(&#x27;,&#x27;, &#x27;.&#x27;), coords[3].replace(&#x27;,&#x27;, &#x27;.&#x27;));
+      } else if (regexDegreeNoDegreeSymbol.test(queryStringForRegex)) {
+        // Go to coordinates
+        let coords = regexDegreeNoDegreeSymbol.exec(queryStringForRegex);
+        this.goTo(coords[1].replace(&#x27;,&#x27;, &#x27;.&#x27;), coords[3].replace(&#x27;,&#x27;, &#x27;.&#x27;));
+      } else if (regexDegreeMinSec.test(queryStringForRegex)) {
         // Go to coordinates with degree, minute, second
-        let degMinSec = regexDegreeMinSec.exec(queryString);
+        let degMinSec = regexDegreeMinSec.exec(queryStringForRegex);
         let coord1 = this.degreeMinSecToDegree(degMinSec[1]);
-        let coord2 = this.degreeMinSecToDegree(degMinSec[2]);
-        this.goTo(coord1, coord2, degMinSec[1], degMinSec[2]);
+        let coord2 = this.degreeMinSecToDegree(degMinSec[3]);
+        this.goTo(coord1, coord2, degMinSec[1].replace(&#x27;,&#x27;, &#x27;.&#x27;), degMinSec[3].replace(&#x27;,&#x27;, &#x27;.&#x27;));
       } else {
         // Сontext search and coordinate search
         let filter;

@@ -857,7 +857,7 @@ export default Ember.Component.extend(
         Ember.getOwner(this).knownForType(&#x27;layer&#x27;, className);
 
       // Style settings are available only for vector layers.
-      return !Ember.isNone(layerClass) &amp;&amp; layerClass.isVectorType(this.get(&#x27;layer&#x27;));
+      return !Ember.isNone(layerClass) &amp;&amp; layerClass.isVectorType(this.get(&#x27;layer&#x27;)) &amp;&amp; false;
     }),
 
     /**
@@ -871,7 +871,7 @@ export default Ember.Component.extend(
     _labelsSettingsAreAvailableForType: Ember.computed(&#x27;_layer.type&#x27;, function () {
       let className = this.get(&#x27;_layer.type&#x27;);
 
-      return Ember.getOwner(this).isKnownNameForType(&#x27;layer&#x27;, className) &amp;&amp; className !== &#x27;group&#x27;;
+      return Ember.getOwner(this).isKnownNameForType(&#x27;layer&#x27;, className) &amp;&amp; className !== &#x27;group&#x27; &amp;&amp; false;
     }),
 
     /**
@@ -1020,7 +1020,6 @@ export default Ember.Component.extend(
       let keyWords = this.get(&#x27;layer.keyWords&#x27;);
       let boundingBox = this.get(&#x27;layer.boundingBox&#x27;);
       let leafletObjectGetter = this.get(&#x27;layer.leafletObjectGetter&#x27;);
-      let returnLeafletObject = this.get(&#x27;layer.returnLeafletObject&#x27;);
       let bounds = getBounds(boundingBox);
 
       let crs = this.get(&#x27;layer.coordinateReferenceSystem&#x27;);
@@ -1054,8 +1053,7 @@ export default Ember.Component.extend(
           maxLat: bounds.maxLat,
           maxLng: bounds.maxLng,
         },
-        leafletObjectGetter: leafletObjectGetter,
-        returnLeafletObject: returnLeafletObject
+        leafletObjectGetter: leafletObjectGetter
       });
     },
 

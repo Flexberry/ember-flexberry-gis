@@ -440,6 +440,14 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
   mapApi: Ember.inject.service(),
 
   /**
+    Injected ember session.
+
+    @property session
+    @type Ember.session
+  */
+  session: Ember.inject.service(),
+
+  /**
     Flag indicates whether to show all coordinates.
     @property mapApi
     @type MapApiService
@@ -719,30 +727,6 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
       this.set(&#x27;featureId&#x27;, shapeId);
       this.set(&#x27;hasEditForm&#x27;, hasEditForm);
     }
-
-    let _this = this;
-    let $caption = this.$(&#x27;.feature-result-item-caption&#x27;);
-    if ($caption.length &gt; 0) {
-      $caption.hover(
-        function () {
-          const togglerCaptionElement = _this.$(this);
-          let $toolbar = togglerCaptionElement.parent().children(&#x27;.feature-result-item-toolbar&#x27;);
-          $toolbar.removeClass(&#x27;hidden&#x27;);
-          $toolbar[0].style.minHeight = &#x60;${togglerCaptionElement.height()}px&#x60;;
-          togglerCaptionElement.addClass(&#x27;blur&#x27;);
-        },
-        function () {
-          let $toolbar = _this.$(this).parent().children(&#x27;.feature-result-item-toolbar&#x27;);
-          $toolbar.hover(
-            () =&gt; { },
-            () =&gt; {
-              $toolbar.addClass(&#x27;hidden&#x27;);
-              _this.$(this).removeClass(&#x27;blur&#x27;);
-              _this.set(&#x27;isSubmenu&#x27;, false);
-            });
-        }
-      );
-    }
   },
 
   willDestroyElement() {
@@ -771,7 +755,12 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
     if (feature.geometry &amp;&amp; feature.geometry.type &amp;&amp;
       (feature.geometry.type === &#x27;Point&#x27; || feature.geometry.type === &#x27;MultiPoint&#x27; ||
         feature.geometry.type === &#x27;LineString&#x27; || feature.geometry.type === &#x27;MultiLineString&#x27;)) {
-      let leafletObject = feature.layerModel.returnLeafletObject();
+      let leafletObject = feature.layerModel.get(&#x27;_leafletObject&#x27;);
+
+      if (leafletObject instanceof L.MarkerClusterGroup) {
+        leafletObject = Ember.get(leafletObject, &#x27;_originalVectorLayer&#x27;);
+      }
+
       let layerOptions = Ember.get(leafletObject, &#x27;options.renderer.options&#x27;);
       if (Ember.isPresent(layerOptions) &amp;&amp; layerOptions.tolerance === 0) {
         Ember.set(layerOptions, &#x27;tolerance&#x27;, 3);
@@ -863,11 +852,12 @@ export default Ember.Component.extend(ResultFeatureInitializer, {
 
       @method actions.onSubmenu
     */
-    onSubmenu() {
+    onSubmenu(e) {
+      e.stopPropagation();
       let component = this.get(&#x27;element&#x27;);
       let moreButton = component.getElementsByClassName(&#x27;icon item more&#x27;);
       let elements = component.getElementsByClassName(&#x27;more submenu hidden&#x27;);
-      openCloseSubmenu(this, moreButton, elements, 4, 0);
+      openCloseSubmenu(this, moreButton, elements);
     },
 
     /**

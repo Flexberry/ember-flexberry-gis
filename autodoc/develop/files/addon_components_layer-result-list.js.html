@@ -743,31 +743,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, ResultFeatureIn
     }
   },
 
-  didUpdate() {
-    let _this = this;
-    let $caption = this.$(&#x27;.title .flexberry-toggler-caption&#x27;);
-    if ($caption.length &gt; 0) {
-      $caption.hover(
-        function () {
-          const togglerCaptionElement = _this.$(this);
-          let $buttons = togglerCaptionElement.parent().parent().parent().children(&#x27;.feature-result-item-buttons&#x27;);
-          $buttons.removeClass(&#x27;hidden&#x27;);
-          $buttons[0].style.minHeight = &#x60;${togglerCaptionElement.height()}px&#x60;;
-          togglerCaptionElement.addClass(&#x27;blur&#x27;);
-        },
-        function () {
-          let $buttons = _this.$(this).parent().parent().parent().children(&#x27;.feature-result-item-buttons&#x27;);
-          $buttons.hover(
-            () =&gt; { },
-            () =&gt; {
-              $buttons.addClass(&#x27;hidden&#x27;);
-              _this.$(this).removeClass(&#x27;blur&#x27;);
-            });
-        }
-      );
-    }
-  },
-
   /**
      Checks model layer links and adds list and edit forms to result object.
 

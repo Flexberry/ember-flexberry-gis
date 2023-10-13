@@ -613,7 +613,13 @@ export default Ember.Mixin.create({
   _findClosestLayer(latlng, bounds, layers) {
     let closestLayer = {};
 
-    layers.filter(l =&gt; l._bounds.intersects(bounds)).forEach((layer, index) =&gt; {
+    layers.filter(l =&gt; {
+      if (!l._bounds) {
+        return L.featureGroup().addLayer(l).getBounds().intersects(bounds);
+      } else {
+        return l._bounds.intersects(bounds);
+      }
+    }).forEach((layer, index) =&gt; {
       let layerDistance = this._calculateDistance(latlng, layer);
 
       if (Ember.isNone(closestLayer.distance) || layerDistance.distance &lt; closestLayer.distance) {

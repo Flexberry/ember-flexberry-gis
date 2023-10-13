@@ -245,12 +245,17 @@ define('dummy/tests/helpers/common-for-layer', ['exports', 'ember'], function (e
       return {};
     };
 
+    var getZoom = function getZoom() {
+      return 10;
+    };
+
     var leafletMap = L.map(document.createElement('div'));
     leafletMap.getBounds = getBounds;
     leafletMap.getPane = getPane;
     leafletMap.createPane = createPane;
     leafletMap.removeLayer = removeLayer;
     leafletMap.hasLayer = hasLayer;
+    leafletMap.getZoom = getZoom;
     var editTools = new L.Editable(leafletMap);
     _ember['default'].set(leafletMap, 'editTools', editTools);
 
@@ -4844,9 +4849,9 @@ define('dummy/tests/unit/components/base-vector-layer-test', ['exports', 'ember'
           assert.equal(clearLayersSpy.callCount, 0);
           assert.equal(loadLayerFeaturesSpy.callCount, 0);
           assert.equal(removeLayerSpy.callCount, 0);
-          assert.equal(addLayerSpy.callCount, 2);
+          assert.equal(addLayerSpy.callCount, 1);
           assert.equal(continueLoadSpy.callCount, 1);
-          assert.equal(hasLayerSpy.callCount, 4);
+          assert.equal(hasLayerSpy.callCount, 2);
           clearLayersSpy.restore();
           loadLayerFeaturesSpy.restore();
           removeLayerSpy.restore();
@@ -4904,8 +4909,8 @@ define('dummy/tests/unit/components/base-vector-layer-test', ['exports', 'ember'
         leafletObject.hideAllLayerObjects();
 
         assert.equal(eachLayerSpy.callCount, 1);
-        assert.equal(removeLayerSpy.callCount, 2);
-        assert.equal(hasLayerSpy.callCount, 3);
+        assert.equal(removeLayerSpy.callCount, 1);
+        assert.equal(hasLayerSpy.callCount, 1);
         eachLayerSpy.restore();
         removeLayerSpy.restore();
         hasLayerSpy.restore();
@@ -4965,7 +4970,7 @@ define('dummy/tests/unit/components/base-vector-layer-test', ['exports', 'ember'
           assert.equal(resule, 'success');
           assert.equal(loadLayerFeaturesSpy.callCount, 1);
           assert.equal(removeLayerSpy.callCount, 0);
-          assert.equal(addLayerSpy.callCount, 2);
+          assert.equal(addLayerSpy.callCount, 1);
           loadLayerFeaturesSpy.restore();
           removeLayerSpy.restore();
           addLayerSpy.restore();
@@ -5027,7 +5032,7 @@ define('dummy/tests/unit/components/base-vector-layer-test', ['exports', 'ember'
         leafletObject._setVisibilityObjects(['1'], false).then(function (resule) {
           assert.equal(resule, 'success');
           assert.equal(loadLayerFeaturesSpy.callCount, 0);
-          assert.equal(removeLayerSpy.callCount, 2);
+          assert.equal(removeLayerSpy.callCount, 1);
           assert.equal(addLayerSpy.callCount, 0);
           loadLayerFeaturesSpy.restore();
           removeLayerSpy.restore();
@@ -6917,7 +6922,7 @@ define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports',
           assert.equal(data.layers.length, 1);
           assert.equal(realCountArr(leafletObject.models), 0);
           assert.equal(leafletObject.getLayers().length, 1);
-          assert.equal(leafletObject._labelsLayer.getLayers().length, 0);
+          assert.equal(leafletObject._labelsLayer.getLayers().length, 1);
           assert.equal(leafletObject.getLayers()[0].state, 'exist');
 
           spyBatchUpdate.restore();
@@ -9308,6 +9313,44 @@ define('dummy/tests/unit/initializers/flexberry-map-tools-test.jshint', ['export
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/initializers/flexberry-map-tools-test.js should pass jshint.');
+  });
+});
+define('dummy/tests/unit/initializers/leaflet-canvas-test', ['exports', 'ember', 'dummy/initializers/leaflet-canvas', 'qunit'], function (exports, _ember, _dummyInitializersLeafletCanvas, _qunit) {
+
+  var application = undefined;
+
+  (0, _qunit.module)('Unit | Initializer | leaflet canvas', {
+    beforeEach: function beforeEach() {
+      _ember['default'].run(function () {
+        application = _ember['default'].Application.create();
+        application.deferReadiness();
+      });
+    }
+  });
+
+  // Replace this with your real tests.
+  (0, _qunit.test)('it works', function (assert) {
+    _dummyInitializersLeafletCanvas['default'].initialize(application);
+
+    // you would normally confirm the results of the initializer here
+    assert.ok(true);
+  });
+});
+define('dummy/tests/unit/initializers/leaflet-canvas-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/initializers');
+  test('unit/initializers/leaflet-canvas-test.js should pass jscs', function () {
+    ok(true, 'unit/initializers/leaflet-canvas-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/initializers/leaflet-canvas-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/initializers/leaflet-canvas-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/initializers/leaflet-canvas-test.js should pass jshint.');
   });
 });
 define('dummy/tests/unit/initializers/leaflet-grid-layer-test', ['exports', 'ember', 'dummy/initializers/leaflet-grid-layer', 'qunit'], function (exports, _ember, _dummyInitializersLeafletGridLayer, _qunit) {
@@ -12717,6 +12760,100 @@ define('dummy/tests/unit/mixins/geom-only-map-tool-test.jshint', ['exports'], fu
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/mixins/geom-only-map-tool-test.js should pass jshint.');
+  });
+});
+define('dummy/tests/unit/mixins/layer-label-test', ['exports', 'ember', 'ember-flexberry-gis/mixins/layer-label', 'qunit', 'sinon'], function (exports, _ember, _emberFlexberryGisMixinsLayerLabel, _qunit, _sinon) {
+
+  (0, _qunit.module)('Unit | Mixin | layer label');
+  var LayerLabelObject = _ember['default'].Object.extend(_emberFlexberryGisMixinsLayerLabel['default']);
+  (0, _qunit.test)('it works', function (assert) {
+    var subject = LayerLabelObject.create();
+    assert.ok(subject);
+  });
+
+  (0, _qunit.test)('test method _createStringLabel', function (assert) {
+    assert.expect(11);
+    var leafletMap = L.map(document.createElement('div'), {
+      center: [51.505, -0.09],
+      zoom: 13
+    });
+    var settings = {
+      'options': {
+        'captionFontColor': '#000000FF',
+        'captionFontFamily': 'Times New Roman',
+        'captionFontSize': '12',
+        'captionFontStyle': 'normal',
+        'captionFontWeight': 'normal',
+        'captionFontDecoration': 'none'
+      },
+      'location': {
+        'locationPoint': 'overRight',
+        'lineLocationSelect': 'Over the line'
+      },
+      'scaleRange': {
+        'minScaleRange': 1,
+        'maxScaleRange': 19
+      },
+      'signMapObjects': true,
+      'labelSettingsString': '<propertyname>atr1</propertyname>'
+    };
+    var labelsLayer = L.featureGroup();
+    labelsLayer.minZoom = settings.scaleRange.minScaleRange;
+    labelsLayer.maxZoom = settings.scaleRange.maxScaleRange;
+    labelsLayer.settings = settings;
+    labelsLayer.leafletMap = leafletMap;
+    var labelsLayers = _ember['default'].A();
+    labelsLayers.addObject(labelsLayer);
+    var layers = [L.marker([59.23, 56.27])];
+    var subject = LayerLabelObject.create({
+      leafletMap: leafletMap,
+      showExisting: false,
+      labelsLayers: [labelsLayer]
+    });
+
+    var _applyFunctionStub = _sinon['default'].stub(subject, '_applyFunction');
+    _applyFunctionStub.returns('test');
+    var _applyPropertyStub = _sinon['default'].stub(subject, '_applyProperty');
+    _applyPropertyStub.returns('test');
+    var _createLabelSpy = _sinon['default'].spy(subject, '_createLabel');
+    var _getLabelsLayersZoomSpy = _sinon['default'].spy(subject, '_getLabelsLayersZoom');
+    var _checkLabelInViewSpy = _sinon['default'].spy(subject, '_checkLabelInView');
+
+    subject._createStringLabel(layers);
+    assert.equal(_getLabelsLayersZoomSpy.callCount, 1);
+    assert.equal(_checkLabelInViewSpy.callCount, 1);
+    assert.deepEqual(_checkLabelInViewSpy.getCalls()[0].args[0], layers);
+    assert.deepEqual(_checkLabelInViewSpy.getCalls()[0].args[1], labelsLayer);
+    assert.equal(_applyFunctionStub.callCount, 1);
+    assert.equal(_applyPropertyStub.callCount, 1);
+    assert.equal(_createLabelSpy.callCount, 1);
+    assert.equal(_createLabelSpy.getCalls()[0].args[0], 'test');
+    assert.deepEqual(_createLabelSpy.getCalls()[0].args[1], layers[0]);
+    assert.deepEqual(_createLabelSpy.getCalls()[0].args[2].string, 'font-family: Times New Roman; font-size: 12px; font-weight: normal; font-style: normal; text-decoration: none; color: #000000FF; text-align: undefined;');
+    assert.deepEqual(_createLabelSpy.getCalls()[0].args[3], labelsLayer);
+
+    _applyFunctionStub.restore();
+    _applyPropertyStub.restore();
+    _createLabelSpy.restore();
+    _getLabelsLayersZoomSpy.restore();
+    _checkLabelInViewSpy.restore();
+  });
+});
+define('dummy/tests/unit/mixins/layer-label-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/mixins');
+  test('unit/mixins/layer-label-test.js should pass jscs', function () {
+    ok(true, 'unit/mixins/layer-label-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/mixins/layer-label-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/mixins/layer-label-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/mixins/layer-label-test.js should pass jshint.');
   });
 });
 define('dummy/tests/unit/mixins/leaflet-events-test', ['exports', 'ember', 'ember-flexberry-gis/mixins/leaflet-events', 'qunit', 'sinon'], function (exports, _ember, _emberFlexberryGisMixinsLeafletEvents, _qunit, _sinon) {

@@ -1749,11 +1749,15 @@ export default Ember.Mixin.create(SnapDraw, actionsHandler, {
     @return {String} Field name.
   */
   _getPkField(layer) {
-    if (Ember.isNone(layer) || typeof Ember.get(layer, &#x27;returnLeafletObject&#x27;) !== &#x27;function&#x27;) {
+    if (Ember.isNone(layer)) {
       throw &#x27;Layer is undefined&#x27;;
     }
 
-    let leafletObject = layer.returnLeafletObject();
+    let leafletObject = layer.get(&#x27;_leafletObject&#x27;);
+
+    if (leafletObject instanceof L.MarkerClusterGroup) {
+      leafletObject = Ember.get(leafletObject, &#x27;_originalVectorLayer&#x27;);
+    }
 
     if (Ember.isNone(leafletObject) || typeof Ember.get(leafletObject, &#x27;getPkField&#x27;) !== &#x27;function&#x27;) {
       throw &#x27;Layer is not VectorLayer&#x27;;

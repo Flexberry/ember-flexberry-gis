@@ -517,7 +517,12 @@ export default TileLayer.extend({
     // can be used in SLD-styles
     this.setEnv();
 
-    options = Ember.$.extend(true, {}, options, { filter: filter, env: this.get(&#x27;env&#x27;) });
+    options = Ember.$.extend(true, {}, options, {
+      filter: filter,
+      env: this.get(&#x27;env&#x27;),
+      rules: this.get(&#x27;styleRules&#x27;),
+      label: this.get(&#x27;labelSettings&#x27;)
+    });
 
     return L.tileLayer.wms(this.get(&#x27;url&#x27;), options);
   },

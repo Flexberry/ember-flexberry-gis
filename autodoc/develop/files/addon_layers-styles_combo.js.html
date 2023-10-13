@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>addon/mixins/flexberry-map-model-api-visualedit.js - Flexberry Documentation</title>
+    <title>addon/layers-styles/combo.js - Flexberry Documentation</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -409,474 +409,82 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>addon/mixins/flexberry-map-model-api-visualedit.js <small>File</small></h1>
+    <h1>addon/layers-styles/combo.js <small>File</small></h1>
 </div>
 
 <div class="file">
     <pre class="prettyprint linenums">
+/**
+  @module ember-flexberry-gis
+*/
+
 import Ember from &#x27;ember&#x27;;
-import turfCombine from &#x27;npm:@turf/combine&#x27;;
-import SnapDraw from &#x27;./snap-draw&#x27;;
-import { zoomToBounds } from &#x27;../utils/zoom-to-bounds&#x27;;
+import SimpleLayerStyle from &#x27;./simple&#x27;;
 
-export default Ember.Mixin.create(SnapDraw, {
+/**
+  Class implementing simple stylization for vector layers.
 
+  @class BaseLayerStyle
+*/
+export default SimpleLayerStyle.extend({
   /**
-    Change layer object properties.
+    Applies layer-style to the specified leaflet layer.
 
-    @method changeLayerObjectProperties
-    @param {string} layerId Layer ID.
-    @param {string} featureId Object ID.
-    @param {Object} properties Object properties.
-    @return {Promise} Layer object.
+    @method renderOnLeafletLayer
+    @param {Object} options Method options.
+    @param {&lt;a =ref=&quot;http://leafletjs.com/reference-1.2.0.html#layer&quot;&gt;L.Layer&lt;/a&gt;} options.leafletLayer Leaflet layer to which layer-style must be applied.
+    @param {Object} options.style Hash containing style settings.
   */
-  changeLayerObjectProperties(layerId, featureId, properties) {
-    return new Ember.RSVP.Promise((resolve, reject) =&gt; {
-      this._getModelLayerFeature(layerId, [featureId], true).then(([, leafletObject, featureLayer]) =&gt; {
-        Object.assign(featureLayer[0].feature.properties, properties);
-        leafletObject.editLayer(featureLayer[0]);
-        resolve(featureLayer[0]);
-      }).catch((e) =&gt; {
-        reject(e);
+  renderOnLeafletLayer({ leafletLayer, style }) {
+    if (leafletLayer instanceof L.LayerGroup) {
+      // First we must clean group layer&#x27;s style options,
+      // otherwise already defined style options won&#x27;t be changed.
+      leafletLayer.options.style = {};
+
+      leafletLayer.eachLayer((layer) =&gt; {
+        this._renderOnLeafletLayer({ leafletLayer: layer, style });
       });
-    });
-  },
-
-  /**
-    Start change layer object.
-
-    @method startChangeLayerObject
-    @param {string} layerId Layer ID.
-    @param {string} featureId Object ID.
-    @param {Boolean} snap Snap or not
-    @param {Array} snapLayers Layers for snap
-    @param {Integer} snapDistance in pixels
-    @param {Boolean} snapOnlyVertex or segments too
-    @return {Promise} Feature layer.
-  */
-  startChangeLayerObject(layerId, featureId, snap, snapLayers, snapDistance, snapOnlyVertex) {
-    return new Ember.RSVP.Promise((resolve, reject) =&gt; {
-      this._getModelLayerFeature(layerId, [featureId]).then(([layerModel, leafletObject, featureLayer]) =&gt; {
-        let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
-        leafletObject.statusLoadLayer = true;
-
-        let bounds;
-        if (featureLayer[0] instanceof L.Marker) {
-          let featureGroup = L.featureGroup().addLayer(featureLayer[0]);
-          bounds = featureGroup.getBounds();
-        } else {
-          bounds = featureLayer[0].getBounds();
-        }
-
-        let minZoom = Ember.get(leafletObject, &#x27;minZoom&#x27;);
-        let maxZoom = Ember.get(leafletObject, &#x27;maxZoom&#x27;);
-        zoomToBounds(bounds, leafletMap, minZoom, maxZoom);
-        if (Ember.isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
-          leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
-        }
-
-        leafletObject.promiseLoadLayer.then(() =&gt; {
-          leafletObject.statusLoadLayer = false;
-          leafletObject.promiseLoadLayer = null;
-          let layers = leafletObject._layers;
-          let featureLayerLoad = Object.values(layers).find(feature =&gt; {
-            const layerFeatureId = this._getLayerFeatureId(layerModel, feature);
-            return layerFeatureId === featureId;
-          });
-
-          if (!featureLayerLoad) {
-            reject(&#x60;Object &#x27;${featureId}&#x27; not found&#x60;);
-          }
-
-          let editTools = this._getEditTools();
-
-          this.disableLayerEditing(leafletMap);
-
-          featureLayerLoad.enableEdit(leafletMap);
-          featureLayerLoad.layerId = layerId;
-
-          this._checkAndEnableSnap(snap, snapLayers, snapDistance, snapOnlyVertex, true);
-          editTools.on(&#x27;editable:editing&#x27;, (e) =&gt; {
-            if (Ember.isEqual(Ember.guidFor(e.layer), Ember.guidFor(featureLayerLoad))) {
-              leafletObject.editLayer(e.layer);
-            }
-          });
-
-          editTools.once(&#x27;editable:disable&#x27;, this._stopSnap, this);
-
-          resolve(featureLayerLoad);
-        });
-      }).catch((e) =&gt; {
-        reject(e);
-      });
-    });
-  },
-
-  /**
-    Cancel edit for layer objects.
-
-    @method cancelLayerEdit
-    @param {[String]} layerIds array id of layer object.
-    @return {Ember.RSVP.Promise} Returns promise.
-  */
-  cancelLayerEdit(layerIds) {
-    let e = {
-      layerIds: layerIds,
-      results: Ember.A()
-    };
-    let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
-    let editTools = this._getEditTools();
-    editTools.off(&#x27;editable:drawing:end&#x27;);
-    editTools.off(&#x27;editable:editing&#x27;);
-    editTools.stopDrawing();
-    leafletMap.fire(&#x27;flexberry-map:cancelEdit&#x27;, e);
-    return Ember.RSVP.all(e.results);
-  },
-
-  /**
-    Cancel edit for layer object.
-
-    @method cancelEdit
-    @param {Object} layer layer object.
-    @return nothing
-  */
-  cancelEdit(layer) {
-    let editTools = this._getEditTools();
-    editTools.off(&#x27;editable:drawing:end&#x27;);
-    editTools.off(&#x27;editable:editing&#x27;);
-    editTools.stopDrawing();
-    this._stopSnap();
-
-    if (!Ember.isNone(layer) &amp;&amp; !Ember.isNone(layer.layerId)) {
-      let [, leafletObject] = this._getModelLeafletObject(layer.layerId);
-      let id = leafletObject.getLayerId(layer);
-      let e = {
-        layerIds: [layer.layerId],
-        ids: [id],
-        results: Ember.A()
-      };
-      let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
-      leafletMap.fire(&#x27;flexberry-map:cancelEdit&#x27;, e);
-      layer.layerId = null;
+    } else if (leafletLayer instanceof L.Path) {
+      this._renderOnLeafletPath({ path: leafletLayer, style });
+    } else if (leafletLayer instanceof L.Marker) {
+      this._renderOnLeafletMarker({ marker: leafletLayer, style });
     }
   },
 
   /**
-    Start visual creating of feature
+    Applies layer-style to the specified leaflet marker.
 
-    @method startNewObject
-    @param {String} layerId Id of layer in that should started editing
-    @param {Object} properties New layer properties
-    @param {Boolean} snap Snap or not
-    @param {Array} snapLayers Layers for snap
-    @param {Integer} snapDistance in pixels
-    @param {Boolean} snapOnlyVertex or segments too
-    @returns {Object} Layer object
+    @method _renderOnLeafletLayer
+    @param {Object} options Method options.
+    @param {&lt;a =ref=&quot;http://leafletjs.com/reference-1.2.0.html#marker&quot;&gt;L.Marker&lt;/a&gt;} options.marker Leaflet marker to which layer-style must be applied.
+    @param {Object} options.style Hash containing style settings.
   */
-  startNewObject(layerId, properties, snap, snapLayers, snapDistance, snapOnlyVertex) {
-    return new Ember.RSVP.Promise((resolve, reject) =&gt; {
-      try {
-        let [layerModel, leafletObject] = this._getModelLeafletObject(layerId);
-
-        let editTools = this._getEditTools();
-        let newLayer;
-
-        let finishDraw = () =&gt; {
-          editTools.off(&#x27;editable:drawing:end&#x27;, finishDraw, this);
-          editTools.stopDrawing();
-          let defaultProperties = layerModel.get(&#x27;settingsAsObject.defaultProperties&#x27;) || {};
-          newLayer.feature = { type: &#x27;Feature&#x27;, properties: Ember.merge(defaultProperties, properties) };
-          newLayer.remove();
-
-          let e = { layers: [newLayer], results: Ember.A() };
-          leafletObject.fire(&#x27;load&#x27;, e);
-
-          Ember.RSVP.allSettled(e.results).then(() =&gt; {
-            this._stopSnap();
-
-            this._checkAndEnableSnap(snap, snapLayers, snapDistance, snapOnlyVertex, true);
-            editTools.once(&#x27;editable:disable&#x27;, this._stopSnap, this);
-            resolve(newLayer);
-          });
-        };
-
-        editTools.on(&#x27;editable:drawing:end&#x27;, finishDraw, this);
-
-        let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
-        leafletMap.fire(&#x27;flexberry-map:switchToDefaultMapTool&#x27;);
-        if (editTools.drawing()) {
-          editTools.stopDrawing();
-        }
-
-        this.disableLayerEditing(leafletMap);
-
-        switch (layerModel.get(&#x27;settingsAsObject.typeGeometry&#x27;).toLowerCase()) {
-          case &#x27;polygon&#x27;:
-            newLayer = editTools.startPolygon();
-            break;
-          case &#x27;polyline&#x27;:
-            newLayer = editTools.startPolyline();
-            break;
-          case &#x27;marker&#x27;:
-            newLayer = editTools.startMarker();
-            break;
-          default:
-            throw &#x27;Unknown layer type: &#x27; + layerModel.get(&#x27;settingsAsObject.typeGeometry&#x27;);
-        }
-        this._checkAndEnableSnap(snap, snapLayers, snapDistance, snapOnlyVertex, false);
-        newLayer.layerId = layerId;
-      } catch (error) {
-        reject(error);
-      }
-    });
-  },
-
-  _checkAndEnableSnap(snap, snapLayers, snapDistance, snapOnlyVertex, edit) {
-    this._stopSnap();
-
-    if (snap) {
-      let layers = snapLayers.map((id) =&gt; {
-        let [, leafletObject] = this._getModelLeafletObject(id);
-        return leafletObject;
-      }).filter(l =&gt; !!l);
-      layers.forEach((l, i) =&gt; {
-        l.on(&#x27;load&#x27;, this._setSnappingFeatures, this);
-      });
-      this.set(&#x27;_snapLayersGroups&#x27;, layers);
-      this._setSnappingFeatures();
-
-      if (snapDistance) {
-        this.set(&#x27;_snapDistance&#x27;, snapDistance);
-      }
-
-      if (!Ember.isNone(snapOnlyVertex)) {
-        this.set(&#x27;_snapOnlyVertex&#x27;, snapOnlyVertex);
-      }
-
-      this._startSnap(edit);
-    }
-  },
-
-  _stopSnap() {
-    let editTools = this._getEditTools();
-    editTools.off(&#x27;editable:drawing:move&#x27;, this._handleSnapping, this);
-    editTools.off(&#x27;editable:drawing:click&#x27;, this._drawClick, this);
-
-    let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
-    leafletMap.off(&#x27;editable:vertex:drag&#x27;, this._handleSnapping, this);
-
-    let layers = this.get(&#x27;_snapLayersGroups&#x27;);
-    if (layers) {
-      layers.forEach((l, i) =&gt; {
-        if (l) {
-          l.off(&#x27;load&#x27;, this._setSnappingFeatures, this);
-        }
-      });
-    }
-
-    this._cleanupSnapping();
-  },
-
-  _startSnap(edit) {
-    let editTools = this._getEditTools();
-    let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
-
-    if (edit) {
-      leafletMap.on(&#x27;editable:vertex:drag&#x27;, this._handleSnapping, this);
-    } else {
-      // маркер, который будет показывать возможную точку прилипания
-      this.set(&#x27;_snapMarker&#x27;, L.marker(leafletMap.getCenter(), {
-        icon: editTools.createVertexIcon({ className: &#x27;leaflet-div-icon leaflet-drawing-icon&#x27; }),
-        opacity: 1,
-        zIndexOffset: 1000
-      }));
-
-      editTools.on(&#x27;editable:drawing:move&#x27;, this._handleSnapping, this);
-      editTools.on(&#x27;editable:drawing:click&#x27;, this._drawClick, this);
-    }
-  },
-
-  /**
-    Get editTools.
-
-    @method _getEditTools
-    @return {Object} EditTools.
-    @private
-  */
-  _getEditTools() {
-    let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
-    let editTools = Ember.get(leafletMap, &#x27;editTools&#x27;);
-    if (Ember.isNone(editTools)) {
-      editTools = new L.Editable(leafletMap);
-      Ember.set(leafletMap, &#x27;editTools&#x27;, editTools);
-    }
-
-    return editTools;
-  },
-
-  /**
-    Return leaflet layer thats corresponds to passed layerId.
-
-    @method getLayerModel
-    @param {String} layerId Layer ID
-    @returns {Object} Layer
-  */
-  getLayerModel(layerId) {
-    const layer = this.get(&#x27;mapLayer&#x27;).findBy(&#x27;id&#x27;, layerId);
-    if (Ember.isNone(layer)) {
-      throw &#x60;Layer &#x27;${layerId}&#x27; not found&#x60;;
-    }
-
-    return layer;
-  },
-
-  /**
-    Get [layerModel, leafletObject, featureLayer] by layer id or layer id and object id.
-
-    @param {string} layerId Layer id.
-    @param {Object[]} featureIds Array object id.
-    @param {Boolean} load flag which indicate load or get feature
-    @param {Boolean} loadNew flag which indicate load new feature or not
-    @returns {[layerModel, leafletObject, featureLayer]} Get [layerModel, leafletObject, featureLayer] or [layerModel, leafletObject, undefined].
-    @private
-  */
-  _getModelLayerFeature(layerId, featureIds, load = false, loadNew = false) {
-    return new Ember.RSVP.Promise((resolve, reject) =&gt; {
-      let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
-
-      let e = {
-        featureIds: featureIds,
-        layer: layerId,
-        load: load,
-        loadNew: loadNew,
-        results: Ember.A()
-      };
-
-      leafletMap.fire(&#x27;flexberry-map:getOrLoadLayerFeatures&#x27;, e);
-      if (Ember.isEmpty(e.results)) {
-        reject(&#x60;Layer &#x27;${layerId}&#x27; not found&#x60;);
-        return;
-      }
-
-      let features = Ember.get(e.results[0], &#x27;features&#x27;);
-      if (features instanceof Ember.RSVP.Promise) {
-        features.then((layerObject) =&gt; {
-          if (Ember.isEmpty(layerObject) || Ember.isNone(layerObject)) {
-            reject(&#x60;Object &#x27;${featureIds}&#x27; not found&#x60;);
-            return;
-          }
-
-          let featureLayer = [];
-          if (load) {
-            let layers = layerObject._layers;
-            if (!Ember.isNone(featureIds) &amp;&amp; featureIds.length &gt; 0) {
-              featureLayer = Object.values(layers).filter(feature =&gt; {
-                const layerFeatureId = this._getLayerFeatureId(e.results[0].layerModel, feature);
-                return featureIds.some((f) =&gt; { return layerFeatureId === f; });
-              });
-            }
+  _renderOnLeafletMarker({ marker, style }) {
+    if (style &amp;&amp; Ember.isArray(style.marker)) {
+      let icons = Ember.A();
+      style.marker.forEach(styleSetting =&gt; {
+        let type = Ember.get(styleSetting, &#x27;type&#x27;);
+        let style = Ember.get(styleSetting, &#x27;style&#x27;);
+        if (Ember.isNone(marker.styleIsSet) || !marker.styleIsSet) {
+          if (type === &#x27;image&#x27;) {
+            icons.addObject(new L.Icon(style));
           } else {
-            featureLayer = layerObject;
+            icons.addObject(new L.Icon.Default());
           }
-
-          resolve([e.results[0].layerModel, e.results[0].leafletObject, featureLayer]);
-        }).catch(() =&gt; {
-          reject(&#x60;Object &#x27;${featureIds}&#x27; not found&#x60;);
-        });
-      } else {
-        reject(&#x27;Result is not promise&#x27;);
+        }
+      });
+      marker.setIcon(icons);
+    } else {
+      let type = Ember.get(style.marker, &#x27;type&#x27;);
+      let styleOptions = Ember.get(style.marker, &#x27;style&#x27;);
+      if (Ember.isNone(marker.styleIsSet) || !marker.styleIsSet) {
+        if (type === &#x27;image&#x27;) {
+          marker.setIcon(new L.Icon(styleOptions));
+        } else {
+          marker.setIcon(new L.Icon.Default());
+        }
       }
-    });
-  },
-
-  /**
-    Get [layerModel, leafletObject] by layer id.
-
-    @param {string} layerId Layer id.
-    @returns {[layerModel, leafletObject]} Get [layerModel, leafletObject].
-    @private
-  */
-  _getModelLeafletObject(layerId) {
-    let layerModel = this.get(&#x27;mapLayer&#x27;).findBy(&#x27;id&#x27;, layerId);
-    if (Ember.isNone(layerModel)) {
-      throw &#x60;Layer &#x27;${layerId}&#x27; not found&#x60;;
     }
-
-    let leafletObject = layerModel.get(&#x27;_leafletObject&#x27;);
-
-    if (leafletObject instanceof L.MarkerClusterGroup) {
-      leafletObject = Ember.get(leafletObject, &#x27;_originalVectorLayer&#x27;);
-    }
-
-    return [layerModel, leafletObject];
-  },
-
-  /**
-    Start creating multy objects.
-
-    @method startChangeMultyLayerObject
-    @param {string} layerId Layer id.
-    @param {Object} featureLayer Feature layer.
-    @param {Boolean} snap Snap or not
-    @param {Array} snapLayers Layers for snap
-    @param {Integer} snapDistance in pixels
-    @param {Boolean} snapOnlyVertex or segments too
-    @return nothing
-  */
-  startChangeMultyLayerObject(layerId, featureLayer, snap, snapLayers, snapDistance, snapOnlyVertex) {
-    let [layerModel, leafletObject] = this._getModelLeafletObject(layerId);
-
-    let editTools = this._getEditTools();
-    let newLayer;
-    featureLayer.layerId = layerId;
-
-    const disableDraw = () =&gt; {
-      editTools.off(&#x27;editable:drawing:end&#x27;, disableDraw, this);
-      editTools.stopDrawing();
-
-      this._stopSnap();
-      var featureCollection = {
-        type: &#x27;FeatureCollection&#x27;,
-        features: [featureLayer.toGeoJSON(), newLayer.toGeoJSON()]
-      };
-
-      // Coordinate union.
-      let fcCombined = turfCombine.default(featureCollection);
-      const featureCombined = L.geoJSON(fcCombined);
-      const combinedLeaflet = featureCombined.getLayers()[0];
-      featureLayer.setLatLngs(combinedLeaflet.getLatLngs());
-      featureLayer.disableEdit();
-      featureLayer.enableEdit();
-
-      newLayer.remove();
-
-      // We note that the shape was edited.
-      leafletObject.editLayer(featureLayer);
-
-      this._checkAndEnableSnap(snap, snapLayers, snapDistance, snapOnlyVertex, true);
-      editTools.once(&#x27;editable:disable&#x27;, this._stopSnap, this);
-    };
-
-    let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
-    this.disableLayerEditing(leafletMap);
-
-    editTools.on(&#x27;editable:drawing:end&#x27;, disableDraw, this);
-
-    switch (layerModel.get(&#x27;settingsAsObject.typeGeometry&#x27;).toLowerCase()) {
-      case &#x27;polygon&#x27;:
-        newLayer = editTools.startPolygon();
-        break;
-      case &#x27;polyline&#x27;:
-        newLayer = editTools.startPolyline();
-        break;
-      case &#x27;marker&#x27;:
-        newLayer = editTools.startMarker();
-        break;
-      default:
-        throw &#x27;Unknown layer type: &#x27; + layerModel.get(&#x27;settingsAsObject.typeGeometry&#x27;);
-    }
-
-    this._checkAndEnableSnap(snap, snapLayers, snapDistance, snapOnlyVertex, false);
   }
 });
 

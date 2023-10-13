@@ -445,9 +445,6 @@ let copyLayer = function(layerModel, store, ignoreLinks) {
   // Copy &#x27;leafletObjectGetter&#x27; function into created empty model.
   copyLeafletObjectGetter(layerModel, layerModelCopy);
 
-  //Copy &#x27;returnLeafletObject&#x27; function into created empty model.
-  copyReturnLeafletObject(layerModel, layerModelCopy);
-
   return layerModelCopy;
 };
 
@@ -499,12 +496,6 @@ let copyLeafletObjectGetter = function(layerModel, layerModelCopy) {
   let leafletObjectGetter = layerModel.get(&#x27;leafletObjectGetter&#x27;);
 
   layerModelCopy.set(&#x27;leafletObjectGetter&#x27;, leafletObjectGetter);
-};
-
-let copyReturnLeafletObject = function(layerModel, layerModelCopy) {
-  let returnLeafletObject = layerModel.get(&#x27;returnLeafletObject&#x27;);
-
-  layerModelCopy.set(&#x27;returnLeafletObject&#x27;, returnLeafletObject);
 };
 
 export {

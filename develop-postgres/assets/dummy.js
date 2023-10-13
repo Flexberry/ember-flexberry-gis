@@ -1232,6 +1232,14 @@ define('dummy/components/legends/kml-legend', ['exports', 'ember-flexberry-gis/c
     }
   });
 });
+define('dummy/components/legends/layers-styles/combo', ['exports', 'ember-flexberry-gis/components/legends/layers-styles/combo'], function (exports, _emberFlexberryGisComponentsLegendsLayersStylesCombo) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisComponentsLegendsLayersStylesCombo['default'];
+    }
+  });
+});
 define('dummy/components/legends/layers-styles/empty', ['exports', 'ember-flexberry-gis/components/legends/layers-styles/empty'], function (exports, _emberFlexberryGisComponentsLegendsLayersStylesEmpty) {
   Object.defineProperty(exports, 'default', {
     enumerable: true,
@@ -4675,6 +4683,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/l
     assert.ok(true, 'modules/ember-flexberry-gis/components/legends/layers-styles/-private/categorized.js should pass jshint.');
   });
 });
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/legends/layers-styles/combo.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/components/legends/layers-styles');
+  test('modules/ember-flexberry-gis/components/legends/layers-styles/combo.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/components/legends/layers-styles/combo.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/legends/layers-styles/combo.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/components/legends/layers-styles/combo.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/components/legends/layers-styles/combo.js should pass jshint.');
+  });
+});
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/legends/layers-styles/empty.jscs-test', ['exports'], function (exports) {
   module('JSCS - modules/ember-flexberry-gis/components/legends/layers-styles');
   test('modules/ember-flexberry-gis/components/legends/layers-styles/empty.js should pass jscs', function () {
@@ -5598,6 +5619,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/initializers
     assert.ok(true, 'modules/ember-flexberry-gis/initializers/coordinate-reference-systems.js should pass jshint.');
   });
 });
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/initializers/leaflet-canvas.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/initializers');
+  test('modules/ember-flexberry-gis/initializers/leaflet-canvas.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/initializers/leaflet-canvas.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/initializers/leaflet-canvas.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/initializers/leaflet-canvas.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/initializers/leaflet-canvas.js should pass jshint.');
+  });
+});
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/initializers/leaflet-editable-measures.jscs-test', ['exports'], function (exports) {
   module('JSCS - modules/ember-flexberry-gis/initializers');
   test('modules/ember-flexberry-gis/initializers/leaflet-editable-measures.js should pass jscs', function () {
@@ -5882,6 +5916,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/layers-style
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'modules/ember-flexberry-gis/layers-styles/-private/categorized.js should pass jshint.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/layers-styles/combo.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/layers-styles');
+  test('modules/ember-flexberry-gis/layers-styles/combo.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/layers-styles/combo.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/layers-styles/combo.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/layers-styles/combo.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/layers-styles/combo.js should pass jshint.');
   });
 });
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/layers-styles/empty.jscs-test', ['exports'], function (exports) {
@@ -6285,6 +6332,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/en/c
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'modules/ember-flexberry-gis/locales/en/components/flexberry-edit-layer-feature.js should pass jshint.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/en/components/flexberry-identify-file.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/locales/en/components');
+  test('modules/ember-flexberry-gis/locales/en/components/flexberry-identify-file.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/locales/en/components/flexberry-identify-file.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/en/components/flexberry-identify-file.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/locales/en/components/flexberry-identify-file.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/locales/en/components/flexberry-identify-file.js should pass jshint.');
   });
 });
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/en/components/flexberry-identify-panel.jscs-test', ['exports'], function (exports) {
@@ -7728,6 +7788,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/ru/c
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'modules/ember-flexberry-gis/locales/ru/components/flexberry-edit-layer-feature.js should pass jshint.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/ru/components/flexberry-identify-file.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/locales/ru/components');
+  test('modules/ember-flexberry-gis/locales/ru/components/flexberry-identify-file.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/locales/ru/components/flexberry-identify-file.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/ru/components/flexberry-identify-file.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/locales/ru/components/flexberry-identify-file.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/locales/ru/components/flexberry-identify-file.js should pass jshint.');
   });
 });
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/locales/ru/components/flexberry-identify-panel.jscs-test', ['exports'], function (exports) {
@@ -10070,6 +10143,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/mixins/geom-
     assert.ok(true, 'modules/ember-flexberry-gis/mixins/geom-only-map-tool.js should pass jshint.');
   });
 });
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/mixins/layer-label.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/mixins');
+  test('modules/ember-flexberry-gis/mixins/layer-label.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/mixins/layer-label.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/mixins/layer-label.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/mixins/layer-label.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/mixins/layer-label.js should pass jshint.');
+  });
+});
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/mixins/layer-model.jscs-test', ['exports'], function (exports) {
   module('JSCS - modules/ember-flexberry-gis/mixins');
   test('modules/ember-flexberry-gis/mixins/layer-model.js should pass jscs', function () {
@@ -12323,6 +12409,20 @@ define('dummy/initializers/injectStore', ['exports', 'ember'], function (exports
     initialize: _ember['default'].K
   };
 });
+define('dummy/initializers/leaflet-canvas', ['exports', 'ember-flexberry-gis/initializers/leaflet-canvas'], function (exports, _emberFlexberryGisInitializersLeafletCanvas) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisInitializersLeafletCanvas['default'];
+    }
+  });
+  Object.defineProperty(exports, 'initialize', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisInitializersLeafletCanvas.initialize;
+    }
+  });
+});
 define('dummy/initializers/leaflet-editable-measures', ['exports', 'dummy/config/environment', 'ember-flexberry-gis/initializers/leaflet-editable-measures'], function (exports, _dummyConfigEnvironment, _emberFlexberryGisInitializersLeafletEditableMeasures) {
 
   // Override initializer to pass into it baseUrl from config/environment.js.
@@ -12871,6 +12971,14 @@ define('dummy/layers-prototyping-modes/metadata-mode', ['exports', 'ember-flexbe
     enumerable: true,
     get: function get() {
       return _emberFlexberryGisLayersPrototypingModesMetadataMode['default'];
+    }
+  });
+});
+define('dummy/layers-styles/combo', ['exports', 'ember-flexberry-gis/layers-styles/combo'], function (exports, _emberFlexberryGisLayersStylesCombo) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisLayersStylesCombo['default'];
     }
   });
 });
@@ -42374,7 +42482,7 @@ catch(err) {
 /* jshint ignore:start */
 
 if (!runningTests) {
-  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","intersectionArea":"intersectionArea","keywordForCosmos":"cosmos","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata","featureExportApi":"http://134.209.30.115:1818/api/featureexport","getNearDistance":"http://134.209.30.115:1818/odata/GetNearDistance"},"wmsEnv":"","log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0+85303575"});
+  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","intersectionArea":"intersectionArea","keywordForCosmos":"cosmos","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata","featureExportApi":"http://134.209.30.115:1818/api/featureexport","getNearDistance":"http://134.209.30.115:1818/odata/GetNearDistance"},"wmsEnv":"","log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0+1cf131b5"});
 }
 
 /* jshint ignore:end */
