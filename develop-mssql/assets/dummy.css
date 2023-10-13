@@ -6622,6 +6622,17 @@ html.mobile .overflowed-cell .flexberry-simpledatetime .flatpickr .ui.ui-clear.b
 .mappanel .leaflet-left .leaflet-control-zoom.leaflet-bar {
   margin-top: 5px;
 }
+.mappanel .leaflet-left .leaflet-control-zoom.leaflet-bar .leaflet-control-zoom-view {
+  padding: 3px 4px;
+  font-size: 14px;
+  height: 22px;
+  line-height: 14px;
+  font-weight: 700;
+}
+.mappanel .leaflet-left .leaflet-control-zoom.leaflet-bar .leaflet-control-zoom-view:hover {
+  border: none;
+  background: #fff;
+}
 .mappanel .leaflet-left .leaflet-control-zoom.leaflet-bar a {
   padding-top: 3px;
 }
@@ -7374,7 +7385,7 @@ div.measure-drag-panel a.flexberry-map-tool.flexberry-measure-close-map-tool i.i
   flex-direction: row;
 }
 .layer-result-list .feature-result-item-caption {
-  padding-left: 8px;
+  padding-left: 5px;
   text-overflow: ellipsis;
   max-width: 80%;
   min-width: 350px;
@@ -7388,7 +7399,10 @@ div.measure-drag-panel a.flexberry-map-tool.flexberry-measure-close-map-tool i.i
 }
 .layer-result-list .feature-result-item a.icon.item.more {
   line-height: 5px;
-  z-index: 100;
+}
+.layer-result-list .feature-result-item a.icon.item.disabled-link {
+  pointer-events: none;
+  color: rgba(59, 66, 86, 0.4);
 }
 .layer-result-list .feature-result-item .more.submenu {
   position: absolute;
@@ -7407,12 +7421,6 @@ div.measure-drag-panel a.flexberry-map-tool.flexberry-measure-close-map-tool i.i
   padding-left: 7px;
   line-height: 1px;
 }
-.layer-result-list .feature-result-item .more.submenu div {
-  margin-bottom: 10px;
-}
-.layer-result-list .feature-result-item .icon.item.more {
-  width: 300px;
-}
 .layer-result-list .feature-result-item-toolbar .feature-result-item-edit-forms ~ .more.submenu {
   left: 62px;
 }
@@ -7421,10 +7429,10 @@ div.measure-drag-panel a.flexberry-map-tool.flexberry-measure-close-map-tool i.i
   position: relative;
 }
 .layer-result-list .feature-result-item-title .ui.checkbox {
-  margin: 0.25rem 0;
+  margin: 0.25rem;
 }
 .layer-result-list .feature-result-item-title .ui.checkbox label {
-  padding-left: 26px;
+  padding-left: 1rem;
 }
 .layer-result-list .feature-result-item-caption {
   max-width: 68%;
@@ -7433,10 +7441,6 @@ div.measure-drag-panel a.flexberry-map-tool.flexberry-measure-close-map-tool i.i
   font-size: 14px;
   color: #3C4F76;
   align-self: center;
-}
-.layer-result-list .feature-result-item-select.icon.item,
-.layer-result-list .feature-result-item-upload.icon.item {
-  font-size: 1.4em;
 }
 .layer-result-list .feature-result-item-list.icon.item {
   font-size: 1.35em;
@@ -7457,12 +7461,8 @@ div.measure-drag-panel a.flexberry-map-tool.flexberry-measure-close-map-tool i.i
 .layer-result-list .feature-result-item-toolbar {
   position: absolute;
   display: flex;
-  flex-direction: row;
-  width: 300px;
-  left: 28px;
-}
-.layer-result-list .feature-result-item-toolbar > .icon.item {
-  font-size: 1.15em;
+  justify-content: flex-end;
+  right: 0;
 }
 .layer-result-list .feature-result-item-toolbar .icon.favorites:before {
   font-family: Icons;
@@ -7476,20 +7476,24 @@ div.measure-drag-panel a.flexberry-map-tool.flexberry-measure-close-map-tool i.i
   padding: 0 !important;
   display: block;
   float: left;
+  width: auto;
+  height: auto;
+  margin: 0;
 }
 .layer-result-list .layer-result-list-toggler .title {
   display: flex;
   align-items: start;
 }
 .layer-result-list .layer-result-list-toggler .title .flexberry-toggler-caption {
-  margin-left: 6px;
+  margin: 2px 0 0 5px;
   display: block;
   float: left;
   max-width: 80%;
   font-size: 14px;
+  line-height: 20px;
 }
 .layer-result-list .flexberry-toggler {
-  padding: 5px;
+  padding-left: 4px;
   margin-bottom: 5px;
   margin-top: 5px;
 }
@@ -7550,11 +7554,13 @@ div.measure-drag-panel a.flexberry-map-tool.flexberry-measure-close-map-tool i.i
 .layer-result-list .feature-div-property-name {
   font-size: 12px;
   color: #8F928F;
-  padding: 10px 0px 5px 0px;
+  padding: 15px 0px 4px 0px;
+  line-height: normal;
 }
 .layer-result-list .feature-div-property-value {
   font-size: 12px;
   color: #343A32;
+  line-height: normal;
 }
 .layer-result-list .feature-div-property-value .table {
   width: 400px;
@@ -7567,7 +7573,7 @@ div.measure-drag-panel a.flexberry-map-tool.flexberry-measure-close-map-tool i.i
   height: 1em;
 }
 .layer-result-list .feature-result-item-content {
-  padding-left: 32px;
+  padding-left: 34px;
 }
 .details .detail.caption {
   font-size: 14px;
@@ -8047,9 +8053,11 @@ form.flexberry-edit-layermap .simple-layers-style .ui.tab.segment .ui.grid.style
   border: 1px solid #E5E5E5;
 }
 .mappanel .leaflet-left .leaflet-control-zoom.leaflet-bar a:not(.leaflet-disabled).active,
+.mappanel .leaflet-left .leaflet-control-zoom.leaflet-bar a:not(.leaflet-disabled, .leaflet-control-zoom-view):hover {
+  border: 1px solid #7ba7d9;
+}
 .mappanel .leaflet-left .leaflet-control-zoom.leaflet-bar a:not(.leaflet-disabled):hover {
   background: #fff;
-  border: 1px solid #7ba7d9;
 }
 .mappanel .leaflet-left .leaflet-control-zoom.leaflet-bar a:first-child {
   border-radius: 3.5px 3.5px 0px 0px;
@@ -8275,6 +8283,10 @@ div.measure-drag-panel .div-tools a.flexberry-map-tool i.star.icon:before {
 }
 .layer-result-list .flexberry-toggler-content {
   padding-top: 0px !important;
+}
+.layer-result-list a.icon.item.disabled-link {
+  pointer-events: none;
+  color: rgba(59, 66, 86, 0.4);
 }
 .layer-result-list .flexberry-toggler-content .item:not(.icon) .ui.table {
   margin-top: 15px;
@@ -17034,6 +17046,10 @@ ol.ui.horizontal.list li:before,
 }
 .layer-result-list .feature-result-item-buttons .icon.item {
   margin: 0 !important;
+  opacity: 0.75;
+}
+.layer-result-list .feature-result-item-buttons .icon.item:hover {
+  opacity: 1;
 }
 .layer-result-list .feature-result-item-buttons .icon.item.feature-result-item-select {
   left: 0px;
@@ -34170,6 +34186,10 @@ a.ui.card:hover,
   word-break: normal;
   word-wrap: break-word;
 }
+.ui.styled.accordion .title .flexberry-maplayer-caption-label.temp-item,
+.ui.styled.accordion .accordion .title .flexberry-maplayer-caption-label.temp-item {
+  color: rgba(59, 66, 86, 0.4);
+}
 .ui.accordion .content .layer-legend,
 .ui.accordion .content .layer-legend,
 .ui.accordion .accordion .content .layer-legend,
@@ -38784,7 +38804,7 @@ select.ui.dropdown {
 **************************************************************************************/
 .modals.dimmer .ui.scrolling.modal.flexberry-export-map-command-dialog,
 .ui.modal.flexberry-export-map-command-dialog {
-  width: calc(100vw - 60px) !important;
+  width: calc(100% - 60px) !important;
   top: 0;
   margin-top: 14px!important;
   position: fixed!important;
@@ -45518,18 +45538,22 @@ img.item-minus {
 .ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).active.title .button,
 .ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).title .flexberry-maplayer-opacity-label,
 .ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).active.title .flexberry-maplayer-opacity-label {
-  width: 30px;
-  height: 30px;
+  width: auto;
+  height: auto;
   color: #7ba7d9;
   background-color: #fff;
-  padding: 7px 5px;
-  margin: 3px 5px 2px 0px;
+  padding: 0;
+  margin: 0 5px 0 0;
 }
 .ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).title .button:hover,
 .ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).active.title .button:hover,
 .ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).title .flexberry-maplayer-opacity-label:hover,
 .ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).active.title .flexberry-maplayer-opacity-label:hover {
   background-color: #fff;
+}
+.ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).title .button.allmore,
+.ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).active.title .button.allmore {
+  margin: 0;
 }
 .ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).title .flexberry-maplayer-opacity-label,
 .ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).active.title .flexberry-maplayer-opacity-label {
@@ -45538,7 +45562,7 @@ img.item-minus {
 }
 .ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).title .button,
 .ui.right.sidebar .ui.styled.accordion .flexberry-treenode-header:not(.flexberry-checkbox).active.title .button {
-  vertical-align: top;
+  vertical-align: middle;
 }
 .ui.right.sidebar .ui.styled.accordion .content,
 .ui.right.sidebar .ui.styled.accordion .accordion .content {
@@ -45599,6 +45623,17 @@ img.item-minus {
   width: 100%;
   display: flex;
   margin-bottom: 5px;
+  align-items: center;
+}
+.ui.right.sidebar .ui.styled.accordion .content .layer-legend .layer-legend-image-wrapper:not(.wms),
+.ui.right.sidebar .ui.styled.accordion .accordion .content .layer-legend .layer-legend-image-wrapper:not(.wms) {
+  flex-direction: column;
+  align-items: flex-start;
+}
+.ui.right.sidebar .ui.styled.accordion .content .layer-legend .layer-legend-image-wrapper .layer-legend-zoom,
+.ui.right.sidebar .ui.styled.accordion .accordion .content .layer-legend .layer-legend-image-wrapper .layer-legend-zoom {
+  width: 100%;
+  padding: 2px;
 }
 .ui.right.sidebar .ui.styled.accordion .content .layer-legend .layer-legend-image-wrapper .layer-legend-image,
 .ui.right.sidebar .ui.styled.accordion .accordion .content .layer-legend .layer-legend-image-wrapper .layer-legend-image,
@@ -45613,6 +45648,7 @@ img.item-minus {
   margin: 5px 0px 0px 5px;
   max-width: 80%;
   width: 80%;
+  line-height: 1.2;
 }
 .flexberry-maplayers .flexberry-treenode .flexberry-treenode-header.title {
   border: none;
@@ -45628,19 +45664,14 @@ img.item-minus {
   display: flex;
   align-items: center;
 }
-.flexberry-maplayers .flexberry-treenode .flexberry-treenode-buttons-block {
-  position: absolute;
-  width: 200px;
-  top: -9px;
-  left: 30px;
-}
-.flexberry-maplayers .flexberry-treenode .flexberry-treenode-buttons-block a.icon.item.more {
-  line-height: 5px;
-}
 .flexberry-maplayers .flexberry-treenode .flexberry-treenode-buttons-block label.floated.flexberry-treenode-prevent-expand-collapse.flexberry-button.ui.button.icon {
   border: none;
   box-shadow: none;
   vertical-align: top;
+  opacity: 0.4;
+}
+.flexberry-maplayers .flexberry-treenode .flexberry-treenode-buttons-block label.floated.flexberry-treenode-prevent-expand-collapse.flexberry-button.ui.button.icon:hover {
+  opacity: 1;
 }
 .flexberry-maplayers .flexberry-treenode .flexberry-treenode-buttons-block .allmore.floated.flexberry-button.ui.button.icon {
   border: none;
@@ -45655,15 +45686,23 @@ img.item-minus {
   font-size: 26px;
 }
 .flexberry-maplayers .flexberry-treenode .flexberry-treenode-buttons-block .allmore.floated.flexberry-button.ui.button.icon .more.submenu {
-  width: 200px;
+  background-color: #FFFFFF;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  border: none;
+  width: 215px;
   height: auto;
   position: absolute;
-  top: 10px;
+  top: 1.5rem;
   z-index: 100;
-  background: #fff;
-  border: 1px solid #E5E5E5;
   border-radius: 3.5px;
   box-sizing: border-box;
+  text-wrap: wrap;
+  left: auto;
+  right: 0;
+}
+.flexberry-maplayers .flexberry-treenode .flexberry-treenode-buttons-block .allmore.floated.flexberry-button.ui.button.icon .more.submenu.reversed {
+  bottom: 1.5rem;
+  top: auto;
 }
 .flexberry-maplayers .flexberry-treenode .flexberry-treenode-buttons-block .allmore.floated.flexberry-button.ui.button.icon .more.submenu.reversed div {
   padding-top: 16px;
@@ -45690,9 +45729,13 @@ img.item-minus {
 }
 .flexberry-maplayers .flexberry-treenode .flexberry-treenode-buttons-block .allmore.floated.flexberry-button.ui.button.icon .more.submenu label.ui.button {
   color: #343A32;
-  font-size: 11px;
-  width: 200px;
+  font-size: 12px;
   text-align: left;
+  opacity: 0.75;
+  padding: 8px 0px 2px 0px;
+}
+.flexberry-maplayers .flexberry-treenode .flexberry-treenode-buttons-block .allmore.floated.flexberry-button.ui.button.icon .more.submenu label.ui.button:hover {
+  opacity: 1;
 }
 .flexberry-maplayers .flexberry-treenode .flexberry-maplayer-type-icon.folder ~ .flexberry-treenode-buttons-block {
   left: 48px;
@@ -46539,6 +46582,9 @@ img.item-minus {
 .ui.right.sidebar.treeview .flexberry-maplayers .flexberry-maplayer-caption-label {
   cursor: pointer;
   font-size: 14px;
+}
+.ui.right.sidebar.treeview .flexberry-maplayers .flexberry-maplayer-caption-label.temp-item {
+  color: rgba(59, 66, 86, 0.4);
 }
 .ui.right.sidebar.treeview .flexberry-maplayers .flexberry-maplayer-type-icon.without-folder ~ .flexberry-treenode-buttons-block .allmore .more.submenu {
   width: 210px;
@@ -49549,6 +49595,9 @@ img.item-minus {
 }
 .flexberry-identify-panel .file-panel button {
   padding: 4px 6px;
+}
+.temp-layer-info > i {
+  color: #DBA939 !important;
 }
 /**
  * All ember-flexberry addon styles.
