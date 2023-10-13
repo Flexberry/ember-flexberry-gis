@@ -361,10 +361,6 @@ export default Ember.Component.extend(
             Ember.set(this.get('layerModel'), 'leafletObjectGetter', this.getLeafletObject.bind(this));
           }
 
-          if (Ember.isNone(this.get('layerModel.returnLeafletObject'))) {
-            Ember.set(this.get('layerModel'), 'returnLeafletObject', this.returnLeafletObject.bind(this));
-          }
-
           // Save the reference to the instance method for getting attributes options.
           if (Ember.isNone(this.get('layerModel._attributesOptions'))) {
             Ember.set(this.get('layerModel'), '_attributesOptions', this._getAttributesOptions.bind(this));
@@ -423,12 +419,8 @@ export default Ember.Component.extend(
 
       this._removeLabelsFromLeafletContainer();
 
-      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('additionalZoomLabel'))) {
-        this.set('additionalZoomLabel', null);
-      }
-
-      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer'))) {
-        this.set('_labelsLayer', null);
+      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('labelsLayers'))) {
+        this.set('labelsLayers', null);
       }
 
       this.set('_leafletObject', null);
@@ -671,17 +663,12 @@ export default Ember.Component.extend(
     */
     _removeLabelsFromLeafletContainer() {
       let leafletContainer = this.get('leafletContainer');
-      if (!Ember.isNone(this.get('additionalZoomLabel'))) {
-        this.get('additionalZoomLabel').forEach(zoomLabels => {
-          if (leafletContainer.hasLayer(zoomLabels)) {
-            leafletContainer.removeLayer(zoomLabels);
+      if (!Ember.isNone(this.get('labelsLayers'))) {
+        this.get('labelsLayers').forEach(labelsLayer => {
+          if (leafletContainer.hasLayer(labelsLayer)) {
+            leafletContainer.removeLayer(labelsLayer);
           }
         });
-      }
-
-      let labelsLayer = this.get('_labelsLayer');
-      if (!Ember.isNone(labelsLayer) && leafletContainer.hasLayer(labelsLayer)) {
-        leafletContainer.removeLayer(labelsLayer);
       }
     },
 

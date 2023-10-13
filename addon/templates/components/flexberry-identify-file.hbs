@@ -2,7 +2,7 @@
   <div class="field upload flexberry-file">
     <label class="label">Файл {{#if (not file.name)}}*{{/if}}</label>
     <div class="ui action input upload">
-      <input type="file" accept=".zip,.GEOJSON,.gml,.xls,.xlsx,.csv,.xml,.gps,.kml" class="hidden" onchange={{action "clickFile"}} id="{{idfile}}"/>
+      <input type="file" accept="{{acceptFiles}}" class="hidden" onchange={{action "clickFile"}} id="{{idfile}}"/>
       <input class="flexberry-file-filename-input" readonly="readonly" value={{file.name}}/>
       <label for="{{idfile}}" class="ui icon button upload flexberry-file-add-button">
         <i class="ui upload icon" title="Прикрепить файл"></i>
@@ -19,9 +19,20 @@
     }}
   </div>
 
+  {{#if needGeometryType}}
+    <div class="field geometryField">
+      <label>{{t "components.flexberry-identify-file.geometry-type.caption"}} <span class="required">*</span></label>
+      {{flexberry-dropdown
+        class=(concat "fluid geometryType")
+        items=_geometryTypes
+        value=_geometryType
+        displayCaptions=true
+      }}
+    </div>
+  {{/if}}
   {{#if needGeometryFieldName}}
     <div class="field geometryField">
-      <label>Название полей с геометрией в файле*</label>
+      <label>{{t "components.flexberry-identify-file.geometry-fields.caption"}} <span class="required">*</span></label>
       {{flexberry-dropdown
         class=(concat "fluid geometryField1")
         items=_availableFields

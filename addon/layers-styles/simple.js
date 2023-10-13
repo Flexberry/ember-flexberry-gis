@@ -56,10 +56,21 @@ export default BaseLayerStyle.extend({
   _renderOnLeafletPath({ path, style }) {
     if (Ember.isNone(path.styleIsSet) || !path.styleIsSet) {
       let pathStyle = style.path || {};
-      pathStyle = Ember.$.extend(true, {}, pathStyle, {
-        // Fill must be disabled for non polygon layers, because filled polylines and other lines-like geometries looks ugly in leaflet.
-        fill: pathStyle.fill === true && path instanceof L.Polygon
-      });
+      if (Ember.isArray(pathStyle)) {
+        pathStyle.forEach(style => {
+          style =  Ember.$.extend(true, {}, style, {
+            // Fill must be disabled for non polygon layers, because filled polylines and other lines-like geometries looks ugly in leaflet.
+            fill: style.fill === true && path instanceof L.Polygon
+          });
+        });
+        pathStyle.count = pathStyle.length;
+      } else {
+        pathStyle = Ember.$.extend(true, {}, pathStyle, {
+          // Fill must be disabled for non polygon layers, because filled polylines and other lines-like geometries looks ugly in leaflet.
+          fill: pathStyle.fill === true && path instanceof L.Polygon
+        });
+        pathStyle.count = 0;
+      }
 
       path.setStyle(pathStyle);
     }
@@ -155,6 +166,16 @@ export default BaseLayerStyle.extend({
 
     // Set line dashig.
     let pathStyle = Ember.get(style, 'path') || {};
+    if (Ember.isArray(pathStyle)) {
+      pathStyle.forEach(style => {
+        this._legendPath(style, ctx, target, canvas);
+      });
+    } else {
+      this._legendPath(pathStyle, ctx, target, canvas);
+    }
+  },
+
+  _legendPath(pathStyle, ctx, target, canvas) {
     let dashArray = Ember.get(pathStyle, 'dashArray');
     dashArray = Ember.isBlank(dashArray) ?
       [] :
@@ -184,7 +205,12 @@ export default BaseLayerStyle.extend({
       ctx.globalAlpha = 1;
 
       let fillColor = Ember.get(pathStyle, 'fillColor');
+      let fillStyle = Ember.get(pathStyle, 'fillStyle');
+      let imagePattern = Ember.get(pathStyle, 'imagePattern');
       ctx.fillStyle = fillColor;
+      if (fillStyle === 'pattern' && imagePattern) {
+        ctx.fillStyle = ctx.createPattern(imagePattern, 'repeat');
+      }
 
       ctx.fill();
     }

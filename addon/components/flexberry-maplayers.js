@@ -481,24 +481,24 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
         let layersToAdd = this.get('currentLayers');
         let layers = this.get('layers');
         layers.forEach(layer => {
-          const leafletLayer = layer.returnLeafletObject();
+          let leafletLayer = layer.get('_leafletObject');
+
+          if (leafletLayer instanceof L.MarkerClusterGroup) {
+            leafletLayer = Ember.get(leafletLayer, '_originalVectorLayer');
+          }
+
           if (leafletLayer && leafletLayer.getContainer && leafletLayer.getContainer()) {
             leafletLayer.getContainer().style.clip = '';
           }
 
           if (layer.get('settingsAsObject.labelSettings.signMapObjects')) {
-            const labelsAdditionalOriginalLayer = layer.returnLeafletObject().additionalZoomLabel;
-            if (labelsAdditionalOriginalLayer) {
-              labelsAdditionalOriginalLayer.forEach(zoomLabels => {
-                if (zoomLabels && zoomLabels.getContainer && zoomLabels.getContainer()) {
+            const labelsLayersOriginalLayer = leafletLayer.labelsLayers;
+            if (labelsLayersOriginalLayer) {
+              labelsLayersOriginalLayer.forEach(labelsLayers => {
+                if (labelsLayers && labelsLayers.getContainer && labelsLayers.getContainer()) {
                   leafletLayer.getContainer().style.clip = '';
                 }
               });
-            }
-
-            const labelsOriginalLayer = layer.returnLeafletObject()._labelsLayer;
-            if (labelsOriginalLayer && labelsOriginalLayer.getContainer && labelsOriginalLayer.getContainer()) {
-              leafletLayer.getContainer().style.clip = '';
             }
           }
         });

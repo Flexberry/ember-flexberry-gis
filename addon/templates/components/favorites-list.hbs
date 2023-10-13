@@ -1,31 +1,36 @@
-{{flexberry-button
-  class="fav-list clear"
-  tooltip=(t "components.favourites-list.clear.tooltip")
-  iconClass="icon-guideline-clear-layers"
-  click=(action "clear")
-}}
+
 {{#if _showFavorites}}
-  <button type="submit" class="ui button primary compare{{if compareBtnDisabled " disabled"}}" {{action "compareTwoGeometries"}} disabled={{compareBtnDisabled}}>
-    {{t "components.compare-object-geometries.compare-objects-caption"}}
-  </button>
-  {{layer-result-list
-    results=data
-    serviceLayer=serviceLayer
-    leafletMap=leafletMap
-    favoriteMode=true
-    allowFavorite=true
-    addToFavorite=(action "addToFavorite")
-    addToCompareGeometries=(action 'addToCompareGeometries')
-    showIntersectionPanel=(action 'showIntersectionPanel')
-    availableCRS=availableCRS
-    _selectedFeature=_selectedFeature
-    pane="zoomto"
-    zoomToCopy=true
-    copyStyle=(hash
-      weight=2
-      fill=false
-    )
-  }}
+  <div class="favorites-block-buttons">
+    <button type="submit" class="ui button compare{{if compareBtnDisabled " disabled"}}" {{action "compareTwoGeometries"}} disabled={{compareBtnDisabled}}>
+      {{t "components.compare-object-geometries.compare-objects-caption"}}
+    </button>
+    {{flexberry-button
+      class="fav-list clear"
+      tooltip=(t "components.favourites-list.clear.tooltip")
+      iconClass="icon-guideline-clear-layers"
+      click=(action "clear")
+    }}
+  </div>
+  <div class="favorites-block-result">
+    {{layer-result-list
+      results=data
+      serviceLayer=serviceLayer
+      leafletMap=leafletMap
+      favoriteMode=true
+      allowFavorite=true
+      addToFavorite=(action "addToFavorite")
+      addToCompareGeometries=(action 'addToCompareGeometries')
+      showIntersectionPanel=(action 'showIntersectionPanel')
+      availableCRS=availableCRS
+      _selectedFeature=_selectedFeature
+      pane="zoomto"
+      zoomToCopy=true
+      copyStyle=(hash
+        weight=2
+        fill=false
+      )
+    }}
+  </div>
 {{else}}
   <div class="ui form loading"></div>
 {{/if}}

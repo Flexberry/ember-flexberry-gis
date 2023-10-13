@@ -452,6 +452,13 @@ let FlexberryMapComponent = Ember.Component.extend(
   */
   _zoomend(e) {
     this.sendAction('zoomend', e);
+    let $leafletContainer = this.get('_$leafletContainer');
+    if (this.get('zoomControl') && $leafletContainer) {
+      let $zoomControl = $leafletContainer.find('.leaflet-control-container .leaflet-control-zoom');
+      let $viewZoom = $zoomControl.find('.leaflet-control-zoom-view');
+      let zoom = e.target._zoom.toFixed(1);
+      Ember.$($viewZoom[0]).text(zoom);
+    }
   },
 
   /**
@@ -468,6 +475,9 @@ let FlexberryMapComponent = Ember.Component.extend(
       let $zoomControl = $leafletContainer.find('.leaflet-control-container .leaflet-control-zoom');
       let $zoomInButton = $zoomControl.find('.leaflet-control-zoom-in');
       let $zoomOutButton = $zoomControl.find('.leaflet-control-zoom-out');
+
+      let viewZoom = '<a class="leaflet-control-zoom-view">' + Number(this.get('zoom')).toFixed(1) + '</a>';
+      Ember.$($zoomInButton[0]).after(viewZoom);
 
       $zoomInButton.attr('title', i18n.t('components.flexberry-map.zoom-control.zoom-in-button.title'));
       $zoomOutButton.attr('title', i18n.t('components.flexberry-map.zoom-control.zoom-out-button.title'));

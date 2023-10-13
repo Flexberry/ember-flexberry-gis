@@ -6,7 +6,7 @@
     </div>
   {{/if}}
   {{#each _legends as |legend|}}
-    <div class="{{flexberryClassNames.imageWrapper}}" style="{{if legend.style legend.style ""}}">
+    <div class="{{flexberryClassNames.imageWrapper}} wms" style="{{if legend.style legend.style ""}}">
       <img class="{{flexberryClassNames.image}}" src="{{legend.src}}" onerror='this.style.display = "none"'>
       {{#if legend.useLayerName}}
         <label class="layer-legend-caption">{{legend.layerName}}</label>

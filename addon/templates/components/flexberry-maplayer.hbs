@@ -48,7 +48,12 @@
           {{/if}}
         </div>
         {{#if (and (not compare.compareLayersEnabled) (not readonly))}}
-          <div class="flexberry-treenode-buttons-block hidden">
+          <div class="flexberry-treenode-buttons-block">
+            {{#if (and isGroup layer.temp)}}
+              <div class="temp-layer-info">
+                  <i class="icon-guideline-circle-info" title="Группа содержит временные слои, которые не сохраняются и будут удалены после закрытия или обновления страницы"></i>
+              </div>
+            {{/if}}
             {{#if (and (not readonlyData) (not isGroup) _editOperationIsAvailable _addFeatureIsAvailableApi)}}
               {{flexberry-button
                 class=(concat flexberryClassNames.attributesButton " floated " flexberryClassNames.preventExpandCollapse)
@@ -65,7 +70,7 @@
                 click=(action "onAttributesButtonClick" readonlyData)
               }}
             {{/if}}
-            {{#if (and (not readonly) (or _fitBoundsOperationIsAvailable (not readonlyModel) createNewLayerAccess))}}
+            {{#if (and (not readonly) (or _fitBoundsOperationIsAvailable (not readonlyModel) createNewLayerAccess) (not layer.temp))}}
               <div class="allmore floated flexberry-button ui button icon {{flexberryClassNames.preventExpandCollapse}}">
                 {{flexberry-button
                   class=(concat "more floated " flexberryClassNames.preventExpandCollapse)
@@ -73,13 +78,6 @@
                   click=(action "onSubmenu")
                 }}
                 <div class="more submenu {{if isSubmenu '' 'hidden'}}">
-                  <div class="button-more-submenu">
-                  {{flexberry-button
-                    class=(concat "more submenu floated " flexberryClassNames.preventExpandCollapse)
-                    iconClass="icon-guideline-points"
-                    click=(action "onSubmenu")
-                  }}
-                  </div>
                   {{#if _fitBoundsOperationIsAvailable}}
                     {{flexberry-button
                       class=(concat flexberryClassNames.boundsButton " floated " flexberryClassNames.preventExpandCollapse)
