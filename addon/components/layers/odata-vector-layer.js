@@ -1519,7 +1519,31 @@ export default BaseVectorLayer.extend({
         let loadedBounds = this.get('loadedBounds');
         let leafletMap = this.get('leafletMap');
         let obj = this.get('_adapterStoreModelProjectionGeom');
-        let bounds = L.rectangle(leafletMap.getBounds());
+
+        let boundsMap = leafletMap.getBounds();
+        if (boundsMap && leafletObject.options && leafletObject.options.crs && leafletObject.options.crs.bounds) {
+          let crsBounds = leafletObject.options.crs.bounds;
+          if (boundsMap._northEast.lat > crsBounds.max.x) {
+            boundsMap._northEast.lat = crsBounds.max.x;
+          }
+
+          if (boundsMap._northEast.lng > crsBounds.max.y) {
+            boundsMap._northEast.lng = crsBounds.max.y;
+          }
+
+          if ((boundsMap._southWest.lat < 0 && boundsMap._southWest.lat < crsBounds.min.x)
+            || (boundsMap._southWest.lat > 0 && boundsMap._southWest.lat > crsBounds.min.x)) {
+              boundsMap._southWest.lat = crsBounds.min.x;
+          }
+
+          if ((boundsMap._southWest.lng < 0 && boundsMap._southWest.lng < crsBounds.min.y)
+            || (boundsMap._southWest.lng > 0 && boundsMap._southWest.lng > crsBounds.min.y)) {
+              boundsMap._southWest.lng = crsBounds.min.y;
+          }
+        }
+
+        let bounds = L.rectangle(boundsMap);
+
         if (!Ember.isNone(leafletObject.showLayerObjects)) {
           leafletObject.showLayerObjects = false;
         }
