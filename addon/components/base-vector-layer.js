@@ -1332,14 +1332,14 @@ export default BaseLayer.extend(layerLabel, {
         boundsMap._northEast.lng = crsBounds.max.y;
       }
 
-      if ((boundsMap._southWest.lat < 0 && boundsMap._southWest.lat < crsBounds.min.x)
-        || (boundsMap._southWest.lat > 0 && boundsMap._southWest.lat > crsBounds.min.x)) {
-          boundsMap._southWest.lat = crsBounds.min.x;
+      if ((boundsMap._southWest.lat < 0 && boundsMap._southWest.lat < crsBounds.min.x) ||
+        (boundsMap._southWest.lat > 0 && boundsMap._southWest.lat > crsBounds.min.x)) {
+        boundsMap._southWest.lat = crsBounds.min.x;
       }
 
-      if ((boundsMap._southWest.lng < 0 && boundsMap._southWest.lng < crsBounds.min.y)
-        || (boundsMap._southWest.lng > 0 && boundsMap._southWest.lng > crsBounds.min.y)) {
-          boundsMap._southWest.lng = crsBounds.min.y;
+      if ((boundsMap._southWest.lng < 0 && boundsMap._southWest.lng < crsBounds.min.y) ||
+        (boundsMap._southWest.lng > 0 && boundsMap._southWest.lng > crsBounds.min.y)) {
+        boundsMap._southWest.lng = crsBounds.min.y;
       }
     }
 
