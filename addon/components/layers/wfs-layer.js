@@ -891,7 +891,6 @@ export default BaseVectorLayer.extend({
       leafletObject = this.returnLeafletObject();
     }
 
-    let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletObject)) {
       let show = this.get('visibility') || (!Ember.isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
       let continueLoad = !leafletObject.options.showExisting && leafletObject.options.continueLoading;
@@ -899,27 +898,7 @@ export default BaseVectorLayer.extend({
 
       let needPromise = false;
       if (continueLoad && show && checkMapZoom(leafletObject)) {
-        let bounds = leafletMap.getBounds();
-        if (bounds && leafletObject.options && leafletObject.options.crs && leafletObject.options.crs.bounds) {
-          let crsBounds = leafletObject.options.crs.bounds;
-          if (bounds._northEast.lat > crsBounds.max.x) {
-            bounds._northEast.lat = crsBounds.max.x;
-          }
-
-          if (bounds._northEast.lng > crsBounds.max.y) {
-            bounds._northEast.lng = crsBounds.max.y;
-          }
-
-          if ((bounds._southWest.lat < 0 && bounds._southWest.lat < crsBounds.min.x)
-            || (bounds._southWest.lat > 0 && bounds._southWest.lat > crsBounds.min.x)) {
-            bounds._southWest.lat = crsBounds.min.x;
-          }
-
-          if ((bounds._southWest.lng < 0 && bounds._southWest.lng < crsBounds.min.y)
-            || (bounds._southWest.lng > 0 && bounds._southWest.lng > crsBounds.min.y)) {
-            bounds._southWest.lng = crsBounds.min.y;
-          }
-        }
+        let bounds = this._boundsCrs(leafletObject);
 
         if (!Ember.isNone(leafletObject.showLayerObjects)) {
           leafletObject.showLayerObjects = false;
