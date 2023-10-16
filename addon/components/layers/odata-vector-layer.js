@@ -1517,9 +1517,12 @@ export default BaseVectorLayer.extend({
 
       if ((continueLoad && show && checkMapZoom(leafletObject)) || (showLayerObjects && continueLoad)) {
         let loadedBounds = this.get('loadedBounds');
-        let leafletMap = this.get('leafletMap');
         let obj = this.get('_adapterStoreModelProjectionGeom');
-        let bounds = L.rectangle(leafletMap.getBounds());
+
+        let boundsMap = this._boundsCrs(leafletObject);
+
+        let bounds = L.rectangle(boundsMap);
+
         if (!Ember.isNone(leafletObject.showLayerObjects)) {
           leafletObject.showLayerObjects = false;
         }

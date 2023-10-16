@@ -891,7 +891,6 @@ export default BaseVectorLayer.extend({
       leafletObject = this.returnLeafletObject();
     }
 
-    let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletObject)) {
       let show = this.get('visibility') || (!Ember.isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
       let continueLoad = !leafletObject.options.showExisting && leafletObject.options.continueLoading;
@@ -899,7 +898,8 @@ export default BaseVectorLayer.extend({
 
       let needPromise = false;
       if (continueLoad && show && checkMapZoom(leafletObject)) {
-        let bounds = leafletMap.getBounds();
+        let bounds = this._boundsCrs(leafletObject);
+
         if (!Ember.isNone(leafletObject.showLayerObjects)) {
           leafletObject.showLayerObjects = false;
         }
