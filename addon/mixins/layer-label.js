@@ -1185,8 +1185,6 @@ export default Ember.Mixin.create({
     }
 
     Ember.$('path#' + id).attr('d', d);
-    Ember.$('svg#svg-' + id).attr('width', svg.getAttribute('width'));
-    Ember.$('svg#svg-' + id).attr('height', svg.getAttribute('height'));
 
     let options = layer._textOptions;
     let text = layer._text;
@@ -1199,8 +1197,8 @@ export default Ember.Mixin.create({
     let bbox = document.getElementById(id).getBBox();
     layer._svg.setAttribute('height', bbox.height + buffer);
     layer._svg.setAttribute('width', bbox.width + buffer);
-    document.getElementById(Ember.$(layer._svg)[0].getAttribute('id')).setAttribute('height', bbox.height + buffer);
-    document.getElementById(Ember.$(layer._svg)[0].getAttribute('id')).setAttribute('width', bbox.width + buffer);
+    Ember.$('svg#svg-' + id).attr('height', bbox.height + buffer);
+    Ember.$('svg#svg-' + id).attr('width', bbox.width + buffer);
   },
 
   _createLabelsLayerOldSettings(labelsLayersArray) {
@@ -1356,7 +1354,11 @@ export default Ember.Mixin.create({
         labelsLayers.forEach(labelLayer => {
           leafletContainer.addLayer(labelLayer);
           labelLayer.eachLayer(layer => {
-            this._setOptionsForSvg(layer);
+            if (layer instanceof L.FeatureGroup) {
+              layer.eachLayer(partLayer => { this._setOptionsForSvg(partLayer); });
+            } else {
+              this._setOptionsForSvg(layer);
+            }
           });
         });
       }

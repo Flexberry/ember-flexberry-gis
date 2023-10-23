@@ -63,7 +63,7 @@ export default BaseMarkerStyle.extend({
     @param {Object} options.style Hash containing style settings.
     @param {Object} [options.target = 'preview'] Render target ('preview' or 'legend').
   */
-  renderOnCanvas({ canvas, style, target }) {
+  renderOnCanvas({ canvas, style, target, scale }) {
     let width = canvas.width;
     let height = canvas.height;
     let ctx = canvas.getContext('2d');
@@ -76,12 +76,19 @@ export default BaseMarkerStyle.extend({
       // Draw loaded image.
       let iconWidth = style.iconSize[0] || iconImage.width;
       let iconHeight = style.iconSize[1] || iconImage.height;
+      let xOffset = 0;
+      let yOffset = 0;
 
-      let scale = iconWidth > width || iconHeight > height ?
-        Math.min(width / iconWidth, height / iconHeight) :
-        1;
-      let xOffset = (width - iconWidth * scale) / 2;
-      let yOffset = (height - iconHeight * scale) / 2;
+      if (Ember.isNone(scale)) {
+        scale = iconWidth > width || iconHeight > height ?
+          Math.min(width / iconWidth, height / iconHeight) :
+          1;
+        xOffset = (width - iconWidth * scale) / 2;
+        yOffset = (height - iconHeight * scale) / 2;
+      } else {
+        xOffset = width/2 - style.iconAnchor[0] * scale;
+        yOffset = height/2 - style.iconAnchor[1] * scale;
+      }
 
       let drawIconImage = function() {
         ctx.drawImage(iconImage, xOffset, yOffset, iconWidth * scale, iconHeight * scale);

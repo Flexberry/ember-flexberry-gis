@@ -96,6 +96,22 @@ export default Ember.Service.extend({
   },
 
   /**
+    Gets style for default marker.
+
+    @method getDefaultMarkerSettings
+    @return {Object} Hash containing default style settings (for example { iconUrl: ..., shadowUrl: ..., ... }).
+  */
+  getDefaultMarkerSettings() {
+    let markerStyle = this._getMarkerStyle('image');
+    if (Ember.isNone(markerStyle)) {
+      Ember.Logger.error(`Service 'markers-styles-renderer' can't get default style settings for '${type}' markers-style.`);
+      return null;
+    }
+
+    return markerStyle.getDefaultStyleSettings();
+  },
+
+  /**
     Applies marker-style to the specified leaflet marker.
 
     @method renderOnLeafletMarker
@@ -126,10 +142,14 @@ export default Ember.Service.extend({
     @param {Object} options.styleSettings Hash containing style settings.
     @param {Object} [options.target = 'preview'] Render target ('preview' or 'legend').
   */
-  renderOnCanvas({ canvas, styleSettings, target }) {
+  renderOnCanvas({ canvas, styleSettings, target, scale }) {
     target = target || 'preview';
 
     if (Ember.isArray(styleSettings)) {
+      if (!scale && styleSettings.length > 1) {
+        scale = this.calcScale(styleSettings);
+      }
+
       styleSettings.forEach(settings => {
         let type = Ember.get(settings, 'type');
         let style = Ember.get(settings, 'style');
@@ -140,7 +160,7 @@ export default Ember.Service.extend({
           return;
         }
 
-        markerStyle.renderOnCanvas({ canvas, style, target });
+        markerStyle.renderOnCanvas({ canvas, style, target, scale });
       });
     } else {
       let type = Ember.get(styleSettings, 'type');
@@ -152,8 +172,80 @@ export default Ember.Service.extend({
         return;
       }
 
-      markerStyle.renderOnCanvas({ canvas, style, target });
+      markerStyle.renderOnCanvas({ canvas, style, target, scale });
+    }
+  },
+
+  /**
+    Size canvas for legend.
+
+    @property size
+    @type Number
+    @default 24
+    @private
+  */
+  _size: 24,
+
+  /**
+    Calculate scale for canvas of legend.
+
+    @method calcScale
+    @param {Object} styleSettings style settings.
+    @return {Object} Hash containing style settings.
+  */
+  calcScale(styleSettings) {
+    let maxSize = this.get('_size');
+    let max = 0;
+    let top = 0, bottom = 0, left = 0, right = 0;
+    if (!Ember.isArray(styleSettings)) {
+      let style = styleSettings.style;
+      if (styleSettings.type === 'default') {
+        style = this.getDefaultMarkerSettings();
+      }
+
+      let iconWidth = style.iconSize[0];
+      let iconHeight = style.iconSize[1];
+      return iconWidth > maxSize || iconHeight > maxSize ?
+        Math.min(maxSize / iconWidth, maxSize / iconHeight) :
+        1;
     }
 
+    if (styleSettings.length === 1) {
+      let iconSize;
+      if (styleSettings.get('firstObject.type') === 'default') {
+        iconSize = this.getDefaultMarkerSettings().iconSize;
+      } else {
+        iconSize = styleSettings.get('firstObject.style.iconSize')
+      }
+
+      max = Math.max(iconSize[0], iconSize[1]);
+    } else {
+      styleSettings.forEach((settings) => {
+        let style = settings.style;
+        if (settings.type === 'default') {
+          style = this.getDefaultMarkerSettings();
+        }
+
+        if (!Ember.isNone(style)) {
+          let width = style.iconSize[0];
+          let height = style.iconSize[1];
+          let anchorH = style.iconAnchor[1];
+          let anchorW = style.iconAnchor[0];
+
+          if ((0 - anchorH) < top) { top = (0 - anchorH); }
+          if ((height - anchorH) > bottom) { bottom = (height - anchorH); }
+          if ((0 - anchorW) < left) { left = (0 - anchorW); }
+          if ((width - anchorW) > right) { right = (width - anchorW); }
+        }
+      });
+
+      max = (Math.max(Math.abs(top), Math.abs(bottom), Math.abs(left), Math.abs(right))) * 2;
+    }
+
+    if (max <= maxSize) {
+      return 1;
+    }
+
+    return maxSize / max;
   }
 });
