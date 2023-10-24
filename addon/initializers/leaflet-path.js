@@ -10,11 +10,14 @@ export function initialize() {
         for (let i = 0; i < this.options.count; i++) {
           if (!style.count) {
             this.setStyleCustom(this, this.options[i], style);
+          } else {
+            L.Path.prototype.setStyle.call(this, style);
           }
         }
       } else {
         L.Path.prototype.setStyle.call(this, style);
       }
+
       if (!Ember.isNone(this.layerModel) && Ember.isNone(this.layerModel.legendStyle)) {
         this.layerModel.legendStyle = {
           type: 'simple',
