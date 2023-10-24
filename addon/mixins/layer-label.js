@@ -244,27 +244,29 @@ export default Ember.Mixin.create({
 
   _labelValue(layer, property, prop, str) {
     let leafletObject = this.returnLeafletObject();
-    let readFormat = Ember.get(leafletObject, 'readFormat.featureType.fieldTypes');
-    let label = layer.feature.properties[property];
-    let dateTimeFormat = this.displaySettings.dateTimeFormat;
-    let dateFormat = this.displaySettings.dateFormat;
-    if (readFormat[property] === 'date' && (!Ember.isEmpty(dateFormat) || !Ember.isEmpty(dateTimeFormat))) {
-      let dateValue = moment(label);
+      if (!Ember.isNone(leafletObject)) {
+      let readFormat = Ember.get(leafletObject, 'readFormat.featureType.fieldTypes');
+      let label = layer.feature.properties[property];
+      let dateTimeFormat = this.displaySettings.dateTimeFormat;
+      let dateFormat = this.displaySettings.dateFormat;
+      if (readFormat[property] === 'date' && (!Ember.isEmpty(dateFormat) || !Ember.isEmpty(dateTimeFormat))) {
+        let dateValue = moment(label);
 
-      if (dateValue.isValid()) {
-        if (!Ember.isEmpty(dateTimeFormat)) {
-          label = (dateValue.format('HH:mm:ss') === '00:00:00') ? dateValue.format(dateFormat) : dateValue.format(dateTimeFormat);
-        } else {
-          label = dateValue.format(dateFormat);
+        if (dateValue.isValid()) {
+          if (!Ember.isEmpty(dateTimeFormat)) {
+            label = (dateValue.format('HH:mm:ss') === '00:00:00') ? dateValue.format(dateFormat) : dateValue.format(dateTimeFormat);
+          } else {
+            label = dateValue.format(dateFormat);
+          }
         }
       }
-    }
 
-    if (Ember.isNone(label)) {
-      label = '';
-    }
+      if (Ember.isNone(label)) {
+        label = '';
+      }
 
-    str = str.replace(prop.outerHTML, label);
+      str = str.replace(prop.outerHTML, label);
+    }
 
     return str;
   },
