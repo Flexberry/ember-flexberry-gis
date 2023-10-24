@@ -206,7 +206,7 @@ export default Ember.Mixin.create({
     @param {Object} layer layer
     @return {String} string with replaced property
   */
-  _applyProperty(str, layer) {
+  _applyProperty(str, layer, leafletObject) {
     let hasReplace = false;
     let propName;
 
@@ -230,7 +230,7 @@ export default Ember.Mixin.create({
         }
 
         if (property && layer.feature.properties && layer.feature.properties.hasOwnProperty(property)) {
-          str = this._labelValue(layer, property, prop, str);
+          str = this._labelValue(layer, property, prop, str, leafletObject);
         }
       }
     }
@@ -242,31 +242,32 @@ export default Ember.Mixin.create({
     }
   },
 
-  _labelValue(layer, property, prop, str) {
-    let leafletObject = this.returnLeafletObject();
-      if (!Ember.isNone(leafletObject)) {
-      let readFormat = Ember.get(leafletObject, 'readFormat.featureType.fieldTypes');
-      let label = layer.feature.properties[property];
-      let dateTimeFormat = this.displaySettings.dateTimeFormat;
-      let dateFormat = this.displaySettings.dateFormat;
-      if (readFormat[property] === 'date' && (!Ember.isEmpty(dateFormat) || !Ember.isEmpty(dateTimeFormat))) {
-        let dateValue = moment(label);
+  _labelValue(layer, property, prop, str, leafletObject) {
+    if (Ember.isNone(leafletObject)) {
+      leafletObject = this.returnLeafletObject();
+    }
 
-        if (dateValue.isValid()) {
-          if (!Ember.isEmpty(dateTimeFormat)) {
-            label = (dateValue.format('HH:mm:ss') === '00:00:00') ? dateValue.format(dateFormat) : dateValue.format(dateTimeFormat);
-          } else {
-            label = dateValue.format(dateFormat);
-          }
+    let readFormat = Ember.get(leafletObject, 'readFormat.featureType.fieldTypes');
+    let label = layer.feature.properties[property];
+    let dateTimeFormat = this.displaySettings.dateTimeFormat;
+    let dateFormat = this.displaySettings.dateFormat;
+    if (readFormat[property] === 'date' && (!Ember.isEmpty(dateFormat) || !Ember.isEmpty(dateTimeFormat))) {
+      let dateValue = moment(label);
+
+      if (dateValue.isValid()) {
+        if (!Ember.isEmpty(dateTimeFormat)) {
+          label = (dateValue.format('HH:mm:ss') === '00:00:00') ? dateValue.format(dateFormat) : dateValue.format(dateTimeFormat);
+        } else {
+          label = dateValue.format(dateFormat);
         }
       }
-
-      if (Ember.isNone(label)) {
-        label = '';
-      }
-
-      str = str.replace(prop.outerHTML, label);
     }
+
+    if (Ember.isNone(label)) {
+      label = '';
+    }
+
+    str = str.replace(prop.outerHTML, label);
 
     return str;
   },
@@ -331,9 +332,8 @@ export default Ember.Mixin.create({
     @method _showLabelsMovingMap
   */
   _showLabelsMovingMap() {
-    let labelsLayers = this.get('labelsLayers');
     let leafletObject = this.returnLeafletObject();
-    this._createStringLabel(leafletObject.getLayers(), labelsLayers);
+    this._createStringLabel(leafletObject.getLayers(), leafletObject);
   },
 
   /**
@@ -342,7 +342,7 @@ export default Ember.Mixin.create({
     @method _createStringLabel
     @param {Array} layers new layers for add labels
   */
-  _createStringLabel(layers) {
+  _createStringLabel(layers, leafletObject) {
     if (layers) {
       let labelsLayerZoom = this._getLabelsLayersZoom();
       if (labelsLayerZoom) {
@@ -360,7 +360,7 @@ export default Ember.Mixin.create({
           `text-align: ${Ember.get(optionsLabel, 'captionFontAlign')};${halo}`);
 
         this._checkLabelInView(layers, labelsLayerZoom).forEach(layer => {
-          let label = layer.labelValue || this._applyFunction(this._applyProperty(labelSettingsString, layer));
+          let label = layer.labelValue || this._applyFunction(this._applyProperty(labelSettingsString, layer, leafletObject));
           this._createLabel(label, layer, style, labelsLayerZoom);
         });
       }
@@ -1317,7 +1317,7 @@ export default Ember.Mixin.create({
 
       this._labelsLayersCreate(leafletObject);
       labelsLayers = this.get('labelsLayers');
-      this._createStringLabel(layers, labelsLayers);
+      this._createStringLabel(layers, leafletObject);
       if (Ember.isNone(this.get('labelsLayers'))) {
         this.set('labelsLayers', labelsLayers);
         this._checkZoomPane();
