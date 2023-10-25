@@ -1190,19 +1190,24 @@ export default Ember.Mixin.create({
     Ember.$('svg#svg-' + id).attr('width', svg.getAttribute('width'));
     Ember.$('svg#svg-' + id).attr('height', svg.getAttribute('height'));
 
-    let options = layer._textOptions;
     let text = layer._text;
     let textNode = layer._textNode;
 
-    this._setAlignForLine(layer, text, options.align, textNode, settingsLabel);
+    this._setAlignForLine(layer, text, settingsLabel.options.captionFontAlign, textNode, settingsLabel);
     Ember.$('text#text-' + id).attr('dx', textNode.getAttribute('dx'));
 
     let buffer = 150;
-    let bbox = document.getElementById(id).getBBox();
-    layer._svg.setAttribute('height', bbox.height + buffer);
-    layer._svg.setAttribute('width', bbox.width + buffer);
-    document.getElementById(Ember.$(layer._svg)[0].getAttribute('id')).setAttribute('height', bbox.height + buffer);
-    document.getElementById(Ember.$(layer._svg)[0].getAttribute('id')).setAttribute('width', bbox.width + buffer);
+    let pathElement = document.getElementById(id);
+    if (pathElement) {
+      let bbox = pathElement.getBBox();
+      layer._svg.setAttribute('height', bbox.height + buffer);
+      layer._svg.setAttribute('width', bbox.width + buffer);
+      let svgElement = document.getElementById(Ember.$(layer._svg)[0].getAttribute('id'));
+      if (svgElement) {
+        svgElement.setAttribute('height', bbox.height + buffer);
+        svgElement.setAttribute('width', bbox.width + buffer);
+      }
+    }
   },
 
   _createLabelsLayerOldSettings(labelsLayersArray) {
