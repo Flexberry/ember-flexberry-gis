@@ -49,6 +49,10 @@ export default Ember.Mixin.create({
     let layer = null;
 
     try {
+      let features = response.features.filter((feature) => {
+        return !Ember.isNone(feature.geometry) && feature.geometry.coordinates.flat(5).length > 0;
+      });
+      response.features = features;
       layer = this._createLayer(response, crs);
     }
     catch (ex) {
