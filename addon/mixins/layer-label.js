@@ -206,7 +206,7 @@ export default Ember.Mixin.create({
     @param {Object} layer layer
     @return {String} string with replaced property
   */
-  _applyProperty(str, layer) {
+  _applyProperty(str, layer, leafletObject) {
     let hasReplace = false;
     let propName;
 
@@ -230,7 +230,7 @@ export default Ember.Mixin.create({
         }
 
         if (property && layer.feature.properties && layer.feature.properties.hasOwnProperty(property)) {
-          str = this._labelValue(layer, property, prop, str);
+          str = this._labelValue(layer, property, prop, str, leafletObject);
         }
       }
     }
@@ -242,8 +242,11 @@ export default Ember.Mixin.create({
     }
   },
 
-  _labelValue(layer, property, prop, str) {
-    let leafletObject = this.returnLeafletObject();
+  _labelValue(layer, property, prop, str, leafletObject) {
+    if (Ember.isNone(leafletObject)) {
+      leafletObject = this.returnLeafletObject();
+    }
+
     let readFormat = Ember.get(leafletObject, 'readFormat.featureType.fieldTypes');
     let label = layer.feature.properties[property];
     let dateTimeFormat = this.displaySettings.dateTimeFormat;
@@ -329,9 +332,8 @@ export default Ember.Mixin.create({
     @method _showLabelsMovingMap
   */
   _showLabelsMovingMap() {
-    let labelsLayers = this.get('labelsLayers');
     let leafletObject = this.returnLeafletObject();
-    this._createStringLabel(leafletObject.getLayers(), labelsLayers);
+    this._createStringLabel(leafletObject.getLayers(), leafletObject);
   },
 
   /**
@@ -340,7 +342,7 @@ export default Ember.Mixin.create({
     @method _createStringLabel
     @param {Array} layers new layers for add labels
   */
-  _createStringLabel(layers) {
+  _createStringLabel(layers, leafletObject) {
     if (layers) {
       let labelsLayerZoom = this._getLabelsLayersZoom();
       if (labelsLayerZoom) {
@@ -358,7 +360,7 @@ export default Ember.Mixin.create({
           `text-align: ${Ember.get(optionsLabel, 'captionFontAlign')};${halo}`);
 
         this._checkLabelInView(layers, labelsLayerZoom).forEach(layer => {
-          let label = layer.labelValue || this._applyFunction(this._applyProperty(labelSettingsString, layer));
+          let label = layer.labelValue || this._applyFunction(this._applyProperty(labelSettingsString, layer, leafletObject));
           this._createLabel(label, layer, style, labelsLayerZoom);
         });
       }
@@ -1188,19 +1190,24 @@ export default Ember.Mixin.create({
     Ember.$('svg#svg-' + id).attr('width', svg.getAttribute('width'));
     Ember.$('svg#svg-' + id).attr('height', svg.getAttribute('height'));
 
-    let options = layer._textOptions;
     let text = layer._text;
     let textNode = layer._textNode;
 
-    this._setAlignForLine(layer, text, options.align, textNode, settingsLabel);
+    this._setAlignForLine(layer, text, settingsLabel.options.captionFontAlign, textNode, settingsLabel);
     Ember.$('text#text-' + id).attr('dx', textNode.getAttribute('dx'));
 
     let buffer = 150;
-    let bbox = document.getElementById(id).getBBox();
-    layer._svg.setAttribute('height', bbox.height + buffer);
-    layer._svg.setAttribute('width', bbox.width + buffer);
-    document.getElementById(Ember.$(layer._svg)[0].getAttribute('id')).setAttribute('height', bbox.height + buffer);
-    document.getElementById(Ember.$(layer._svg)[0].getAttribute('id')).setAttribute('width', bbox.width + buffer);
+    let pathElement = document.getElementById(id);
+    if (pathElement) {
+      let bbox = pathElement.getBBox();
+      layer._svg.setAttribute('height', bbox.height + buffer);
+      layer._svg.setAttribute('width', bbox.width + buffer);
+      let svgElement = document.getElementById(Ember.$(layer._svg)[0].getAttribute('id'));
+      if (svgElement) {
+        svgElement.setAttribute('height', bbox.height + buffer);
+        svgElement.setAttribute('width', bbox.width + buffer);
+      }
+    }
   },
 
   _createLabelsLayerOldSettings(labelsLayersArray) {
@@ -1315,7 +1322,7 @@ export default Ember.Mixin.create({
 
       this._labelsLayersCreate(leafletObject);
       labelsLayers = this.get('labelsLayers');
-      this._createStringLabel(layers, labelsLayers);
+      this._createStringLabel(layers, leafletObject);
       if (Ember.isNone(this.get('labelsLayers'))) {
         this.set('labelsLayers', labelsLayers);
         this._checkZoomPane();
