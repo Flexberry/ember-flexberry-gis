@@ -13,6 +13,8 @@ export default Ember.Mixin.create({
 
   coordinate: null,
   geometryType: null,
+  _geometryTypes: [],
+  _geometryType: null,
 
   importErrorMessage: t('components.geometry-add-modes.import.import-error.message'),
   createLayerErrorMessage: t('components.geometry-add-modes.import.create-layer-error.message'),
@@ -47,6 +49,10 @@ export default Ember.Mixin.create({
     let layer = null;
 
     try {
+      let features = response.features.filter((feature) => {
+        return !Ember.isNone(feature.geometry) && feature.geometry.coordinates.flat(5).length > 0;
+      });
+      response.features = features;
       layer = this._createLayer(response, crs);
     }
     catch (ex) {
@@ -125,6 +131,10 @@ export default Ember.Mixin.create({
       let data = new FormData();
       data.append(file.name, file);
       data.append('crs', this.get('coordinate'));
+
+      if (this.get('needGeometryType')) {
+        data.append('typeGeometryLayer', this.get('_geometryType'));
+      }
 
       if (this.get('needGeometryFieldName')) {
         data.append('geometryFieldFile', this.get('geometryFieldFile'));
