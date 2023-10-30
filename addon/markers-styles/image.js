@@ -54,6 +54,18 @@ export default BaseMarkerStyle.extend({
     }
   },
 
+  getAnchor(style) {
+    let aW = 0.5;
+    let aH = 0.5;
+
+    if (!Ember.isNone(style)) {
+      aW = style.iconAnchor[0];
+      aH = style.iconAnchor[1];
+    }
+
+    return [Math.round(Number(style.iconSize[0]) * aW), Math.round(Number(style.iconSize[1]) * aH)];
+  },
+
   /**
     Renderes marker-style preview on the specified canvas element.
 
@@ -72,6 +84,7 @@ export default BaseMarkerStyle.extend({
     ctx.clearRect(0, 0, width, height);
 
     var iconImage = new Image();
+    let _this = this;
     iconImage.onload = function() {
       // Draw loaded image.
       let iconWidth = style.iconSize[0] || iconImage.width;
@@ -79,16 +92,9 @@ export default BaseMarkerStyle.extend({
       let xOffset = 0;
       let yOffset = 0;
 
-      if (Ember.isNone(scale)) {
-        scale = iconWidth > width || iconHeight > height ?
-          Math.min(width / iconWidth, height / iconHeight) :
-          1;
-        xOffset = (width - iconWidth * scale) / 2;
-        yOffset = (height - iconHeight * scale) / 2;
-      } else {
-        xOffset = width/2 - style.iconAnchor[0] * scale;
-        yOffset = height/2 - style.iconAnchor[1] * scale;
-      }
+      let anchor = _this.getAnchor(style);
+      xOffset = width/2 - anchor[0] * scale;
+      yOffset = height/2 - anchor[1] * scale;
 
       let drawIconImage = function() {
         ctx.drawImage(iconImage, xOffset, yOffset, iconWidth * scale, iconHeight * scale);
