@@ -93,8 +93,8 @@ export default BaseMarkerStyle.extend({
       let yOffset = 0;
 
       let anchor = _this.getAnchor(style);
-      xOffset = width/2 - anchor[0] * scale;
-      yOffset = height/2 - anchor[1] * scale;
+      xOffset = width / 2 - anchor[0] * scale;
+      yOffset = height / 2 - anchor[1] * scale;
 
       let drawIconImage = function() {
         ctx.drawImage(iconImage, xOffset, yOffset, iconWidth * scale, iconHeight * scale);

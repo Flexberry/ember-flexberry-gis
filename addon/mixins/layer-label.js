@@ -762,10 +762,11 @@ export default Ember.Mixin.create({
       width = options.width;
       height = options.height;
     } else {
-      let style = styleMarker.style;
-      if (styleMarker.type === 'default') {
+      let style = stylesMarker.style;
+      if (stylesMarker.type === 'default') {
         style = this._defaultMarkerOptions(settingsLabel.location.locationPoint);
       }
+
       let iconSize = style.iconSize;
       let iconAnchor = style.iconAnchor;
       if (!Ember.isNone(iconAnchor) && iconAnchor.length === 2 && !Ember.isNone(iconSize) && iconSize.length === 2) {

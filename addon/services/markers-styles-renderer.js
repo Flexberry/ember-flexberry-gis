@@ -104,7 +104,7 @@ export default Ember.Service.extend({
   getDefaultMarkerSettings() {
     let markerStyle = this._getMarkerStyle('image');
     if (Ember.isNone(markerStyle)) {
-      Ember.Logger.error(`Service 'markers-styles-renderer' can't get default style settings for '${type}' markers-style.`);
+      Ember.Logger.error(`Service 'markers-styles-renderer' can't get default style settings for default markers-style.`);
       return null;
     }
 
@@ -196,7 +196,10 @@ export default Ember.Service.extend({
   calcScale(styleSettings) {
     let maxSize = this.get('_size');
     let max = 0;
-    let top = 0, bottom = 0, left = 0, right = 0;
+    let top = 0;
+    let bottom = 0;
+    let left = 0;
+    let right = 0;
     if (!Ember.isArray(styleSettings)) {
       let style = styleSettings.style;
       if (styleSettings.type === 'default') {
@@ -215,7 +218,7 @@ export default Ember.Service.extend({
       if (styleSettings.get('firstObject.type') === 'default') {
         iconSize = this.getDefaultMarkerSettings().iconSize;
       } else {
-        iconSize = styleSettings.get('firstObject.style.iconSize')
+        iconSize = styleSettings.get('firstObject.style.iconSize');
       }
 
       max = Math.max(iconSize[0], iconSize[1]);
@@ -233,8 +236,11 @@ export default Ember.Service.extend({
           let anchorW = style.iconAnchor[0];
 
           if ((0 - anchorH) < top) { top = (0 - anchorH); }
+
           if ((height - anchorH) > bottom) { bottom = (height - anchorH); }
+
           if ((0 - anchorW) < left) { left = (0 - anchorW); }
+
           if ((width - anchorW) > right) { right = (width - anchorW); }
         }
       });
