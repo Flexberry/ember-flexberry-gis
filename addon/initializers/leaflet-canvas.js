@@ -41,6 +41,35 @@ export function initialize() {
     },
 
     /**
+      @method _updateCircle
+      Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/vector/Canvas.js#L302
+      Get ctx and call _fillStroke.
+    */
+    _updateCircle: function (layer) {
+
+      if (!this._drawing || layer._empty()) { return; }
+
+      var p = layer._point,
+          ctx = this._ctx,
+          r = Math.max(Math.round(layer._radius), 1),
+          s = (Math.max(Math.round(layer._radiusY), 1) || r) / r;
+
+      if (s !== 1) {
+        ctx.save();
+        ctx.scale(1, s);
+      }
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y / s, r, 0, Math.PI * 2, false);
+
+      if (s !== 1) {
+        ctx.restore();
+      }
+
+      this._fillStroke(ctx, layer.options);
+    },
+
+    /**
       @method _fillStroke
       Override https://github.com/Leaflet/Leaflet/blob/main/src/layer/vector/Canvas.js#L326
       If fillStyle is pattern, create pattern for ctx. Otherwise set color for fill.
