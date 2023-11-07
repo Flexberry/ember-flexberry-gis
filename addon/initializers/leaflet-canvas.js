@@ -49,10 +49,10 @@ export function initialize() {
 
       if (!this._drawing || layer._empty()) { return; }
 
-      var p = layer._point,
-          ctx = this._ctx,
-          r = Math.max(Math.round(layer._radius), 1),
-          s = (Math.max(Math.round(layer._radiusY), 1) || r) / r;
+      let p = layer._point;
+      let ctx = this._ctx;
+      let r = Math.max(Math.round(layer._radius), 1);
+      let s = (Math.max(Math.round(layer._radiusY), 1) || r) / r;
 
       if (s !== 1) {
         ctx.save();
