@@ -13,7 +13,7 @@
 @greencolor: #65A43F;
 @orangecolor: #EB1C24;
 @mediumbluecolor: #DDEBFF;
-
+@greyText: #848E99;
 
 /*******************************
       Components variables
