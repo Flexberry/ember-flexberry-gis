@@ -23,7 +23,9 @@ test('uploadFile should send post request with fileName and data to backend and 
     resolveRegistration() {
       return {
         'APP': {
-          'backendUrl': 'stubbackend'
+          'backendUrls': {
+            'fileUploadUrl': 'stubbackend'
+          }
         }
       };
     }
@@ -37,7 +39,7 @@ test('uploadFile should send post request with fileName and data to backend and 
 
   assert.ok(result instanceof Ember.RSVP.Promise);
   assert.ok(server.requests[0].requestBody.has('testFile'));
-  assert.equal(server.requests[0].url, 'stubbackend/controls/FileUploaderHandler.ashx?FileName=testFile');
+  assert.equal(server.requests[0].url, 'stubbackend?FileName=testFile');
   result.then((e) => {
     assert.equal(e, 'uploadfileresponse');
     done();
