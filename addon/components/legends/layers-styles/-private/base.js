@@ -18,7 +18,8 @@ const flexberryClassNames = {
   imageWrapper: 'layer-legend-image-wrapper',
   image: 'layer-legend-image',
   caption: 'layer-legend-caption',
-  zoom: 'layer-legend-zoom'
+  zoom: 'layer-legend-zoom',
+  marker: 'layer-legend-marker'
 };
 
 /**

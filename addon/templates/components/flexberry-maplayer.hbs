@@ -230,9 +230,15 @@
         }}
       {{/if}}
       {{#if (and layer.legendCanBeDisplayed hasBeenExpanded)}}
-        {{component (concat "legends/" layer.type "-legend")
-          layer=layer
-        }}
+        {{#if (and (eq layer.type "wms-wfs") (eq layer.settingsAsObject.remoteStyles false) )}}
+          {{component (concat "legends/wfs-legend")
+            layer=layer
+          }}
+        {{else}}
+          {{component (concat "legends/" layer.type "-legend")
+            layer=layer
+          }}
+        {{/if}}
       {{/if}}
     {{/yield-slot}}
   {{/block-slot}}

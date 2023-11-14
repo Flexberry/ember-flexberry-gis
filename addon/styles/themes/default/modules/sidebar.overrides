@@ -282,6 +282,17 @@
                 .layer-legend-zoom {
                   width: 100%;
                   padding: 2px;
+                  display: flex;
+                  .layer-legend-marker {
+                    display: flex;
+                    flex-direction: column;
+                    vertical-align: middle;
+                    align-items: center;
+                    justify-content: center;
+                    position: relative;
+                    width:24px;
+                    height:24px;
+                  }
                 }
 
                 .layer-legend-image,
@@ -290,6 +301,13 @@
                   float: left;
                 }
                 .layer-legend-image {
+                  position: relative;
+                  max-width: 24px;
+                  max-height: 24px;
+                  .icon-image {
+                    position: absolute;
+                    pointer-events: none;
+                  }
                 }
                 .layer-legend-caption {
                   color: @textColor;
