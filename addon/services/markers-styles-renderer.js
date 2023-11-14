@@ -139,7 +139,7 @@ export default Ember.Service.extend({
     let topOffsetCenter = parseFloat(((Math.abs(top) / (Math.abs(top) + Math.abs(bottom))) * 100).toFixed(2));
     let leftOffsetCenter = parseFloat(((Math.abs(left) / (Math.abs(left) + Math.abs(right))) * 100).toFixed(2));
 
-    return { size, topOffsetCenter, leftOffsetCenter};
+    return { size, topOffsetCenter, leftOffsetCenter };
   },
 
   transform(style, top, bottom, left, right) {
