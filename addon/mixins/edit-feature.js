@@ -1,5 +1,6 @@
 
 import Ember from 'ember';
+import { getLeafletCrs } from '../utils/leaflet-crs';
 
 export default Ember.Mixin.create({
 
@@ -54,5 +55,80 @@ export default Ember.Mixin.create({
     return L.geoJson(layer.toGeoJSON(), {
       pane: 'zoomto'
     }).setStyle(this.get('zoomFeatureStyle'));
+  },
+
+  /**
+    Sends request to trancate GeoWebCache for layer by boundingBox.
+
+    @method trancateGeoWebCache
+    @param {Object} leafletObject laeflet layer.
+    @param {Object} leafletMap laeflet map.
+  */
+  trancateGeoWebCache(leafletObject, leafletMap) {
+    let layers = leafletObject.wmsParams.layers.split();
+    let workspace;
+    let layer;
+    let geoWebCache;
+    if (layers.length === 2) {
+      workspace = layers[0];
+      layer = layers[1];
+    } else {
+      let urlSplit = leafletObject._url.split('/');
+      let indexGeoserver = urlSplit.indexOf('geoserver');
+      if (indexGeoserver > -1 && urlSplit.length === indexGeoserver + 3) {
+        workspace = urlSplit.at(indexGeoserver + 1);
+      } else {
+        console.error('Can\'t get workspace in geoserver');
+        return;
+      }
+
+      layer = layers[0];
+    }
+
+    if (!Ember.isBlank(leafletObject._url.match(new RegExp('(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?')))) {
+      let indexGeoserver = leafletObject._url.indexOf('geoserver');
+      if (indexGeoserver === -1) {
+        console.error('Can\'t get url geoserver');
+        return;
+      }
+
+      geoWebCache = leafletObject._url.slice(0, indexGeoserver + 10) + '/gwc/rest/seed/';
+    }
+
+    if (!Ember.isNone(geoWebCache)) {
+      let url = geoWebCache + workspace + ':' + layer;
+      let gridSetId = leafletObject.wmsParams.crs + '_' + leafletObject.wmsParams.width;
+      let zoom = Math.trunc(leafletMap.getZoom());
+      let zoomStart = zoom - 1 > 0 ? zoom - 1 : zoom;
+      let zoomStop = zoom + 1 < 20 ? zoom + 1 : zoom;
+      let styles = leafletObject.wmsParams.styles;
+      let parameterStyles = '';
+      if (!Ember.isNone(styles)) {
+        parameterStyles = `parameter_STYLES=${workspace}:${styles}&`;
+      }
+
+      let crsName = leafletObject.wmsParams.crs;
+      let crs;
+      if (!Ember.isNone(crsName)) {
+        crs = getLeafletCrs('{ "code": "' + crsName.toUpperCase() + '", "definition": "" }', this);
+      }
+
+      let bounds = leafletMap.getBounds();
+      let minXY = L.marker(bounds._southWest).toProjectedGeoJSON(crs);
+      let maxXY = L.marker(bounds._northEast).toProjectedGeoJSON(crs);
+
+      Ember.$.ajax({
+        method: 'POST',
+        url: url,
+        async: true,
+        data: `threadCount=01&type=truncate&gridSetId=${gridSetId}&tileFormat=image%2Fpng&zoomStart=${zoomStart}&zoomStop=${zoomStop}&` +
+          `${parameterStyles}minX=${minXY.geometry.coordinates[0]}&minY=${minXY.geometry.coordinates[1]}` +
+          `&maxX=${maxXY.geometry.coordinates[0]}&maxY=${maxXY.geometry.coordinates[1]}`,
+        contentType: 'text/html',
+        error: function (data) {
+          console.error(data);
+        }
+      });
+    }
   }
 });

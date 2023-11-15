@@ -49,6 +49,10 @@ export default Ember.Mixin.create({
     let layer = null;
 
     try {
+      let features = response.features.filter((feature) => {
+        return !Ember.isNone(feature.geometry) && feature.geometry.coordinates.flat(5).length > 0;
+      });
+      response.features = features;
       layer = this._createLayer(response, crs);
     }
     catch (ex) {
@@ -109,7 +113,7 @@ export default Ember.Mixin.create({
       let ajax = this.get('fileLoadAjax');
       if (ajax) {
         if (ajax.readyState === 4 && ajax.status === 200) {
-          resolve(this.get('fileLoadAjax').responseJSON);
+          resolve(JSON.parse(this.get('fileLoadAjax').responseText || '{}'));
           return;
         }
 
@@ -126,7 +130,7 @@ export default Ember.Mixin.create({
       let url = `${config.APP.backendUrls.geomFileValidationUrl}?FileName=${file.name}`;
       let data = new FormData();
       data.append(file.name, file);
-      data.append('crs', this.get('coordinate'));
+      data.append('fileCrs', this.get('coordinate'));
 
       if (this.get('needGeometryType')) {
         data.append('typeGeometryLayer', this.get('_geometryType'));
@@ -149,11 +153,12 @@ export default Ember.Mixin.create({
           processData: false
         }).done((response) => {
           this._showHideLoader(false);
-          if (response && response.features) {
-            this.set('coordinate', response.definedCrs);
-            this.set('geometryType', this.getGeometryType(response.features[0].geometry.type));
+          let jsonResponse = JSON.parse(response || '{}');
+          if (jsonResponse.features) {
+            this.set('coordinate', jsonResponse.definedCrs);
+            this.set('geometryType', this.getGeometryType(jsonResponse.features[0].geometry.type));
 
-            resolve(response);
+            resolve(jsonResponse);
           } else {
             reject({
               message: this.get('emptyErrorMessage')
