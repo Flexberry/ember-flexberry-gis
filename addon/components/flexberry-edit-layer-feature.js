@@ -777,8 +777,10 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
           // Removing a layer from the map that was added for edit mode
           if (leafletMap.hasLayer(layer)) {
-            layer.setStyle(layer.defaultFeatureStyle);
-            layer.styleIsSet = layer.defaultSetStyle;
+            if (!this.get('isLayerCopy')) {
+              layer.setStyle(layer.defaultFeatureStyle);
+              layer.styleIsSet = layer.defaultSetStyle;
+            }
 
             if (this.get('isLayerCopy')) {
               leafletMap.removeLayer(layer);
@@ -1096,8 +1098,10 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           leafletObject.editLayer(layer);
 
           if (leafletMap.hasLayer(layer)) {
-            layer.setStyle(layer.defaultFeatureStyle);
-            layer.styleIsSet = layer.defaultSetStyle;
+            if (!this.get('isLayerCopy')) {
+              layer.setStyle(layer.defaultFeatureStyle);
+              layer.styleIsSet = layer.defaultSetStyle;
+            }
 
             if (this.get('isLayerCopy')) {
               // Deleting a copy of an edited layer from the map
