@@ -932,9 +932,11 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       geoWebCache = leafletObject._url.slice(0, indexGeoserver + 10) + '/gwc/rest/seed/';
     }
 
-    if (!Ember.isNone(geoWebCache)) {
+    let crsName = leafletObject.wmsParams.crs || leafletObject.options.crs.code;
+
+    if (!Ember.isNone(geoWebCache) && !Ember.isNone(crsName)) {
       let url = geoWebCache + workspace + ':' + layer;
-      let gridSetId = leafletObject.wmsParams.crs + '_' + leafletObject.wmsParams.width;
+      let gridSetId = crsName + '_' + leafletObject.wmsParams.width;
       let leafletMap = this.get('leafletMap');
       let zoom = Math.trunc(leafletMap.getZoom());
       let zoomStart = zoom - 1 > 0 ? zoom - 1 : zoom;
@@ -945,7 +947,6 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         parameterStyles = `parameter_STYLES=${workspace}:${styles}&`;
       }
 
-      let crsName = leafletObject.wmsParams.crs;
       let crs;
       if (!Ember.isNone(crsName)) {
         crs = getLeafletCrs('{ "code": "' + crsName.toUpperCase() + '", "definition": "" }', this);
