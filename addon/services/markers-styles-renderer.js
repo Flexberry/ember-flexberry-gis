@@ -173,7 +173,7 @@ export default Ember.Service.extend({
     let bottom = 0;
     let left = 0;
     let right = 0;
-    let reasult;
+    let result;
     if (!Ember.isArray(styleSettings)) {
       let style = styleSettings.style;
       if (styleSettings.type === 'default') {
@@ -181,7 +181,7 @@ export default Ember.Service.extend({
       }
 
       let value = this.transform(style, top, bottom, left, right);
-      reasult = this.calcTransform(value.top, value.bottom, value.left, value.right);
+      result = this.calcTransform(value.top, value.bottom, value.left, value.right);
     } else {
       styleSettings.forEach((settings) => {
         let style = settings.style;
@@ -196,10 +196,10 @@ export default Ember.Service.extend({
         right = value.right;
       });
 
-      reasult = this.calcTransform(top, bottom, left, right);
+      result = this.calcTransform(top, bottom, left, right);
     }
 
-    return reasult;
+    return result;
   },
 
   getStyle(scale, settings) {
