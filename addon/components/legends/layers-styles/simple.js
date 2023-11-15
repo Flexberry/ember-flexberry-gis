@@ -74,12 +74,23 @@ export default BaseLayerStyleLegendComponent.extend({
         }
 
         if (this.get('_markersCanBeDisplayed')) {
-          let style = styleRule.styleSettings.style.marker;
-          let canvas = this.$(`canvas.markers${index}`)[0];
-          this._markerLegendRenderer(style, canvas);
+          let styles = styleRule.styleSettings.style.marker;
+          if (styles.hasOwnProperty('scale')) {
+            return;
+          }
+
+          let markersStylesRenderer = this.get('_markersStylesRenderer');
+          let scale = markersStylesRenderer.calcScale(styles);
+          styles.scale = scale;
+          Ember.set(styleRule, 'width', scale.size);
+          Ember.set(styleRule, 'height', scale.size);
+
+          styles.forEach(style => {
+            markersStylesRenderer.getStyle(scale, style);
+          });
+
         }
       });
-
     } else {
       this._withoutStyleRules();
     }
@@ -93,9 +104,17 @@ export default BaseLayerStyleLegendComponent.extend({
     }
 
     if (this.get('_markersCanBeDisplayed')) {
-      let styleSettings = Ember.isNone(this.parentView.layer.legendStyle) ? this.get('styleSettings.style.marker') : this.parentView.layer.legendStyle;
-      let canvas = this.$('canvas.markers')[0];
-      this._markerLegendRenderer(styleSettings, canvas);
+      let styles = Ember.isNone(this.parentView.layer.legendStyle) ? this.get('styleSettings.style.marker') : this.parentView.layer.legendStyle;
+      if (styles.hasOwnProperty('scale')) {
+        return;
+      }
+
+      let markersStylesRenderer = this.get('_markersStylesRenderer');
+      let scale = markersStylesRenderer.calcScale(styles);
+      styles.scale = scale;
+      this.set('width', scale.size);
+      this.set('height', scale.size);
+      markersStylesRenderer.getStyle(scale, styles);
     }
   },
 
@@ -114,14 +133,5 @@ export default BaseLayerStyleLegendComponent.extend({
       canvas: canvas,
       target: 'legend'
     });
-  },
-
-  _markerLegendRenderer(styleSettings, canvas) {
-    let markersStylesRenderer = this.get('_markersStylesRenderer');
-    markersStylesRenderer.renderOnCanvas({
-      styleSettings: styleSettings,
-      canvas: canvas,
-      target: 'legend'
-    });
-  },
+  }
 });

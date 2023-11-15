@@ -230,7 +230,7 @@
         }}
       {{/if}}
       {{#if (and layer.legendCanBeDisplayed hasBeenExpanded)}}
-        {{component (concat "legends/" layer.type "-legend")
+        {{component (concat "legends/" layer.legendType "-legend")
           layer=layer
         }}
       {{/if}}

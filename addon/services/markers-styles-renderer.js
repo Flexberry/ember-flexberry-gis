@@ -96,6 +96,22 @@ export default Ember.Service.extend({
   },
 
   /**
+    Gets style for default marker.
+
+    @method getDefaultMarkerSettings
+    @return {Object} Hash containing default style settings (for example { iconUrl: ..., shadowUrl: ..., ... }).
+  */
+  getDefaultMarkerSettings() {
+    let markerStyle = this._getMarkerStyle('image');
+    if (Ember.isNone(markerStyle)) {
+      Ember.Logger.error(`Service 'markers-styles-renderer' can't get default style settings for default markers-style.`);
+      return null;
+    }
+
+    return markerStyle.getDefaultStyleSettings();
+  },
+
+  /**
     Applies marker-style to the specified leaflet marker.
 
     @method renderOnLeafletMarker
@@ -117,43 +133,106 @@ export default Ember.Service.extend({
     markerStyle.renderOnLeafletMarker({ marker, style });
   },
 
-  /**
-    Renderes marker-style preview on the specified canvas element.
+  calcTransform(top, bottom, left, right) {
+    let size = (Math.max(Math.abs(top) + Math.abs(bottom), Math.abs(left) + Math.abs(right)));
 
-    @method renderOnCanvas
-    @param {Object} options Method options.
-    @param {<a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>} options.canvas Canvas element on which layer-style preview must be rendered.
-    @param {Object} options.styleSettings Hash containing style settings.
-    @param {Object} [options.target = 'preview'] Render target ('preview' or 'legend').
-  */
-  renderOnCanvas({ canvas, styleSettings, target }) {
-    target = target || 'preview';
+    let topOffsetCenter = parseFloat(((Math.abs(top) / (Math.abs(top) + Math.abs(bottom))) * 100).toFixed(2));
+    let leftOffsetCenter = parseFloat(((Math.abs(left) / (Math.abs(left) + Math.abs(right))) * 100).toFixed(2));
 
-    if (Ember.isArray(styleSettings)) {
-      styleSettings.forEach(settings => {
-        let type = Ember.get(settings, 'type');
-        let style = Ember.get(settings, 'style');
+    return { size, topOffsetCenter, leftOffsetCenter };
+  },
 
-        let markerStyle = this._getMarkerStyle(type);
-        if (Ember.isNone(markerStyle)) {
-          Ember.Logger.error(`Service 'markers-styles-renderer' can't render '${type}' markers-style on canvas.`);
-          return;
-        }
+  transform(style, top, bottom, left, right) {
+    if (!Ember.isNone(style)) {
+      let width = style.iconSize[0];
+      let height = style.iconSize[1];
+      let anchorH = style.iconAnchor[1];
+      let anchorW = style.iconAnchor[0];
 
-        markerStyle.renderOnCanvas({ canvas, style, target });
-      });
-    } else {
-      let type = Ember.get(styleSettings, 'type');
-      let style = Ember.get(styleSettings, 'style');
+      if ((0 - anchorH) < top) { top = (0 - anchorH); }
 
-      let markerStyle = this._getMarkerStyle(type);
-      if (Ember.isNone(markerStyle)) {
-        Ember.Logger.error(`Service 'markers-styles-renderer' can't render '${type}' markers-style on canvas.`);
-        return;
-      }
+      if ((height - anchorH) > bottom) { bottom = (height - anchorH); }
 
-      markerStyle.renderOnCanvas({ canvas, style, target });
+      if ((0 - anchorW) < left) { left = (0 - anchorW); }
+
+      if ((width - anchorW) > right) { right = (width - anchorW); }
     }
 
+    return { top, bottom, left, right };
+  },
+
+  /**
+    Calculate scale for canvas of legend.
+
+    @method calcScale
+    @param {Object} styleSettings style settings.
+    @return {Object} Hash containing style settings.
+  */
+  calcScale(styleSettings) {
+    let top = 0;
+    let bottom = 0;
+    let left = 0;
+    let right = 0;
+    let result;
+    if (!Ember.isArray(styleSettings)) {
+      let style = styleSettings.style;
+      if (styleSettings.type === 'default') {
+        style = this.getDefaultMarkerSettings();
+      }
+
+      let value = this.transform(style, top, bottom, left, right);
+      result = this.calcTransform(value.top, value.bottom, value.left, value.right);
+    } else {
+      styleSettings.forEach((settings) => {
+        let style = settings.style;
+        if (settings.type === 'default') {
+          style = this.getDefaultMarkerSettings();
+        }
+
+        let value = this.transform(style, top, bottom, left, right);
+        top = value.top;
+        bottom = value.bottom;
+        left = value.left;
+        right = value.right;
+      });
+
+      result = this.calcTransform(top, bottom, left, right);
+    }
+
+    return result;
+  },
+
+  getStyle(scale, settings) {
+    if (settings.cssStyle) {
+      return;
+    }
+
+    let size = scale.size;
+    let style = settings.style;
+    if (settings.type === 'default') {
+      style = this.getDefaultMarkerSettings();
+    }
+
+    let iconHeight = style.iconSize[1];
+    let iconWidth = style.iconSize[0];
+
+    let anchorHeight = style.iconAnchor[1];
+    let anchorWidth = style.iconAnchor[0];
+
+    let topOffsetCenter = scale.topOffsetCenter;
+    let leftOffsetCenter = scale.leftOffsetCenter;
+
+    let top = (topOffsetCenter - ((anchorHeight / size) * 100)).toFixed(2);
+    let left = (leftOffsetCenter - ((anchorWidth / size) * 100)).toFixed(2);
+
+    let height = ((iconHeight / size) * 100).toFixed(2);
+    let width = ((iconWidth / size) * 100).toFixed(2);
+
+    let cssStyle = {
+      style: `height: ${height}%; width: ${width}%; top: ${top}%; left: ${left}%;`,
+      src: style.iconUrl
+    };
+
+    Ember.set(settings, 'cssStyle', cssStyle);
   }
 });

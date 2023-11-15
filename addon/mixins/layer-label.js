@@ -428,7 +428,7 @@ export default Ember.Mixin.create({
     let className = 'label';
     className += ' point ' + positionPoint.cssClass;
     let html = '<div style="' + style + positionPoint.style + '">' + text + '</div>';
-    let optionsMarker = this._optionsMarker(latlng, className, html, iconWidth, iconHeight, anchor);
+    let optionsMarker = this._optionsMarker(latlng, className, html, positionPoint.iconSize, anchor);
     let label = this._createLabelMarker(layer, optionsMarker, labelsLayerZoom._paneLabel);
     this._addLabel(label, labelsLayerZoom, layer);
   },
@@ -596,13 +596,12 @@ export default Ember.Mixin.create({
     this._addLabel(label, labelsLayerZoom, layer);
   },
 
-  _optionsMarker(latlng, className, html, iconWidth, iconHeight, anchor) {
+  _optionsMarker(latlng, className, html, iconSize, anchor) {
     return {
       latlng,
       className,
       html,
-      iconWidth,
-      iconHeight,
+      iconSize,
       anchor
     };
   },
@@ -630,7 +629,7 @@ export default Ember.Mixin.create({
     let paramsDivIcon = {
       className: options.className,
       html: options.html,
-      iconSize: [options.iconWidth, options.iconHeight],
+      iconSize: options.iconSize,
       iconAnchor: options.anchor
     };
     let icon = L.divIcon(paramsDivIcon);
@@ -681,27 +680,31 @@ export default Ember.Mixin.create({
     return minPosition;
   },
 
-  _defaultMarkerOptions() {
+  _defaultMarkerOptions(locationPoint) {
     return {
       iconSize: [25, 41],
-      iconAnchor: [12, 41]
+      iconAnchor: locationPoint.indexOf('over') >= 0 ? [12, 41] : [12, 20]
     };
   },
 
-  _positionForComboStyle(stylesMarker) {
+  _positionForComboStyle(stylesMarker, locationPoint) {
     let leftMin = 0;
     let rightMax = 0;
     let topMin = 0;
     let bottomMax = 0;
+    let widthMax = 0;
+    let heightMax = 0;
 
     let left = 0;
     let right = 0;
     let top = 0;
     let bottom = 0;
+    let width = 0;
+    let height = 0;
     stylesMarker.forEach(styleMarker => {
       let style = styleMarker.style;
       if (styleMarker.type === 'default') {
-        style = this._defaultMarkerOptions;
+        style = this._defaultMarkerOptions(locationPoint);
       }
 
       if (!Ember.isNone(style)) {
@@ -712,10 +715,14 @@ export default Ember.Mixin.create({
           right = (iconSize[0] || 0) - (iconAnchor[0] || 0);
           top = iconAnchor[1] || 0;
           bottom = (iconSize[1] || 0) - (iconAnchor[1] || 0);
+          width = iconSize[0];
+          height = iconSize[1];
           leftMin = this._positionMin(leftMin, left);
           rightMax = this._positionMax(rightMax, right);
           topMin = this._positionMin(topMin, top);
           bottomMax = this._positionMax(bottomMax, bottom);
+          widthMax = this._positionMax(widthMax, width);
+          heightMax = this._positionMax(heightMax, height);
         }
       }
     });
@@ -724,7 +731,9 @@ export default Ember.Mixin.create({
       left: leftMin,
       right: rightMax,
       top: topMin,
-      bottom: bottomMax
+      bottom: bottomMax,
+      width: widthMax,
+      height: heightMax
     };
   },
 
@@ -740,24 +749,33 @@ export default Ember.Mixin.create({
     // значения для маркера по умолчанию
     let left = 12.5;
     let right = 12.5;
-    let top = 41;
+    let top = 20.5;
     let bottom = 0;
 
     let stylesMarker = this.get('styleSettings.style.marker');
     if (stylesMarker && Ember.isArray(stylesMarker) && stylesMarker.length > 0) {
-      let options = this._positionForComboStyle(stylesMarker);
+      let options = this._positionForComboStyle(stylesMarker, settingsLabel.location.locationPoint);
       left = options.left;
       right = options.right;
       top = options.top;
       bottom = options.bottom;
+      width = options.width;
+      height = options.height;
     } else {
-      let iconSize = this.get('styleSettings.style.marker.style.iconSize');
-      let iconAnchor = this.get('styleSettings.style.marker.style.iconAnchor');
+      let style = stylesMarker.style;
+      if (stylesMarker.type === 'default') {
+        style = this._defaultMarkerOptions(settingsLabel.location.locationPoint);
+      }
+
+      let iconSize = style.iconSize;
+      let iconAnchor = style.iconAnchor;
       if (!Ember.isNone(iconAnchor) && iconAnchor.length === 2 && !Ember.isNone(iconSize) && iconSize.length === 2) {
         left = iconAnchor[0] || 0;
         right = (iconSize[0] || 0) - (iconAnchor[0] || 0);
         top = iconAnchor[1] || 0;
         bottom = (iconSize[1] || 0) - (iconAnchor[1] || 0);
+        width = iconSize[0] || 0;
+        height = iconSize[1] || 0;
       }
     }
 
@@ -768,12 +786,12 @@ export default Ember.Mixin.create({
     switch (settingsLabel.location.locationPoint) {
       case 'overLeft':
         style = 'text-align: right;';
-        anchor = [left + width, top + height];
+        anchor = [left + width - 2, top + height - 2];
         cssClass = 'over left';
         break;
       case 'overRight':
         style = 'text-align: left;';
-        anchor = [-1 * right, top + height];
+        anchor = [-1 * right + 2, top + height - 2];
         cssClass = 'over right';
         break;
       case 'alongLeft':
@@ -793,27 +811,29 @@ export default Ember.Mixin.create({
         break;
       case 'underLeft':
         style = 'text-align: right;';
-        anchor = [left + width, -1 * bottom];
+        anchor = [left + width, -1 * bottom + 2];
         cssClass = 'under left';
         break;
       case 'underMiddle':
         style = 'text-align: center;';
-        anchor = [Math.round((width - (right - left)) / 2), -1 * bottom];
+        anchor = [Math.round((width - (right - left)) / 2), -1 * bottom + 2];
         cssClass = 'under middle';
         break;
       case 'underRight':
         style = 'text-align: left;';
-        anchor = [-1 * right, -1 * bottom];
+        anchor = [-1 * right, -1 * bottom + 2];
         cssClass = 'under right';
         break;
       default: // and overMiddle
         style = 'text-align: center;';
-        anchor = [Math.round((width - (right - left)) / 2), top + height];
+        anchor = [Math.round((width - (right - left)) / 2), top + height - 2];
         cssClass = 'over middle';
         break;
     }
 
-    return { style, anchor, cssClass };
+    let iconSize = [width, height];
+
+    return { style, anchor, cssClass, iconSize };
   },
 
   /**
@@ -1173,6 +1193,45 @@ export default Ember.Mixin.create({
     }
   },
 
+  /**
+    Update position for marker object's label
+
+    @method _updatePositionLabelForLine
+  */
+  _updatePositionLabelForMarker() {
+    let leafletObject = this.returnLeafletObject();
+    let _this = this;
+    let labelsLayersZoom = this._getLabelsLayersZoom();
+
+    if (!Ember.isNone(leafletObject) && labelsLayersZoom && this.get('leafletMap').hasLayer(labelsLayersZoom)) {
+      // обновлять будем только то что видно
+      this._checkLabelInView(leafletObject.getLayers(), labelsLayersZoom, false).forEach(layer => {
+        if (!Ember.isNone(layer._icon) && !Ember.isNone(layer._label)) {
+          layer._label.forEach(zoomLabel => {
+            if (zoomLabel instanceof L.FeatureGroup) {
+              zoomLabel.getLayers().forEach((label) => {
+                _this._updateAttributesMarker(label, labelsLayersZoom.settings);
+              });
+            } else {
+              _this._updateAttributesMarker(zoomLabel, labelsLayersZoom.settings);
+            }
+          });
+        }
+      });
+    }
+  },
+
+  _updateAttributesMarker(label, settings) {
+    let options = this._setPositionPoint(label.options.icon.options.iconSize[0],
+      label.options.icon.options.iconSize[1], settings);
+
+    let icon = label.getIcon();
+    icon.options.iconAnchor = options.anchor;
+    icon.options.iconSize = options.iconSize;
+    icon.options.className = 'label point ' + options.cssClass;
+    label.setIcon(icon);
+  },
+
   _updateAttributesSvg(layer, partline, svg, path, settingsLabel) {
     this._setLabelLine(layer, svg, partline, layer._text, settingsLabel);
     let d = layer._path.getAttribute('d');
@@ -1187,8 +1246,6 @@ export default Ember.Mixin.create({
     }
 
     Ember.$('path#' + id).attr('d', d);
-    Ember.$('svg#svg-' + id).attr('width', svg.getAttribute('width'));
-    Ember.$('svg#svg-' + id).attr('height', svg.getAttribute('height'));
 
     let text = layer._text;
     let textNode = layer._textNode;
@@ -1285,6 +1342,8 @@ export default Ember.Mixin.create({
 
       if (this.get('typeGeometry') === 'polyline') {
         leafletMap.on('zoomend', this._updatePositionLabelForLine, this);
+      } else if (this.get('typeGeometry') === 'marker') {
+        leafletMap.on('zoomend', this._updatePositionLabelForMarker, this);
       }
 
       // для showExisting не грузим все надписи сразу. слишком много. поэтому приходится догружать при сдвиге карты, как будто это continueLoading,
@@ -1330,6 +1389,8 @@ export default Ember.Mixin.create({
 
       if (this.get('typeGeometry') === 'polyline') {
         this._updatePositionLabelForLine();
+      } else if (this.get('typeGeometry') === 'marker') {
+        this._updatePositionLabelForMarker();
       }
     }
   },
@@ -1363,7 +1424,11 @@ export default Ember.Mixin.create({
         labelsLayers.forEach(labelLayer => {
           leafletContainer.addLayer(labelLayer);
           labelLayer.eachLayer(layer => {
-            this._setOptionsForSvg(layer);
+            if (layer instanceof L.FeatureGroup) {
+              layer.eachLayer(partLayer => { this._setOptionsForSvg(partLayer); });
+            } else {
+              this._setOptionsForSvg(layer);
+            }
           });
         });
       }
@@ -1451,6 +1516,8 @@ export default Ember.Mixin.create({
       this._checkZoomPane();
       if (this.get('typeGeometry') === 'polyline') {
         this._updatePositionLabelForLine();
+      } else if (this.get('typeGeometry') === 'marker') {
+        this._updatePositionLabelForMarker();
       }
     }
   },
