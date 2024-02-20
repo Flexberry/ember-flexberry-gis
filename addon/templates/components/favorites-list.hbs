@@ -1,4 +1,5 @@
 
+{{yield}}
 {{#if _showFavorites}}
   <div class="favorites-block-buttons">
     <button type="submit" class="ui button compare{{if compareBtnDisabled " disabled"}}" {{action "compareTwoGeometries"}} disabled={{compareBtnDisabled}}>
@@ -12,7 +13,7 @@
     }}
   </div>
   <div class="favorites-block-result">
-    {{layer-result-list
+    {{#layer-result-list
       results=data
       serviceLayer=serviceLayer
       leafletMap=leafletMap
@@ -30,6 +31,8 @@
         fill=false
       )
     }}
+      {{yield}}
+    {{/layer-result-list}}
   </div>
 {{else}}
   <div class="ui form loading"></div>
