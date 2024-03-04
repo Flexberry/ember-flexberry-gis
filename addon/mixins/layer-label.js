@@ -435,14 +435,21 @@ export default Ember.Mixin.create({
 
   _createLabelForPolygon(text, layer, style, labelsLayerZoom) {
     let latlng = null;
-    let iconWidth = 10;
+    let iconWidth = 40;
     let iconHeight = 40;
+
+    let labelSize = labelsLayerZoom.settings.size;
+    if (labelSize) {
+      iconWidth = labelSize[0];
+      iconHeight = labelSize[1];
+    }
+
     let anchor = null;
     let html = '';
     let label;
 
     let geojsonWriter = new jsts.io.GeoJSONWriter();
-    let className = 'label';
+    let className = 'label polygon';
 
     let multi = labelsLayerZoom.settings.multi;
     let objJsts = layer.toJsts(L.CRS.EPSG4326);
@@ -489,11 +496,18 @@ export default Ember.Mixin.create({
 
   _polygonMultiLabel(layer, style, text, labelsLayerZoom) {
     let latlng = null;
-    let iconWidth = 10;
+    let iconWidth = 40;
     let iconHeight = 40;
+
+    let labelSize = labelsLayerZoom.settings.size;
+    if (labelSize) {
+      iconWidth = labelSize[0];
+      iconHeight = labelSize[1];
+    }
+
     let anchor = null;
     let html = '';
-    let className = 'label';
+    let className = 'label polygon multi';
     let label;
     let geojsonWriter = new jsts.io.GeoJSONWriter();
     let objJsts = layer.toJsts(L.CRS.EPSG4326);
@@ -1271,13 +1285,15 @@ export default Ember.Mixin.create({
   _labelsLayersCreate(leafletObject) {
     let labelsLayers = this.get('labelsLayers');
     let leafletMap = this.get('leafletMap');
-    let labelSettingsString = this.get('labelSettings.labelSettingsString');
+
     if (Ember.isNone(labelsLayers)) {
       let labelsLayersArray = Ember.A();
-      if (labelSettingsString) {
-        this._createLabelsLayerOldSettings(labelsLayersArray);
-      } else {
+
+      let rules = this.get('labelSettings.rules');
+      if (!Ember.isNone(rules)) {
         this._createLabelsLayer(labelsLayersArray);
+      } else {
+        this._createLabelsLayerOldSettings(labelsLayersArray);
       }
 
       leafletObject.labelsLayers = labelsLayersArray;
