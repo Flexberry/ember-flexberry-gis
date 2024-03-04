@@ -467,7 +467,7 @@ export default Ember.Mixin.create({
         html = '<div style="' + style + '">' + text + '</div>';
 
         let paneLabel = labelsLayerZoom._paneLabel;
-        let optionsMarker = this._optionsMarker(latlng, className, html, iconWidth, iconHeight, anchor);
+        let optionsMarker = this._optionsMarker(latlng, className, html, [iconWidth, iconHeight], anchor);
 
         // возможно тут тоже надо будет сделать L.featureGroup()
         label = this._createLabelMarker(layer, optionsMarker, paneLabel);
@@ -521,7 +521,7 @@ export default Ember.Mixin.create({
         let centroidN = geojsonWriter.write(centroidNJsts);
         latlng = L.latLng(centroidN.coordinates[1], centroidN.coordinates[0]);
         html = '<div style="' + style + '">' + text + '</div>';
-        let optionsMarker = this._optionsMarker(latlng, className, html, iconWidth, iconHeight, anchor);
+        let optionsMarker = this._optionsMarker(latlng, className, html, [iconWidth, iconHeight], anchor);
         let labelN = this._createLabelMarker(layer, optionsMarker, labelsLayerZoom._paneLabel);
         label.addLayer(labelN);
       }
@@ -580,7 +580,7 @@ export default Ember.Mixin.create({
           iconWidth = 12;
           iconHeight = 12;
           html = Ember.$(layer._svgConteiner).html();
-          let optionsMarker = this._optionsMarker(latlng, className, html, iconWidth, iconHeight, anchor);
+          let optionsMarker = this._optionsMarker(latlng, className, html, [iconWidth, iconHeight], anchor);
 
           if (multi) {
             let labelN = this._createLabelMarker(layer, optionsMarker, labelsLayerZoom._paneLabel);
@@ -599,7 +599,7 @@ export default Ember.Mixin.create({
         iconHeight = 12;
         html = Ember.$(layer._svgConteiner).html();
 
-        let optionsMarker = this._optionsMarker(latlng, className, html, iconWidth, iconHeight, anchor);
+        let optionsMarker = this._optionsMarker(latlng, className, html, [iconWidth, iconHeight], anchor);
         label = this._createLabelMarker(layer, optionsMarker, labelsLayerZoom._paneLabel);
       }
     }
