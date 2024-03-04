@@ -435,14 +435,21 @@ export default Ember.Mixin.create({
 
   _createLabelForPolygon(text, layer, style, labelsLayerZoom) {
     let latlng = null;
-    let iconWidth = 10;
+    let iconWidth = 40;
     let iconHeight = 40;
+
+    let labelSize = labelsLayerZoom.settings.size;
+    if (labelSize) {
+      iconWidth = labelSize[0];
+      iconHeight = labelSize[1];
+    }
+
     let anchor = null;
     let html = '';
     let label;
 
     let geojsonWriter = new jsts.io.GeoJSONWriter();
-    let className = 'label';
+    let className = 'label polygon';
 
     let multi = labelsLayerZoom.settings.multi;
     let objJsts = layer.toJsts(L.CRS.EPSG4326);
@@ -460,7 +467,7 @@ export default Ember.Mixin.create({
         html = '<div style="' + style + '">' + text + '</div>';
 
         let paneLabel = labelsLayerZoom._paneLabel;
-        let optionsMarker = this._optionsMarker(latlng, className, html, iconWidth, iconHeight, anchor);
+        let optionsMarker = this._optionsMarker(latlng, className, html, [iconWidth, iconHeight], anchor);
 
         // возможно тут тоже надо будет сделать L.featureGroup()
         label = this._createLabelMarker(layer, optionsMarker, paneLabel);
@@ -489,11 +496,18 @@ export default Ember.Mixin.create({
 
   _polygonMultiLabel(layer, style, text, labelsLayerZoom) {
     let latlng = null;
-    let iconWidth = 10;
+    let iconWidth = 40;
     let iconHeight = 40;
+
+    let labelSize = labelsLayerZoom.settings.size;
+    if (labelSize) {
+      iconWidth = labelSize[0];
+      iconHeight = labelSize[1];
+    }
+
     let anchor = null;
     let html = '';
-    let className = 'label';
+    let className = 'label polygon multi';
     let label;
     let geojsonWriter = new jsts.io.GeoJSONWriter();
     let objJsts = layer.toJsts(L.CRS.EPSG4326);
@@ -507,7 +521,7 @@ export default Ember.Mixin.create({
         let centroidN = geojsonWriter.write(centroidNJsts);
         latlng = L.latLng(centroidN.coordinates[1], centroidN.coordinates[0]);
         html = '<div style="' + style + '">' + text + '</div>';
-        let optionsMarker = this._optionsMarker(latlng, className, html, iconWidth, iconHeight, anchor);
+        let optionsMarker = this._optionsMarker(latlng, className, html, [iconWidth, iconHeight], anchor);
         let labelN = this._createLabelMarker(layer, optionsMarker, labelsLayerZoom._paneLabel);
         label.addLayer(labelN);
       }
@@ -566,7 +580,7 @@ export default Ember.Mixin.create({
           iconWidth = 12;
           iconHeight = 12;
           html = Ember.$(layer._svgConteiner).html();
-          let optionsMarker = this._optionsMarker(latlng, className, html, iconWidth, iconHeight, anchor);
+          let optionsMarker = this._optionsMarker(latlng, className, html, [iconWidth, iconHeight], anchor);
 
           if (multi) {
             let labelN = this._createLabelMarker(layer, optionsMarker, labelsLayerZoom._paneLabel);
@@ -585,7 +599,7 @@ export default Ember.Mixin.create({
         iconHeight = 12;
         html = Ember.$(layer._svgConteiner).html();
 
-        let optionsMarker = this._optionsMarker(latlng, className, html, iconWidth, iconHeight, anchor);
+        let optionsMarker = this._optionsMarker(latlng, className, html, [iconWidth, iconHeight], anchor);
         label = this._createLabelMarker(layer, optionsMarker, labelsLayerZoom._paneLabel);
       }
     }
@@ -1328,13 +1342,15 @@ export default Ember.Mixin.create({
   _labelsLayersCreate(leafletObject) {
     let labelsLayers = this.get('labelsLayers');
     let leafletMap = this.get('leafletMap');
-    let labelSettingsString = this.get('labelSettings.labelSettingsString');
+
     if (Ember.isNone(labelsLayers)) {
       let labelsLayersArray = Ember.A();
-      if (labelSettingsString) {
-        this._createLabelsLayerOldSettings(labelsLayersArray);
-      } else {
+
+      let rules = this.get('labelSettings.rules');
+      if (!Ember.isNone(rules)) {
         this._createLabelsLayer(labelsLayersArray);
+      } else {
+        this._createLabelsLayerOldSettings(labelsLayersArray);
       }
 
       leafletObject.labelsLayers = labelsLayersArray;
