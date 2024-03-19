@@ -209,7 +209,7 @@ export default BaseVectorLayer.extend({
         });
       });
 
-      this._createStringLabel([layer], leafletObject.labelsLayers);
+      this._createStringLabel([layer], leafletObject);
     }
   },
 
