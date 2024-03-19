@@ -444,11 +444,26 @@ export default Ember.Component.extend(CheckFileMixin, {
   */
   geometryField2: null,
 
+  /**
+    Necessity of geometry field names (one (with WKT geometry) or two (X,Y coordinates - points only))
+    geometryField1 and geometryField2
+    For .csv, .xls, .xlsx
+  */
   needGeometryFieldName: false,
 
-  acceptFiles: null,
+  /**
+    Necessity of geometry type. For .gpx (it contains different types of data and can be transformed to different types of data)
+  */
+  needGeometryType: false,
 
-  importErrorMessage: &#x27;Загруженный файл не соответствует требованиям: &#x27;,
+  /**
+    Necessity of &quot;not auto&quot; CRS
+  */
+  needCRS: false,
+
+  acceptFiles: &#x27;.zip,.GEOJSON,.gml,.xls,.xlsx,.csv,.xml,.gpx,.kml&#x27;,
+
+  importErrorMessage: &#x27;Загруженный файл не соответствует требованиям&#x27;,
 
   emptyErrorMessage: &#x27;Файл не содержит геометрических объектов&#x27;,
 
@@ -458,10 +473,9 @@ export default Ember.Component.extend(CheckFileMixin, {
 
   typeGeometryErrorMessage: &#x27;Указанный тип геометрии противоречит объектам в файле&#x27;,
 
-  warningMessageSRS: &#x27;Укажите верную систему координат, указанную в загружаемом файле. &#x27; +
-  &#x27;При выборе ошибочной системы координат слой может некорректно отображаться на карте&#x27;,
-
   warningMessageEmptyGeometry: &#x27;В файле обнаружены объекты без геометрии. Дальнейшая загрузка будет осуществлена без них&#x27;,
+
+  warningMessageAutoCRS: &#x27;У загруженного файла не определена система координат. Выберите систему координат из списка&#x27;,
 
   emptyGeometryField: &#x27;Укажите название поля с геометрией в файле (WKT/X,Y)&#x27;,
 
@@ -483,18 +497,11 @@ export default Ember.Component.extend(CheckFileMixin, {
     });
   },
 
-  setAcceptFiles() {
-    if (Ember.isEmpty(this.get(&#x27;acceptFiles&#x27;))) {
-      this.set(&#x27;acceptFiles&#x27;, &#x27;.zip,.GEOJSON,.gml,.xls,.xlsx,.csv,.xml,.gps,.kml&#x27;);
-    }
-  },
-
   didInsertElement() {
     this._super(...arguments);
 
     this.set(&#x27;systemCoordinates&#x27;, this.get(&#x27;systemCoordinates&#x27;) || availableCoordinateReferenceSystemsCodesWithCaptions(this));
     this.set(&#x27;coordinate&#x27;, &#x27;auto&#x27;);
-    this.setAcceptFiles();
 
     this.send(&#x27;clearFile&#x27;);
   },
@@ -537,7 +544,7 @@ export default Ember.Component.extend(CheckFileMixin, {
 
     @method fieldsSet
   */
-  fieldsSet: Ember.observer(&#x27;file&#x27;, &#x27;needGeometryFieldName&#x27;, &#x27;geometryField1&#x27;, &#x27;geometryField2&#x27;, function() {
+  fieldsSet: Ember.observer(&#x27;file&#x27;, &#x27;needGeometryFieldName&#x27;, &#x27;geometryField1&#x27;, &#x27;geometryField2&#x27;, function () {
     let file = this.get(&#x27;file&#x27;);
     if (this.get(&#x27;needGeometryFieldName&#x27;) &amp;&amp; !Ember.isNone(file)) {
       let geometryField1 = this.get(&#x27;geometryField1&#x27;);
@@ -550,11 +557,11 @@ export default Ember.Component.extend(CheckFileMixin, {
   }),
 
   /**
-    Get headers fields from csv or xls file.
+    Get headers fields from csv or xls|xlsx file.
 
-    @method getFieldsFromCsv
+    @method getFields
   */
-  getFieldsFromCsv() {
+  getFields() {
     this.set(&#x27;_showError&#x27;, false);
     let config = Ember.getOwner(this).resolveRegistration(&#x27;config:environment&#x27;);
     let data = new FormData();
@@ -570,29 +577,27 @@ export default Ember.Component.extend(CheckFileMixin, {
         processData: false,
       }).done((response) =&gt; {
         if (response &amp;&amp; response.length) {
-          const items = response.split(&#x27;,&#x27;);
-          this.set(&#x27;_availableFields&#x27;, Ember.A(items));
-          this.set(&#x27;needGeometryFieldName&#x27;, true);
+          this.set(&#x27;_availableFields&#x27;, Ember.A(response));
         } else {
-          this.set(&#x27;_errorMessage&#x27;, this.get(&#x27;importErrorMessage&#x27;) + this.get(&#x27;emptyHeaderErrorMessage&#x27;));
+          this.set(&#x27;_errorMessage&#x27;, this.get(&#x27;emptyHeaderErrorMessage&#x27;));
           this.set(&#x27;_showError&#x27;, true);
-          this.set(&#x27;needGeometryFieldName&#x27;, false);
-          this.set(&#x27;needGeometryType&#x27;, false);
         }
       }).fail(() =&gt; {
         let message = this.get(&#x27;badFileMessage&#x27;);
-        this.set(&#x27;_errorMessage&#x27;, this.get(&#x27;importErrorMessage&#x27;) + message);
+        this.set(&#x27;_errorMessage&#x27;, message);
         this.set(&#x27;_showError&#x27;, true);
-        this.set(&#x27;needGeometryFieldName&#x27;, false);
-        this.set(&#x27;needGeometryType&#x27;, false);
       });
     }
   },
 
   actions: {
-    onCoordinateChange() {
+    clearCacheAndPreview() {
       this.set(&#x27;_showError&#x27;, false);
       this.clearAjax();
+      if (this.get(&#x27;filePreview&#x27;)) {
+        this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;).fire(&#x60;flexberry-map-loadfile${this.get(&#x27;suffix&#x27;)}:clear&#x60;);
+        this.set(&#x27;filePreview&#x27;, false);
+      }
     },
 
     clearFile() {
@@ -600,6 +605,7 @@ export default Ember.Component.extend(CheckFileMixin, {
       this.set(&#x27;coordinate&#x27;, &#x27;auto&#x27;);
       this.set(&#x27;needGeometryFieldName&#x27;, false);
       this.set(&#x27;needGeometryType&#x27;, false);
+      this.set(&#x27;needCRS&#x27;, false);
       this.set(&#x27;geometryField1&#x27;, null);
       this.set(&#x27;geometryField2&#x27;, null);
       this.set(&#x27;geometryFieldFile&#x27;, null);
@@ -617,19 +623,33 @@ export default Ember.Component.extend(CheckFileMixin, {
       this.$(&#x27;.ui.button.remove&#x27;).addClass(&#x27;hidden&#x27;);
     },
 
+    /**
+     * Выбор пользователем файла
+    */
     clickFile(e) {
       let file = e.target.files[0];
-      let fileName = file.name;
-      let ext = fileName.substring(fileName.indexOf(&#x27;.&#x27;), fileName.length);
-      this.set(&#x27;file&#x27;, file);
-
-      if (ext.toLowerCase() === &#x27;.csv&#x27; || ext.toLowerCase() === &#x27;.xls&#x27; || ext.toLowerCase() === &#x27;.xlsx&#x27;) {
-        this.set(&#x27;needGeometryFieldName&#x27;, true);
-        this.getFieldsFromCsv();
-        this.set(&#x27;warningMessage&#x27;, this.get(&#x27;warningMessageSRS&#x27;));
+      if (!file) {
+        return;
       }
 
-      if (ext.toLowerCase() === &#x27;.gpx&#x27;) {
+      let fileName = file.name;
+      let ext = fileName.substring(fileName.lastIndexOf(&#x27;.&#x27;), fileName.length).toLowerCase();
+      this.set(&#x27;file&#x27;, file);
+
+      if (ext === &#x27;.csv&#x27; || ext === &#x27;.xls&#x27; || ext === &#x27;.xlsx&#x27;) {
+        this.set(&#x27;needGeometryFieldName&#x27;, true);
+        this.getFields();
+      }
+
+      if (ext === &#x27;.gpx&#x27; || ext === &#x27;.kml&#x27;) {
+        this.set(&#x27;coordinate&#x27;, &#x27;EPSG:4326&#x27;);
+      }
+
+      if (ext === &#x27;.gpx&#x27; || ext === &#x27;.gml&#x27; || ext === &#x27;.csv&#x27; || ext === &#x27;.xls&#x27; || ext === &#x27;.xlsx&#x27;) {
+        this.set(&#x27;needCRS&#x27;, true);
+      }
+
+      if (ext === &#x27;.gpx&#x27;) {
         this.set(&#x27;needGeometryType&#x27;, true);
       }
 

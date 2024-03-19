@@ -625,7 +625,7 @@ export default BaseVectorLayer.extend({
         });
       });
 
-      this._createStringLabel([layer], leafletObject.labelsLayers);
+      this._createStringLabel([layer], leafletObject);
     }
   },
 
@@ -1933,9 +1933,12 @@ export default BaseVectorLayer.extend({
 
       if ((continueLoad &amp;&amp; show &amp;&amp; checkMapZoom(leafletObject)) || (showLayerObjects &amp;&amp; continueLoad)) {
         let loadedBounds = this.get(&#x27;loadedBounds&#x27;);
-        let leafletMap = this.get(&#x27;leafletMap&#x27;);
         let obj = this.get(&#x27;_adapterStoreModelProjectionGeom&#x27;);
-        let bounds = L.rectangle(leafletMap.getBounds());
+
+        let boundsMap = this._boundsCrs(leafletObject);
+
+        let bounds = L.rectangle(boundsMap);
+
         if (!Ember.isNone(leafletObject.showLayerObjects)) {
           leafletObject.showLayerObjects = false;
         }

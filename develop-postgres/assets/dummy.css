@@ -6630,7 +6630,6 @@ html.mobile .overflowed-cell .flexberry-simpledatetime .flatpickr .ui.ui-clear.b
   font-weight: 700;
 }
 .mappanel .leaflet-left .leaflet-control-zoom.leaflet-bar .leaflet-control-zoom-view:hover {
-  border: none;
   background: #fff;
 }
 .mappanel .leaflet-left .leaflet-control-zoom.leaflet-bar a {
@@ -45634,6 +45633,18 @@ img.item-minus {
 .ui.right.sidebar .ui.styled.accordion .accordion .content .layer-legend .layer-legend-image-wrapper .layer-legend-zoom {
   width: 100%;
   padding: 2px;
+  display: flex;
+}
+.ui.right.sidebar .ui.styled.accordion .content .layer-legend .layer-legend-image-wrapper .layer-legend-zoom .layer-legend-marker,
+.ui.right.sidebar .ui.styled.accordion .accordion .content .layer-legend .layer-legend-image-wrapper .layer-legend-zoom .layer-legend-marker {
+  display: flex;
+  flex-direction: column;
+  vertical-align: middle;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 24px;
+  height: 24px;
 }
 .ui.right.sidebar .ui.styled.accordion .content .layer-legend .layer-legend-image-wrapper .layer-legend-image,
 .ui.right.sidebar .ui.styled.accordion .accordion .content .layer-legend .layer-legend-image-wrapper .layer-legend-image,
@@ -45641,6 +45652,17 @@ img.item-minus {
 .ui.right.sidebar .ui.styled.accordion .accordion .content .layer-legend .layer-legend-image-wrapper .layer-legend-caption {
   display: block;
   float: left;
+}
+.ui.right.sidebar .ui.styled.accordion .content .layer-legend .layer-legend-image-wrapper .layer-legend-image,
+.ui.right.sidebar .ui.styled.accordion .accordion .content .layer-legend .layer-legend-image-wrapper .layer-legend-image {
+  position: relative;
+  max-width: 24px;
+  max-height: 24px;
+}
+.ui.right.sidebar .ui.styled.accordion .content .layer-legend .layer-legend-image-wrapper .layer-legend-image .icon-image,
+.ui.right.sidebar .ui.styled.accordion .accordion .content .layer-legend .layer-legend-image-wrapper .layer-legend-image .icon-image {
+  position: absolute;
+  pointer-events: none;
 }
 .ui.right.sidebar .ui.styled.accordion .content .layer-legend .layer-legend-image-wrapper .layer-legend-caption,
 .ui.right.sidebar .ui.styled.accordion .accordion .content .layer-legend .layer-legend-image-wrapper .layer-legend-caption {
@@ -49482,6 +49504,11 @@ img.item-minus {
 .ui.form .error.message.hidden {
   display: none !important;
 }
+.flexberry-validationsummary.ui.gray.message {
+  box-shadow: none;
+  color: #848E99;
+  border-color: #848E99;
+}
 /**
     Fix disappearing checkboxes while scrolling
 */
@@ -49522,6 +49549,12 @@ img.item-minus {
 }
 .hidden {
   display: none !important;
+}
+.leaflet-marker-icon.label.polygon {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 .leaflet-marker-icon.label.point {
   display: flex;

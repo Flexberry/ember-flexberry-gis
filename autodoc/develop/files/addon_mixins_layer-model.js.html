@@ -505,6 +505,57 @@ export default Ember.Mixin.create({
   },
 
   /**
+    Type of legend.
+    @property legendType
+    @type String
+    @readOnly
+  */
+  legendType: Ember.computed(&#x27;isDeleted&#x27;, &#x27;type&#x27;, &#x27;settingsAsObject.legendSettings&#x27;, function () {
+    if (this.get(&#x27;isDeleted&#x27;) || !this.get(&#x27;settingsAsObject.legendSettings&#x27;)) {
+      return false;
+    }
+
+    let layerClassFactory = Ember.getOwner(this).knownForType(&#x27;layer&#x27;, this.get(&#x27;type&#x27;));
+    let legendType = layerClassFactory.getLegendType(this.get(&#x27;type&#x27;), this.get(&#x27;settingsAsObject&#x27;));
+
+    return legendType;
+  }),
+
+  /**
+    Settings of legend.
+    @property legendSettings
+    @type Object
+    @readOnly
+  */
+  legendSettings: Ember.computed(&#x27;isDeleted&#x27;, &#x27;type&#x27;, &#x27;settingsAsObject.legendSettings&#x27;, function () {
+    if (this.get(&#x27;isDeleted&#x27;) || !this.get(&#x27;settingsAsObject.legendSettings&#x27;)) {
+      return false;
+    }
+
+    let layerClassFactory = Ember.getOwner(this).knownForType(&#x27;layer&#x27;, this.get(&#x27;type&#x27;));
+    let legendSettings = layerClassFactory.getLegendSettings(this.get(&#x27;settingsAsObject&#x27;));
+
+    return legendSettings;
+  }),
+
+  /**
+    Type of legend from style settings.
+    @property styleSettingsForLegend
+    @type String
+    @readOnly
+  */
+  styleSettingsTypeForLegend: Ember.computed(&#x27;isDeleted&#x27;, &#x27;type&#x27;, &#x27;settingsAsObject.styleSettings.type&#x27;, function () {
+    if (this.get(&#x27;isDeleted&#x27;) || !this.get(&#x27;settingsAsObject.legendSettings&#x27;)) {
+      return false;
+    }
+
+    let layerClassFactory = Ember.getOwner(this).knownForType(&#x27;layer&#x27;, this.get(&#x27;type&#x27;));
+    let styleSettingsTypeForLegend = layerClassFactory.getStyleSettingsTypeForLegend(this.get(&#x27;settingsAsObject&#x27;));
+
+    return styleSettingsTypeForLegend;
+  }),
+
+  /**
     Flag: indicates whether layer can be identified.
     @property canBeIdentified
     @type Boolean

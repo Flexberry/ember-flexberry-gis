@@ -422,17 +422,43 @@ import Ember from &#x27;ember&#x27;;
 export function initialize() {
   let setStyle = {
     setStyle: function (style) {
-      L.Path.prototype.setStyle.call(this, style);
-      if (!Ember.isNone(this.layerModel) &amp;&amp; Ember.isNone(this.layerModel.legendStyle)) {
-        this.layerModel.legendStyle = {
-          type: &#x27;simple&#x27;,
-          style: {
-            path: style
+      if (style) {
+        if (this.options.count) {
+          for (let i = 0; i &lt; this.options.count; i++) {
+            if (!style.count) {
+              this.setStyleCustom(this, this.options[i], style);
+            } else {
+              L.Path.prototype.setStyle.call(this, style);
+            }
           }
-        };
+        } else {
+          L.Path.prototype.setStyle.call(this, style);
+        }
+
+        if (!Ember.isNone(this.layerModel) &amp;&amp; Ember.isNone(this.layerModel.legendStyle)) {
+          this.layerModel.legendStyle = {
+            type: &#x27;simple&#x27;,
+            style: {
+              path: style
+            }
+          };
+        }
       }
 
       return this;
+    },
+
+    setStyleCustom(layer, options, style) {
+      for (var j in style) {
+        options[j] = style[j];
+      }
+
+      if (layer._renderer) {
+        layer._renderer._updateStyle(layer);
+        if (options.stroke &amp;&amp; style &amp;&amp; style.hasOwnProperty(&#x27;weight&#x27;)) {
+          layer._updateBounds();
+        }
+      }
     }
   };
 

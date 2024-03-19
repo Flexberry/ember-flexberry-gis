@@ -1364,6 +1364,12 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         this.set(&#x27;loading&#x27;, false);
         tabModel._reload();
         leafletObject.off(&#x27;save:failed&#x27;, saveFailed);
+
+        let _leafletObjectFirst = tabModel.layerModel._leafletObjectFirst;
+        if (!Ember.isNone(_leafletObjectFirst) &amp;&amp; typeof _leafletObjectFirst.setParams === &#x27;function&#x27;) {
+          this.trancateGeoWebCache(_leafletObjectFirst, leafletMap);
+          _leafletObjectFirst.setParams({ fake: Date.now() }, false);
+        }
       };
 
       this.set(&#x27;loading&#x27;, true);

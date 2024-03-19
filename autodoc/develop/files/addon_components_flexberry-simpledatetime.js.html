@@ -465,9 +465,21 @@ export default SimpleDatetime.extend({
     this.set(&#x27;eventNamespace&#x27;, namespace);
     Ember.$(document).on(&#x60;mousedown.${namespace}&#x60;, e =&gt; {
       let clicky = Ember.$(e.target);
-      if (clicky.closest(&#x27;.flatpickr-calendar&#x27;).length === 0 &amp;&amp; clicky.get(0) !== this.$(&#x27;.custom-flatpickr&#x27;).get(0)) {
-        this.get(&#x27;_flatpickr&#x27;).close();
+      let flatpickr = this.get(&#x27;_flatpickr&#x27;);
+
+      if (!flatpickr) {
+        return;
       }
+
+      if (clicky.closest(&#x27;.flatpickr-calendar&#x27;).length &gt; 0) {
+        return;
+      }
+
+      if (clicky.get(0) === this.$(&#x27;.custom-flatpickr&#x27;).get(0)) {
+        return;
+      }
+
+      flatpickr.close();
     });
     this.$(&#x27;.custom-flatpickr&#x27;).on(&#x27;click&#x27;, (e) =&gt; { this.inputClick(this, e); });
     this.$(&#x27;.button&#x27;).on(&#x27;click&#x27;, (e) =&gt; { this.actions.remove(this, e); });

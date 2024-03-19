@@ -660,7 +660,7 @@ export default BaseVectorLayer.extend({
         });
       });
 
-      this._createStringLabel([layer], leafletObject.labelsLayers);
+      this._createStringLabel([layer], leafletObject);
     }
   },
 
@@ -1029,7 +1029,7 @@ export default BaseVectorLayer.extend({
                 break;
               case &#x27;date&#x27;:
                 let dateInfo = getDateFormatFromString(e.searchOptions.queryString);
-                let searchDate = moment.utc(e.searchOptions.queryString, dateInfo.dateFormat + dateInfo.timeFormat, true);
+                let searchDate = moment(e.searchOptions.queryString, dateInfo.dateFormat + dateInfo.timeFormat, true);
 
                 if (dateInfo.dateFormat &amp;&amp; searchDate.isValid()) {
                   let [startInterval, endInterval] = createTimeInterval(searchDate, dateInfo.dateFormat);
@@ -1307,7 +1307,6 @@ export default BaseVectorLayer.extend({
       leafletObject = this.returnLeafletObject();
     }
 
-    let leafletMap = this.get(&#x27;leafletMap&#x27;);
     if (!Ember.isNone(leafletObject)) {
       let show = this.get(&#x27;visibility&#x27;) || (!Ember.isNone(leafletObject.showLayerObjects) &amp;&amp; leafletObject.showLayerObjects);
       let continueLoad = !leafletObject.options.showExisting &amp;&amp; leafletObject.options.continueLoading;
@@ -1315,7 +1314,8 @@ export default BaseVectorLayer.extend({
 
       let needPromise = false;
       if (continueLoad &amp;&amp; show &amp;&amp; checkMapZoom(leafletObject)) {
-        let bounds = leafletMap.getBounds();
+        let bounds = this._boundsCrs(leafletObject);
+
         if (!Ember.isNone(leafletObject.showLayerObjects)) {
           leafletObject.showLayerObjects = false;
         }

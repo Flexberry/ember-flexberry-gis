@@ -722,12 +722,14 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
       }
 
       let label = this.get(&#x27;_dragLayer._label&#x27;);
-      let zoom = Number(this.get(&#x27;leafletMap&#x27;).getZoom().toFixed(1));
-      let labelZooms = label.filter(l =&gt; { return (l.minZoom == null || l.minZoom &lt;= zoom) &amp;&amp; (l.maxZoom == null || l.maxZoom &gt;= zoom); });
-      if (labelZooms.length &gt; 0) {
-        let labelZoom = labelZooms[0];
-        newCoords = moveCoords(labelZoom.getLatLng());
-        labelZoom.setLatLng(newCoords);
+      if (label) {
+        let zoom = Number(this.get(&#x27;leafletMap&#x27;).getZoom().toFixed(1));
+        let labelZooms = label.filter(l =&gt; { return (l.minZoom == null || l.minZoom &lt;= zoom) &amp;&amp; (l.maxZoom == null || l.maxZoom &gt;= zoom); });
+        if (labelZooms.length &gt; 0) {
+          let labelZoom = labelZooms[0];
+          newCoords = moveCoords(labelZoom.getLatLng());
+          labelZoom.setLatLng(newCoords);
+        }
       }
     };
 

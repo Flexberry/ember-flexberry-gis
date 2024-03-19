@@ -820,7 +820,7 @@ export default Ember.Mixin.create({
       let rootArray = this.get(rootPath);
       rootArray.pushObject(childLayer);
 
-      setIndexes(rootArray, this.get(&#x27;model.hierarchy&#x27;));
+      setIndexes(rootArray, this.get(&#x27;model.otherLayers&#x27;));
     },
 
     /**
@@ -955,7 +955,7 @@ export default Ember.Mixin.create({
 
       let rootArray = this.get(rootPath);
 
-      setIndexes(rootArray, this.get(&#x27;model.hierarchy&#x27;));
+      setIndexes(rootArray, this.get(&#x27;model.otherLayers&#x27;));
     }
   },
 

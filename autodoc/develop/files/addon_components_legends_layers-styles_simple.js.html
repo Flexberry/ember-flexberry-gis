@@ -490,12 +490,23 @@ export default BaseLayerStyleLegendComponent.extend({
         }
 
         if (this.get(&#x27;_markersCanBeDisplayed&#x27;)) {
-          let style = styleRule.styleSettings.style.marker;
-          let canvas = this.$(&#x60;canvas.markers${index}&#x60;)[0];
-          this._markerLegendRenderer(style, canvas);
+          let styles = styleRule.styleSettings.style.marker;
+          if (styles.hasOwnProperty(&#x27;scale&#x27;)) {
+            return;
+          }
+
+          let markersStylesRenderer = this.get(&#x27;_markersStylesRenderer&#x27;);
+          let scale = markersStylesRenderer.calcScale(styles);
+          styles.scale = scale;
+          Ember.set(styleRule, &#x27;width&#x27;, scale.size);
+          Ember.set(styleRule, &#x27;height&#x27;, scale.size);
+
+          styles.forEach(style =&gt; {
+            markersStylesRenderer.getStyle(scale, style);
+          });
+
         }
       });
-
     } else {
       this._withoutStyleRules();
     }
@@ -509,9 +520,17 @@ export default BaseLayerStyleLegendComponent.extend({
     }
 
     if (this.get(&#x27;_markersCanBeDisplayed&#x27;)) {
-      let styleSettings = Ember.isNone(this.parentView.layer.legendStyle) ? this.get(&#x27;styleSettings.style.marker&#x27;) : this.parentView.layer.legendStyle;
-      let canvas = this.$(&#x27;canvas.markers&#x27;)[0];
-      this._markerLegendRenderer(styleSettings, canvas);
+      let styles = Ember.isNone(this.parentView.layer.legendStyle) ? this.get(&#x27;styleSettings.style.marker&#x27;) : this.parentView.layer.legendStyle;
+      if (styles.hasOwnProperty(&#x27;scale&#x27;)) {
+        return;
+      }
+
+      let markersStylesRenderer = this.get(&#x27;_markersStylesRenderer&#x27;);
+      let scale = markersStylesRenderer.calcScale(styles);
+      styles.scale = scale;
+      this.set(&#x27;width&#x27;, scale.size);
+      this.set(&#x27;height&#x27;, scale.size);
+      markersStylesRenderer.getStyle(scale, styles);
     }
   },
 
@@ -530,16 +549,7 @@ export default BaseLayerStyleLegendComponent.extend({
       canvas: canvas,
       target: &#x27;legend&#x27;
     });
-  },
-
-  _markerLegendRenderer(styleSettings, canvas) {
-    let markersStylesRenderer = this.get(&#x27;_markersStylesRenderer&#x27;);
-    markersStylesRenderer.renderOnCanvas({
-      styleSettings: styleSettings,
-      canvas: canvas,
-      target: &#x27;legend&#x27;
-    });
-  },
+  }
 });
 
     </pre>

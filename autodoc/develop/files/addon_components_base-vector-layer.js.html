@@ -1733,6 +1733,33 @@ export default BaseLayer.extend(layerLabel, {
     } else {
       return geoJSONLayer.geometry.coordinates;
     }
+  },
+
+  _boundsCrs(leafletObject) {
+    let leafletMap = this.get(&#x27;leafletMap&#x27;);
+    let boundsMap = leafletMap.getBounds();
+    if (boundsMap &amp;&amp; leafletObject.options &amp;&amp; leafletObject.options.crs &amp;&amp; leafletObject.options.crs.bounds) {
+      let crsBounds = leafletObject.options.crs.bounds;
+      if (boundsMap._northEast.lat &gt; crsBounds.max.x) {
+        boundsMap._northEast.lat = crsBounds.max.x;
+      }
+
+      if (boundsMap._northEast.lng &gt; crsBounds.max.y) {
+        boundsMap._northEast.lng = crsBounds.max.y;
+      }
+
+      if ((boundsMap._southWest.lat &lt; 0 &amp;&amp; boundsMap._southWest.lat &lt; crsBounds.min.x) ||
+        (boundsMap._southWest.lat &gt; 0 &amp;&amp; boundsMap._southWest.lat &gt; crsBounds.min.x)) {
+        boundsMap._southWest.lat = crsBounds.min.x;
+      }
+
+      if ((boundsMap._southWest.lng &lt; 0 &amp;&amp; boundsMap._southWest.lng &lt; crsBounds.min.y) ||
+        (boundsMap._southWest.lng &gt; 0 &amp;&amp; boundsMap._southWest.lng &gt; crsBounds.min.y)) {
+        boundsMap._southWest.lng = crsBounds.min.y;
+      }
+    }
+
+    return boundsMap;
   }
 });
 

@@ -422,6 +422,7 @@ import Ember from &#x27;ember&#x27;;
 import layout from &#x27;../templates/components/layer-result-list&#x27;;
 import LeafletZoomToFeatureMixin from &#x27;../mixins/leaflet-zoom-to-feature&#x27;;
 import ResultFeatureInitializer from &#x27;../mixins/result-feature-initializer&#x27;;
+import SlotsMixin from &#x27;ember-block-slots&#x27;;
 
 // Url key used to identify transitions from ember-flexberry-gis on other resources.
 const isMapLimitKey = &#x27;GISLinked&#x27;;
@@ -433,7 +434,7 @@ const isMapLimitKey = &#x27;GISLinked&#x27;;
   @uses LeafletZoomToFeatureMixin
   @extends &lt;a href=&quot;http://emberjs.com/api/classes/Ember.Component.html&quot;&gt;Ember.Component&lt;/a&gt;
  */
-export default Ember.Component.extend(LeafletZoomToFeatureMixin, ResultFeatureInitializer, {
+export default Ember.Component.extend(SlotsMixin, LeafletZoomToFeatureMixin, ResultFeatureInitializer, {
 
   /**
   Service for managing map API.
@@ -674,14 +675,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, ResultFeatureIn
     */
     findIntersection(feature) {
       this.sendAction(&#x27;showIntersectionPanel&#x27;, feature);
-    },
-
-    /**
-     * Search satellite action
-     * @param feature
-     */
-    searchSatellites(feature) {
-      this.sendAction(&#x27;showSatellitePanel&#x27;, feature);
     },
 
     /**

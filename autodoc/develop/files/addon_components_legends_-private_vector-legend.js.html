@@ -438,8 +438,8 @@ export default BaseLegendComponent.extend({
     @private
     @readOnly
   */
-  _styleSettingsRelatedComponentName: Ember.computed(&#x27;layer.settingsAsObject.styleSettings.type&#x27;, function() {
-    return &#x60;legends/layers-styles/${this.get(&#x27;layer.settingsAsObject.styleSettings.type&#x27;)}&#x60;;
+  _styleSettingsRelatedComponentName: Ember.computed(&#x27;layer.styleSettingsTypeForLegend&#x27;, function() {
+    return &#x60;legends/layers-styles/${this.get(&#x27;layer.styleSettingsTypeForLegend&#x27;)}&#x60;;
   })
 });
 

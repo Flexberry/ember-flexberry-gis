@@ -473,10 +473,10 @@ export default BaseLayerStyle.extend({
     if (Ember.isNone(path.styleIsSet) || !path.styleIsSet) {
       let pathStyle = style.path || {};
       if (Ember.isArray(pathStyle)) {
-        pathStyle.forEach(style =&gt; {
-          style =  Ember.$.extend(true, {}, style, {
+        pathStyle.forEach(styleInner =&gt; {
+          styleInner =  Ember.$.extend(true, {}, styleInner, {
             // Fill must be disabled for non polygon layers, because filled polylines and other lines-like geometries looks ugly in leaflet.
-            fill: style.fill === true &amp;&amp; path instanceof L.Polygon
+            fill: styleInner.fill === true &amp;&amp; path instanceof L.Polygon
           });
         });
         pathStyle.count = pathStyle.length;

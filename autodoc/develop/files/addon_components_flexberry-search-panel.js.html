@@ -600,6 +600,8 @@ export default Ember.Component.extend({
 
   actions: {
     querySearch() {
+      this.sendAction(&#x27;clearSearch&#x27;);
+
       if (this.get(&#x27;attrVisible&#x27;)) {
         if (Ember.isNone(this.get(&#x27;_selectedLayer&#x27;))) {
           this.set(&#x27;errorMessage&#x27;, this.get(&#x27;i18n&#x27;).t(&#x27;components.flexberry-search.error-message-empty-selected-layer&#x27;));
@@ -691,6 +693,8 @@ export default Ember.Component.extend({
     },
 
     attrSearch() {
+      this.sendAction(&#x27;clearSearch&#x27;);
+
       let attrVisible = !this.get(&#x27;attrVisible&#x27;);
       if (attrVisible) {
         this.set(&#x27;attrVisible&#x27;, attrVisible);

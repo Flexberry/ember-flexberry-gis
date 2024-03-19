@@ -1630,7 +1630,7 @@ export default Ember.Mixin.create(SnapDraw, actionsHandler, {
 
     return new Ember.RSVP.Promise((resolve, reject) =&gt; {
       Ember.$.ajax({
-        url: &#x60;${config.APP.backendUrl}/controls/FileUploaderHandler.ashx?FileName=${file.name}&#x60;,
+        url: &#x60;${config.APP.backendUrls.fileUploadUrl}?FileName=${file.name}&#x60;,
         type: &#x27;POST&#x27;,
         data: data,
         cache: false,

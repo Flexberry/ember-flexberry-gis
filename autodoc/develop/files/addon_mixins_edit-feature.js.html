@@ -416,6 +416,7 @@
     <pre class="prettyprint linenums">
 
 import Ember from &#x27;ember&#x27;;
+import { getLeafletCrs } from &#x27;../utils/leaflet-crs&#x27;;
 
 export default Ember.Mixin.create({
 
@@ -470,6 +471,81 @@ export default Ember.Mixin.create({
     return L.geoJson(layer.toGeoJSON(), {
       pane: &#x27;zoomto&#x27;
     }).setStyle(this.get(&#x27;zoomFeatureStyle&#x27;));
+  },
+
+  /**
+    Sends request to trancate GeoWebCache for layer by boundingBox.
+
+    @method trancateGeoWebCache
+    @param {Object} leafletObject laeflet layer.
+    @param {Object} leafletMap laeflet map.
+  */
+  trancateGeoWebCache(leafletObject, leafletMap) {
+    let layers = leafletObject.wmsParams.layers.split();
+    let workspace;
+    let layer;
+    let geoWebCache;
+    if (layers.length === 2) {
+      workspace = layers[0];
+      layer = layers[1];
+    } else {
+      let urlSplit = leafletObject._url.split(&#x27;/&#x27;);
+      let indexGeoserver = urlSplit.indexOf(&#x27;geoserver&#x27;);
+      if (indexGeoserver &gt; -1 &amp;&amp; urlSplit.length === indexGeoserver + 3) {
+        workspace = urlSplit.at(indexGeoserver + 1);
+      } else {
+        console.error(&#x27;Can\&#x27;t get workspace in geoserver&#x27;);
+        return;
+      }
+
+      layer = layers[0];
+    }
+
+    if (!Ember.isBlank(leafletObject._url.match(new RegExp(&#x27;(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?&#x27;)))) {
+      let indexGeoserver = leafletObject._url.indexOf(&#x27;geoserver&#x27;);
+      if (indexGeoserver === -1) {
+        console.error(&#x27;Can\&#x27;t get url geoserver&#x27;);
+        return;
+      }
+
+      geoWebCache = leafletObject._url.slice(0, indexGeoserver + 10) + &#x27;/gwc/rest/seed/&#x27;;
+    }
+
+    if (!Ember.isNone(geoWebCache)) {
+      let url = geoWebCache + workspace + &#x27;:&#x27; + layer;
+      let gridSetId = leafletObject.wmsParams.crs + &#x27;_&#x27; + leafletObject.wmsParams.width;
+      let zoom = Math.trunc(leafletMap.getZoom());
+      let zoomStart = zoom - 1 &gt; 0 ? zoom - 1 : zoom;
+      let zoomStop = zoom + 1 &lt; 20 ? zoom + 1 : zoom;
+      let styles = leafletObject.wmsParams.styles;
+      let parameterStyles = &#x27;&#x27;;
+      if (!Ember.isNone(styles)) {
+        parameterStyles = &#x60;parameter_STYLES=${workspace}:${styles}&amp;&#x60;;
+      }
+
+      let crsName = leafletObject.wmsParams.crs;
+      let crs;
+      if (!Ember.isNone(crsName)) {
+        crs = getLeafletCrs(&#x27;{ &quot;code&quot;: &quot;&#x27; + crsName.toUpperCase() + &#x27;&quot;, &quot;definition&quot;: &quot;&quot; }&#x27;, this);
+      }
+
+      let bounds = leafletMap.getBounds();
+      let minXY = L.marker(bounds._southWest).toProjectedGeoJSON(crs);
+      let maxXY = L.marker(bounds._northEast).toProjectedGeoJSON(crs);
+
+      Ember.$.ajax({
+        method: &#x27;POST&#x27;,
+        url: url,
+        async: true,
+        data: &#x60;threadCount=01&amp;type=truncate&amp;gridSetId=${gridSetId}&amp;tileFormat=image%2Fpng&amp;zoomStart=${zoomStart}&amp;zoomStop=${zoomStop}&amp;&#x60; +
+          &#x60;${parameterStyles}minX=${minXY.geometry.coordinates[0]}&amp;minY=${minXY.geometry.coordinates[1]}&#x60; +
+          &#x60;&amp;maxX=${maxXY.geometry.coordinates[0]}&amp;maxY=${maxXY.geometry.coordinates[1]}&#x60;,
+        contentType: &#x27;text/html&#x27;,
+        error: function (data) {
+          console.error(data);
+        }
+      });
+    }
   }
 });
 
