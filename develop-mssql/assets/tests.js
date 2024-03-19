@@ -12332,7 +12332,9 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-test', ['exports', 'embe
       resolveRegistration: function resolveRegistration() {
         return {
           'APP': {
-            'backendUrl': 'stubbackend'
+            'backendUrls': {
+              'fileUploadUrl': 'stubbackend'
+            }
           }
         };
       }
@@ -12346,7 +12348,7 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-test', ['exports', 'embe
 
     assert.ok(result instanceof _ember['default'].RSVP.Promise);
     assert.ok(server.requests[0].requestBody.has('testFile'));
-    assert.equal(server.requests[0].url, 'stubbackend/controls/FileUploaderHandler.ashx?FileName=testFile');
+    assert.equal(server.requests[0].url, 'stubbackend?FileName=testFile');
     result.then(function (e) {
       assert.equal(e, 'uploadfileresponse');
       done();
@@ -12777,6 +12779,13 @@ define('dummy/tests/unit/mixins/layer-label-test', ['exports', 'ember', 'ember-f
       center: [51.505, -0.09],
       zoom: 13
     });
+    var styleSettings = {
+      'style': {
+        'marker': {
+          'type': 'default'
+        }
+      }
+    };
     var settings = {
       'options': {
         'captionFontColor': '#000000FF',
@@ -12808,7 +12817,8 @@ define('dummy/tests/unit/mixins/layer-label-test', ['exports', 'ember', 'ember-f
     var subject = LayerLabelObject.create({
       leafletMap: leafletMap,
       showExisting: false,
-      labelsLayers: [labelsLayer]
+      labelsLayers: [labelsLayer],
+      styleSettings: styleSettings
     });
 
     var _applyFunctionStub = _sinon['default'].stub(subject, '_applyFunction');
