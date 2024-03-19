@@ -143,6 +143,36 @@ export default Ember.Object.extend({
   },
 
   /**
+    Type of legend.
+    @property getLegendType
+    @type String
+    @readOnly
+  */
+  getLegendType(type, settingsAsObject) {
+    return type;
+  },
+
+  /**
+    Settings of legend.
+    @property getLegendSettings
+    @type Object
+    @readOnly
+  */
+  getLegendSettings(settingsAsObject) {
+    return settingsAsObject.legendSettings;
+  },
+
+  /**
+    Type of legend from style settings.
+    @property getStyleSettingsTypeForLegend
+    @type String
+    @readOnly
+  */
+  getStyleSettingsTypeForLegend(settingsAsObject) {
+    return settingsAsObject.styleSettings.type;
+  },
+
+  /**
     Creates new settings object (with settings related to layer-type) from the specified CSW record.
 
     @method createSetingsFromCsw

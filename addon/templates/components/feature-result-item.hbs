@@ -1,3 +1,4 @@
+{{yield}}
 <div class="feature-result-item-title">
   {{#if _showLoader}}
     <div class="ui small active loader"></div>
@@ -113,12 +114,9 @@
             {{t "components.feature-result-item.find-intersection-caption"}}
           </a>
         </div>
-        <div title={{if session.isAuthenticated "" (t "components.feature-result-item.search-satellite-authenticated")}}>
-          <a class="icon item {{if session.isAuthenticated "" "disabled-link"}}"  {{action "searchSatellites" feature on="click"}}>
-            <i class="icon-guideline-earth"></i>
-            {{t "components.feature-result-item.search-satellite"}}
-          </a>
-        </div>
+        {{#yield-slot "list-buttons" (block-params feature)}}
+            {{yield}}
+        {{/yield-slot}}
       </div>
     {{/if}}
   </div>

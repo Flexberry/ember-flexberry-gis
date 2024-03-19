@@ -57,6 +57,48 @@ export default WmsLayer.extend({
   },
 
   /**
+    Type of legend.
+    @property getLegendType
+    @type String
+    @readOnly
+  */
+  getLegendType(type, settingsAsObject) {
+    if (settingsAsObject.remoteStyles === false) {
+      return 'wfs';
+    }
+
+    return type;
+  },
+
+  /**
+    Settings of legend.
+    @property getLegendSettings
+    @type Object
+    @readOnly
+  */
+  getLegendSettings(settingsAsObject) {
+    if (settingsAsObject.remoteStyles === false) {
+      return settingsAsObject.wfs.legendSettings;
+    }
+
+    return settingsAsObject.legendSettings;
+  },
+
+  /**
+    Type of legend from style settings.
+    @property getStyleSettingsTypeForLegend
+    @type String
+    @readOnly
+  */
+  getStyleSettingsTypeForLegend(settingsAsObject) {
+    if (settingsAsObject.remoteStyles === false) {
+      return settingsAsObject.wfs.styleSettings.type;
+    }
+
+    return settingsAsObject.styleSettings.type;
+  },
+
+  /**
     Creates new search settings object (with search settings related to layer-type).
 
     @method createSearchSettings

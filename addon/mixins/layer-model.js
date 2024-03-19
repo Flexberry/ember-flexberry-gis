@@ -89,6 +89,57 @@ export default Ember.Mixin.create({
   },
 
   /**
+    Type of legend.
+    @property legendType
+    @type String
+    @readOnly
+  */
+  legendType: Ember.computed('isDeleted', 'type', 'settingsAsObject.legendSettings', function () {
+    if (this.get('isDeleted') || !this.get('settingsAsObject.legendSettings')) {
+      return false;
+    }
+
+    let layerClassFactory = Ember.getOwner(this).knownForType('layer', this.get('type'));
+    let legendType = layerClassFactory.getLegendType(this.get('type'), this.get('settingsAsObject'));
+
+    return legendType;
+  }),
+
+  /**
+    Settings of legend.
+    @property legendSettings
+    @type Object
+    @readOnly
+  */
+  legendSettings: Ember.computed('isDeleted', 'type', 'settingsAsObject.legendSettings', function () {
+    if (this.get('isDeleted') || !this.get('settingsAsObject.legendSettings')) {
+      return false;
+    }
+
+    let layerClassFactory = Ember.getOwner(this).knownForType('layer', this.get('type'));
+    let legendSettings = layerClassFactory.getLegendSettings(this.get('settingsAsObject'));
+
+    return legendSettings;
+  }),
+
+  /**
+    Type of legend from style settings.
+    @property styleSettingsForLegend
+    @type String
+    @readOnly
+  */
+  styleSettingsTypeForLegend: Ember.computed('isDeleted', 'type', 'settingsAsObject.styleSettings.type', function () {
+    if (this.get('isDeleted') || !this.get('settingsAsObject.legendSettings')) {
+      return false;
+    }
+
+    let layerClassFactory = Ember.getOwner(this).knownForType('layer', this.get('type'));
+    let styleSettingsTypeForLegend = layerClassFactory.getStyleSettingsTypeForLegend(this.get('settingsAsObject'));
+
+    return styleSettingsTypeForLegend;
+  }),
+
+  /**
     Flag: indicates whether layer can be identified.
     @property canBeIdentified
     @type Boolean

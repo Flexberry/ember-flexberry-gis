@@ -4,7 +4,6 @@ import SnapDrawMixin from '../mixins/snap-draw';
 import EditFeatureMixin from '../mixins/edit-feature';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
 import { translationMacro as t } from 'ember-i18n';
-import { getLeafletCrs } from '../utils/leaflet-crs';
 import { addAlpha, splitColor } from '../utils/leaflet-opacity';
 
 export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFeatureMixin, {
@@ -778,8 +777,10 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
           // Removing a layer from the map that was added for edit mode
           if (leafletMap.hasLayer(layer)) {
-            layer.setStyle(layer.defaultFeatureStyle);
-            layer.styleIsSet = layer.defaultSetStyle;
+            if (!this.get('isLayerCopy')) {
+              layer.setStyle(layer.defaultFeatureStyle);
+              layer.styleIsSet = layer.defaultSetStyle;
+            }
 
             if (this.get('isLayerCopy')) {
               leafletMap.removeLayer(layer);
@@ -890,81 +891,6 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
     if (Ember.get(leafletObject, 'updateLabel') && typeof (leafletObject.updateLabel) === 'function') {
       leafletObject.updateLabel(layer);
-    }
-  },
-
-  /**
-    Sends request to trancate GeoWebCache for layer by boundingBox.
-
-    @method trancateGeoWebCache
-    @param {Object} leafletObject laeflet layer.
-  */
-  trancateGeoWebCache(leafletObject) {
-    let layers = leafletObject.wmsParams.layers.split();
-    let workspace;
-    let layer;
-    let geoWebCache;
-    if (layers.length === 2) {
-      workspace = layers[0];
-      layer = layers[1];
-    } else {
-      let urlSplit = leafletObject._url.split('/');
-      let indexGeoserver = urlSplit.indexOf('geoserver');
-      if (indexGeoserver > -1 && urlSplit.length === indexGeoserver + 3) {
-        workspace = urlSplit.at(indexGeoserver + 1);
-      } else {
-        console.error('Can\'t get workspace in geoserver');
-        return;
-      }
-
-      layer = layers[0];
-    }
-
-    if (!Ember.isBlank(leafletObject._url.match(new RegExp('(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?')))) {
-      let indexGeoserver = leafletObject._url.indexOf('geoserver');
-      if (indexGeoserver === -1) {
-        console.error('Can\'t get url geoserver');
-        return;
-      }
-
-      geoWebCache = leafletObject._url.slice(0, indexGeoserver + 10) + '/gwc/rest/seed/';
-    }
-
-    if (!Ember.isNone(geoWebCache)) {
-      let url = geoWebCache + workspace + ':' + layer;
-      let gridSetId = leafletObject.wmsParams.crs + '_' + leafletObject.wmsParams.width;
-      let leafletMap = this.get('leafletMap');
-      let zoom = Math.trunc(leafletMap.getZoom());
-      let zoomStart = zoom - 1 > 0 ? zoom - 1 : zoom;
-      let zoomStop = zoom + 1 < 20 ? zoom + 1 : zoom;
-      let styles = leafletObject.wmsParams.styles;
-      let parameterStyles = '';
-      if (!Ember.isNone(styles)) {
-        parameterStyles = `parameter_STYLES=${workspace}:${styles}&`;
-      }
-
-      let crsName = leafletObject.wmsParams.crs;
-      let crs;
-      if (!Ember.isNone(crsName)) {
-        crs = getLeafletCrs('{ "code": "' + crsName.toUpperCase() + '", "definition": "" }', this);
-      }
-
-      let bounds = leafletMap.getBounds();
-      let minXY = L.marker(bounds._southWest).toProjectedGeoJSON(crs);
-      let maxXY = L.marker(bounds._northEast).toProjectedGeoJSON(crs);
-
-      Ember.$.ajax({
-        method: 'POST',
-        url: url,
-        async: true,
-        data: `threadCount=01&type=truncate&gridSetId=${gridSetId}&tileFormat=image%2Fpng&zoomStart=${zoomStart}&zoomStop=${zoomStop}&` +
-          `${parameterStyles}minX=${minXY.geometry.coordinates[0]}&minY=${minXY.geometry.coordinates[1]}` +
-          `&maxX=${maxXY.geometry.coordinates[0]}&maxY=${maxXY.geometry.coordinates[1]}`,
-        contentType: 'text/html',
-        error: function(data) {
-          console.error(data);
-        }
-      });
     }
   },
 
@@ -1172,8 +1098,10 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           leafletObject.editLayer(layer);
 
           if (leafletMap.hasLayer(layer)) {
-            layer.setStyle(layer.defaultFeatureStyle);
-            layer.styleIsSet = layer.defaultSetStyle;
+            if (!this.get('isLayerCopy')) {
+              layer.setStyle(layer.defaultFeatureStyle);
+              layer.styleIsSet = layer.defaultSetStyle;
+            }
 
             if (this.get('isLayerCopy')) {
               // Deleting a copy of an edited layer from the map
@@ -1248,8 +1176,9 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         this.set('mode', 'Saved');
 
         let _leafletObjectFirst = this.get('layerModel.layerModel._leafletObjectFirst');
+        let leafletMap = this.get('leafletMap');
         if (!Ember.isNone(_leafletObjectFirst) && typeof _leafletObjectFirst.setParams === 'function') {
-          this.trancateGeoWebCache(_leafletObjectFirst);
+          this.trancateGeoWebCache(_leafletObjectFirst, leafletMap);
           _leafletObjectFirst.setParams({ fake: Date.now() }, false);
         }
 

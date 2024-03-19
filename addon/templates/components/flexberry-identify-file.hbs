@@ -23,10 +23,12 @@
     <div class="field geometryField">
       <label>{{t "components.flexberry-identify-file.geometry-type.caption"}} <span class="required">*</span></label>
       {{flexberry-dropdown
-        class=(concat "fluid geometryType")
+        class=(concat "no-placeholder fluid geometryType")
         items=_geometryTypes
         value=_geometryType
         displayCaptions=true
+        placeholder=""
+        onChange=(action 'clearCacheAndPreview')
       }}
     </div>
   {{/if}}
@@ -34,15 +36,19 @@
     <div class="field geometryField">
       <label>{{t "components.flexberry-identify-file.geometry-fields.caption"}} <span class="required">*</span></label>
       {{flexberry-dropdown
-        class=(concat "fluid geometryField1")
+        class=(concat "no-placeholder fluid geometryField1")
         items=_availableFields
         value=geometryField1
+        placeholder=""
+        onChange=(action 'clearCacheAndPreview')
       }}
     </div>
     {{flexberry-dropdown
-      class=(concat "field fluid geometryField2" (if disableCrs " disabled" ""))
+      class=(concat "no-placeholder fluid geometryField2")
       items=_availableFields
       value=geometryField2
+      placeholder=""
+      onChange=(action 'clearCacheAndPreview')
     }}
   {{/if}}
 
@@ -52,7 +58,7 @@
       items=systemCoordinates
       value=coordinate
       displayCaptions=true
-      onChange=(action 'onCoordinateChange')
+      onChange=(action 'clearCacheAndPreview')
       class="scale-value fluid"
     }}
   </div>
@@ -63,7 +69,7 @@
   {{flexberry-button
     iconClass=(if filePreview 'icon-guideline-hide' 'icon-guideline-show')
     click=(action "showFileLayer")
-    readonly = (not file)
+    readonly = (or (not file) (and needCRS (eq coordinate 'auto')) (and needGeometryFieldName (not geometryFieldFile)))
     tooltip=(t "components.flexberry-identify-panel.file.preview.caption")
   }}
 
@@ -72,7 +78,7 @@
       class='ml-20'
       iconClass='icon-guideline-layers-info'
       click=(action "identificationFile")
-      readonly = (not file)
+      readonly = (or (not file) (and needCRS (eq coordinate 'auto')) (and needGeometryFieldName (not geometryFieldFile)))
       tooltip=(t "components.flexberry-identify-panel.file.identify.caption")
     }}
 
@@ -81,12 +87,23 @@
         class='ml-20'
         iconClass='icon-guideline-goout'
         click=(action "createLayerByFile")
-        readonly = (not file)
+        readonly = (or (not file) (and needCRS (eq coordinate 'auto')) (and needGeometryFieldName (not geometryFieldFile)))
         tooltip=(t "components.flexberry-identify-panel.file.create-layer.caption")
       }}
     {{/if}}
   {{/if}}
 </div>
+
+{{#if (and needCRS (eq coordinate 'auto'))}}
+  {{ui-message
+    type="error"
+    closeable=false
+    visible=true
+    class=(concat "flexberry-validationsummary gray")
+    message=warningMessageAutoCRS
+  }}
+{{/if}}
+
 {{#if _showError}}
   {{ui-message
     type="error"
@@ -95,3 +112,4 @@
     message=_errorMessage
   }}
 {{/if}}
+

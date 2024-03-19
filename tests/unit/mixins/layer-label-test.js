@@ -16,6 +16,13 @@ test('test method _createStringLabel', function(assert) {
     center: [51.505, -0.09],
     zoom: 13
   });
+  let styleSettings = {
+    'style': {
+      'marker': {
+        'type': 'default',
+      }
+    }
+  };
   let settings = {
     'options': {
       'captionFontColor': '#000000FF',
@@ -47,7 +54,8 @@ test('test method _createStringLabel', function(assert) {
   let subject = LayerLabelObject.create({
     leafletMap: leafletMap,
     showExisting: false,
-    labelsLayers: [labelsLayer]
+    labelsLayers: [labelsLayer],
+    styleSettings: styleSettings
   });
 
   let _applyFunctionStub = sinon.stub(subject, '_applyFunction');

@@ -54,11 +54,11 @@ export default BaseMarkerStyle.extend({
     @param {Object} options.style Hash containing style settings.
     @param {Object} [options.target = 'preview'] Render target ('preview' or 'legend').
   */
-  renderOnCanvas({ canvas, style, target }) {
+  renderOnCanvas({ canvas, style, target, scale }) {
     // Default 'image' markers-style's settings are settings for leaflet default image icon (L.Icon.Default),
     // so we can reuse 'image' markers-style here.
     let markersStylesRenderer = this.get('_markersStylesRenderer');
     let defaultMarkerStyleSettings = markersStylesRenderer.getDefaultStyleSettings('image');
-    markersStylesRenderer.renderOnCanvas({ canvas, styleSettings: defaultMarkerStyleSettings, target });
+    markersStylesRenderer.renderOnCanvas({ canvas, styleSettings: defaultMarkerStyleSettings, target, scale });
   }
 });

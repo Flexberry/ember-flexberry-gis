@@ -39,6 +39,12 @@
   }
 }
 
+.flexberry-validationsummary.ui.gray.message {
+  box-shadow: none;
+  color: @greyText;
+  border-color: @greyText;
+}
+
 /**
     Fix disappearing checkboxes while scrolling
 */
@@ -74,6 +80,13 @@
 
 .hidden {
   display: none !important;
+}
+
+.leaflet-marker-icon.label.polygon {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 .leaflet-marker-icon.label.point {
