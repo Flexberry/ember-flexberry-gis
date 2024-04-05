@@ -520,7 +520,7 @@ let FlexberryMapComponent = Ember.Component.extend(
       leafletMap.mainMap = true;
       L.DomEvent.on(leafletMap, 'mousedown mouseup mousein mouseout', (e) => {
         if (e.originalEvent.button === 2) {
-
+          
           if (!this.get('maptoolOptionsService.identifyOnRightClick')) {
             return;
           }
@@ -531,23 +531,35 @@ let FlexberryMapComponent = Ember.Component.extend(
               tabName: 'identify',
               prevTab: ''
             });
-            let editTools = leafletMap.flexberryMap.tools.getEnabled()._editTools;
+
+            let identifyTool = leafletMap.flexberryMap.tools.getEnabled();
+            let identifyEditTools = Ember.get(identifyTool, '_editTools');
+
+            if (Ember.isNone(identifyEditTools)) {
+              return;
+            }
 
             // Инициируем нажатие ЛКМ 
             let newMouseDownEvent = new MouseEvent('mousedown');
-            editTools.onMousedown({
+            identifyEditTools.onMousedown({
               latlng: e.latlng,
               originalEvent: newMouseDownEvent
             });
           }
 
-          if (e.type === 'mouseup') {   
-            leafletMap.flexberryMap.tools.getEnabled()._editTools.stopDrawing();
-            this.set('prevEnabledTools', null);         
+          if (e.type === 'mouseup') {
+            let identifyTool = leafletMap.flexberryMap.tools.getEnabled();
+            let identifyEditTools = Ember.get(identifyTool, '_editTools');
+
+            if (!Ember.isNone(identifyEditTools)) {
+              identifyEditTools.stopDrawing();
+            }
+
+            this.set('prevEnabledTools', null);
             leafletMap.flexberryMap.tools.enable('drag');
           }
-          
-        }else if (e.originalEvent.button === 1) {
+
+        } else if (e.originalEvent.button === 1) {
           if (e.type === 'mousedown') {
             e.originalEvent.preventDefault();
             let enabledTools = {

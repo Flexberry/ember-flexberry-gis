@@ -233,11 +233,12 @@ let ExportMapCommandComponent = Ember.Component.extend({
         e.closeDialog = true;
         this._hideExportDialog();
       });
-    },
+    }
   },
 
   /**
     Hides export dialog.
+
     @method _hideExportDialog
     @private
   */
