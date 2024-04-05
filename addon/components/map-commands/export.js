@@ -183,8 +183,6 @@ let ExportMapCommandComponent = Ember.Component.extend({
    * Compare service. Disable before open map.
    */
   compare: Ember.inject.service(),
-  
-  maptoolOptionsService: Ember.inject.service("maptool-options"),
 
   /**
       Shows export dialog.
@@ -198,8 +196,6 @@ let ExportMapCommandComponent = Ember.Component.extend({
 
     // Show dialog.
     this.set('_exportDialogIsVisible', true);
-    
-    this.set('maptoolOptionsService.identifyOnRightClick', false)
   },
 
   actions: {
@@ -235,23 +231,19 @@ let ExportMapCommandComponent = Ember.Component.extend({
       leafletMap.flexberryMap.commands.execute('export', null, mapCommandExecutionOptions).then(() => {
         this.set('_exportIsInProgress', false);
         e.closeDialog = true;
-        this.send("hideExportDialog");
+        this._hideExportDialog();
       });
     },
-    
-    /**
-      Hides export dialog.
+  },
 
-      @method hideExportDialog
-      @private
-    */
-    hideExportDialog() {
-      // Hide dialog.
-      this.set('_exportDialogIsVisible', false);
-      
-      console.log('провернули')
-      this.set('maptoolOptionsService.identifyOnRightClick', true)
-    },
+  /**
+    Hides export dialog.
+    @method _hideExportDialog
+    @private
+  */
+  _hideExportDialog() {
+    // Hide dialog.
+    this.set('_exportDialogIsVisible', false);
   },
 
   /**
@@ -260,7 +252,7 @@ let ExportMapCommandComponent = Ember.Component.extend({
   willDestroyElement() {
     this._super(...arguments);
 
-    this.send("hideExportDialog");
+    this._hideExportDialog();
   },
 
   /**
