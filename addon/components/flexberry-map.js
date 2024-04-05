@@ -143,6 +143,7 @@ let FlexberryMapComponent = Ember.Component.extend(
   */
   lat: null,
 
+  maptoolOptionsService: Ember.inject.service("maptool-options"),    
   /**
     Map center longitude.
 
@@ -503,6 +504,10 @@ let FlexberryMapComponent = Ember.Component.extend(
 
     // Store map's container as jQuery object.
     let $leafletContainer = this.$();
+    
+    // Выключаем стандартный обработчик ПКМ для контейнера карты
+    $leafletContainer.on('contextmenu', (e) => e.preventDefault())
+    
     this.set('_$leafletContainer', $leafletContainer);
 
     let options = this.get('options');
@@ -513,7 +518,35 @@ let FlexberryMapComponent = Ember.Component.extend(
     if (this.get('mainMap')) {
       leafletMap.mainMap = true;
       L.DomEvent.on(leafletMap, 'mousedown mouseup mousein mouseout', (e) => {
-        if (e.originalEvent.button === 1) {
+        if (e.originalEvent.button === 2) {
+
+          if (!this.get('maptoolOptionsService.identifyOnRightClick')) {
+            return
+          }
+          
+          if (e.type === 'mousedown') {
+            this.sendAction('toggleSidebar', {
+              changed: true,
+              tabName: 'identify',
+              prevTab: ""
+            });
+            let editTools = leafletMap.flexberryMap.tools.getEnabled()._editTools
+            
+            // Инициируем нажатие ЛКМ 
+            let newMouseDownEvent = new MouseEvent('mousedown');
+            editTools.onMousedown({ 
+              latlng: e.latlng, 
+              originalEvent: newMouseDownEvent
+            })            
+          }
+          
+          if (e.type === 'mouseup') {   
+            leafletMap.flexberryMap.tools.getEnabled()._editTools.stopDrawing()
+            this.set('prevEnabledTools', null);         
+            leafletMap.flexberryMap.tools.enable('drag');
+          }
+          
+        }else if (e.originalEvent.button === 1) {
           if (e.type === 'mousedown') {
             e.originalEvent.preventDefault();
             let enabledTools = {
