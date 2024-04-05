@@ -520,7 +520,7 @@ let FlexberryMapComponent = Ember.Component.extend(
       leafletMap.mainMap = true;
       L.DomEvent.on(leafletMap, 'mousedown mouseup mousein mouseout', (e) => {
         if (e.originalEvent.button === 2) {
-          
+
           if (!this.get('maptoolOptionsService.identifyOnRightClick')) {
             return;
           }
@@ -539,7 +539,7 @@ let FlexberryMapComponent = Ember.Component.extend(
               return;
             }
 
-            // Инициируем нажатие ЛКМ 
+            // Инициируем нажатие ЛКМ
             let newMouseDownEvent = new MouseEvent('mousedown');
             identifyEditTools.onMousedown({
               latlng: e.latlng,
