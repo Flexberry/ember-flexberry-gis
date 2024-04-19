@@ -1,7 +1,9 @@
 import Ember from 'ember';
 import layout from '../templates/components/favorites-list';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
-export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
+import SlotsMixin from 'ember-block-slots';
+
+export default Ember.Component.extend(LeafletZoomToFeatureMixin, SlotsMixin, {
 
   /**
     Reference to component's template.
