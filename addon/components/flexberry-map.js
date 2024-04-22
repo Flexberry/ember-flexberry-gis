@@ -135,16 +135,16 @@ let FlexberryMapComponent = Ember.Component.extend(
     @property defaultIdentifyTool
     @type String
     @default null
-  */    
+  */
   identifyToolName: null,
-  
+
   /**
     Identification map tool options
 
     @property identifyToolProperties
     @type Object
     @default null
-  */    
+  */
   identifyToolProperties: null,
 
   /**
@@ -539,7 +539,7 @@ let FlexberryMapComponent = Ember.Component.extend(
       L.DomEvent.on(leafletMap, 'mousedown mouseup mousein mouseout', (e) => {
         // Обработка ПКМ: Включение инструмента идентификации типа "Прямоугольник"
         // При mouseDown включение, создание вершины, переключение в draggable-состояние для задания области идентификации
-        // При mouseUp идентификация, переключение инструмента    
+        // При mouseUp идентификация, переключение инструмента
         if (e.originalEvent.button === 2) {
           if (!this.get('maptoolOptionsService.identifyOnRightClick')) {
             return;
@@ -547,11 +547,11 @@ let FlexberryMapComponent = Ember.Component.extend(
 
           if (e.type === 'mousedown') {
             // Сохраняем предыдущий инструмент
-            this.set('prevEnabledTools', { 
+            this.set('prevEnabledTools', {
               name: leafletMap.flexberryMap.tools.getEnabled().name,
               mapToolProperties: leafletMap.flexberryMap.tools.getEnabled().mapToolProperties
             });
-            
+
             // Включаем инструмент идентификации
             let identifyTool = leafletMap.flexberryMap.tools.enable(this.get('identifyToolName'), this.get('identifyToolProperties'));
             let identifyEditTools = Ember.get(identifyTool, '_editTools');
@@ -566,7 +566,7 @@ let FlexberryMapComponent = Ember.Component.extend(
 
           if (e.type === 'mouseup') {
             let currentMapTool = leafletMap.flexberryMap.tools.getEnabled();
-            
+
             if (Ember.get(currentMapTool, 'name') === this.get('identifyToolName')) {
               let identifyEditTools = Ember.get(currentMapTool, '_editTools');
 
@@ -574,47 +574,47 @@ let FlexberryMapComponent = Ember.Component.extend(
                 identifyEditTools.stopDrawing();
               }
             }
-            
+
             if (!Ember.isNone(this.get('prevEnabledTools'))) {
               leafletMap.flexberryMap.tools.enable(this.get('prevEnabledTools.name'), this.get('prevEnabledTools.mapToolProperties'));
             } else {
               leafletMap.flexberryMap.tools.enable('drag');
             }
-            
+
             this.set('prevEnabledTools', null);
           }
-          
+
           return;
-        } 
-        
+        }
+
         // Обработка средней клавиши мыши: возможность перетаскивания карты из любого рабочего инструмента
         // При mouseDown включение инструмента "рука"
         // При mouseUp переключение обратно в рабочий инструмент
         if (e.originalEvent.button === 1) {
           if (e.type === 'mousedown') {
             e.originalEvent.preventDefault();
-            
-            this.set('prevEnabledTools', { 
+
+            this.set('prevEnabledTools', {
               name: leafletMap.flexberryMap.tools.getEnabled().name,
               mapToolProperties: leafletMap.flexberryMap.tools.getEnabled().mapToolProperties
             });
-            
+
             leafletMap.flexberryMap.tools.enable('drag');
           } else {
             leafletMap.flexberryMap.tools.enable(this.get('prevEnabledTools.name'), this.get('prevEnabledTools.mapToolProperties'));
             this.set('prevEnabledTools', null);
           }
-          
+
           return;
-        } 
-        
+        }
+
         // Обработка ЛКМ: перезагрузить рабочий инструмент
         // Если во время работы инструмента что-то пошло не так (двойной клик, одновременный клик лкм+пкм, выход за границы рабочей области)
         if (e.originalEvent.button === 0) {
           if (Ember.isNone(this.get('prevEnabledTools'))) {
             return;
           }
-          
+
           leafletMap.flexberryMap.tools.enable(this.get('prevEnabledTools.name'), this.get('prevEnabledTools.mapToolProperties'));
           this.set('prevEnabledTools', null);
         }
