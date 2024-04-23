@@ -552,12 +552,18 @@ let FlexberryMapComponent = Ember.Component.extend(
             return;
           }
 
+          // ПКМ обработчик карты пока умеет работать только с identify-visible-rectangle
+          // this.rightClickToolProperties должен содержать перечень слоев для идентификации
+          if (this.get('rightClickToolName') !== 'identify-visible-rectangle' || !this.get('rightClickToolProperties')) {
+            return;
+          }
+
           if (e.type === 'mousedown') {
             let rightClickAvailiblePrevMapTools = this.get('rightClickAvailiblePrevMapTools');
-            let savePrevEnabledTools = rightClickAvailiblePrevMapTools.includes(leafletMap.flexberryMap.tools.getEnabled().name);
+            let savePrevEnabledTool = rightClickAvailiblePrevMapTools.includes(leafletMap.flexberryMap.tools.getEnabled().name);
 
             // Сохраняем предыдущий инструмент из списка "включаемых" инструментов
-            if (savePrevEnabledTools) {
+            if (savePrevEnabledTool) {
               this.set('prevEnabledTools', {
                 name: leafletMap.flexberryMap.tools.getEnabled().name,
                 mapToolProperties: leafletMap.flexberryMap.tools.getEnabled().mapToolProperties
