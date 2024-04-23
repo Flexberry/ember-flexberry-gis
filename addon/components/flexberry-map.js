@@ -132,20 +132,27 @@ let FlexberryMapComponent = Ember.Component.extend(
   /**
     Map tool that should be enabled when right clicking
 
-    @property defaultIdentifyTool
+    @property rightClickToolName
     @type String
     @default null
   */
-  identifyToolName: null,
+  rightClickToolName: null,
 
   /**
     Identification map tool options
 
-    @property identifyToolProperties
+    @property rightClickToolProperties
     @type Object
     @default null
   */
-  identifyToolProperties: null,
+  rightClickToolProperties: null,
+
+  /**
+    List of available tools for switching to identification mode using the right click and saving active state of working tool
+    @property rightClickAvailiblePrevMapTools
+    @type String []
+  */
+  rightClickAvailiblePrevMapTools: [],
 
   /**
     List of leaflet map properties bindings.
@@ -546,14 +553,19 @@ let FlexberryMapComponent = Ember.Component.extend(
           }
 
           if (e.type === 'mousedown') {
-            // Сохраняем предыдущий инструмент
-            this.set('prevEnabledTools', {
-              name: leafletMap.flexberryMap.tools.getEnabled().name,
-              mapToolProperties: leafletMap.flexberryMap.tools.getEnabled().mapToolProperties
-            });
+            let rightClickAvailiblePrevMapTools = this.get('rightClickAvailiblePrevMapTools');
+            let savePrevEnabledTools = rightClickAvailiblePrevMapTools.includes(leafletMap.flexberryMap.tools.getEnabled().name);
+
+            // Сохраняем предыдущий инструмент из списка "включаемых" инструментов
+            if (savePrevEnabledTools) {
+              this.set('prevEnabledTools', {
+                name: leafletMap.flexberryMap.tools.getEnabled().name,
+                mapToolProperties: leafletMap.flexberryMap.tools.getEnabled().mapToolProperties
+              });
+            }
 
             // Включаем инструмент идентификации
-            let identifyTool = leafletMap.flexberryMap.tools.enable(this.get('identifyToolName'), this.get('identifyToolProperties'));
+            let identifyTool = leafletMap.flexberryMap.tools.enable(this.get('rightClickToolName'), this.get('rightClickToolProperties'));
             let identifyEditTools = Ember.get(identifyTool, '_editTools');
 
             // Инициируем нажатие ЛКМ для создания стартовой точки и перехода в состояние "перетаскивание" инструмента
@@ -567,7 +579,7 @@ let FlexberryMapComponent = Ember.Component.extend(
           if (e.type === 'mouseup') {
             let currentMapTool = leafletMap.flexberryMap.tools.getEnabled();
 
-            if (Ember.get(currentMapTool, 'name') === this.get('identifyToolName')) {
+            if (Ember.get(currentMapTool, 'name') === this.get('rightClickToolName')) {
               let identifyEditTools = Ember.get(currentMapTool, '_editTools');
 
               if (!Ember.isNone(identifyEditTools)) {
