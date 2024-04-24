@@ -130,31 +130,6 @@ let FlexberryMapComponent = Ember.Component.extend(
   ],
 
   /**
-    Map tool that should be enabled when right clicking
-
-    @property rightClickToolName
-    @type String
-    @default null
-  */
-  rightClickToolName: null,
-
-  /**
-    Identification map tool options
-
-    @property rightClickToolProperties
-    @type Object
-    @default null
-  */
-  rightClickToolProperties: null,
-
-  /**
-    List of available tools for switching to identification mode using the right click and saving active state of working tool
-    @property rightClickAvailiblePrevMapTools
-    @type String []
-  */
-  rightClickAvailiblePrevMapTools: [],
-
-  /**
     List of leaflet map properties bindings.
   */
   leafletProperties: ['zoom:setZoom', 'center:panTo:zoomPanOptions', 'maxBounds:setMaxBounds', 'bounds:fitBounds:fitBoundsOptions'],
@@ -548,18 +523,12 @@ let FlexberryMapComponent = Ember.Component.extend(
         // При mouseDown включение, создание вершины, переключение в draggable-состояние для задания области идентификации
         // При mouseUp идентификация, переключение инструмента
         if (e.originalEvent.button === 2) {
-          if (!this.get('maptoolOptionsService.identifyOnRightClick')) {
-            return;
-          }
-
-          // ПКМ обработчик карты пока умеет работать только с identify-visible-rectangle
-          // this.rightClickToolProperties должен содержать перечень слоев для идентификации
-          if (this.get('rightClickToolName') !== 'identify-visible-rectangle' || !this.get('rightClickToolProperties')) {
+          if (!this.get('maptoolOptionsService.isRightClickToolAvailable')) {
             return;
           }
 
           if (e.type === 'mousedown') {
-            let rightClickAvailiblePrevMapTools = this.get('rightClickAvailiblePrevMapTools');
+            let rightClickAvailiblePrevMapTools = this.get('maptoolOptionsService.rightClickAvailiblePrevMapTools');
             let savePrevEnabledTool = rightClickAvailiblePrevMapTools.includes(leafletMap.flexberryMap.tools.getEnabled().name);
 
             // Сохраняем предыдущий инструмент из списка "включаемых" инструментов
@@ -568,12 +537,23 @@ let FlexberryMapComponent = Ember.Component.extend(
                 name: leafletMap.flexberryMap.tools.getEnabled().name,
                 mapToolProperties: leafletMap.flexberryMap.tools.getEnabled().mapToolProperties
               });
+            } else {
+              this.set('prevEnabledTools', null);
             }
 
+            // ПКМ обработчик карты пока умеет работать только с identify-visible-rectangle
+            // this.rightClickToolProperties должен содержать перечень слоев для идентификации
             // Включаем инструмент идентификации
-            let identifyTool = leafletMap.flexberryMap.tools.enable(this.get('rightClickToolName'), this.get('rightClickToolProperties'));
+            let identifyTool = leafletMap.flexberryMap.tools.enable(this.get('maptoolOptionsService.rightClickToolName'), this.get('maptoolOptionsService.rightClickToolProperties'));
             let identifyEditTools = Ember.get(identifyTool, '_editTools');
 
+            // Если _editTools не доступно
+            if (Ember.isNone(identifyEditTools)) {
+              console.error('The handler for right click map tool is not defined')
+              leafletMap.flexberryMap.tools.enable('drag');
+              return;
+            }
+            
             // Инициируем нажатие ЛКМ для создания стартовой точки и перехода в состояние "перетаскивание" инструмента
             let newMouseDownEvent = new MouseEvent('mousedown');
             identifyEditTools.onMousedown({
@@ -585,7 +565,7 @@ let FlexberryMapComponent = Ember.Component.extend(
           if (e.type === 'mouseup') {
             let currentMapTool = leafletMap.flexberryMap.tools.getEnabled();
 
-            if (Ember.get(currentMapTool, 'name') === this.get('rightClickToolName')) {
+            if (Ember.get(currentMapTool, 'name') === this.get('maptoolOptionsService.rightClickToolName')) {
               let identifyEditTools = Ember.get(currentMapTool, '_editTools');
 
               if (!Ember.isNone(identifyEditTools)) {
