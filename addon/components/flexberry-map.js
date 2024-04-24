@@ -544,16 +544,18 @@ let FlexberryMapComponent = Ember.Component.extend(
             // ПКМ обработчик карты пока умеет работать только с identify-visible-rectangle
             // this.rightClickToolProperties должен содержать перечень слоев для идентификации
             // Включаем инструмент идентификации
-            let identifyTool = leafletMap.flexberryMap.tools.enable(this.get('maptoolOptionsService.rightClickToolName'), this.get('maptoolOptionsService.rightClickToolProperties'));
+            let rightClickToolName = this.get('maptoolOptionsService.rightClickToolName');
+            let rightClickToolProperties = this.get('maptoolOptionsService.rightClickToolProperties');
+            let identifyTool = leafletMap.flexberryMap.tools.enable(rightClickToolName, rightClickToolProperties);
             let identifyEditTools = Ember.get(identifyTool, '_editTools');
 
             // Если _editTools не доступно
             if (Ember.isNone(identifyEditTools)) {
-              console.error('The handler for right click map tool is not defined')
+              console.error('The handler for right click map tool is not defined');
               leafletMap.flexberryMap.tools.enable('drag');
               return;
             }
-            
+
             // Инициируем нажатие ЛКМ для создания стартовой точки и перехода в состояние "перетаскивание" инструмента
             let newMouseDownEvent = new MouseEvent('mousedown');
             identifyEditTools.onMousedown({
