@@ -9,7 +9,7 @@ export default Ember.Service.extend({
     @default false
   */
   isRightClickToolAvailable: false,
-  
+
   /**
     Map tool that should be enabled when right clicking
 
