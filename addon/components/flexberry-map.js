@@ -529,7 +529,9 @@ let FlexberryMapComponent = Ember.Component.extend(
 
           if (e.type === 'mousedown') {
             let rightClickAvailiblePrevMapTools = this.get('maptoolOptionsService.rightClickAvailiblePrevMapTools');
-            let savePrevEnabledTool = rightClickAvailiblePrevMapTools.includes(leafletMap.flexberryMap.tools.getEnabled().name);
+
+            let prevToolName = leafletMap.flexberryMap.tools.getEnabled().name;
+            let savePrevEnabledTool = rightClickAvailiblePrevMapTools.some(availiblePrevMapToolName => prevToolName.includes(availiblePrevMapToolName));
 
             // Сохраняем предыдущий инструмент из списка "включаемых" инструментов
             if (savePrevEnabledTool) {
@@ -540,6 +542,9 @@ let FlexberryMapComponent = Ember.Component.extend(
             } else {
               this.set('prevEnabledTools', null);
             }
+
+            // Для переключения некоторых инструментов рисования требуется корректно прервать функциональность (вызвать необходимые обработчики, переключить флаги)
+            leafletMap.flexberryMap.tools.getEnabled().interrupt(e);
 
             // ПКМ обработчик карты пока умеет работать только с identify-visible-rectangle
             // this.rightClickToolProperties должен содержать перечень слоев для идентификации
@@ -571,7 +576,7 @@ let FlexberryMapComponent = Ember.Component.extend(
               let identifyEditTools = Ember.get(currentMapTool, '_editTools');
 
               if (!Ember.isNone(identifyEditTools)) {
-                identifyEditTools.stopDrawing();
+                identifyEditTools.commitDrawing(e);
               }
             }
 

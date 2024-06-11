@@ -33,5 +33,5 @@ export default Ember.Service.extend({
     @property rightClickAvailiblePrevMapTools
     @type String []
   */
-  rightClickAvailiblePrevMapTools: ['drag', 'zoom-in', 'zoom-out']
+  rightClickAvailiblePrevMapTools: ['drag', 'zoom-in', 'zoom-out', 'identify', 'measure-coordinates', 'measure-distance']
 });

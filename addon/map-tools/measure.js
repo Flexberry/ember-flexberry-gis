@@ -95,6 +95,17 @@ export default BaseNonclickableMapTool.extend({
     }
   },
 
+  interrupt(e) {
+    this._super(...arguments);
+    let measureTools = this.get('_measureTools');
+
+    if (Ember.isNone(measureTools))
+      return
+
+    measureTools.editTools.onMousedown(e)
+    measureTools.editTools.onMouseup(e)
+  },
+
   /**
     Handles edit tools 'editable:drawing:end' event.
 
