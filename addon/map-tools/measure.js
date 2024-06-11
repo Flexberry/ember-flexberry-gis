@@ -99,11 +99,18 @@ export default BaseNonclickableMapTool.extend({
     this._super(...arguments);
     let measureTools = this.get('_measureTools');
 
-    if (Ember.isNone(measureTools))
-      return
+    if (Ember.isNone(measureTools)) {
+      return;
+    }
 
-    measureTools.editTools.onMousedown(e)
-    measureTools.editTools.onMouseup(e)
+    let measureEditTools = Ember.get(measureTools, 'editTools');
+
+    if (Ember.isNone(measureEditTools)) {
+      return;
+    }
+
+    measureEditTools.onMousedown(e);
+    measureEditTools.onMouseup(e);
   },
 
   /**
