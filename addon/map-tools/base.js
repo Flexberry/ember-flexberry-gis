@@ -108,7 +108,7 @@ export default Ember.Object.extend(Ember.Evented,
     @private
   */
   interrupt(e) {
-    return
+    return;
   },
 
   /**
