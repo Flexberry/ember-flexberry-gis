@@ -110,11 +110,13 @@ export default EditFormRoute.extend({
     let mapId = params.id;
     let modelQuery = this.get('mapStore').getMapById(mapId);
     let metadataQuery = this._getMetadata(params.metadata);
+    let backgroundQuery = this.getBackgroundLayers();
 
     return new Ember.RSVP.Promise((resolve, reject) => {
-      Ember.RSVP.all([modelQuery, metadataQuery]).then((data) => {
-        let [model, metadata] = data;
+      Ember.RSVP.all([modelQuery, metadataQuery, backgroundQuery]).then((data) => {
+        let [model, metadata, backgroundLayers] = data;
         this._addMetadata(model, metadata);
+        Ember.set(model, 'backgroundLayers', backgroundLayers);
         resolve(model);
       }).catch((error) => {
         reject(error);
@@ -132,9 +134,13 @@ export default EditFormRoute.extend({
   */
   setupController(controller, model) {
     this._super(...arguments);
-    let layers = model.get('mapLayer');
 
-    this.setLayerCategories(model, layers);
+    let layers = model.get('mapLayer');
+    if (layers) {
+      let rootLayers = layers.filter(layer => Ember.isEmpty(layer.get('parent')));
+      let maplayers = this.sortLayersByIndex(rootLayers);
+      model.set('hierarchy', maplayers);
+    }
 
     let urlParams = ['zoom', 'lat', 'lng'];
     let currentParams = {};
@@ -154,24 +160,24 @@ export default EditFormRoute.extend({
     });
   },
 
-  setLayerCategories(model, layers) {
-    if (layers) {
-      let rootLayers = layers.filter(layer => Ember.isEmpty(layer.get('parent')));
+  /**
+    Requests a list of background layers.
 
-      let hierarchy = this.sortLayersByIndex(rootLayers);
-      model.set('hierarchy', hierarchy);
+    @method getBackgroundLayers
+  */
+  getBackgroundLayers() {
+    let store = this.get('store');
+    let modelName = 'new-platform-flexberry-g-i-s-background-layer';
+    let queryBuilder = new Query.Builder(this.get('store'))
+        .from(modelName)
+        .selectByProjection('BackgroundLayerL');
 
-      let backgroundLayers = Ember.A();
-      backgroundLayers.addObjects(hierarchy.filterBy('settingsAsObject.backgroundSettings.canBeBackground', true));
-      model.set('backgroundLayers', backgroundLayers);
-
-      let other = hierarchy.filter((layer) => {
-        return Ember.isNone(layer.get('settingsAsObject')) || !layer.get('settingsAsObject.backgroundSettings.canBeBackground');
-      });
-      let otherLayers = Ember.A();
-      otherLayers.addObjects(other);
-      model.set('otherLayers', otherLayers);
-    }
+    return store.findAll(modelName, queryBuilder.build()).then(response => response.content.map(responseArray => {
+      let backgroundLayer = responseArray.record;
+      let settingsAsObject = JSON.parse(Ember.get(backgroundLayer, 'settings'));
+      backgroundLayer.set('settingsAsObject', settingsAsObject);
+      return backgroundLayer;
+    }));
   },
 
   /**

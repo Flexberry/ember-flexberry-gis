@@ -59,7 +59,7 @@
               presenceLayerInGeoportal=access.presenceLayerInGeoportal)
             leafletMap=leafletMap
             sideBySide=sideBySide
-            layers=(get-with-dynamic-actions this "model.otherLayers"
+            layers=(get-with-dynamic-actions this "model.hierarchy"
               hierarchyPropertyName="layers"
               pathKeyword="layerPath"
               dynamicActions=(array
@@ -71,7 +71,7 @@
                 (hash
                   on="copy"
                   actionName="onMapLayerCopy"
-                  actionArguments=(array "model.otherLayers")
+                  actionArguments=(array "model.hierarchy")
                 )
                 (hash
                   on="edit"
