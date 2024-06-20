@@ -7,7 +7,7 @@ import layout from '../../templates/components/geometry-add-modes/manual';
 import LeafletZoomToFeatureMixin from '../../mixins/leaflet-zoom-to-feature';
 import { translationMacro as t } from 'ember-i18n';
 import { coordinatesToString } from '../../utils/coordinates-to';
-import { getCrsCode } from '../../utils/get-crs-by-name';
+import { getCrsCode, getCrsByName } from '../../utils/get-crs-by-name';
 
 /**
   Component's CSS-classes names.
@@ -71,6 +71,8 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
   */
   _crs: null,
 
+  _layerCrs: null,
+
   /**
     Added coordinates.
 
@@ -109,6 +111,9 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
   */
   coordinatesTypeGeometryError: false,
 
+  availableCoordinateReferenceSystemsCodes: null,
+  displayCaptionsDD: false,
+
   /**
     Flag to display line error.
 
@@ -145,6 +150,8 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
       return;
     }
 
+    // Сохраняем выбранную СК при добавлении объекта.
+    this.set('_layerCrs', this.get('_crs'));
     this.set('_crs', settings.layerCRS);
 
     let layer = this.get('layer');
@@ -174,7 +181,12 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
       return;
     }
 
-    let baseCrs = this.get('settings.layerCRS');
+    let baseCrs = this.get('_crs');
+    const _layerCrsCode = this.get('_layerCrs.code');
+    if (!Ember.isNone(_layerCrsCode)) {
+      baseCrs = getCrsByName(_layerCrsCode, this).get('crs');
+    }
+
     let coordinates = layer.toProjectedGeoJSON(baseCrs).geometry.coordinates;
 
     const str = coordinatesToString(coordinates);
