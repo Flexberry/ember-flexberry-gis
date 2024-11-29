@@ -3121,10 +3121,10 @@ detective@~3.1.0:
     escodegen "~1.1.0"
     esprima-fb "3001.1.0-dev-harmony-fb"
 
-dexie@^1.4.2:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/dexie/-/dexie-1.5.1.tgz#ac3ad5a0ebaf7e6e42760db58710418d4a756624"
-  integrity sha1-rDrVoOuvfm5Cdg21hxBBjUp1ZiQ=
+dexie@^3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/dexie/-/dexie-3.2.2.tgz#fa6f2a3c0d6ed0766f8d97a03720056f88fe0e01"
+  integrity sha512-q5dC3HPmir2DERlX+toCBbHQXW5MsyrFqPFcovkH9N2S/UW/H3H5AWAB6iEOExeraAu+j+zRDG+zg/D7YhH0qg==
 
 dezalgo@^1.0.0, dezalgo@^1.0.1, dezalgo@^1.0.2, dezalgo@~1.0.3:
   version "1.0.3"
