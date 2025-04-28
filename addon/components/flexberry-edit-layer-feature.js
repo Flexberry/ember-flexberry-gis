@@ -327,7 +327,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     let presenceLayerInGeoportal = this.get('access');
     if (!Ember.isNone(presenceLayerInGeoportal)) {
       let mapLayer = Object.keys(presenceLayerInGeoportal).find(key => key === id);
-      return  presenceLayerInGeoportal[mapLayer]
+      return presenceLayerInGeoportal[mapLayer];
     }
 
     return null;
@@ -349,7 +349,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         contentType: false,
         processData: false
       }).done((response) => {
-        resolve(response)
+        resolve(response);
       }).fail(() => {
         _this.set('error', t('components.flexberry-edit-layer-feature.domain.gets-errors'));
         reject('error');
