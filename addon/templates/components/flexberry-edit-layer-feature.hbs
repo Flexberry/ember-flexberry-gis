@@ -165,6 +165,13 @@
               value=(mut (get dataValue fieldName))
               readonly=(or isPropertiesReadonly (array-contains _model.readOnlyFields fieldName))
             }}
+          {{else if (and (eq (get _model.fieldTypes fieldName) "string") (get _model.fieldDomains fieldName))}}
+            {{flexberry-dropdown
+              class=(concat "no-placeholder fluid")
+              items=(get _model.fieldDomains fieldName)
+              value=(mut (get dataValue fieldName))
+              placeholder=""
+            }}
           {{else}}
             {{input
               type="text"

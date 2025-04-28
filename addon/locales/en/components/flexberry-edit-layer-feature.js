@@ -16,5 +16,8 @@ export default {
     'field-error': 'Validation error',
     'field-required': 'Required error',
     'save-fail': 'Save failed'
+  },
+  'domain': {
+    'gets-errors': 'Can not get domain values'
   }
 };

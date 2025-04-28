@@ -63,6 +63,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
   geoproviderMode: true,
 
+  access: null,
+
   /**
     Indicator for adding a layer to the map for edit mode.
     When a layer is not activated in the layer tree
@@ -318,6 +320,43 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
   */
   leafletObject: null,
 
+  /**
+    Get layer class id from access
+  */
+  getLayerClass(id) {
+    let presenceLayerInGeoportal = this.get('access');
+    if (!Ember.isNone(presenceLayerInGeoportal)) {
+      let mapLayer = Object.keys(presenceLayerInGeoportal).find(key => key === id);
+      return  presenceLayerInGeoportal[mapLayer]
+    }
+
+    return null;
+  },
+
+  /**
+    Get domain values for attributes by layer
+  */
+  getDomainForLayer(id) {
+    let config = Ember.getOwner(this).resolveRegistration('config:environment');
+    let url = config.APP.backendUrls.domainForAttr + id;
+    let _this = this;
+
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      Ember.$.ajax({
+        url: url,
+        type: 'GET',
+        cache: false,
+        contentType: false,
+        processData: false
+      }).done((response) => {
+        resolve(response)
+      }).fail(() => {
+        _this.set('error', t('components.flexberry-edit-layer-feature.domain.gets-errors'));
+        reject('error');
+      });
+    });
+  },
+
   _model: Ember.computed('layerModel', 'i18n.locale', function () {
     let layer = this.get('layerModel');
 
@@ -369,7 +408,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       }
     });
 
-    return {
+    let modelData = Ember.Object.create({
       availableDrawTools: availableDrawTools,
       typeGeometry: typeGeometry,
       name: Ember.get(layer, 'layerModel.name'),
@@ -380,9 +419,35 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       fieldValidators: Ember.get(leafletObject, 'readFormat.featureType.fieldValidators'),
       requiredFields: requiredFields,
       readOnlyFields: Ember.get(leafletObject, 'readFormat.excludedProperties'),
-      fieldNames: getHeader()
-    };
+      fieldNames: getHeader(),
+      fieldDomains: this.get('domainValues')
+    });
+
+    if (!this.get('domainValues')) {
+      let layerClass = this.getLayerClass(Ember.get(layer, 'layerModel.id'));
+      if (layerClass) {
+        this.getDomainForLayer(layerClass).then((results) => {
+          if (results) {
+            for (let property in results) {
+              if (requiredFields[property] === false) {
+                results[property].unshift('');
+              }
+            }
+
+            Ember.set(modelData, 'fieldDomains', results);
+            this.set('domainValues', results);
+          }
+        });
+      }
+    }
+
+    return modelData;
   }),
+
+  /**
+    Save domain values.
+  */
+  domainValues: null,
 
   /**
     Whether or not layer's properties are readonly.
