@@ -1,7 +1,9 @@
-import Ember from "ember";
+import Ember from 'ember';
 
 export function parseLinkFromValue([text], htmlSafe = true) {
-  if (!text) return text;
+  if (!text) {
+    return text;
+  }
 
   const urlRegex = /(https?:\/\/[^\s]+)/g;
   const linkedText = text.replace(
