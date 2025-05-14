@@ -34,7 +34,7 @@
   <div class="bookmarks">
     {{#each bookmarks as |bkmrk|}}
       <div class="bookmark-item">
-        <div class="bookmark-item-title">{{parse-link-from-value bkmrk.name}}</div>
+        <div class="bookmark-item-title">{{bkmrk.name}}</div>
         <div class="bookmark-item-buttons">
           <button class="ui button icon" title="{{ t "components.spatial-bookmarks.go-to-bookmark" }}" {{action "zoomMap" bkmrk}}>
             <i class="icon-guideline-marker"></i>
