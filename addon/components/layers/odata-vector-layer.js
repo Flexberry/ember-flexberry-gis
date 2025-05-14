@@ -1136,7 +1136,7 @@ export default BaseVectorLayer.extend({
     readFormat.featureType.geometryFields[geometryField] = this.get('geometryType');
 
     // это поля, которые исключены из РЕДАКТИРОВАНИЯ
-    readFormat.excludedProperties = [pkField, 'creator', 'editor', 'createTime', 'editTime'];
+    readFormat.excludedProperties = [pkField, 'creator', 'editor', 'createTime', 'editTime', 'area', 'length'];
     return readFormat;
   },
 
