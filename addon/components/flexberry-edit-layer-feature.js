@@ -63,7 +63,9 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
   geoproviderMode: true,
 
-  access: null,
+  presenceLayerInGeoportal: null,
+
+  _showLoader: false,
 
   /**
     Indicator for adding a layer to the map for edit mode.
@@ -321,10 +323,10 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
   leafletObject: null,
 
   /**
-    Get layer class id from access
+    Get layer class id from presenceLayerInGeoportal
   */
   getLayerClass(id) {
-    let presenceLayerInGeoportal = this.get('access');
+    let presenceLayerInGeoportal = this.get('presenceLayerInGeoportal');
     if (!Ember.isNone(presenceLayerInGeoportal)) {
       let mapLayer = Object.keys(presenceLayerInGeoportal).find(key => key === id);
       return presenceLayerInGeoportal[mapLayer];
@@ -340,6 +342,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     let config = Ember.getOwner(this).resolveRegistration('config:environment');
     let url = config.APP.backendUrls.domainForAttr + id;
     let _this = this;
+    this.set('_showLoader', true);
 
     return new Ember.RSVP.Promise((resolve, reject) => {
       Ember.$.ajax({
@@ -350,6 +353,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         processData: false
       }).done((response) => {
         resolve(response);
+        this.set('_showLoader', false);
       }).fail(() => {
         _this.set('error', t('components.flexberry-edit-layer-feature.domain.gets-errors'));
         reject('error');
