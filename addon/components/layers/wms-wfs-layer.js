@@ -4,7 +4,6 @@
 
 import Ember from 'ember';
 import WmsLayerComponent from './wms-layer';
-import WfsLayerComponent from './wfs-layer';
 
 /**
   WMS-WFS layer component for leaflet map.
@@ -153,12 +152,12 @@ export default WmsLayerComponent.extend({
     this._super(...arguments);
 
     let innerWfsLayerProperties = {
-      leafletMap: this.get('leafletMap'),
-      leafletContainer: this.get('leafletContainer'),
-      layerModel: this.get('layerModel'),
-      index: this.get('index'),
+      leafletMap: this.get("leafletMap"),
+      leafletContainer: this.get("leafletContainer"),
+      layerModel: this.get("layerModel"),
+      index: this.get("index"),
       visibility: false,
-      dynamicProperties: this.get('wfs')
+      dynamicProperties: this.get("wfs"),
     };
 
     // Set creating component's owner to avoid possible lookup exceptions.
@@ -174,8 +173,8 @@ export default WmsLayerComponent.extend({
       innerWfsLayerProperties[ownerKey] = owner;
     }
 
-    // Create inner WFS-layer which is needed for identification (always invisible, won't be added to map).
-    this.set('_wfsLayer', WfsLayerComponent.create(innerWfsLayerProperties));
+    const WfsLayerFactory = owner.factoryFor("component:layers/wfs-layer"); // получаем фабрику компонента
+    this.set("_wfsLayer", WfsLayerFactory.create(innerWfsLayerProperties)); // создаем экземпляр
   },
 
   didInsertElement() {

@@ -67,5 +67,148 @@ export default Ember.Mixin.create({
       case 'not':
         return new Query.NotPredicate(properties[0]);
     }
-  }
+  },
+
+  /**
+    <OdataFilterParserMixin> Parse filter condition expression.
+
+    @method parseFilterConditionExpression
+    @param {String} field Field name
+    @param {String} condition Condition name
+    @param {String} value Field value
+    @returns {Object} Filter object
+  */
+  parseFilterConditionExpressionAG(field, condition, value) {
+    const filterType = value.filterType;
+
+    if (condition === "inRange") {
+      let firstValue = value.dateFrom || value.filter;
+      let secondValue = value.dateTo || value.filterTo;
+      value = [firstValue, secondValue];
+    } else {
+      value = value.dateFrom || value.filter;
+    }
+
+
+    if ((filterType === 'date' || filterType === 'dateTime') && value) {
+      if (Ember.isArray(value)) {
+        value = value.map(e => new Date(e).toISOString())
+      } else {
+        value = new Date(value).toISOString()
+      }
+    }
+
+    switch (condition) {
+      case "equals":
+        if (filterType === 'date') {
+          return new Query.DatePredicate(field, Query.FilterOperator.Eq, value, true);
+        }
+
+        return new Query.SimplePredicate(field, Query.FilterOperator.Eq, value);
+      case "notEqual":
+        if (filterType === 'date') {
+          return new Query.DatePredicate(field, Query.FilterOperator.Neq, value, true);
+        }
+
+        return new Query.SimplePredicate(
+          field,
+          Query.FilterOperator.Neq,
+          value
+        );
+      case "contains":
+        return new Query.StringPredicate(field).contains(value);
+      case "notContains":
+        return new Query.NotPredicate(
+          new Query.StringPredicate(field).contains(value)
+        );
+      case "startsWith":
+        return new Query.StringPredicate(field).startsWith(value);
+      case "endsWith":
+        return new Query.StringPredicate(field).endsWith(value);
+      case "blank":
+        if (filterType === "date" || filterType === "dateTime")
+          return new Query.SimplePredicate(
+            field,
+            Query.FilterOperator.Eq,
+            null
+          );
+
+        return new Query.ComplexPredicate(
+          Query.Condition.Or,
+          new Query.SimplePredicate(field, Query.FilterOperator.Eq, null),
+          new Query.SimplePredicate(field, Query.FilterOperator.Eq, "")
+        );
+
+      case "notBlank" || "all":
+        if (filterType === "date" || filterType === "dateTime")
+          return new Query.NotPredicate(
+            new Query.SimplePredicate(field, Query.FilterOperator.Eq, null)
+          );
+
+        return new Query.NotPredicate(
+          new Query.ComplexPredicate(
+            Query.Condition.Or,
+            new Query.SimplePredicate(field, Query.FilterOperator.Eq, null),
+            new Query.SimplePredicate(field, Query.FilterOperator.Eq, "")
+          )
+        );
+
+      case "true":
+        return new Query.SimplePredicate(field, Query.FilterOperator.Eq, true);
+      case "false":
+        return new Query.SimplePredicate(field, Query.FilterOperator.Eq, false);
+
+      case "greaterThan":
+        if (filterType === 'date') {
+          return new Query.DatePredicate(field, Query.FilterOperator.Ge, value, true);
+        }
+
+        return new Query.SimplePredicate(field, Query.FilterOperator.Ge, value);
+      case "lessThan":
+        if (filterType === 'date') {
+          return new Query.DatePredicate(field, Query.FilterOperator.Le, value, true);
+        }
+
+        return new Query.SimplePredicate(field, Query.FilterOperator.Le, value);
+      case "greaterThanOrEqual":
+        if (filterType === 'date') {
+          return new Query.DatePredicate(field, Query.FilterOperator.Geq, value, true);
+        }
+
+        return new Query.SimplePredicate(
+          field,
+          Query.FilterOperator.Geq,
+          value
+        );
+      case "lessThanOrEqual":
+        if (filterType === 'date') {
+          return new Query.DatePredicate(field, Query.FilterOperator.Leq, value, true);
+        }
+
+        return new Query.SimplePredicate(
+          field,
+          Query.FilterOperator.Leq,
+          value
+        );
+      case "inRange":
+        if (filterType === 'date') {
+
+          return new Query.ComplexPredicate(
+            Query.Condition.And,
+            new Query.DatePredicate(field, Query.FilterOperator.Geq, value[0], true),
+            new Query.DatePredicate(field, Query.FilterOperator.Leq, value[1], true),
+          );
+
+        }
+
+        return new Query.ComplexPredicate(
+          Query.Condition.And,
+          new Query.SimplePredicate(field, Query.FilterOperator.Geq, value[0]),
+          new Query.SimplePredicate(field, Query.FilterOperator.Leq, value[1])
+        );
+
+      default:
+        new Query.SimplePredicate(field, Query.FilterOperator.Eq, value);
+    }
+  },
 });

@@ -634,10 +634,10 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
       leafletMap.off('flexberry-map:identificationFinished', this.actions.onIdentificationFinished, this);
       leafletMap.off('flexberry-map:geomChanged', this.actions.onGeomChanged, this);
 
-      let enabledTool = leafletMap.flexberryMap.tools.getEnabled();
-      if (enabledTool && enabledTool.name === this.get('_identifyToolName')) {
-        leafletMap.flexberryMap.tools.disable();
-      }
+      // let enabledTool = leafletMap.flexberryMap.tools.getEnabled();
+      // if (enabledTool && enabledTool.name === this.get('_identifyToolName')) {
+      //   leafletMap.flexberryMap.tools.disable();
+      // }
     }
 
     this.clearDrawLayer();
