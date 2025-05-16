@@ -12,13 +12,14 @@ import state from '../../utils/state';
 import moment from 'moment';
 import { getDateFormatFromString, createTimeInterval } from '../../utils/get-date-from-string';
 import getBooleanFromString from '../../utils/get-boolean-from-string';
+import WfsFilterParserMixin from '../../mixins/wfs-filter-parser';
 
 /**
   WFS layer component for leaflet map.
   @class WfsLayerComponent
   @extends BaseVectorLayerComponent
  */
-export default BaseVectorLayer.extend({
+export default BaseVectorLayer.extend(WfsFilterParserMixin, {
   /**
     Array containing component's properties which are also leaflet layer options.
     @property leafletOptions
@@ -482,6 +483,11 @@ export default BaseVectorLayer.extend({
     }
 
     wfsLayer.loadLayerFeatures = this.get('loadLayerFeatures').bind(this);
+    wfsLayer.parseFilterConditionExpressionAG = this.get('parseFilterConditionExpressionAG').bind(this);
+    wfsLayer.loadFeaturesForTableAttr = this.get('_loadFeaturesForTableAttr').bind(wfsLayer);
+    wfsLayer.getMetaForTableAttr = this.get('_getMetaForTableAttr').bind(wfsLayer);
+    wfsLayer._addSortingToWfsXml = this.get('_addSortingToWfsXml').bind(wfsLayer);
+
     return wfsLayer;
   },
 
@@ -1285,5 +1291,246 @@ export default BaseVectorLayer.extend({
           });
       }
     });
-  }
+  },
+
+  /**
+    Load features by filter and return promise.
+    @method _loadFeatures
+    @param filter {L.Filter} filter on loaded features
+    @param fireLoad flag indicates needs of fire 'load' event
+    @returns {RSVP.Promise}.
+  */
+  _loadFeaturesForTableAttr(top = 25, skip = 0, sortModel = null, filterModel = null, fireLoad = true) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      var that = this;
+      let getFeaturesMeta = new Ember.RSVP.Promise((resolve) => {
+        resolve(undefined);
+      });
+
+      if (that.error) {
+        resolve({
+          data: [],
+          totalCount: 0,
+        });
+        return that;
+      }
+
+      if (Ember.isPresent(filterModel) && Object.keys(filterModel).length > 0) {
+        let leafletFilters = Object.entries(filterModel).map(([key, value]) => {
+          let isMultiFilter = Ember.isPresent(value.conditions) && Ember.isArray(value.conditions);
+          if (isMultiFilter) {
+            let multiFilters = value.conditions.map((multiValue) =>
+              this.parseFilterConditionExpressionAG(key, multiValue.type, multiValue)
+            );
+
+            if (value.operator === 'OR') {
+              return new L.Filter.Or(...multiFilters);
+            }
+
+            if (value.operator === 'AND') {
+              return new L.Filter.And(...multiFilters);
+            }
+
+            throw new Error('cannot parse ag-grid multifilter operator');
+          }
+
+          return this.parseFilterConditionExpressionAG(key, value.type, value);
+        });
+
+        if (leafletFilters.length === 1) {
+          filterModel = leafletFilters[0];
+        } else {
+          filterModel = new L.Filter.And(...leafletFilters);
+        }
+      } else {
+        filterModel = null;
+      }
+
+      let queryBody = that.getFeature(filterModel);
+
+      // TODO: для uuid атрибута нельзя использовать строковые L.filter, нужно как-то функцию toString вызывать
+      // или убирать строковые фильтры для uuid
+
+      // queryBody= new XMLSerializer().serializeToString(queryBody);
+      // queryBody.replace(
+      //   "<ogc:PropertyName>primarykey</ogc:PropertyName>",
+      //   ```
+      //     <ogc:Function name="toString">
+      //      <ogc:PropertyName>primarykey</ogc:PropertyName>
+      //     </ogc:Function>
+      //   ```
+      // );
+
+      // WFS 1.1.0 c (outputFormat=text/xml; subtype=gml/3.1.1) требует отдельного запроса для вычисления количества features
+      // В то время как (outputFormat=application/json) возвращает totalFeatures при выборке гис-объектов
+      if (this.options.version.startsWith('1.1.0') && this.readFormat.outputFormat === 'text/xml; subtype=gml/3.1.1') {
+        const queryBodyForMeta = queryBody.cloneNode(true);
+        queryBodyForMeta.removeAttribute('maxFeatures');
+        queryBodyForMeta.setAttribute('resultType', 'hits');
+        getFeaturesMeta = that.getMetaForTableAttr(queryBodyForMeta);
+      }
+
+      if (top === 0) {
+        queryBody.removeAttribute('maxFeatures');
+      } else {
+        queryBody.setAttribute('maxFeatures', top);
+      }
+
+      if (skip === -1) {
+        queryBody.removeAttribute('startIndex');
+      } else {
+        queryBody.setAttribute('startIndex', skip);
+      }
+
+      this._addSortingToWfsXml(queryBody, sortModel);
+
+      getFeaturesMeta
+        .then((featuresMeta) => {
+          L.Util.request({
+            url: this.options.url,
+            data: L.XmlUtil.serializeXmlDocumentString(queryBody),
+            headers: this.options.headers || {},
+            withCredentials: this.options.withCredentials,
+            success: function (responseText) {
+              // If some exception occur, WFS-service can response successfully, but with ExceptionReport,
+              // and such situation must be handled.
+              let exceptionReport = L.XmlUtil.parseOwsExceptionReport(responseText);
+              if (exceptionReport) {
+                that.fire('error', {
+                  error: new Error(exceptionReport.message),
+                });
+                reject(exceptionReport);
+                return that;
+              }
+
+              // Request was truly successful (without exception report),
+              // so convert response to layers.
+              var layers = that.readFormat.responseToLayers(responseText, {
+                coordsToLatLng: that.options.coordsToLatLng,
+                pointToLayer: that.options.pointToLayer,
+              });
+
+              var featureMetrics = featuresMeta || that.readFormat.responseToMetrics(responseText);
+
+              layers.forEach(function (element) {
+                if (!Ember.isNone(Ember.get(element, 'feature')) && Ember.isNone(Ember.get(element, 'feature.leafletLayer'))) {
+                  element.minZoom = that.minZoom;
+                  element.maxZoom = that.maxZoom;
+                  Ember.set(element.feature, 'leafletLayer', element);
+                }
+              });
+
+              if (typeof that.options.style === 'function') {
+                layers.forEach(function (element) {
+                  element.state = that.state.exist;
+                  if (element.setStyle) {
+                    element.setStyle(that.options.style(element));
+                  }
+
+                  that.addLayer(element);
+                });
+              } else {
+                layers.forEach(function (element) {
+                  element.state = that.state.exist;
+                  that.addLayer(element);
+                });
+
+                that.setStyle(that.options.style);
+              }
+
+              if (fireLoad) {
+                that.fire('load', {
+                  responseText: responseText,
+                  layers: layers,
+                });
+              }
+
+              resolve(Object.assign(featureMetrics, { data: layers }));
+
+              return that;
+            },
+            error: function (errorMessage) {
+              that.fire('error', {
+                error: new Error(errorMessage),
+              });
+
+              reject(errorMessage);
+
+              return that;
+            },
+          });
+        })
+        .catch((error) => {
+          that.fire('error', {
+            error: new Error(error),
+          });
+          reject(error);
+        });
+    });
+  },
+
+  _getMetaForTableAttr(queryBodyMeta) {
+    var that = this;
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      L.Util.request({
+        url: this.options.url,
+        data: L.XmlUtil.serializeXmlDocumentString(queryBodyMeta),
+        headers: this.options.headers || {},
+        withCredentials: this.options.withCredentials,
+        success: function (responseText) {
+          // If some exception occur, WFS-service can response successfully, but with ExceptionReport,
+          // and such situation must be handled.
+          let exceptionReport = L.XmlUtil.parseOwsExceptionReport(responseText);
+          if (exceptionReport) {
+            that.fire('error', {
+              error: new Error(exceptionReport.message),
+            });
+            reject(exceptionReport);
+            return that;
+          }
+
+          var xmlDoc = L.XmlUtil.parseXml(responseText);
+          var featuresMeta = xmlDoc.documentElement;
+          var totalFeatures = Number(featuresMeta.getAttribute('numberOfFeatures'));
+
+          resolve({
+            totalFeatures: isNaN(totalFeatures) ? 0 : totalFeatures,
+          });
+
+          return that;
+        },
+        error: function (errorMessage) {
+          that.fire('error', {
+            error: new Error(errorMessage),
+          });
+
+          reject(errorMessage);
+
+          return that;
+        },
+      });
+    });
+  },
+  _addSortingToWfsXml(xmlDoc, sortModel) {
+    const query = xmlDoc.querySelector('Query');
+    if (!query || !sortModel || !Array.isArray(sortModel)) {
+      return xmlDoc;
+    }
+
+    const sortString = `<ogc:SortBy xmlns:ogc="http://www.opengis.net/ogc">
+      ${sortModel.reduce((acc, curr) => {
+        acc += `
+        <ogc:SortProperty>
+            <ogc:PropertyName>${curr.colId}</ogc:PropertyName>
+            <ogc:SortOrder>${curr.sort}</ogc:SortOrder>
+        </ogc:SortProperty>`;
+
+        return acc;
+      }, '')}
+    </ogc:SortBy>
+    `;
+
+    const sortXML = new DOMParser().parseFromString(sortString, 'text/xml');
+    query.appendChild(sortXML.documentElement);
+  },
 });

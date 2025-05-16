@@ -9,7 +9,7 @@ import Ember from 'ember';
   Contains methods for parsing WFS filter.
 
   @class WfsFilterParserMixin
-  @uses <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
+  @uses <a href='http://emberjs.com/api/classes/Ember.Mixin.html'>Ember.Mixin</a>
 */
 export default Ember.Mixin.create({
   /**
@@ -112,6 +112,80 @@ export default Ember.Mixin.create({
           L.CRS.EPSG4326
         );
         return condition === 'in' ? filter : new L.Filter.Not(filter);
+    }
+  },
+
+  /**
+   Parse filter condition expression.
+    @method parseFilterConditionExpressionAG
+    @param {String} field Field name
+    @param {String} condition Condition name
+    @param {String} value Field value
+    @returns {Object} Filter object
+  */
+  parseFilterConditionExpressionAG(field, condition, value) {
+    const filterType = value.filterType;
+
+    if (condition === 'inRange') {
+      let firstValue = value.dateFrom || value.filter;
+      let secondValue = value.dateTo || value.filterTo;
+      value = [firstValue, secondValue];
+    } else {
+      value = value.dateFrom || value.filter;
+    }
+
+    if ((filterType === 'date' || filterType === 'dateTime') && value) {
+      if (Ember.isArray(value)) {
+        value = value.map((e) => new Date(e).toISOString());
+      } else {
+        value = new Date(value).toISOString();
+      }
+    }
+
+    switch (condition) {
+      case 'equals':
+        return new L.Filter.EQ(field, value, true);
+      case 'notEqual':
+        return new L.Filter.NotEQ(field, value, true);
+      case 'contains':
+        return new L.Filter.Like(field, `%${value}%`, { matchCase: false });
+      case 'notContains':
+        return new L.Filter.Not(new L.Filter.Like(field, `%${value}%`, { matchCase: false }));
+      case 'startsWith':
+        return new L.Filter.Like(field, `${value}%`, { matchCase: false });
+      case 'endsWith':
+        return new L.Filter.Like(field, `%${value}`, { matchCase: false });
+      case 'blank':
+        if (filterType === 'date' || filterType === 'dateTime') {
+          return new L.Filter.IsNull(field);
+        }
+
+        return new L.Filter.Or(new L.Filter.EQ(field, '', true), new L.Filter.IsNull(field));
+      case 'notBlank' || 'all':
+        if (filterType === 'date' || filterType === 'dateTime') {
+          return new L.Filter.Not(new L.Filter.IsNull(field));
+        }
+
+        return new L.Filter.Or(new L.Filter.NotEQ(field, '', true), new L.Filter.Not(new L.Filter.IsNull(field)));
+
+      case 'true':
+        return new L.Filter.EQ(field, true, false);
+      case 'false':
+        return new L.Filter.EQ(field, false, false);
+
+      case 'greaterThan':
+        return new L.Filter.GT(field, value, false);
+      case 'lessThan':
+        return new L.Filter.LT(field, value, false);
+      case 'greaterThanOrEqual':
+        return new L.Filter.GEQ(field, value, false);
+      case 'lessThanOrEqual':
+        return new L.Filter.LEQ(field, value, false);
+      case 'inRange':
+        return new L.Filter.IsBetween(field, value[0], value[1]);
+
+      default:
+        return new L.Filter.EQ(field, value, true);
     }
   },
 });

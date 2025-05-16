@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { Projection, Adapter } from 'ember-flexberry-data';
-import ODataQueryAdapter from 'ember-flexberry-data/query/odata-adapter';
+import CustomODataQueryAdapter from './odata-query-adapter';
 import { getResponseMeta, getBatchResponses, parseBatchResponse } from 'ember-flexberry-data/utils/batch-queries';
 import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 
@@ -21,7 +21,7 @@ export default Adapter.Odata.extend(Projection.AdapterMixin, {
     requestBody += 'Content-Transfer-Encoding: binary\r\n';
 
     const getUrl = this._buildURL(modelName, null);
-    const queryAdapter = new ODataQueryAdapter(getUrl, store);
+    const queryAdapter = new CustomODataQueryAdapter(getUrl, store);
     const fullUrl = queryAdapter.getODataFullUrl(query);
 
     requestBody += '\r\nGET ' + fullUrl + ' HTTP/1.1\r\n';
@@ -47,13 +47,19 @@ export default Adapter.Odata.extend(Projection.AdapterMixin, {
       }
 
       try {
-        const batchResponses = getBatchResponses(response, meta.boundary).map(parseBatchResponse);
-        const result = batchResponses.filter(r => r.contentType === 'application/http')[0];
+        const batchResponses = getBatchResponses(
+          response,
+          meta.boundary
+        ).map(parseBatchResponse);
+        const result = batchResponses.filter(
+          (r) => r.contentType === 'application/http'
+        )[0];
 
         const normalizedRecords = { data: Ember.A(), included: Ember.A() };
         let odataValue = result.response.body.value;
+        let odataCount = result.response.body['@odata.count'] || 0;
         if (!Ember.isNone(odataValue)) {
-          odataValue.forEach(record => {
+          odataValue.forEach((record) => {
             const normalized = store.normalize(modelName, record);
             normalizedRecords.data.addObject(normalized.data);
             if (normalized.included) {
@@ -64,10 +70,15 @@ export default Adapter.Odata.extend(Projection.AdapterMixin, {
           console.error('Error batch: ' + result.response.body);
         }
 
-        return resolve(Ember.run(store, store.push, normalizedRecords));
+        return resolve({
+          res: Ember.run(store, store.push, normalizedRecords),
+          count: odataCount,
+        });
       } catch (e) {
         return reject(e);
       }
-    }).fail(reject));
+    })
+    .fail(reject)
+    );
   }
 });

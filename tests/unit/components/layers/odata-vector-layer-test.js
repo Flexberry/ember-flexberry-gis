@@ -110,7 +110,7 @@ moduleForComponent('layers/odata-vector-layer', 'Unit | Component | layers/odata
     OData-Version: 4.0
 
     {
-      "@odata.context":"http://dh.ics.perm.ru:8085/map/odata/$metadata#TestModel(__PrimaryKey,ID,Name,Shape)","value":[
+      "@odata.context":"http://dh.ics.perm.ru:8085/map/odata/$metadata#TestModel(__PrimaryKey,ID,Name,Shape)","@odata.count":2,"value":[
         {
           "__PrimaryKey":"13681407-924d-4d2f-9c0d-f3059830a79b", "Name":null,"Shape":{
             "type":"MultiPolygon","coordinates":[
@@ -487,8 +487,8 @@ test('getLayerFeatures() with featureIds=null', function(assert) {
     component.get('_leafletLayerPromise').then((leafletLayer) => {
       component.set('_leafletObject', leafletLayer);
 
-      component.getLayerFeatures(e).then((layers) => {
-        assert.ok(layers, 'Get with null featureIds');
+      component.getLayerFeatures(e).then((res) => {
+        assert.ok(res, 'Get with null featureIds');
         done();
       });
     }).finally(() => {
