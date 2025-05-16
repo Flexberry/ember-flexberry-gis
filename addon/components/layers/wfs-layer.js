@@ -424,7 +424,7 @@ export default BaseVectorLayer.extend({
 
     wfsLayer.error = error;
     let pkField = this.getPkField(this.get('layerModel'));
-    wfsLayer.readFormat.excludedProperties = [pkField];
+    wfsLayer.readFormat.excludedProperties = [pkField, 'area', 'length'];
     let leafletMap = this.get('leafletMap');
 
     wfsLayer.on('save:success', this._setLayerState, this);
