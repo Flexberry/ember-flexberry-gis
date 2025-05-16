@@ -437,6 +437,33 @@
 
       padding: 50px 25px;
 
+      .field .flexberry-dropdown {
+        input.search {
+          width: 91%;
+          margin: 15px;
+          font-size: 0.9rem;
+        }
+        .menu {
+          div.item, div.message {
+            margin-left: 15px;
+            margin-right: 15px;
+          }
+        }
+        i.icon.remove {
+          position: absolute;
+          top: 1rem;
+          right: 1rem;
+          &:before {
+            color: #848E99 !important;
+            font-size: 1.2rem;
+            font-weight: 600;
+          }
+          &:hover:before {
+            color: #0061D9 !important;
+          }
+        }
+      }
+
       .create-edit-block {
         height: @visibleCreateEditBlockHeight;
         width: @visibleCreateEditBlockWidth;

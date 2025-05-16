@@ -169,12 +169,15 @@
                 readonly=(or isPropertiesReadonly (array-contains _model.readOnlyFields fieldName))
               }}
             {{else if (and (eq (get _model.fieldTypes fieldName) "string") (get _model.fieldDomains fieldName))}}
-              {{flexberry-dropdown
+              {{flexberry-dropdown-search
                 class=(concat "no-placeholder fluid")
                 items=(get _model.fieldDomains fieldName)
                 value=(mut (get dataValue fieldName))
-                placeholder=""
+                placeholderSearch=(t "components.flexberry-edit-layer-feature.dropdown.placeholderSearch")
                 disabled=(or isPropertiesReadonly (array-contains _model.readOnlyFields fieldName))
+                isSearch=true
+                isSearchReadOnly=true
+                placeholder=""
               }}
             {{else}}
               {{input
