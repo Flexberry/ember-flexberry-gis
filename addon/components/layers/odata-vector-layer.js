@@ -1519,10 +1519,10 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin, {
               }
 
               Ember.RSVP.all(promises)
-                .then(({ res, count }) => {
+                .then((promiseResults) => {
                   let result = [];
-                  res.forEach((loadedModels) => {
-                    result = result.concat(getLoadedFeatures(loadedModels));
+                  promiseResults.forEach(({ res, count }) => {
+                    result = result.concat(getLoadedFeatures(res));
                   });
                   resolve(result);
                 })
