@@ -433,7 +433,7 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin, {
       }
 
       let build = queryBuilder.build();
-      let config = Ember.getOwner(this).resolveRegistration("config:environment");
+      let config = Ember.getOwner(this).resolveRegistration('config:environment');
       let intersectionArea = config.APP.intersectionArea;
       if (isIdentify && build.select.indexOf(intersectionArea) === -1) {
         build.select.push(intersectionArea);
@@ -1898,7 +1898,6 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin, {
     });
   },
 
-
   /**
     Get feature, not add to map
 
@@ -1963,7 +1962,6 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin, {
                 ...multiFilters
               );
             }
-
 
             throw new Error('cannot parse ag-grid multifilter operator');
           }

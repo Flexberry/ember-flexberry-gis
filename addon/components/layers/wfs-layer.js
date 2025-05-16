@@ -1511,7 +1511,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
       });
     });
   },
-  _addSortingToWfsXml (xmlDoc, sortModel) {
+  _addSortingToWfsXml(xmlDoc, sortModel) {
     const query = xmlDoc.querySelector('Query');
     if (!query || !sortModel || !Array.isArray(sortModel)) {
       return xmlDoc;
@@ -1527,31 +1527,6 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
 
         return acc;
       }, '')}
-    </ogc:SortBy>
-    `;
-
-    const sortXML = new DOMParser().parseFromString(sortString, 'text/xml');
-    query.appendChild(sortXML.documentElement);
-  },
-
-  _addFilterToWfsXml (xmlDoc, filterModel) {
-    const query = xmlDoc.querySelector('Query');
-    if (!query || !filterModel || !Array.isArray(filterModel)) {
-      return xmlDoc;
-    }
-
-    this.addCustomFilter(filterModel);
-
-    const sortString = `<ogc:SortBy xmlns:ogc="http://www.opengis.net/ogc">
-      ${sortModel.reduce((acc, curr) => {
-        acc += `
-        <ogc:SortProperty>
-            <ogc:PropertyName>${curr.colId}</ogc:PropertyName>
-            <ogc:SortOrder>${curr.sort}</ogc:SortOrder>
-        </ogc:SortProperty>`;
-
-        return acc;
-      }, "")}
     </ogc:SortBy>
     `;
 

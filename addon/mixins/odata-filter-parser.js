@@ -89,12 +89,11 @@ export default Ember.Mixin.create({
       value = value.dateFrom || value.filter;
     }
 
-
     if ((filterType === 'date' || filterType === 'dateTime') && value) {
       if (Ember.isArray(value)) {
-        value = value.map(e => new Date(e).toISOString())
+        value = value.map(e => new Date(e).toISOString());
       } else {
-        value = new Date(value).toISOString()
+        value = new Date(value).toISOString();
       }
     }
 
@@ -126,12 +125,13 @@ export default Ember.Mixin.create({
       case 'endsWith':
         return new Query.StringPredicate(field).endsWith(value);
       case 'blank':
-        if (filterType === 'date' || filterType === 'dateTime')
+        if (filterType === 'date' || filterType === 'dateTime') {
           return new Query.SimplePredicate(
             field,
             Query.FilterOperator.Eq,
             null
           );
+        }
 
         return new Query.ComplexPredicate(
           Query.Condition.Or,
@@ -140,10 +140,11 @@ export default Ember.Mixin.create({
         );
 
       case 'notBlank' || 'all':
-        if (filterType === 'date' || filterType === 'dateTime')
+        if (filterType === 'date' || filterType === 'dateTime') {
           return new Query.NotPredicate(
             new Query.SimplePredicate(field, Query.FilterOperator.Eq, null)
           );
+        }
 
         return new Query.NotPredicate(
           new Query.ComplexPredicate(
@@ -196,7 +197,7 @@ export default Ember.Mixin.create({
           return new Query.ComplexPredicate(
             Query.Condition.And,
             new Query.DatePredicate(field, Query.FilterOperator.Geq, value[0], true),
-            new Query.DatePredicate(field, Query.FilterOperator.Leq, value[1], true),
+            new Query.DatePredicate(field, Query.FilterOperator.Leq, value[1], true)
           );
 
         }
