@@ -19,5 +19,9 @@ export default {
   },
   'domain': {
     'gets-errors': 'Can not get domain values'
+  },
+  'dropdown': {
+    'placeholderSearch': 'Search',
+    'message': 'No data'
   }
 };

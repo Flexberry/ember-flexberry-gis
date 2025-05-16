@@ -1,0 +1,16 @@
+<i class="dropdown icon"></i>
+<div class="{{unless value "default"}} text">{{text}}</div>
+<div class="menu {{if canFixElement fixedElementClass}}">
+  {{yield}}
+  {{#if isSearch}}
+    {{#if isSearchReadOnly}}
+      <input class="search" autocomplete="off" placeholder={{placeholderSearch}}  value={{mut searchValue}} oninput={{action "onChangeSearchValue"}}>
+    {{else}}
+      <input class="search" autocomplete="off" readonly placeholder={{placeholderSearch}} value={{mut searchValue}} oninput={{action "onChangeSearchValue"}}>
+    {{/if}}
+    <i class={{concat "remove icon" (if (is-blank searchValue) " hidden" "")}} onclick={{action "onClear"}}></i>
+  {{/if}}
+  {{#each-in items as |key itemValue|}}
+    <div class="item {{if (eq value (if displayCaptions key itemValue)) "active selected"}}" data-value="{{key}}">{{itemValue}}</div>
+  {{/each-in}}
+</div>

@@ -19,5 +19,9 @@ export default {
   },
   'domain': {
     'gets-errors': 'Произошла ошибка получения значения справочников'
+  },
+  'dropdown': {
+    'placeholderSearch': 'Поиск',
+    'message': 'Нет данных'
   }
 };
