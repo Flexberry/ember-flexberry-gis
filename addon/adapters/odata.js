@@ -69,7 +69,7 @@ export default Adapter.Odata.extend(Projection.AdapterMixin, {
         } else {
           console.error('Error batch: ' + result.response.body);
         }
-//TODO: сменился контракт
+
         return resolve({
           res: Ember.run(store, store.push, normalizedRecords),
           count: odataCount,
