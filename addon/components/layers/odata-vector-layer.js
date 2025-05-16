@@ -28,7 +28,7 @@ const { Builder } = Query;
   @class ODataVectorLayerComponent
   @extends BaseVectorLayer
  */
-export default BaseVectorLayer.extend(OdataFilterParserMixin,{
+export default BaseVectorLayer.extend(OdataFilterParserMixin, {
 
   leafletOptions: [
     'attribution',
@@ -433,7 +433,7 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin,{
       }
 
       let build = queryBuilder.build();
-      let config =Ember.getOwner(this).resolveRegistration("config:environment");
+      let config = Ember.getOwner(this).resolveRegistration("config:environment");
       let intersectionArea = config.APP.intersectionArea;
       if (isIdentify && build.select.indexOf(intersectionArea) === -1) {
         build.select.push(intersectionArea);
@@ -1196,7 +1196,6 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin,{
     };
   }),
 
-
   /**
     Handles 'flexberry-map:loadLayerFeatures' event of leaflet map.
 
@@ -1900,7 +1899,7 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin,{
   },
 
 
-    /**
+  /**
     Get feature, not add to map
 
     @method _getFeature
@@ -1951,17 +1950,20 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin,{
               )
             );
 
-            if (value.operator === 'OR')
+            if (value.operator === 'OR') {
               return new Query.ComplexPredicate(
                 Query.Condition.Or,
                 ...multiFilters
               );
+            }
 
-            if (value.operator === 'AND')
+            if (value.operator === 'AND') {
               return new Query.ComplexPredicate(
                 Query.Condition.And,
                 ...multiFilters
               );
+            }
+
 
             throw new Error('cannot parse ag-grid multifilter operator');
           }

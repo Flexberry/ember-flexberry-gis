@@ -12,14 +12,14 @@ import state from '../../utils/state';
 import moment from 'moment';
 import { getDateFormatFromString, createTimeInterval } from '../../utils/get-date-from-string';
 import getBooleanFromString from '../../utils/get-boolean-from-string';
-import WfsFilterParserMixin from '../../mixins/wfs-filter-parser'
+import WfsFilterParserMixin from '../../mixins/wfs-filter-parser';
 
 /**
   WFS layer component for leaflet map.
   @class WfsLayerComponent
   @extends BaseVectorLayerComponent
  */
-export default BaseVectorLayer.extend(WfsFilterParserMixin,{
+export default BaseVectorLayer.extend(WfsFilterParserMixin, {
   /**
     Array containing component's properties which are also leaflet layer options.
     @property leafletOptions
@@ -483,10 +483,10 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin,{
     }
 
     wfsLayer.loadLayerFeatures = this.get('loadLayerFeatures').bind(this);
-    wfsLayer.parseFilterConditionExpressionAG = this.get("parseFilterConditionExpressionAG").bind(this);
-    wfsLayer.loadFeaturesForTableAttr = this.get("_loadFeaturesForTableAttr").bind(wfsLayer);
-    wfsLayer.getMetaForTableAttr = this.get("_getMetaForTableAttr").bind(wfsLayer);
-    wfsLayer._addSortingToWfsXml = this.get("_addSortingToWfsXml").bind(wfsLayer);
+    wfsLayer.parseFilterConditionExpressionAG = this.get('parseFilterConditionExpressionAG').bind(this);
+    wfsLayer.loadFeaturesForTableAttr = this.get('_loadFeaturesForTableAttr').bind(wfsLayer);
+    wfsLayer.getMetaForTableAttr = this.get('_getMetaForTableAttr').bind(wfsLayer);
+    wfsLayer._addSortingToWfsXml = this.get('_addSortingToWfsXml').bind(wfsLayer);
 
     return wfsLayer;
   },
@@ -1323,11 +1323,15 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin,{
               this.parseFilterConditionExpressionAG(key, multiValue.type, multiValue)
             );
 
-            if (value.operator === "OR") return new L.Filter.Or(...multiFilters);
+            if (value.operator === 'OR') {
+              return new L.Filter.Or(...multiFilters);
+            }
 
-            if (value.operator === "AND") return new L.Filter.And(...multiFilters);
+            if (value.operator === 'AND') {
+              return new L.Filter.And(...multiFilters);
+            }
 
-            throw new Error("cannot parse ag-grid multifilter operator");
+            throw new Error('cannot parse ag-grid multifilter operator');
           }
 
           return this.parseFilterConditionExpressionAG(key, value.type, value);
@@ -1359,15 +1363,15 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin,{
 
       // WFS 1.1.0 c (outputFormat=text/xml; subtype=gml/3.1.1) требует отдельного запроса для вычисления количества features
       // В то время как (outputFormat=application/json) возвращает totalFeatures при выборке гис-объектов
-      if (this.options.version.startsWith("1.1.0") && this.readFormat.outputFormat === "text/xml; subtype=gml/3.1.1") {
+      if (this.options.version.startsWith('1.1.0') && this.readFormat.outputFormat === 'text/xml; subtype=gml/3.1.1') {
         const queryBodyForMeta = queryBody.cloneNode(true);
-        queryBodyForMeta.removeAttribute("maxFeatures");
-        queryBodyForMeta.setAttribute("resultType", "hits");
+        queryBodyForMeta.removeAttribute('maxFeatures');
+        queryBodyForMeta.setAttribute('resultType', 'hits');
         getFeaturesMeta = that.getMetaForTableAttr(queryBodyForMeta);
       }
 
-      top === 0 ? queryBody.removeAttribute("maxFeatures") : queryBody.setAttribute("maxFeatures", top);
-      skip === -1 ? queryBody.removeAttribute("startIndex") : queryBody.setAttribute("startIndex", skip);
+      top === 0 ? queryBody.removeAttribute('maxFeatures') : queryBody.setAttribute('maxFeatures', top);
+      skip === -1 ? queryBody.removeAttribute('startIndex') : queryBody.setAttribute('startIndex', skip);
       this._addSortingToWfsXml(queryBody, sortModel);
 
       getFeaturesMeta
@@ -1382,7 +1386,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin,{
               // and such situation must be handled.
               let exceptionReport = L.XmlUtil.parseOwsExceptionReport(responseText);
               if (exceptionReport) {
-                that.fire("error", {
+                that.fire('error', {
                   error: new Error(exceptionReport.message),
                 });
                 reject(exceptionReport);
@@ -1399,14 +1403,14 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin,{
               var featureMetrics = featuresMeta || that.readFormat.responseToMetrics(responseText);
 
               layers.forEach(function (element) {
-                if (!Ember.isNone(Ember.get(element, "feature")) && Ember.isNone(Ember.get(element, "feature.leafletLayer"))) {
+                if (!Ember.isNone(Ember.get(element, 'feature')) && Ember.isNone(Ember.get(element, 'feature.leafletLayer'))) {
                   element.minZoom = that.minZoom;
                   element.maxZoom = that.maxZoom;
-                  Ember.set(element.feature, "leafletLayer", element);
+                  Ember.set(element.feature, 'leafletLayer', element);
                 }
               });
 
-              if (typeof that.options.style === "function") {
+              if (typeof that.options.style === 'function') {
                 layers.forEach(function (element) {
                   element.state = that.state.exist;
                   if (element.setStyle) {
@@ -1425,7 +1429,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin,{
               }
 
               if (fireLoad) {
-                that.fire("load", {
+                that.fire('load', {
                   responseText: responseText,
                   layers: layers,
                 });
@@ -1436,7 +1440,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin,{
               return that;
             },
             error: function (errorMessage) {
-              that.fire("error", {
+              that.fire('error', {
                 error: new Error(errorMessage),
               });
 
@@ -1447,7 +1451,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin,{
           });
         })
         .catch((error) => {
-          that.fire("error", {
+          that.fire('error', {
             error: new Error(error),
           });
           reject(error);
@@ -1468,7 +1472,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin,{
           // and such situation must be handled.
           let exceptionReport = L.XmlUtil.parseOwsExceptionReport(responseText);
           if (exceptionReport) {
-            that.fire("error", {
+            that.fire('error', {
               error: new Error(exceptionReport.message),
             });
             reject(exceptionReport);
@@ -1477,7 +1481,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin,{
 
           var xmlDoc = L.XmlUtil.parseXml(responseText);
           var featuresMeta = xmlDoc.documentElement;
-          var totalFeatures = Number(featuresMeta.getAttribute("numberOfFeatures"));
+          var totalFeatures = Number(featuresMeta.getAttribute('numberOfFeatures'));
 
           resolve({
             totalFeatures: isNaN(totalFeatures) ? 0 : totalFeatures,
@@ -1486,7 +1490,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin,{
           return that;
         },
         error: function (errorMessage) {
-          that.fire("error", {
+          that.fire('error', {
             error: new Error(errorMessage),
           });
 
@@ -1498,7 +1502,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin,{
     });
   },
   _addSortingToWfsXml: function (xmlDoc, sortModel) {
-    const query = xmlDoc.querySelector("Query");
+    const query = xmlDoc.querySelector('Query');
     if (!query || !sortModel || !Array.isArray(sortModel)) {
       return xmlDoc;
     }
@@ -1516,12 +1520,12 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin,{
     </ogc:SortBy>
     `;
 
-    const sortXML = new DOMParser().parseFromString(sortString, "text/xml");
+    const sortXML = new DOMParser().parseFromString(sortString, 'text/xml');
     query.appendChild(sortXML.documentElement);
   },
 
   _addFilterToWfsXml: function (xmlDoc, filterModel) {
-    const query = xmlDoc.querySelector("Query");
+    const query = xmlDoc.querySelector('Query');
     if (!query || !filterModel || !Array.isArray(filterModel)) {
       return xmlDoc;
     }
@@ -1541,7 +1545,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin,{
     </ogc:SortBy>
     `;
 
-    const sortXML = new DOMParser().parseFromString(sortString, "text/xml");
+    const sortXML = new DOMParser().parseFromString(sortString, 'text/xml');
     query.appendChild(sortXML.documentElement);
   },
 });
