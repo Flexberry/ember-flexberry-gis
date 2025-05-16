@@ -10,7 +10,7 @@ import { Query } from 'ember-flexberry-data';
   Contains methods for parsing odata filter.
 
   @class OdataFilterParserMixin
-  @uses <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
+  @uses <a href='http://emberjs.com/api/classes/Ember.Mixin.html'>Ember.Mixin</a>
 */
 export default Ember.Mixin.create({
   /**
@@ -81,7 +81,7 @@ export default Ember.Mixin.create({
   parseFilterConditionExpressionAG(field, condition, value) {
     const filterType = value.filterType;
 
-    if (condition === "inRange") {
+    if (condition === 'inRange') {
       let firstValue = value.dateFrom || value.filter;
       let secondValue = value.dateTo || value.filterTo;
       value = [firstValue, secondValue];
@@ -99,13 +99,13 @@ export default Ember.Mixin.create({
     }
 
     switch (condition) {
-      case "equals":
+      case 'equals':
         if (filterType === 'date') {
           return new Query.DatePredicate(field, Query.FilterOperator.Eq, value, true);
         }
 
         return new Query.SimplePredicate(field, Query.FilterOperator.Eq, value);
-      case "notEqual":
+      case 'notEqual':
         if (filterType === 'date') {
           return new Query.DatePredicate(field, Query.FilterOperator.Neq, value, true);
         }
@@ -115,18 +115,18 @@ export default Ember.Mixin.create({
           Query.FilterOperator.Neq,
           value
         );
-      case "contains":
+      case 'contains':
         return new Query.StringPredicate(field).contains(value);
-      case "notContains":
+      case 'notContains':
         return new Query.NotPredicate(
           new Query.StringPredicate(field).contains(value)
         );
-      case "startsWith":
+      case 'startsWith':
         return new Query.StringPredicate(field).startsWith(value);
-      case "endsWith":
+      case 'endsWith':
         return new Query.StringPredicate(field).endsWith(value);
-      case "blank":
-        if (filterType === "date" || filterType === "dateTime")
+      case 'blank':
+        if (filterType === 'date' || filterType === 'dateTime')
           return new Query.SimplePredicate(
             field,
             Query.FilterOperator.Eq,
@@ -136,11 +136,11 @@ export default Ember.Mixin.create({
         return new Query.ComplexPredicate(
           Query.Condition.Or,
           new Query.SimplePredicate(field, Query.FilterOperator.Eq, null),
-          new Query.SimplePredicate(field, Query.FilterOperator.Eq, "")
+          new Query.SimplePredicate(field, Query.FilterOperator.Eq, '')
         );
 
-      case "notBlank" || "all":
-        if (filterType === "date" || filterType === "dateTime")
+      case 'notBlank' || 'all':
+        if (filterType === 'date' || filterType === 'dateTime')
           return new Query.NotPredicate(
             new Query.SimplePredicate(field, Query.FilterOperator.Eq, null)
           );
@@ -149,28 +149,28 @@ export default Ember.Mixin.create({
           new Query.ComplexPredicate(
             Query.Condition.Or,
             new Query.SimplePredicate(field, Query.FilterOperator.Eq, null),
-            new Query.SimplePredicate(field, Query.FilterOperator.Eq, "")
+            new Query.SimplePredicate(field, Query.FilterOperator.Eq, '')
           )
         );
 
-      case "true":
+      case 'true':
         return new Query.SimplePredicate(field, Query.FilterOperator.Eq, true);
-      case "false":
+      case 'false':
         return new Query.SimplePredicate(field, Query.FilterOperator.Eq, false);
 
-      case "greaterThan":
+      case 'greaterThan':
         if (filterType === 'date') {
           return new Query.DatePredicate(field, Query.FilterOperator.Ge, value, true);
         }
 
         return new Query.SimplePredicate(field, Query.FilterOperator.Ge, value);
-      case "lessThan":
+      case 'lessThan':
         if (filterType === 'date') {
           return new Query.DatePredicate(field, Query.FilterOperator.Le, value, true);
         }
 
         return new Query.SimplePredicate(field, Query.FilterOperator.Le, value);
-      case "greaterThanOrEqual":
+      case 'greaterThanOrEqual':
         if (filterType === 'date') {
           return new Query.DatePredicate(field, Query.FilterOperator.Geq, value, true);
         }
@@ -180,7 +180,7 @@ export default Ember.Mixin.create({
           Query.FilterOperator.Geq,
           value
         );
-      case "lessThanOrEqual":
+      case 'lessThanOrEqual':
         if (filterType === 'date') {
           return new Query.DatePredicate(field, Query.FilterOperator.Leq, value, true);
         }
@@ -190,7 +190,7 @@ export default Ember.Mixin.create({
           Query.FilterOperator.Leq,
           value
         );
-      case "inRange":
+      case 'inRange':
         if (filterType === 'date') {
 
           return new Query.ComplexPredicate(

@@ -152,12 +152,12 @@ export default WmsLayerComponent.extend({
     this._super(...arguments);
 
     let innerWfsLayerProperties = {
-      leafletMap: this.get("leafletMap"),
-      leafletContainer: this.get("leafletContainer"),
-      layerModel: this.get("layerModel"),
-      index: this.get("index"),
+      leafletMap: this.get('leafletMap'),
+      leafletContainer: this.get('leafletContainer'),
+      layerModel: this.get('layerModel'),
+      index: this.get('index'),
       visibility: false,
-      dynamicProperties: this.get("wfs"),
+      dynamicProperties: this.get('wfs'),
     };
 
     // Set creating component's owner to avoid possible lookup exceptions.
@@ -173,8 +173,8 @@ export default WmsLayerComponent.extend({
       innerWfsLayerProperties[ownerKey] = owner;
     }
 
-    const WfsLayerFactory = owner.factoryFor("component:layers/wfs-layer"); // получаем фабрику компонента
-    this.set("_wfsLayer", WfsLayerFactory.create(innerWfsLayerProperties)); // создаем экземпляр
+    const WfsLayerFactory = owner.factoryFor('component:layers/wfs-layer'); // получаем фабрику компонента
+    this.set('_wfsLayer', WfsLayerFactory.create(innerWfsLayerProperties)); // создаем экземпляр
   },
 
   didInsertElement() {

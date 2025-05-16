@@ -1293,7 +1293,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
     });
   },
 
-   /**
+  /**
     Load features by filter and return promise.
     @method _loadFeatures
     @param filter {L.Filter} filter on loaded features
@@ -1370,8 +1370,18 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
         getFeaturesMeta = that.getMetaForTableAttr(queryBodyForMeta);
       }
 
-      top === 0 ? queryBody.removeAttribute('maxFeatures') : queryBody.setAttribute('maxFeatures', top);
-      skip === -1 ? queryBody.removeAttribute('startIndex') : queryBody.setAttribute('startIndex', skip);
+      if (top === 0) {
+        queryBody.removeAttribute('maxFeatures');
+      } else {
+        queryBody.setAttribute('maxFeatures', top);
+      }
+
+      if (skip === -1) {
+        queryBody.removeAttribute('startIndex');
+      } else {
+        queryBody.setAttribute('startIndex', skip);
+      }
+
       this._addSortingToWfsXml(queryBody, sortModel);
 
       getFeaturesMeta
@@ -1501,7 +1511,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
       });
     });
   },
-  _addSortingToWfsXml: function (xmlDoc, sortModel) {
+  _addSortingToWfsXml (xmlDoc, sortModel) {
     const query = xmlDoc.querySelector('Query');
     if (!query || !sortModel || !Array.isArray(sortModel)) {
       return xmlDoc;
@@ -1516,7 +1526,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
         </ogc:SortProperty>`;
 
         return acc;
-      }, "")}
+      }, '')}
     </ogc:SortBy>
     `;
 
@@ -1524,7 +1534,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
     query.appendChild(sortXML.documentElement);
   },
 
-  _addFilterToWfsXml: function (xmlDoc, filterModel) {
+  _addFilterToWfsXml (xmlDoc, filterModel) {
     const query = xmlDoc.querySelector('Query');
     if (!query || !filterModel || !Array.isArray(filterModel)) {
       return xmlDoc;

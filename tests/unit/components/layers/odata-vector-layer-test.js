@@ -487,7 +487,7 @@ test('getLayerFeatures() with featureIds=null', function(assert) {
     component.get('_leafletLayerPromise').then((leafletLayer) => {
       component.set('_leafletObject', leafletLayer);
 
-      component.getLayerFeatures(e).then((layers) => {
+      component.getLayerFeatures(e).then(({layers, count}) => {
         assert.ok(layers, 'Get with null featureIds');
         done();
       });
