@@ -8,7 +8,6 @@ import {
   translationMacro as t
 } from 'ember-i18n';
 
-
 /**
   Dropdown component based on Semantic UI Dropdown module.
 
@@ -29,14 +28,14 @@ import {
   @extends FlexberryBaseComponent
 */
 export default Ember.Component.extend({
-    /**
+  /**
     Reference to component's template.
   */
   layout,
 
   placeholderSearch: '',
 
-  searchValue: "",
+  searchValue: '',
 
   noResults:  t('components.flexberry-edit-layer-feature.dropdown.message'),
 
