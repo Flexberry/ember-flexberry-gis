@@ -1283,6 +1283,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           this.trancateGeoWebCache(_leafletObjectFirst);
           _leafletObjectFirst.setParams({ fake: Date.now() }, false);
         }
+
         this.get('modalMessage').showModal({
           title: 'Объект успешно сохранен',
           text: `Объект успешно сохранен в слой “${layerModel.name}”`,
