@@ -319,6 +319,7 @@ export default Ember.Component.extend(SlotsMixin, ResultFeatureInitializer, {
     let leafletMap = this.get('mapApi').getFromApi('leafletMap');
     leafletMap.off('flexberry-map:edit-feature:end', this._updateFeatureResultItem, this);
     leafletMap.off('flexberry-map:edit-feature:fail', this._updateFeatureResultItem, this);
+    leafletMap.off('flexberry-map:edit-feature:removeResultObject', this._removeResultObject, this);
   },
 
   /**
@@ -335,6 +336,7 @@ export default Ember.Component.extend(SlotsMixin, ResultFeatureInitializer, {
     let leafletMap = this.get('mapApi').getFromApi('leafletMap');
     leafletMap.on('flexberry-map:edit-feature:end', this._updateFeatureResultItem, this);
     leafletMap.on('flexberry-map:edit-feature:fail', this._updateFeatureResultItem, this);
+    leafletMap.on('flexberry-map:edit-feature:removeResultObject', this._removeResultObject, this);
     this.set('defaultFeatureStyle', Object.assign({ stroke: true, fill: true }, feature.leafletLayer.options));
 
     if (feature.geometry && feature.geometry.type &&
@@ -680,6 +682,11 @@ export default Ember.Component.extend(SlotsMixin, ResultFeatureInitializer, {
       leafletMap.addLayer(feature.leafletLayer); // return back featureLayer with identification/search results
     }
   },
+
+  _removeResultObject(feature) {
+    let features = this.get('resultObject.features');
+    features.removeObject(features.findBy('id', feature.id));
+  }
 
   /**
     Component's action invoking for select feature
