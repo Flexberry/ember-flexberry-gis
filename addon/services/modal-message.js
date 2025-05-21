@@ -1,22 +1,22 @@
-import Ember from "ember";
+import Ember from 'ember';
 
 export default Ember.Service.extend({
   show: false,
-  messageCaption: "",
-  messageText: "",
+  messageCaption: '',
+  messageText: '',
   applicationController: null,
 
   init() {
     this._super(...arguments);
-    const container = Ember.getOwner(this).lookup("controller:application");
-    this.set("applicationController", container);
+    const container = Ember.getOwner(this).lookup('controller:application');
+    this.set('applicationController', container);
   },
 
   showModal(options) {
-    const controller = this.get("applicationController");
+    const controller = this.get('applicationController');
 
     const onClose = function () {
-      controller.set("isModalVisible", false);
+      controller.set('isModalVisible', false);
       if (options.onClose) {
         options.onClose();
       }
@@ -28,12 +28,12 @@ export default Ember.Service.extend({
       modalText: options.text,
       modalDuration: options.duration || 5000,
       modalOnClose: onClose,
-      modalExtraClass: options.extraClass || "",
+      modalExtraClass: options.extraClass || '',
     });
   },
 
   showErrorModal(options) {
-    const controller = this.get("applicationController");
+    const controller = this.get('applicationController');
 
     controller.setProperties({
       isErrorModalVisible: true,
@@ -53,8 +53,8 @@ export default Ember.Service.extend({
   clearModalMessage() {
     this.setProperties({
       show: false,
-      messageCaption: "",
-      messageText: "",
+      messageCaption: '',
+      messageText: '',
     });
   },
 });

@@ -1,4 +1,4 @@
-import Ember from "ember";
+import Ember from 'ember';
 import layout from '../templates/components/success-modal';
 
 export default Ember.Component.extend({
@@ -8,27 +8,27 @@ export default Ember.Component.extend({
   layout,
 
   isFadingOut: false,
-  extraClass: "",
+  extraClass: '',
 
   init() {
     this._super();
 
-    const duration = this.get("duration");
-    const router = Ember.getOwner(this).lookup("router:main");
+    const duration = this.get('duration');
+    const router = Ember.getOwner(this).lookup('router:main');
 
-    this.set("router", router);
+    this.set('router', router);
 
     this._closeTimer = Ember.run.later(
       this,
       () => {
-        this.send("closeModal");
+        this.send('closeModal');
       },
       duration
     );
   },
 
-  currentPathDidChange: Ember.observer("router.currentPath", function () {
-    this.send("closeModal", 0);
+  currentPathDidChange: Ember.observer('router.currentPath', function () {
+    this.send('closeModal', 0);
   }),
 
   willDestroyElement() {
@@ -41,9 +41,9 @@ export default Ember.Component.extend({
 
   actions: {
     closeModal(timer = 200) {
-      const onClose = this.get("onClose");
+      const onClose = this.get('onClose');
 
-      this.set("isFadingOut", true);
+      this.set('isFadingOut', true);
 
       Ember.run.later(
         this,

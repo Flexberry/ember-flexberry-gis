@@ -1230,7 +1230,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         this.set('loading', false);
         this.get('modalMessage').showErrorModal({
           title: 'Ошибка',
-          text: `Произошла техническая ошибка при сохранении объекта в слое “${layerModel.name}”. Попробуйте еще раз позднее. Если проблема повторится, обратитесь в техподдержку: <a href='mailto:${config.support.mail}'>${config.support.mail}</a>`,
+          text: `Произошла техническая ошибка при сохранении объекта в слое “${layerModel.name}”. Попробуйте еще раз позднее.
+                Если проблема повторится, обратитесь в техподдержку: <a href='mailto:${config.support.mail}'>${config.support.mail}</a>`,
         });
         leafletObject.off('save:success', saveSuccess);
       };
