@@ -7,6 +7,8 @@ import { translationMacro as t } from 'ember-i18n';
 import { addAlpha, splitColor } from '../utils/leaflet-opacity';
 
 export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, EditFeatureMixin, {
+  modalMessage: Ember.inject.service(),
+
   /**
     Service for managing map API.
     @property mapApi
@@ -1053,7 +1055,10 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       Object.keys(datas).forEach((index) => {
         let parsedData = this.parseData(index, datas[index]);
         if (Ember.isNone(parsedData)) {
-          this.set('error', t('components.flexberry-edit-layer-feature.validation.data-errors'));
+          this.set(
+            'error',
+            t('components.flexberry-edit-layer-feature.validation.data-errors')
+          );
           error = true;
           return;
         }
@@ -1086,7 +1091,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       if (state === 'New') {
         let e = {
           layers: [],
-          results: Ember.A()
+          results: Ember.A(),
         };
 
         Object.keys(layers).forEach((index) => {
@@ -1094,7 +1099,10 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           let data = datas[index];
 
           if (Ember.isNone(layer)) {
-            this.set('error', t('components.flexberry-edit-layer-feature.validation.no-layer'));
+            this.set(
+              'error',
+              t('components.flexberry-edit-layer-feature.validation.no-layer')
+            );
             error = true;
             return;
           }
@@ -1104,7 +1112,11 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           // Create a new object in the layer
           if (leafletObject.createLayerObject) {
             leafletMap.removeLayer(layer);
-            layer = leafletObject.createLayerObject(leafletObject, data, layer.toGeoJSON().geometry);
+            layer = leafletObject.createLayerObject(
+              leafletObject,
+              data,
+              layer.toGeoJSON().geometry
+            );
           } else {
             leafletMap.removeLayer(layer);
             Ember.set(layer, 'feature', { type: 'Feature' });
@@ -1142,12 +1154,17 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           let data = datas[index];
 
           if (Ember.isNone(layer)) {
-            this.set('error', t('components.flexberry-edit-layer-feature.validation.no-layer'));
+            this.set(
+              'error',
+              t('components.flexberry-edit-layer-feature.validation.no-layer')
+            );
             error = true;
             return;
           }
 
-          let properties = Object.keys(this.get('leafletObject.readFormat.featureType.fields'));
+          let properties = Object.keys(
+            this.get('leafletObject.readFormat.featureType.fields')
+          );
 
           for (var key in data) {
             if (!properties.contains(key)) {
@@ -1157,7 +1174,12 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
             if (data.hasOwnProperty(key)) {
               var element = data[key];
-              if (!Ember.isEqual(element, Ember.get(layer.feature, `properties.${key}`))) {
+              if (
+                !Ember.isEqual(
+                  element,
+                  Ember.get(layer.feature, `properties.${key}`)
+                )
+              ) {
                 Ember.set(layer.feature, `properties.${key}`, element);
               }
             }
@@ -1167,10 +1189,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           leafletObject.editLayer(layer);
 
           if (leafletMap.hasLayer(layer)) {
-            if (!this.get('isLayerCopy')) {
-              layer.setStyle(layer.defaultFeatureStyle);
-              layer.styleIsSet = layer.defaultSetStyle;
-            }
+            layer.setStyle(layer.defaultFeatureStyle);
+            layer.styleIsSet = layer.defaultSetStyle;
 
             if (this.get('isLayerCopy')) {
               // Deleting a copy of an edited layer from the map
@@ -1191,32 +1211,40 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         layers: Object.values(layers),
         layerModel: layerModel,
         initialFeatureKeys: this.get('dataItems.initialFeatureKeys'),
-        editMode: this.get('mode')
+        editMode: this.get('mode'),
       };
 
       if (!Ember.isNone(initialLayers)) {
         const mapModelApi = this.get('mapApi').getFromApi('mapModel');
-        const pkField = mapModelApi._getPkField(this.get('layerModel.layerModel'));
-        e.initialFeatureIds = initialLayers.map(l => Ember.get(l, `feature.properties.${pkField}`));
+        const pkField = mapModelApi._getPkField(
+          this.get('layerModel.layerModel')
+        );
+        e.initialFeatureIds = initialLayers.map((l) =>
+          Ember.get(l, `feature.properties.${pkField}`)
+        );
       }
+
+      let config = Ember.getOwner(this).resolveRegistration('config:environment');
 
       let saveFailed = () => {
         this.set('loading', false);
-        this.set('error', t('components.flexberry-edit-layer-feature.validation.save-fail'));
-        leafletObject.off('save:success', saveSuccess);
-        this.restoreLayers().then(() => {
-          this.get('leafletMap').fire(event + ':fail', e);
-        }).catch(() => {
-          // can't save or restore layers. No decision on what to do next
-          console.log('Save and restore layer error');
+        this.get('modalMessage').showErrorModal({
+          title: 'Ошибка',
+          text: `Произошла техническая ошибка при сохранении объекта в слое “${layerModel.name}”. Попробуйте еще раз позднее.
+                Если проблема повторится, обратитесь в техподдержку: <a href='mailto:${config.support.mail}'>${config.support.mail}</a>`,
         });
+        leafletObject.off('save:success', saveSuccess);
       };
 
       let saveSuccess = (data) => {
         this.set('loading', false);
         leafletObject.off('save:failed', saveFailed);
 
-        if (!Ember.isNone(data.layers) && Ember.isArray(data.layers) && data.layers.length > 0) {
+        if (
+          !Ember.isNone(data.layers) &&
+          Ember.isArray(data.layers) &&
+          data.layers.length > 0
+        ) {
           if (state === 'New') {
             e.layers.forEach((l) => {
               this.get('leafletMap').removeLayer(l);
@@ -1228,7 +1256,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
               Ember.set(layer.feature, 'leafletLayer', layer);
             }
 
-            const afterSaveFeatureFunc = this.get('mapApi').getFromApi('afterSaveFeature');
+            const afterSaveFeatureFunc =
+              this.get('mapApi').getFromApi('afterSaveFeature');
             if (typeof afterSaveFeatureFunc === 'function') {
               afterSaveFeatureFunc(layer.feature.properties.primarykey);
             }
@@ -1244,12 +1273,22 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         this.get('leafletMap').fire(event + ':end', e);
         this.set('mode', 'Saved');
 
-        let _leafletObjectFirst = this.get('layerModel.layerModel._leafletObjectFirst');
-        let leafletMap = this.get('leafletMap');
-        if (!Ember.isNone(_leafletObjectFirst) && typeof _leafletObjectFirst.setParams === 'function') {
-          this.trancateGeoWebCache(_leafletObjectFirst, leafletMap);
+        let _leafletObjectFirst = this.get(
+          'layerModel.layerModel._leafletObjectFirst'
+        );
+        if (
+          !Ember.isNone(_leafletObjectFirst) &&
+          typeof _leafletObjectFirst.setParams === 'function'
+        ) {
+          this.trancateGeoWebCache(_leafletObjectFirst);
           _leafletObjectFirst.setParams({ fake: Date.now() }, false);
         }
+
+        this.get('modalMessage').showModal({
+          title: 'Объект успешно сохранен',
+          text: `Объект успешно сохранен в слой “${layerModel.name}”`,
+          duration: 5000,
+        });
 
         this.sendAction('editFeatureEnd'); // close edit tab
       };
@@ -1265,13 +1304,15 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         (createPromise ? createPromise : Ember.RSVP.resolve()).then(() => {
           leafletObject.save();
         });
-      }
-      catch (ex) {
+      } catch (ex) {
         leafletObject.off('save:failed', saveFailed);
         leafletObject.off('save:success', saveSuccess);
 
         this.set('loading', false);
-        this.set('error', t('components.flexberry-edit-layer-feature.validation.save-fail'));
+        this.set(
+          'error',
+          t('components.flexberry-edit-layer-feature.validation.save-fail')
+        );
       }
     },
 
