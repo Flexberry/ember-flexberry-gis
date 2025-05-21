@@ -6,13 +6,6 @@
     </h3>
   </div>
 
-   {{#if error}}
-    {{ui-message
-      type="error"
-      message=error
-    }}
-  {{/if}}
-
   {{#if (or (eq mode "Create") (eq mode "Edit") (eq mode "Import"))}}
 
     <div class="editfeature-tab-nav-panel">
@@ -144,68 +137,60 @@
             }}
           </div>
         {{/if}}
-        {{#if _showLoader}}
-          <div class="ui small active loader"></div>
-        {{else}}
-          {{#each-in _model.fieldNames as |fieldName fieldValue|}}
-          <div class="field {{if (or (get parsingErrors (concat '' curIndex '.' fieldName '.invalidValue')) (and (get parsingErrors (concat '' curIndex '.' fieldName '.missedValue')) (is-none (get dataValue fieldName) true) )) "error" ""}}">
-            <label>{{fieldValue}}
-              {{#if (and (get _model.requiredFields fieldName) (is-none (get dataValue fieldName) true))}}
-                <span class="required">*</span>
-              {{/if}}
-            </label>
-            {{#if (eq (get _model.fieldTypes fieldName) "date")}}
-              {{flexberry-simpledatetime
-                type="datetime"
-                value=(mut (get dataValue fieldName))
-                placeholder=placeholderDataPicker
-                defaultHour=0
-                defaultMinute=0
-                readonly=(or isPropertiesReadonly (array-contains _model.readOnlyFields fieldName))
-              }}
-            {{else if (eq (get _model.fieldTypes fieldName) "boolean")}}
-              {{flexberry-checkbox
-                value=(mut (get dataValue fieldName))
-                readonly=(or isPropertiesReadonly (array-contains _model.readOnlyFields fieldName))
-              }}
-            {{else if (and (eq (get _model.fieldTypes fieldName) "string") (get _model.fieldDomains fieldName))}}
-              {{flexberry-dropdown-search
-                class=(concat "no-placeholder fluid")
-                items=(get _model.fieldDomains fieldName)
-                value=(mut (get dataValue fieldName))
-                placeholderSearch=(t "components.flexberry-edit-layer-feature.dropdown.placeholderSearch")
-                disabled=(or isPropertiesReadonly (array-contains _model.readOnlyFields fieldName))
-                isSearch=true
-                isSearchReadOnly=true
-                placeholder=""
-              }}
-            {{else}}
-              {{input
-                type="text"
-                value=(mut (get dataValue fieldName))
-                disabled=(or isPropertiesReadonly (array-contains _model.readOnlyFields fieldName))
-              }}
+        {{#each-in _model.fieldNames as |fieldName fieldValue|}}
+        <div class="field {{if (or (get parsingErrors (concat '' curIndex '.' fieldName '.invalidValue')) (and (get parsingErrors (concat '' curIndex '.' fieldName '.missedValue')) (is-none (get dataValue fieldName) true) )) "error" ""}}">
+          <label>{{fieldValue}}
+            {{#if (and (get _model.requiredFields fieldName) (is-none (get dataValue fieldName) true))}}
+              <span class="required">*</span>
             {{/if}}
-            {{#if (get parsingErrors (concat '' curIndex '.' fieldName '.invalidValue'))}}
-            <div class="validation">
-              {{t "components.flexberry-edit-layer-feature.validation.field-error"}}
-            </div>
-            {{/if}}
-
-            {{#if (and (get parsingErrors (concat '' curIndex '.' fieldName '.missedValue')) (is-none (get dataValue fieldName) true))}}
-            <div class="validation">
-              {{t "components.flexberry-edit-layer-feature.validation.field-required"}}
-            </div>
-            {{/if}}
+          </label>
+          {{#if (eq (get _model.fieldTypes fieldName) "date")}}
+            {{flexberry-simpledatetime
+              type="datetime"
+              value=(mut (get dataValue fieldName))
+              placeholder=placeholderDataPicker
+              defaultHour=0
+              defaultMinute=0
+              readonly=(or isPropertiesReadonly (array-contains _model.readOnlyFields fieldName))
+            }}
+          {{else if (eq (get _model.fieldTypes fieldName) "boolean")}}
+            {{flexberry-checkbox
+              value=(mut (get dataValue fieldName))
+              readonly=(or isPropertiesReadonly (array-contains _model.readOnlyFields fieldName))
+            }}
+          {{else}}
+            {{input
+              type="text"
+              value=(mut (get dataValue fieldName))
+              disabled=(or isPropertiesReadonly (array-contains _model.readOnlyFields fieldName))
+            }}
+          {{/if}}
+          {{#if (get parsingErrors (concat '' curIndex '.' fieldName '.invalidValue'))}}
+          <div class="validation">
+            {{t "components.flexberry-edit-layer-feature.validation.field-error"}}
           </div>
-          {{/each-in}}
-        {{/if}}
+          {{/if}}
+
+          {{#if (and (get parsingErrors (concat '' curIndex '.' fieldName '.missedValue')) (is-none (get dataValue fieldName) true))}}
+          <div class="validation">
+            {{t "components.flexberry-edit-layer-feature.validation.field-required"}}
+          </div>
+          {{/if}}
+        </div>
+        {{/each-in}}
       </form>
     </div>
   </div>
 
   {{/each-in}}
 </div>
+
+  {{#if error}}
+    {{ui-message
+      type="error"
+      message=error
+    }}
+  {{/if}}
 
 <div class="create-edit-block-buttons flex-buttons">
   <button type="submit" class="ui button positive {{if (or block loading) "disabled"}}" {{action "save"}}>

@@ -1,11 +1,13 @@
-{{flexberry-dialog class=(concat class " " flexberryClassNames.prefix)
+{{#flexberry-dialog class=(concat class " " flexberryClassNames.prefix)
   caption=caption
   content=content
-  approveButtonCaption=approveButtonCaption
-  denyButtonCaption=denyButtonCaption
+  approveButtonCaption="Удалить"
+  denyButtonCaption="Отмена"
   visible=visible
   approve=(action "onApprove")
   deny=(action "onDeny")
   show=(action "onShow")
   hide=(action "onHide")
 }}
+  <i class="notification" title="Уведомление"></i>
+{{/flexberry-dialog}}
