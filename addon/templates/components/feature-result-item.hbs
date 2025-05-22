@@ -109,6 +109,14 @@
           {{/if}}
         </div>
         <div>
+          {{#if (and availableEdit (not feature.arch))}}
+            <a class="icon item" {{action "showModalDialogRemove" feature on="click"}}>
+              <i class="icon-guideline-delete"/>
+              {{t "components.feature-result-item.delete-caption"}}
+            </a>
+          {{/if}}
+        </div>
+        <div>
           <a class="icon item"  {{action "findIntersection" on="click"}}>
             <i class="icon-guideline-intersection"></i>
             {{t "components.feature-result-item.find-intersection-caption"}}

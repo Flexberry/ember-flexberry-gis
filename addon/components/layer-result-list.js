@@ -299,6 +299,15 @@ export default Ember.Component.extend(SlotsMixin, LeafletZoomToFeatureMixin, Res
     zoomToIntersection(feature) {
       this.sendAction('zoomToIntersection', feature);
     },
+
+    /**
+     * Открытие модального окна "Удаление объекта в слое"
+     * @param {*} feature
+     */
+    showModalDialogRemove(feature) {
+      this.sendAction('showModalDialogRemove', feature);
+    },
+
     /**
       Action pans to intersection feature.
 

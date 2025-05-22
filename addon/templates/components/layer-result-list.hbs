@@ -109,6 +109,7 @@
                     editFeature=(action 'editFeature')
                     availableEdit=(and availableEdit (array-contains accessibleData result.layerModel.id))
                     accessibleMap=accessibleMap
+                    showModalDialogRemove=(action 'showModalDialogRemove')
                 }}
                 {{else}}
                   {{#feature-result-item
@@ -131,6 +132,7 @@
                     editFeature=(action 'editFeature')
                     availableEdit=(and availableEdit (array-contains accessibleData result.layerModel.id))
                     accessibleMap=accessibleMap
+                    showModalDialogRemove=(action 'showModalDialogRemove')
                   }}
                     {{yield}}
                   {{/feature-result-item}}
@@ -243,6 +245,7 @@
                 editFeature=(action 'editFeature')
                 availableEdit=(and availableEdit (array-contains accessibleData result.layerModel.id))
                 accessibleMap=accessibleMap
+                showModalDialogRemove=(action 'showModalDialogRemove')
             }}
             {{else}}
               {{#feature-result-item
@@ -268,6 +271,7 @@
                 editFeature=(action 'editFeature')
                 availableEdit=(and availableEdit (array-contains accessibleData result.layerModel.id))
                 accessibleMap=accessibleMap
+                showModalDialogRemove=(action 'showModalDialogRemove')
               }}
                 {{yield}}
               {{/feature-result-item}}
