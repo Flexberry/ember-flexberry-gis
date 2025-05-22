@@ -426,10 +426,12 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       requiredFields: requiredFields,
       readOnlyFields: Ember.get(leafletObject, 'readFormat.excludedProperties'),
       fieldNames: getHeader(),
-      fieldDomains: this.get('domainValues')
+      fieldDomains: null
     });
 
-    if (!this.get('domainValues')) {
+    let id = Ember.get(layer, 'layerModel.id');
+    let domainValues = this.get('domainValues');
+    if (Ember.isNone(domainValues) || (!Ember.isNone(domainValues) && !domainValues.hasOwnProperty(id))) {
       let layerClass = this.getLayerClass(Ember.get(layer, 'layerModel.id'));
       if (layerClass) {
         this.getDomainForLayer(layerClass).then((results) => {
@@ -441,10 +443,18 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
             }
 
             Ember.set(modelData, 'fieldDomains', results);
-            this.set('domainValues', results);
+            if (Ember.isNone(domainValues)) {
+              domainValues = {};
+            }
+
+            domainValues[id] = results;
+            this.set('domainValues', domainValues);
+            modelData.set('fieldDomains', results);
           }
         });
       }
+    } else if (!Ember.isNone(domainValues) && domainValues.hasOwnProperty(id)) {
+      modelData.set('fieldDomains', domainValues[id]);
     }
 
     return modelData;
