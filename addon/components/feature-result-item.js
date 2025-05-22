@@ -637,6 +637,13 @@ export default Ember.Component.extend(SlotsMixin, ResultFeatureInitializer, {
       this.sendAction('zoomToIntersection', this.get('feature'));
     },
 
+    /**
+     * Открытие модального окна "Удаление объекта в слое"
+     * @param {*} feature
+     */
+    showModalDialogRemove() {
+      this.sendAction('showModalDialogRemove', this.get('feature'));
+    },
   },
 
   /**

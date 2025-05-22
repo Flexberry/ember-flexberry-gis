@@ -14,4 +14,5 @@ export default {
   },
   'search-satellite': 'Поиск космоснимков',
   'search-satellite-authenticated': 'Для поиска космоснимков необходимо авторизоваться в системе',
+  'delete-caption': 'Удалить объект',
 };
