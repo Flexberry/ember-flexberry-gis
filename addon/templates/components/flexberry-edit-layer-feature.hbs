@@ -147,7 +147,7 @@
                 <span class="required">*</span>
               {{/if}}
             </label>
-            {{#if (eq (get _model.fieldTypes fieldName) "date")}}
+            {{#if (or (eq (get _model.fieldTypes fieldName) "date") (eq (get _model.fieldTypes fieldName) "dateTime")) }}
               {{flexberry-simpledatetime
                 type="datetime"
                 value=(mut (get dataValue fieldName))
