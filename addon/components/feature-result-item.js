@@ -494,7 +494,7 @@ export default Ember.Component.extend(SlotsMixin, ResultFeatureInitializer, {
             return;
           }
 
-          let editedProperty = layerObject.feature.properties;
+          let editedProperty = feature.properties;
 
           let dataItems = {
             mode: 'Edit',
