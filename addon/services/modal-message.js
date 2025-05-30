@@ -29,7 +29,13 @@ export default Ember.Service.extend({
       modalDuration: options.duration || 5000,
       modalOnClose: onClose,
       modalExtraClass: options.extraClass || '',
+      modalAutoClose: options.autoClose === undefined ? true : options.autoClose,
     });
+  },
+
+  removeSuccessModal() {
+    const controller = this.get('applicationController');
+    controller.set('isModalVisible', false);
   },
 
   showErrorModal(options) {

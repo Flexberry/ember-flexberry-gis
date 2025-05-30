@@ -9,6 +9,7 @@ export default Ember.Component.extend({
 
   isFadingOut: false,
   extraClass: '',
+  autoClose: true,
 
   init() {
     this._super();
@@ -18,13 +19,15 @@ export default Ember.Component.extend({
 
     this.set('router', router);
 
-    this._closeTimer = Ember.run.later(
-      this,
-      () => {
-        this.send('closeModal');
-      },
-      duration
-    );
+    if (this.get('autoClose')) {
+      this._closeTimer = Ember.run.later(
+        this,
+        () => {
+          this.send('closeModal');
+        },
+        duration
+      );
+    }
   },
 
   currentPathDidChange: Ember.observer('router.currentPath', function () {
