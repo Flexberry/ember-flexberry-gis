@@ -156,17 +156,17 @@ export default Ember.Mixin.create({
       case 'endsWith':
         return new L.Filter.Like(field, `%${value}`, { matchCase: false });
       case 'blank':
-        if (filterType === 'date' || filterType === 'dateTime') {
-          return new L.Filter.IsNull(field);
+        if (filterType === 'string') {
+          return new L.Filter.Or(new L.Filter.EQ(field, '', true), new L.Filter.IsNull(field));
         }
 
-        return new L.Filter.Or(new L.Filter.EQ(field, '', true), new L.Filter.IsNull(field));
+        return new L.Filter.IsNull(field);
       case 'notBlank' || 'all':
-        if (filterType === 'date' || filterType === 'dateTime') {
-          return new L.Filter.Not(new L.Filter.IsNull(field));
+        if (filterType === 'string') {
+          return new L.Filter.Or(new L.Filter.NotEQ(field, '', true), new L.Filter.Not(new L.Filter.IsNull(field)));
         }
 
-        return new L.Filter.Or(new L.Filter.NotEQ(field, '', true), new L.Filter.Not(new L.Filter.IsNull(field)));
+        return new L.Filter.Not(new L.Filter.IsNull(field));
 
       case 'true':
         return new L.Filter.EQ(field, true, false);
