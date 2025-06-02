@@ -1,4 +1,4 @@
-import SuccessModal from "./success-modal";
+import SuccessModal from './success-modal';
 
 export default SuccessModal.extend({
   extraClass: 'warning',
