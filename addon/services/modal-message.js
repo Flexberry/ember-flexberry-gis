@@ -33,9 +33,26 @@ export default Ember.Service.extend({
     });
   },
 
-  removeSuccessModal() {
+  showWarningModal(options) {
     const controller = this.get('applicationController');
-    controller.set('isModalVisible', false);
+
+    const onClose = function () {
+      controller.set('isWarningModalVisible', false);
+      if (options.onClose) {
+        options.onClose();
+      }
+    };
+
+    controller.setProperties({
+      isWarningModalVisible: true,
+      warningModalText: options.text,
+      warningModalOnClose: onClose,
+    });
+  },
+
+  removeWarningModal() {
+    const controller = this.get('applicationController');
+    controller.set('isWarningModalVisible', false);
   },
 
   showErrorModal(options) {
