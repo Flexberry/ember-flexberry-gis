@@ -31,7 +31,10 @@ export default Ember.Component.extend({
   },
 
   currentPathDidChange: Ember.observer('router.currentPath', function () {
-    this.send('closeModal', 0);
+    const onClose = this.get('onClose');
+    if (onClose) {
+      onClose();
+    }
   }),
 
   willDestroyElement() {
