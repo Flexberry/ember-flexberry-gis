@@ -144,8 +144,8 @@
             {{/if}}
           </div>
           <div class="feature-div-property-value">
-            {{#if (regex-test propertyValue '^(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?')}}
-              <a target="_blank" class="auto-parsed-link" href="{{propertyValue}}">{{propertyValue}}</a>
+            {{#if (regex-test propertyValue '(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?')}}
+              {{parse-link-from-value propertyValue}}
             {{else}}
               {{{format-property propertyValue (get _fieldTypes propertyName) resultObject}}}
             {{/if}}
