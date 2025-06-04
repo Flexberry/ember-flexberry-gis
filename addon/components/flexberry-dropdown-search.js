@@ -297,6 +297,7 @@ export default Ember.Component.extend({
     }, this.get('settings'));
 
     this.$().dropdown(settings);
+    this.$().dropdown({ fullTextSearch: true });
     this.set('_initialized', true);
   },
 

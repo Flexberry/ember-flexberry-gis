@@ -437,16 +437,31 @@
 
       padding: 50px 25px;
 
-      .field .flexberry-dropdown {
+      .field .flexberry-dropdown,
+      .field.error .flexberry-dropdown {
+        .menu > .item:hover {
+          background: #E5E5E5;
+          color: #3B4256;
+          z-index: 13;
+        }
         input.search {
           width: 91%;
           margin: 15px;
           font-size: 0.9rem;
+          border: none;
+          background: #F4F7FB;
+          caret-color: black;
+          color: #3B4256;
         }
         .menu {
           div.item, div.message {
             margin-left: 15px;
             margin-right: 15px;
+          }
+          .item.selected,
+          .item.active {
+            background: #E5E5E5;
+            background-color: #E5E5E5 !important;
           }
         }
         i.icon.remove {
