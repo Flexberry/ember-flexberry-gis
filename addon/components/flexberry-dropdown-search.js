@@ -254,11 +254,12 @@ export default Ember.Component.extend({
   didInsertElement() {
     this._super(...arguments);
     let noRes = this.get('noResults').toString();
-    this.set('message', { noResults:  noRes });
 
     let settings = Ember.$.extend({
       action: 'select',
       message: { noResults:  noRes },
+      fullTextSearch: true,
+      match: 'text',
       onChange: (newValue) => {
         Ember.run.schedule('afterRender', () => {
           const currentValue = this.get('_value');
@@ -297,7 +298,6 @@ export default Ember.Component.extend({
     }, this.get('settings'));
 
     this.$().dropdown(settings);
-    this.$().dropdown({ fullTextSearch: true });
     this.set('_initialized', true);
   },
 
