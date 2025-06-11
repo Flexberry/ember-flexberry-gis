@@ -1247,6 +1247,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       };
 
       let saveSuccess = (data) => {
+        let leafletMap = this.get('leafletMap');
         this.set('loading', false);
         leafletObject.off('save:failed', saveFailed);
 
@@ -1257,7 +1258,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         ) {
           if (state === 'New') {
             e.layers.forEach((l) => {
-              this.get('leafletMap').removeLayer(l);
+              leafletMap.removeLayer(l);
             });
           }
 
@@ -1277,10 +1278,10 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         }
 
         if (this.get('isFavorite')) {
-          this.get('leafletMap').fire('flexberry-map:updateFavorite', e);
+          leafletMap.fire('flexberry-map:updateFavorite', e);
         }
 
-        this.get('leafletMap').fire(event + ':end', e);
+        leafletMap.fire(event + ':end', e);
         this.set('mode', 'Saved');
 
         let _leafletObjectFirst = this.get(
@@ -1290,7 +1291,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           !Ember.isNone(_leafletObjectFirst) &&
           typeof _leafletObjectFirst.setParams === 'function'
         ) {
-          this.trancateGeoWebCache(_leafletObjectFirst);
+          this.trancateGeoWebCache(_leafletObjectFirst, leafletMap);
           _leafletObjectFirst.setParams({ fake: Date.now() }, false);
         }
 
