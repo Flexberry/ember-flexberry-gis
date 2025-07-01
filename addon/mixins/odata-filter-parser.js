@@ -81,6 +81,9 @@ export default Ember.Mixin.create({
   parseFilterConditionExpressionAG(field, condition, value) {
     const filterType = value.filterType;
 
+    // Для odata необходимо обращаться к атрибуту "primaryKey" через алиас "id"
+    field = field === 'primarykey' ? 'id' : field;
+
     if (condition === 'inRange') {
       let firstValue = value.dateFrom || value.filter;
       let secondValue = value.dateTo || value.filterTo;

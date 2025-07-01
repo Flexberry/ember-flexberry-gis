@@ -1910,16 +1910,17 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin, {
     top = 25,
     skip = 0,
     sortModel = null,
-    filterModel = null
+    filterModel = null,
+    fireLoad = true
   ) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let obj = this.get('_adapterStoreModelProjectionGeom');
-
+      const leafletObject = this.get('_leafletObject');
       let queryBuilder = new Builder(obj.store)
         .from(obj.modelName)
         .selectByProjection(obj.projectionName)
         .top(top)
-        .skip(skip)
+        .skip(Math.max(skip, 0)) // В одата отрицательный skip вызывает ошибку 500
         .count();
 
       if (sortModel && Array.isArray(sortModel)) {
@@ -1992,26 +1993,28 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin, {
       let objs = obj.adapter.batchLoadModel(obj.modelName, build, obj.store);
       objs
         .then(({ res, count }) => {
-          let features = Ember.A();
-          let models = res;
-          if (typeof res.toArray === 'function') {
-            models = res.toArray();
-          }
+         let models = res;
+        if (typeof res.toArray === 'function') {
+          models = res.toArray();
+        }
 
-          let layer = L.featureGroup();
+        let innerLayers = [];
+        models.forEach((model) => {
+          let l = this.addLayerObject(leafletObject, model, false);
+          innerLayers.push(l);
+        });
 
-          models.forEach((model) => {
-            let feat = this.addLayerObject(layer, model, false);
-            Ember.set(feat.feature, 'arch', this.get('hasTime') || false);
-            features.push(feat.feature);
-          });
+        let e = { layers: innerLayers, results: Ember.A() };
 
-          resolve(
-            Object.assign(
-              { totalFeatures: count },
-              { data: features.map((e) => e.leafletLayer) }
-            )
-          );
+        if (fireLoad) {
+          leafletObject.fire('load', e);
+        }
+
+        Ember.RSVP.allSettled(e.results).then(() => {
+          this._setLayerState();
+          resolve({ totalFeatures: count, data: innerLayers });
+        });
+
         })
         .catch((e) => {
           reject(e.error || e);
