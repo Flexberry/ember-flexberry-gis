@@ -16,15 +16,16 @@ export default Ember.Helper.extend({
 
     switch (type) {
       case 'date':
+      case 'dateTime':
         let dateFormat = settings.dateFormat || this.get('dateFormat');
         let dateTimeFormat = settings.dateTimeFormat;
 
         if (!Ember.isEmpty(dateFormat) || !Ember.isEmpty(dateTimeFormat)) {
-          let dateValue = moment(value);
+          let dateValue = moment.utc(value).local();
 
           if (dateValue.isValid()) {
-            if (!Ember.isEmpty(dateTimeFormat)) {
-              return (dateValue.format('HH:mm:ss') === '00:00:00') ? dateValue.format(dateFormat) : dateValue.format(dateTimeFormat);
+            if (type === 'dateTime' && !Ember.isEmpty(dateTimeFormat)) {
+              return dateValue.format(dateTimeFormat);
             } else {
               return dateValue.format(dateFormat);
             }
