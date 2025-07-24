@@ -1993,27 +1993,27 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin, {
       let objs = obj.adapter.batchLoadModel(obj.modelName, build, obj.store);
       objs
         .then(({ res, count }) => {
-         let models = res;
-        if (typeof res.toArray === 'function') {
-          models = res.toArray();
-        }
+          let models = res;
+          if (typeof res.toArray === 'function') {
+            models = res.toArray();
+          }
 
-        let innerLayers = [];
-        models.forEach((model) => {
-          let l = this.addLayerObject(leafletObject, model, false);
-          innerLayers.push(l);
-        });
+          let innerLayers = [];
+          models.forEach((model) => {
+            let l = this.addLayerObject(leafletObject, model, false);
+            innerLayers.push(l);
+          });
 
-        let e = { layers: innerLayers, results: Ember.A() };
+          let e = { layers: innerLayers, results: Ember.A() };
 
-        if (fireLoad) {
-          leafletObject.fire('load', e);
-        }
+          if (fireLoad) {
+            leafletObject.fire('load', e);
+          }
 
-        Ember.RSVP.allSettled(e.results).then(() => {
-          this._setLayerState();
-          resolve({ totalFeatures: count, data: innerLayers });
-        });
+          Ember.RSVP.allSettled(e.results).then(() => {
+            this._setLayerState();
+            resolve({ totalFeatures: count, data: innerLayers });
+          });
 
         })
         .catch((e) => {
