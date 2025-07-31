@@ -100,10 +100,13 @@
         </div>
       </div>
     </div>
-    <div class="offset-button flex-buttons">
-      <button type="submit" class="ui button positive" {{action "applyXY"}}>
-        {{t "components.geometry-add-modes.draw.movexy.apply"}}
-      </button>
+    <div class="flex-buttons">
+      {{flexberry-button
+        caption=(t "components.geometry-add-modes.draw.movexy.apply")
+        click=(action "applyXY")
+        class="primary"
+        readonly=(or _offsetInvalid.x _offsetInvalid.y)
+      }}
     </div>
   {{/if}}
 {{/if}}
