@@ -109,7 +109,7 @@ export default BaseLegendComponent.extend({
                       parameters.height = legendImageScale;
                       legendsContainer.push({
                         src: `${url}${L.Util.getParamString(parameters)}`,
-                        layerName: rule.name,
+                        layerName: rule.title || rule.name,
                         useLayerName: true,
                         style: `height: ${this.get('height')}px;`
                       });
