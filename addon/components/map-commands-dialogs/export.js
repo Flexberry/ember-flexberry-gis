@@ -1056,96 +1056,78 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     '_mapLegendPreviewHeight',
     '_mapHeightDelta',
     '_options.legendControl',
-    function() {
-      const sheetOfPaperPreviewHeight = this.get('_sheetOfPaperPreviewHeight');
-      const mapCaptionPreviewHeight = this.get('_mapCaptionPreviewHeight');
-
+    function () {
+      let sheetOfPaperPreviewHeight = this.get('_sheetOfPaperPreviewHeight');
+      let mapCaptionPreviewHeight = this.get('_mapCaptionPreviewHeight');
       if (Ember.isNone(sheetOfPaperPreviewHeight) || Ember.isNone(mapCaptionPreviewHeight)) {
-        return Ember.String.htmlSafe('');
+        return Ember.String.htmlSafe(``);
       }
 
-      const padding = this.get('mapPadding') * this.get('_sheetOfPaperPreviewScaleFactor');
+      const padding = (this.get('mapPadding') * this.get('_sheetOfPaperPreviewScaleFactor'));
 
-      // Schedule map size invalidation after render
-      Ember.run.scheduleOnce('afterRender', this, this._invalidateSizeOfLeafletMap);
+      // Real map size has been changed, so we need to refresh it's size after render, otherwise it may be displayed incorrectly.
+      Ember.run.scheduleOnce('afterRender', () => {
+        this._invalidateSizeOfLeafletMap();
 
-      this._handleLegendVisibility(padding);
+        // Logic for understand are there any invisible layers (should add '...'?)
+        let container = Ember.$('.flexberry-export-map-command-dialog-sheet-of-paper')[0];
+        let _this = this;
+        this.set('isBusy', true);
+
+        Ember.$(container).waitForImages(() => {
+          let legends = Ember.$('.ember-view.layer-legend', container);
+          legends.each(function () {
+            Ember.$(this).css('visibility', 'visible');
+          });
+
+          let firstInvisibleIndex = legends.length;
+          legends.each(function(l) {
+            if (!_this.isElementFullyVisibleInContainer(legends[l], container, padding) && l < firstInvisibleIndex) {
+              firstInvisibleIndex = l;
+            }
+          });
+          let lastVisible = (firstInvisibleIndex > 0 && firstInvisibleIndex < legends.length) ? legends[firstInvisibleIndex - 1] : null;
+          let invisibleLegends = legends.filter((l) => !_this.isElementFullyVisibleInContainer(legends[l], container));
+          if (_this.get('_options.legendUnderMap')) {
+            if (!Ember.$('label#export-legend-more').length && invisibleLegends.length) {
+              if (!lastVisible) {
+                Ember.$('.flexberry-export-map-command-dialog-legend-control-map', container).prepend('<label id="export-legend-more">...</label>');
+              } else {
+                Ember.$('.layer-legend-image-wrapper:not(.layer-caption)', lastVisible).append('<label id="export-legend-more">...</label>');
+              }
+            } else if (!invisibleLegends.length) {
+              Ember.$('label#export-legend-more').remove();
+            }
+
+            for (let i = firstInvisibleIndex; i < legends.length; i++) {
+              Ember.$(legends[i]).css('visibility', 'hidden');
+            }
+          }
+
+          Ember.run.later(() => { _this.set('isBusy', false); }, 0);
+        });
+      });
 
       if (this.get('_options.displayMode') === 'map-only-mode') {
-        return Ember.String.htmlSafe('height: 100%;');
+        return Ember.String.htmlSafe(`height: 100%;`);
       }
 
-      let legendHeight = this._calculateLegendHeight(padding);
-      const mapCaptionHeight = Math.max(mapCaptionPreviewHeight, padding);
+      var legendHeight = this.get('_mapLegendPreviewHeight');
+      var legendLines = this.get('_mapLegendLines');
 
-      const pxHeightValue = sheetOfPaperPreviewHeight - mapCaptionHeight - legendHeight;
+      // 6 - is margin from css
+      legendHeight = (legendHeight + 6) * legendLines + padding + legendStyleConstants.heightMargin; // margin
+      if (!this.get('_options.legendUnderMap') || !this.get('_options.legendControl')) {
+        legendHeight = padding;
+      }
+
+      const mapCaptionHeight = mapCaptionPreviewHeight < padding ? padding : mapCaptionPreviewHeight;
+      let pxHeightValue = sheetOfPaperPreviewHeight - mapCaptionHeight -
+        legendHeight;
+
       return Ember.String.htmlSafe(`height: ${pxHeightValue}px; min-height: 60%;`);
     }
   ),
-
-  // Helper methods extracted for better readability
-  _handleLegendVisibility(padding) {
-    this.set('isBusy', true);
-    const container = Ember.$('.flexberry-export-map-command-dialog-sheet-of-paper')[0];
-    const _this = this;
-
-    Ember.$(container).waitForImages(() => {
-      const legends = Ember.$('.ember-view.layer-legend', container);
-
-      // Make all legends visible initially
-      legends.css('visibility', 'visible');
-
-      // Find first invisible legend
-      const firstInvisibleIndex = this._findFirstInvisibleLegend(legends, container, padding);
-      const lastVisible = firstInvisibleIndex > 0 ? legends[firstInvisibleIndex - 1] : null;
-      const invisibleLegends = legends.slice(firstInvisibleIndex);
-
-      if (this.get('_options.legendUnderMap')) {
-        this._updateLegendMoreLabel(invisibleLegends, lastVisible, container);
-        invisibleLegends.css('visibility', 'hidden');
-      }
-
-      Ember.run.later(() => {
-        this.set('isBusy', false);
-      }, 0);
-    });
-  },
-
-  _findFirstInvisibleLegend(legends, container, padding) {
-    for (let i = 0; i < legends.length; i++) {
-      if (!this.isElementFullyVisibleInContainer(legends[i], container, padding)) {
-        return i;
-      }
-    }
-    return legends.length;
-  },
-
-  _updateLegendMoreLabel(invisibleLegends, lastVisible, container) {
-    const moreLabelExists = Ember.$('label#export-legend-more').length > 0;
-
-    if (invisibleLegends.length) {
-      if (!moreLabelExists) {
-        const targetElement = lastVisible
-          ? Ember.$('.layer-legend-image-wrapper:not(.layer-caption)', lastVisible)
-          : Ember.$('.flexberry-export-map-command-dialog-legend-control-map', container);
-
-        targetElement.prepend('<label id="export-legend-more">...</label>');
-      }
-    } else if (moreLabelExists) {
-      Ember.$('label#export-legend-more').remove();
-    }
-  },
-
-  _calculateLegendHeight(padding) {
-    if (!this.get('_options.legendUnderMap') || !this.get('_options.legendControl')) {
-      return padding;
-    }
-
-    const legendHeight = this.get('_mapLegendPreviewHeight');
-    const legendLines = this.get('_mapLegendLines');
-    // 6 - is margin from css
-    return (legendHeight + 6) * legendLines + padding + legendStyleConstants.heightMargin;
-  },
 
   /**
    * Is element is visible in container.
@@ -1155,15 +1137,15 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
    * @param {Float} bottomPadding
    * @returns Boolean
    */
-  isElementFullyVisibleInContainer(element, container, bottomPadding = 0) {
-    const elementRect = element.getBoundingClientRect();
-    const containerRect = container.getBoundingClientRect();
-
+  isElementFullyVisibleInContainer(element, container, bottomPadding) {
+    const elementSettings = element.getBoundingClientRect();
+    const containerSettings = container.getBoundingClientRect();
+    let padding = (bottomPadding) ? bottomPadding : 0;
     return (
-      elementRect.left >= containerRect.left &&
-      elementRect.top >= containerRect.top &&
-      elementRect.right <= containerRect.right &&
-      elementRect.bottom <= (containerRect.bottom - bottomPadding)
+      (elementSettings.left > containerSettings.left) &&
+      (elementSettings.top > containerSettings.top) &&
+      (elementSettings.right < containerSettings.right) &&
+      (elementSettings.bottom < (containerSettings.bottom - padding))
     );
   },
 
