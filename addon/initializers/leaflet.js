@@ -3,6 +3,7 @@
 */
 
 import { latLngToCoords, latLngsToCoords } from '../utils/lat-lng-to-coord';
+import Ember from 'ember';
 
 /**
   Registers options for leaflet library.
@@ -61,6 +62,12 @@ export function initialize(application, baseURL) {
   });
 
   L.LayerGroup.include({
+
+    // @method getLayerId(layer: Layer): Number
+    // Returns the internal ID for a layer
+    getLayerId: function (layer) {
+      return Ember.get(layer, 'feature.properties.primarykey') || L.Util.stamp(layer)
+    },
     toProjectedMultiPoint: function (crs, precision) {
       var coords = [];
 
