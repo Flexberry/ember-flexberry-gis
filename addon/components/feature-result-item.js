@@ -510,7 +510,7 @@ export default Ember.Component.extend(SlotsMixin, ResultFeatureInitializer, {
             leafletMap.removeLayer(objectFirst)
 
           // Удаляем исходный объект слоя
-          leafletMap.removeLayer(object)
+          leafletMap.removeLayer(feature.leafletLayer);
           // Так как во время редактирования будет создан дубликат исходного объекта на сервисном слое
 
           this.sendAction('editFeature', {
