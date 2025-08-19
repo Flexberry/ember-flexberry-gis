@@ -506,8 +506,9 @@ export default Ember.Component.extend(SlotsMixin, ResultFeatureInitializer, {
           };
 
           // Для слоев типа wms-wfs удаляем исходный объект wms-тайл
-          if (objectFirst)
-            leafletMap.removeLayer(objectFirst)
+          if (objectFirst) {
+            leafletMap.removeLayer(objectFirst);
+          }
 
           // Удаляем исходный объект слоя
           leafletMap.removeLayer(feature.leafletLayer);

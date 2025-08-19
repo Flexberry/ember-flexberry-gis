@@ -911,7 +911,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     // Возвращаем wms часть слоя wms-wfs на карту при сохранение, которую удаляли при редактировании feature
     let _leafletObjectFirst = this.get('layerModel.layerModel._leafletObjectFirst');
     if (!Ember.isNone(_leafletObjectFirst) && !leafletMap.hasLayer(_leafletObjectFirst)) {
-      leafletMap.addLayer(_leafletObjectFirst)
+      leafletMap.addLayer(_leafletObjectFirst);
     }
 
     this.set('latlngs', null);
@@ -1300,7 +1300,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
           // Возвращаем wms часть слоя wms-wfs на карту при сохранение, которую удаляли при редактировании feature
           if (!leafletMap.hasLayer(_leafletObjectFirst)) {
-            leafletMap.addLayer(_leafletObjectFirst)
+            leafletMap.addLayer(_leafletObjectFirst);
           }
 
           this.trancateGeoWebCache(_leafletObjectFirst, leafletMap);

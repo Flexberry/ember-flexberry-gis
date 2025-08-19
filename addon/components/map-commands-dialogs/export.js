@@ -1099,7 +1099,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
               Ember.$('label#export-legend-more').remove();
             }
 
-            invisibleLegends.css('visibility', 'hidden')
+            invisibleLegends.css('visibility', 'hidden');
           }
 
           Ember.run.later(() => { _this.set('isBusy', false); }, 0);
@@ -1139,14 +1139,6 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     const elementSettings = element.getBoundingClientRect();
     const containerSettings = container.getBoundingClientRect();
     let padding = (bottomPadding) ? bottomPadding : 0;
-    console.log({
-      container, element, padding, containerBounding: container.getBoundingClientRect(), elementBounding: element.getBoundingClientRect(), isVisible: (
-        (elementSettings.left > containerSettings.left) &&
-        (elementSettings.top > containerSettings.top) &&
-        (elementSettings.right < containerSettings.right) &&
-        (elementSettings.bottom < (containerSettings.bottom - padding))
-      )
-    })
     return (
       (elementSettings.left > containerSettings.left) &&
       (elementSettings.top > containerSettings.top) &&

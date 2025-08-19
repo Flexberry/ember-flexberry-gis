@@ -66,7 +66,7 @@ export function initialize(application, baseURL) {
     // @method getLayerId(layer: Layer): Number
     // Returns the internal ID for a layer
     getLayerId: function (layer) {
-      return Ember.get(layer, 'feature.properties.primarykey') || L.Util.stamp(layer)
+      return Ember.get(layer, 'feature.properties.primarykey') || L.Util.stamp(layer);
     },
     toProjectedMultiPoint: function (crs, precision) {
       var coords = [];
