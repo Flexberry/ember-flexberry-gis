@@ -124,7 +124,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     @method _validFloatNumber
   */
   _validOffset(str) {
-    const regex = /^(([0-9]*[.])?[0-9]+)$/;
+    const regex = /^-?([0-9]*[.])?[0-9]+$/;
     return regex.exec(str);
   },
 

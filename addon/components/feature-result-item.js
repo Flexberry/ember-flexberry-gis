@@ -466,7 +466,7 @@ export default Ember.Component.extend(SlotsMixin, ResultFeatureInitializer, {
 
       this.set('_showLoader', true);
 
-      getAttributesOptions().then(({ object, settings }) => {
+      getAttributesOptions().then(({ objectFirst, object, settings }) => {
         let name = Ember.get(layerModel, 'name');
 
         // редактируемый объект должен быть загружен
@@ -505,7 +505,15 @@ export default Ember.Component.extend(SlotsMixin, ResultFeatureInitializer, {
             }]
           };
 
+          // Для слоев типа wms-wfs удаляем исходный объект wms-тайл
+          if (objectFirst) {
+            leafletMap.removeLayer(objectFirst);
+          }
+
+          // Удаляем исходный объект слоя
+          // Так как во время редактирования будет создан дубликат исходного объекта на сервисном слое
           leafletMap.removeLayer(feature.leafletLayer);
+
           this.sendAction('editFeature', {
             isFavorite: feature.properties.isFavorite,
             dataItems: dataItems,
@@ -665,7 +673,7 @@ export default Ember.Component.extend(SlotsMixin, ResultFeatureInitializer, {
     let leafletMap = this.get('mapApi').getFromApi('leafletMap');
     let resultObject = this.get('resultObject'); // parent result object from layer-result-list
 
-    if (editedLayer && editedLayerId ===  resultObject.layerModel.id && editedFeature && editedFeatureId === feature.id) {
+    if (editedLayer && editedLayerId === resultObject.layerModel.id && editedFeature && editedFeatureId === feature.id) {
       // on successfull edit
       Object.keys(editedFeature.feature.properties).forEach(attribute => {
         if (attribute === 'primarykey') {
@@ -676,7 +684,7 @@ export default Ember.Component.extend(SlotsMixin, ResultFeatureInitializer, {
       });
       Ember.set(feature, 'displayValue', this.getFeatureDisplayProperty(feature, resultObject.settings));
 
-      if (typeof editedFeature.getLatLngs  === 'function') {
+      if (typeof editedFeature.getLatLngs === 'function') {
         feature.leafletLayer.setLatLngs(editedFeature.getLatLngs()); // Update feature geometry
       } else {
         feature.leafletLayer.setLatLng(editedFeature.getLatLng());

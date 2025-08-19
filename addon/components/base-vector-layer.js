@@ -185,7 +185,7 @@ export default BaseLayer.extend(layerLabel, {
           // It is necessary to clean up the labels with the cluster layer handler
           // that works only for _originalVectorLayer feature addition
           if (this.get('_leafletObject') instanceof L.MarkerClusterGroup) {
-            this.loadClusterLayer({ type:'layeradd', target: this.returnLeafletObject(), layer: {} });
+            this.loadClusterLayer({ type: 'layeradd', target: this.returnLeafletObject(), layer: {} });
           }
         }
 
@@ -478,6 +478,10 @@ export default BaseLayer.extend(layerLabel, {
       // For L.MarkerCluster there is an option to get clustered markers
       clusterMarker.getAllChildMarkers()
         .filter(markerLayer => {
+          if (Ember.isNone(markerLayer._label) || !Ember.isArray(markerLayer._label)) {
+            return false;
+          }
+
           return markerLayer._label.some(label => {
             return leafletMap.hasLayer(label);
           });
@@ -874,7 +878,7 @@ export default BaseLayer.extend(layerLabel, {
     return new Ember.RSVP.Promise((resolve) => {
       let image = new Image();
       Ember.set(style, 'pattern', true);
-      image.onload = function() {
+      image.onload = function () {
         Ember.set(style, 'imagePattern', this);
         let result = {};
         if (Ember.isNone(index)) {

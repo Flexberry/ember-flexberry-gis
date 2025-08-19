@@ -6,6 +6,8 @@ export default BaseVectorLayer.extend({
     'url',
     'layerName',
     'style',
+    'minZoom',
+    'maxZoom'
   ],
 
   /**
@@ -19,7 +21,9 @@ export default BaseVectorLayer.extend({
     let nameLayer = options.layerName;
     let url = options.url;
     let vectorGridOptions = {
-      vectorTileLayerStyles: {}
+      vectorTileLayerStyles: {},
+      maxZoom: options.maxZoom,
+      minZoom: options.minZoom
     };
     vectorGridOptions.vectorTileLayerStyles[nameLayer] = options.style;
     return L.vectorGrid.protobuf(url, vectorGridOptions);

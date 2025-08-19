@@ -59,6 +59,7 @@ export default WmsLayerComponent.extend({
       this.get('_wfsLayer._leafletObject').showLayerObjects = true;
       return this.get('_wfsLayer').continueLoad(this.get('_wfsLayer._leafletObject'));
     }).then(() => {
+      Ember.set(resultingAttributesOptions, 'objectFirst', resultingAttributesOptions.object);
       Ember.set(resultingAttributesOptions, 'object', this.get('_wfsLayer._leafletObject'));
       Ember.set(resultingAttributesOptions, 'settings.readonly', this.get('wfs.readonly'));
 

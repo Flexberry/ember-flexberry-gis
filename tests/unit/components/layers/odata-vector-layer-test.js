@@ -402,14 +402,6 @@ var jsonModel = {
   external: false
 };
 
-let realCountArr = function (arr) {
-  return arr.filter((item) => {
-    if (item) {
-      return item;
-    }
-  }).length;
-};
-
 test('getFilterParameters return SimplePredicate on single value in array', function (assert) {
   assert.expect(2);
   var done = assert.async(1);
@@ -900,12 +892,12 @@ test('test method save() no modified objects', function(assert) {
       let obj = component.get('_adapterStoreModelProjectionGeom');
       let spyBatchUpdate = sinon.spy(obj.adapter, 'batchUpdate');
 
-      assert.equal(realCountArr(leafletObject.models), 0);
+      assert.equal(Object.values(leafletObject.models).length, 0);
       assert.equal(leafletObject.getLayers().length, 2);
 
       component.save();
 
-      assert.equal(realCountArr(leafletObject.models), 0);
+      assert.equal(Object.values(leafletObject.models).length, 0);
       assert.equal(leafletObject.getLayers().length, 2);
       assert.equal(spyBatchUpdate.callCount, 0);
 
@@ -927,7 +919,7 @@ test('test method save() with objects', function(assert) {
       let obj = component.get('_adapterStoreModelProjectionGeom');
       let spyBatchUpdate = sinon.spy(obj.adapter, 'batchUpdate');
 
-      assert.equal(realCountArr(leafletObject.models), 0);
+      assert.equal(Object.values(leafletObject.models).length, 0);
       assert.equal(leafletObject.getLayers().length, 2);
 
       let layerUpdate = leafletObject.getLayers()[0];
@@ -947,13 +939,13 @@ test('test method save() with objects', function(assert) {
           '7998208.303352221,6282204.143427601,7998205.77214398,6282035.717038031,7998313.982057768';
       assert.equal(layerUpdate.feature.geometry.coordinates.toString(), coordinates);
 
-      assert.equal(realCountArr(leafletObject.models), 1);
+      assert.equal(Object.values(leafletObject.models).length, 1);
       assert.equal(leafletObject.getLayers().length, 2);
 
       let layerRemove = leafletObject.getLayers()[1];
       leafletObject.removeLayer(layerRemove);
 
-      assert.equal(realCountArr(leafletObject.models), 2);
+      assert.equal(Object.values(leafletObject.models).length, 2);
       assert.equal(leafletObject.getLayers().length, 1);
 
       let feature = {
@@ -969,7 +961,7 @@ test('test method save() with objects', function(assert) {
       let pk = layerAdd.feature.properties.primarykey;
       responseBatchUpdate.replace('a5532858-dbdc-4d3c-9eaf-3d71d097ceb0', pk);
 
-      assert.equal(realCountArr(leafletObject.models), 3);
+      assert.equal(Object.values(leafletObject.models).length, 3);
       assert.equal(leafletObject.getLayers().length, 2);
 
       let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
@@ -983,7 +975,7 @@ test('test method save() with objects', function(assert) {
         assert.equal(_getModelLayerFeatureStub.callCount, 1);
         assert.deepEqual(_getModelLayerFeatureStub.getCall(0).args[1], [pk]);
         assert.equal(data.layers.length, 1);
-        assert.equal(realCountArr(leafletObject.models), 0);
+        assert.equal(Object.values(leafletObject.models).length, 0);
         assert.equal(leafletObject.getLayers().length, 1);
         assert.equal(leafletObject._labelsLayer.getLayers().length, 1);
         assert.equal(leafletObject.getLayers()[0].state, 'exist');
@@ -1129,10 +1121,10 @@ test('test method clearLayers()', function(assert) {
     leafletLayer.promiseLoadLayer.then(() => {
       let leafletObject = component.get('_leafletObject');
 
-      assert.equal(realCountArr(leafletObject.models), 0);
+      assert.equal(Object.values(leafletObject.models).length, 0);
       assert.equal(leafletObject.getLayers().length, 2);
       leafletObject.clearLayers();
-      assert.equal(realCountArr(leafletObject.models), 0);
+      assert.equal(Object.values(leafletObject.models).length, 0);
       assert.equal(leafletObject.getLayers().length, 0);
       done();
     });
@@ -1150,19 +1142,19 @@ test('test method clearChanges() with no changes', function(assert) {
       let leafletObject = component.get('_leafletObject');
       let leafletMap = component.get('leafletMap');
 
-      assert.equal(realCountArr(leafletObject.models), 0);
+      assert.equal(Object.values(leafletObject.models).length, 0);
       assert.equal(leafletObject.getLayers().length, 2);
       assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
 
       let layerUpdate = leafletObject.getLayers()[0];
       layerUpdate.enableEdit(leafletMap);
 
-      assert.equal(realCountArr(leafletObject.models), 0);
+      assert.equal(Object.values(leafletObject.models).length, 0);
       assert.equal(leafletObject.getLayers().length, 2);
       assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
 
       component.clearChanges();
-      assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
+      assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
       done();
     });
   });
@@ -1179,7 +1171,7 @@ test('test method clearChanges() with create', function(assert) {
       let leafletObject = component.get('_leafletObject');
       let leafletMap = component.get('leafletMap');
 
-      assert.equal(realCountArr(leafletObject.models), 0);
+      assert.equal(Object.values(leafletObject.models).length, 0);
       assert.equal(leafletObject.getLayers().length, 2);
       assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
 
@@ -1200,7 +1192,7 @@ test('test method clearChanges() with create', function(assert) {
       layerAdd.enableEdit(leafletMap);
       leafletMap.editTools.featuresLayer.addLayer(layerAdd);
 
-      assert.equal(realCountArr(leafletObject.models), 1);
+      assert.equal(Object.values(leafletObject.models).length, 1);
       assert.equal(leafletObject.getLayers().length, 3);
       assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
       assert.equal(leafletMap.editTools.featuresLayer.getLayers().length, 1);
@@ -1224,7 +1216,7 @@ test('test method clearChanges() with update and delete', function(assert) {
       let leafletObject = component.get('_leafletObject');
       let leafletMap = component.get('leafletMap');
 
-      assert.equal(realCountArr(leafletObject.models), 0);
+      assert.equal(Object.values(leafletObject.models).length, 0);
       assert.equal(leafletObject.getLayers().length, 2);
       assert.equal(leafletMap.editTools.editLayer.getLayers().length, 0);
 
@@ -1233,7 +1225,7 @@ test('test method clearChanges() with update and delete', function(assert) {
       layerUpdate.enableEdit(leafletMap);
       leafletObject.editLayer(layerUpdate);
 
-      assert.equal(realCountArr(leafletObject.models), 1);
+      assert.equal(Object.values(leafletObject.models).length, 1);
       assert.equal(leafletObject.getLayers().length, 2);
       assert.equal(leafletMap.editTools.editLayer.getLayers().length, 1);
 
@@ -1241,7 +1233,7 @@ test('test method clearChanges() with update and delete', function(assert) {
       layerRemove.enableEdit(leafletMap);
       leafletObject.removeLayer(layerRemove);
 
-      assert.equal(realCountArr(leafletObject.models), 2);
+      assert.equal(Object.values(leafletObject.models).length, 2);
       assert.equal(leafletObject.getLayers().length, 1);
       assert.equal(leafletMap.editTools.editLayer.getLayers().length, 2);
 

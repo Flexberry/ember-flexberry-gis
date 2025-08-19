@@ -217,10 +217,26 @@
       margin: 0;
       display: block;
       overflow: hidden;
+
+      .layer-legend > .legend-container {
+          display:flex;
+          flex-direction: column;
+      }
     }
     .flexberry-export-map-command-dialog-sheet-of-paper {
       .flexberry-export-map-command-dialog-legend-control-map {
         margin-top: 10px;
+      }
+
+       .layer-legend > .legend-container {
+          display:flex;
+          gap: 10px;
+
+          & > .layer-legend-caption {
+            //max-width: 250px;
+            //overflow: hidden;
+            //text-overflow: ellipsis;
+          }
       }
     }
 
@@ -232,9 +248,14 @@
         margin-bottom: 6px;
       }
       .layer-legend-image-wrapper {
-        float: left;
         height: inherit;
         padding-right: 11px;
+
+
+        & > .layer-legend-zoom {
+          display: flex;
+          align-items: center;
+        }
 
         .layer-legend-image {
           height: inherit;

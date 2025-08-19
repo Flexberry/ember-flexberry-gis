@@ -908,6 +908,12 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       this.send('clearSelected');
     }
 
+    // Возвращаем wms часть слоя wms-wfs на карту при сохранение, которую удаляли при редактировании feature
+    let _leafletObjectFirst = this.get('layerModel.layerModel._leafletObjectFirst');
+    if (!Ember.isNone(_leafletObjectFirst) && !leafletMap.hasLayer(_leafletObjectFirst)) {
+      leafletMap.addLayer(_leafletObjectFirst);
+    }
+
     this.set('latlngs', null);
     this.set('layers', null);
     this.set('isLayerCopy', false);
@@ -1291,6 +1297,12 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           !Ember.isNone(_leafletObjectFirst) &&
           typeof _leafletObjectFirst.setParams === 'function'
         ) {
+
+          // Возвращаем wms часть слоя wms-wfs на карту при сохранение, которую удаляли при редактировании feature
+          if (!leafletMap.hasLayer(_leafletObjectFirst)) {
+            leafletMap.addLayer(_leafletObjectFirst);
+          }
+
           this.trancateGeoWebCache(_leafletObjectFirst, leafletMap);
           _leafletObjectFirst.setParams({ fake: Date.now() }, false);
         }
