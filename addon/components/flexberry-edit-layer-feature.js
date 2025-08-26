@@ -908,7 +908,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
       this.send('clearSelected');
     }
 
-    // Возвращаем wms часть слоя wms-wfs на карту при сохранение, которую удаляли при редактировании feature
+    // Возвращаем wms часть слоя wms-wfs на карту при сохранении, которую удаляли при редактировании feature
     let _leafletObjectFirst = this.get('layerModel.layerModel._leafletObjectFirst');
     if (!Ember.isNone(_leafletObjectFirst) && !leafletMap.hasLayer(_leafletObjectFirst)) {
       leafletMap.addLayer(_leafletObjectFirst);
@@ -1037,8 +1037,14 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         return;
       }
 
+      let event = {
+        layers: Object.values(this.get('layers')),
+        layerModel: this.get('layerModel'),
+        initialFeatureKeys: this.get('dataItems.initialFeatureKeys'),
+        editMode: this.get('mode'),
+      };
       this.set('dataItems', null);
-      this.get('leafletMap').fire('flexberry-map:edit-feature:end', null); // cancel edit-feature mode
+      this.get('leafletMap').fire('flexberry-map:edit-feature:end', event); // cancel edit-feature mode
       this.sendAction('editFeatureEnd'); // close edit tab
     },
 

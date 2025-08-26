@@ -1403,49 +1403,53 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
                 return that;
               }
 
-              // Request was truly successful (without exception report),
-              // so convert response to layers.
-              var layers = that.readFormat.responseToLayers(responseText, {
+              // Генерация новых leafletLayer из ответа geoJSON
+              var leafletFeatures = that.readFormat.responseToLayers(responseText, {
                 coordsToLatLng: that.options.coordsToLatLng,
                 pointToLayer: that.options.pointToLayer,
               });
 
+               // Сбор аналитики (totalFeatures) из ответа geoJSON
               var featureMetrics = featuresMeta || that.readFormat.responseToMetrics(responseText);
 
-              layers.forEach(function (element) {
-                if (!Ember.isNone(Ember.get(element, 'feature')) && Ember.isNone(Ember.get(element, 'feature.leafletLayer'))) {
-                  element.minZoom = that.minZoom;
-                  element.maxZoom = that.maxZoom;
-                  Ember.set(element.feature, 'leafletLayer', element);
+              leafletFeatures = leafletFeatures.map(newLeafletFeature => {
+                const featureID = newLeafletFeature.feature.properties.primarykey;
+                const allreadyLoadedFeature = that.getLayer(featureID);
+                // Если объект слоя уже был загружен на карту
+                // То не берем новый экземпляр, а отсылаемся к уже существующему
+                if (allreadyLoadedFeature) {
+                  return allreadyLoadedFeature
                 }
-              });
 
-              if (typeof that.options.style === 'function') {
-                layers.forEach(function (element) {
-                  element.state = that.state.exist;
-                  if (element.setStyle) {
-                    element.setStyle(that.options.style(element));
-                  }
+                // Иначе объект не находится на карте, возвращаем новый экземпляр
+                // Определяем свойства
+                newLeafletFeature.minZoom = that.minZoom;
+                newLeafletFeature.maxZoom = that.maxZoom;
+                Ember.set(generatedNewLeafletLayer.feature, 'leafletLayer', newLeafletFeature)
+                newLeafletFeature.state = that.state.exist;
 
-                  that.addLayer(element);
-                });
-              } else {
-                layers.forEach(function (element) {
-                  element.state = that.state.exist;
-                  that.addLayer(element);
-                });
+                // стили
+                if (typeof that.options.style === 'function') {
+                    if (newLeafletFeature.setStyle) {
+                      newLeafletFeature.setStyle(that.options.style(newLeafletFeature));
+                    }
+                } else {
+                  that.setStyle(that.options.style);
+                }
 
-                that.setStyle(that.options.style);
-              }
+                // Добавляем объект в слой
+                that.addLayer(newLeafletFeature);
+                return newLeafletFeature
+              })
 
               if (fireLoad) {
                 that.fire('load', {
                   responseText: responseText,
-                  layers: layers,
+                  layers: leafletFeatures,
                 });
               }
 
-              resolve(Object.assign(featureMetrics, { data: layers }));
+              resolve(Object.assign(featureMetrics, { data: leafletFeatures }));
 
               return that;
             },
