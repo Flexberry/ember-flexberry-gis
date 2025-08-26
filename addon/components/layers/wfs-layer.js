@@ -1409,38 +1409,37 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
                 pointToLayer: that.options.pointToLayer,
               });
 
-               // Сбор аналитики (totalFeatures) из ответа geoJSON
+              // Сбор аналитики (totalFeatures) из ответа geoJSON
               var featureMetrics = featuresMeta || that.readFormat.responseToMetrics(responseText);
 
               leafletFeatures = leafletFeatures.map(newLeafletFeature => {
                 const featureID = newLeafletFeature.feature.properties.primarykey;
                 const allreadyLoadedFeature = that.getLayer(featureID);
-                // Если объект слоя уже был загружен на карту
-                // То не берем новый экземпляр, а отсылаемся к уже существующему
+                // Если объект слоя уже был загружен на карту, то не берем новый экземпляр, а отсылаемся к уже существующему
                 if (allreadyLoadedFeature) {
-                  return allreadyLoadedFeature
+                  return allreadyLoadedFeature;
                 }
 
                 // Иначе объект не находится на карте, возвращаем новый экземпляр
                 // Определяем свойства
                 newLeafletFeature.minZoom = that.minZoom;
                 newLeafletFeature.maxZoom = that.maxZoom;
-                Ember.set(generatedNewLeafletLayer.feature, 'leafletLayer', newLeafletFeature)
+                Ember.set(newLeafletFeature.feature, 'leafletLayer', newLeafletFeature);
                 newLeafletFeature.state = that.state.exist;
 
                 // стили
                 if (typeof that.options.style === 'function') {
-                    if (newLeafletFeature.setStyle) {
-                      newLeafletFeature.setStyle(that.options.style(newLeafletFeature));
-                    }
+                  if (newLeafletFeature.setStyle) {
+                    newLeafletFeature.setStyle(that.options.style(newLeafletFeature));
+                  }
                 } else {
                   that.setStyle(that.options.style);
                 }
 
                 // Добавляем объект в слой
                 that.addLayer(newLeafletFeature);
-                return newLeafletFeature
-              })
+                return newLeafletFeature;
+              });
 
               if (fireLoad) {
                 that.fire('load', {
