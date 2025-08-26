@@ -751,6 +751,15 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin, {
 
     const geometryCoordinates = this.transformToLatLng(geometry.coordinates);
 
+
+    // Загрузка слоя может быть инкрементальная (слой загружается без предварительного очищения clearLayers()), например, как в таблице атрибутов
+    // Тогда необходимо найти существующую ссылку на leafletFeature (соответствует primarykey) для текущего odata response
+    // Иначе создастся leaflet-дубликат и редактировать odata объекты на карте из таблицы атрибутов будет невозможно
+    let allreadyLoadedFeature  = layer.getLayers().find(leafletFeature=> leafletFeature.feature.properties.primarykey === model.id);
+    if (allreadyLoadedFeature) {
+      return allreadyLoadedFeature;
+    }
+
     let innerLayer;
     if (geometry.type === 'Polygon') {
       innerLayer = L.polygon(geometryCoordinates[0]);

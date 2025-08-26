@@ -1304,7 +1304,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           typeof _leafletObjectFirst.setParams === 'function'
         ) {
 
-          // Возвращаем wms часть слоя wms-wfs на карту при сохранение, которую удаляли при редактировании feature
+          // Возвращаем wms часть слоя wms-wfs на карту при сохранении, которую удаляли при редактировании feature
           if (!leafletMap.hasLayer(_leafletObjectFirst)) {
             leafletMap.addLayer(_leafletObjectFirst);
           }
