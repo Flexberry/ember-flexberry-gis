@@ -604,7 +604,7 @@ let FlexberryMapComponent = Ember.Component.extend(
       const readyMapLayers = mapApi.getFromApi('readyMapLayers');
       const errorMapLayers = mapApi.getFromApi('errorMapLayers');
 
-      const rejected = array.filter((item) => { return item.state === 'rejected' || Ember.isNone(item.value);  }).length > 0;
+      const rejected = array.filter((item) => { return item.state === 'rejected' || Ember.isNone(item.value); }).length > 0;
 
       if (!Ember.isNone(readyMapLayers) && !rejected) {
         readyMapLayers();
@@ -765,6 +765,33 @@ let FlexberryMapComponent = Ember.Component.extend(
 
     leafletMap.addLayer(serviceLayer);
     this.sendAction('serviceLayerInit', serviceLayer);
+
+
+    let pane = leafletMap.getPane('overlayPane');
+    L.DomEvent.on(pane, 'mousemove', function (e) {
+      if (e._stopped) { return; }
+
+      var target = e.target;
+
+      if (leafletMap.flexberryMap.tools.getEnabled().name !== 'drag') {
+        return;
+      }
+
+      var ev = new MouseEvent(e.type, e);
+      let removed = { node: target, pointerEvents: target.style.pointerEvents };
+      target.style.pointerEvents = 'none';
+      target = document.elementFromPoint(e.clientX, e.clientY);
+
+      if (target && target !== pane) {
+        let stopped = !target.dispatchEvent(ev);
+        if (stopped || ev._stopped) {
+          L.DomEvent.stop(e);
+        }
+      }
+
+      removed.node.style.pointerEvents = removed.pointerEvents;
+    });
+
   },
 
   /**

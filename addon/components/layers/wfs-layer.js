@@ -181,11 +181,29 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
       }
 
       layer.leafletMap = leafletMap;
+      layer.on('mouseover', (e) => {
+      // popup появляется скраю, там где первый раз поймали mouseover, неудобно, что не появляется повторно, когда "сходили" 
+      // на другой объект, находящийся над большим полигоном - приходится кликать
+      // если включить mousemove (ниже), то popup бегает за мышкой - стоит добавить задержку, но вариант рабочий
+      // если показывать popup в центре полигона, то при наложении двух полигонов из разных слоев - непонятно над кем он всплыл
+        e.target
+        .bindPopup(`<b>${this.get('layerModel.name')}</b><br />${layer.feature.properties.primarykey}`)
+        .openPopup(e.latlng);
+      });
+
+      /*layer.on('mousemove', (e) => {
+        e.target
+        .bindPopup(`<b>${this.get('layerModel.name')}</b><br />${layer.feature.properties.primarykey}`)
+        .openPopup(e.latlng);
+      });*/
+
+      layer.on('mouseout', (e) => { 
+        e.target.closePopup();
+       });
 
       if (!Ember.isNone(leafletObject)) {
         leafletObject.baseAddLayer(layer);
       }
-
     });
 
     this._super(...arguments);
@@ -1522,14 +1540,14 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
 
     const sortString = `<ogc:SortBy xmlns:ogc="http://www.opengis.net/ogc">
       ${sortModel.reduce((acc, curr) => {
-        acc += `
+      acc += `
         <ogc:SortProperty>
             <ogc:PropertyName>${curr.colId}</ogc:PropertyName>
             <ogc:SortOrder>${curr.sort}</ogc:SortOrder>
         </ogc:SortProperty>`;
 
-        return acc;
-      }, '')}
+      return acc;
+    }, '')}
     </ogc:SortBy>
     `;
 
