@@ -18,6 +18,13 @@
   {{#yield-slot "above-tree" (block-params this)}}
     {{yield}}
 
+    {{input
+      class=(concat flexberryClassNames.input " prompt")
+      type="text"
+      value=searchValue
+      key-up=(action "search")
+    }}
+
     {{#if (not compare.compareLayersEnabled)}}
       <div class="flexberry-check-all">
         <span {{action "onAllLayerVisibilityChanged"}}>{{#if allLayerVisible}}Снять выделение{{else}}Выделить все{{/if}}</span>
@@ -60,6 +67,8 @@
           leafletMap=leafletMap
           histEnabled=histEnabled
           layer=layer
+          searchValue=searchValue
+          extraClassNames=(if (get layer 'hideBySearch') 'hide')
           dynamicProperties=layer.dynamicProperties
           dynamicActions=layer.dynamicActions
           side=side

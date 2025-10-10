@@ -119,472 +119,501 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
   DynamicPropertiesMixin,
   CompareLayersMixin, {
 
-    /**
-      Component's required actions names.
-      For actions enumerated in this array an assertion exceptions will be thrown,
-      if actions handlers are not defined for them.
+  /**
+    Component's required actions names.
+    For actions enumerated in this array an assertion exceptions will be thrown,
+    if actions handlers are not defined for them.
 
-      @property _requiredActions
-      @type String[]
-      @default ['add']
-    */
-    _requiredActionNames: ['add'],
+    @property _requiredActions
+    @type String[]
+    @default ['add']
+  */
+  _requiredActionNames: ['add'],
 
-    /**
-      Flag: indicates whether map layers tree is placed on root level (hasn't parent layers).
+  /**
+    Flag: indicates whether map layers tree is placed on root level (hasn't parent layers).
 
-      @property _isRoot
-      @type Boolean
-      @readonly
-      @private
-    */
-    _isRoot: Ember.computed('parentViewExcludingSlots', function() {
-      let parentView = this.get('parentViewExcludingSlots');
+    @property _isRoot
+    @type Boolean
+    @readonly
+    @private
+  */
+  _isRoot: Ember.computed('parentViewExcludingSlots', function() {
+    let parentView = this.get('parentViewExcludingSlots');
 
-      return !(parentView instanceof FlexberryTreenodeComponent);
-    }),
+    return !(parentView instanceof FlexberryTreenodeComponent);
+  }),
 
-    /**
-      Flag: indicates whether some {{#crossLink "FlexberryMaplayersComponent/layers:property"}}layers{{/crossLink}} are defined.
+  /**
+    Flag: indicates whether some {{#crossLink "FlexberryMaplayersComponent/layers:property"}}layers{{/crossLink}} are defined.
 
-      @property _hasLayers
-      @type boolean
-      @readOnly
-      @private
-    */
-    _hasLayers: Ember.computed('layers.[]', 'layers.@each.isDeleted', function() {
+    @property _hasLayers
+    @type boolean
+    @readOnly
+    @private
+  */
+  _hasLayers: Ember.computed('layers.[]', 'layers.@each.isDeleted', function() {
+    let layers = this.get('layers');
+
+    return Ember.isArray(layers) && layers.filter((layer) => {
+      return !Ember.isNone(layer) && Ember.get(layer, 'isDeleted') !== true;
+    }).length > 0;
+  }),
+
+  /**
+    Flag: indicates whether some nested content for header is defined
+    (some yield markup for 'header').
+
+    @property _hasHeader
+    @type boolean
+    @readOnly
+    @private
+  */
+  _hasHeader: Ember.computed('_slots.[]', '_isRoot', 'readonly', 'showHeader', function() {
+    // Yielded {{block-slot "header"}} is defined and current tree is root.
+    return (this._isRegistered('header') || !this.get('readonly')) && this.get('_isRoot') && this.get('showHeader');
+  }),
+
+  /**
+    Flag: indicates whether some nested content is defined
+    (some yield markup or {{#crossLink "FlexberryMaplayersComponent/layers:property"}}'layers'{{/crossLink}} are defined).
+
+    @property _hasContent
+    @type boolean
+    @readOnly
+    @private
+  */
+  _hasContent: Ember.computed('_slots.[]', '_hasLayers', function() {
+    // Yielded {{block-slot "content"}} is defined or 'nodes' are defined.
+    return this._isRegistered('content') || this.get('_hasLayers');
+  }),
+
+  /**
+    Flag: indicates whether some nested content for footer is defined
+    (some yield markup for 'footer').
+
+    @property _hasFooter
+    @type boolean
+    @readOnly
+    @private
+  */
+  _hasFooter: Ember.computed('_slots.[]', '_isRoot', 'showFooter', function() {
+    // Yielded {{block-slot "header"}} is defined and current tree is root.
+    return this._isRegistered('footer') && this.get('_isRoot') && this.get('showFooter');
+  }),
+
+  /**
+    Reference to 'store' service.
+
+    @property store
+    @type <a href="https://emberjs.com/api/ember-data/2.4/classes/DS.Store">DS.Store</a>
+    @private
+  */
+  store: Ember.inject.service('store'),
+
+  /**
+    Flag: indicates whether add dialog has been already requested by user or not.
+
+    @property _addDialogHasBeenRequested
+    @type boolean
+    @private
+  */
+  _addDialogHasBeenRequested: false,
+
+  /**
+    Flag: indicates whether add dialog is visible or not.
+
+    @property _addDialogIsVisible
+    @type boolean
+    @private
+  */
+  _addDialogIsVisible: false,
+
+  /**
+    Layer model for 'add' dialog.
+
+    @property _addDialogLayer
+    @type NewPlatformFlexberryGISMapLayerModel
+    @default null
+  */
+  _addDialogLayer: null,
+
+  /**
+    Reference to component's template.
+  */
+  layout,
+
+  /**
+    Reference to component's CSS-classes names.
+    Must be also a component's instance property to be available from component's hbs-markup.
+  */
+  flexberryClassNames,
+
+  /**
+    Overridden ['tagName' property](http://emberjs.com/api/classes/Ember.Component.html#property_tagName).
+    Is blank to disable component's wrapping <div>.
+
+    @property tagName
+    @type String
+    @default ''
+  */
+  tagName: '',
+
+  /**
+    Component's CSS-classes names.
+
+    Any other CSS-class names can be added through component's 'class' property.
+    ```handlebars
+    {{#flexberry-maplayers class="styled"}}
+      Layers tree content
+    {{/flexberry-maplayers}}
+    ```
+
+    @property class
+    @type String
+    @default ''
+  */
+  class: '',
+
+  /**
+    Component's placeholder.
+    Will be displayed if nested layers are not defined.
+
+    @property placeholder
+    @type String
+    @default t('components.flexberry-maplayers.placeholder')
+  */
+  placeholder: t('components.flexberry-maplayers.placeholder'),
+
+  /**
+    Flag: indicates whether only one layer node can be expanded at the same time.
+    If true, all expanded layer nodes will be automatically collapsed, on some other node expand.
+
+    @property exclusive
+    @type Boolean
+    @default false
+  */
+  exclusive: false,
+
+  /**
+    Flag: indicates whether it is allowed for already expanded layer nodes to collapse.
+
+    @property collapsible
+    @type Boolean
+    @default true
+  */
+  collapsible: true,
+
+  /**
+    Flag: indicates whether nested layer nodes content opacity should be animated
+    (if true, it may cause performance issues with many nested child nodes).
+
+    @property animateChildren
+    @type Boolean
+    @default false
+  */
+  animateChildren: false,
+
+  /**
+    Layer nodes expand/collapse animation duration in milliseconds.
+
+    @property animationDuration
+    @type Number
+    @default 350
+  */
+  duration: 350,
+
+  /**
+    Nested layers hierarchy.
+    This property is optional and must be used when there are too many child layers,
+    and you don't want to define them explicitly in the hbs-markup,
+    then you can define layers array somewhere in code & pass defined array to this component's property.
+
+    @property layers
+    @type Object[]
+    @default null
+  */
+  layers: null,
+
+  /**
+    Leaflet map.
+
+    @property leafletMap
+    @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
+    @default null
+  */
+  leafletMap: null,
+
+  /**
+    History enabled mode
+
+    @default false
+  */
+  histEnabled: false,
+
+  /**
+    Flag: indicates whether layers tree is in readonly mode.
+    If true, layers nodes data-related UI will be in readonly mode.
+
+    @property readonly
+    @type Boolean
+    @default false
+  */
+  readonly: false,
+
+  /**
+    Flag: indicates whether "header" block-slot can be shown or not.
+
+    @property showHeader
+    @type Boolean
+    @default true
+  */
+  showHeader: true,
+
+  /**
+    Flag: indicates whether "footer" block-slot can be shown or not.
+
+    @property showFooter
+    @type Boolean
+    @default true
+  */
+  showFooter: true,
+
+  /**
+    Property contatining sideBySide component.
+
+    @property sideBySide
+    @type L.control.sideBySide
+    @default null
+  */
+  sideBySide: null,
+
+  /**
+    Proprty containing layer on left side of sideBySide control.
+
+    @property leftLayer
+    @type String
+    @default null
+  */
+  leftLayer: null,
+
+  /**
+    Proprty containing layer on right side of sideBySide control.
+
+    @property rightLayer
+    @type String
+    @default null
+  */
+  rightLayer: null,
+
+  /**
+    Property containing current active layers.
+
+    @property currentLayers
+    @type Array
+    @default []
+  */
+  currentLayers: [],
+
+  /**
+    Flag for checkAll visibility
+
+    @property allLayerVisible
+    @type Boolean
+    @default false
+  */
+  allLayerVisible: false,
+
+  /**
+    Proprty containing raster layers to compare.
+
+    @property rasterLayers
+    @type Array
+    @default []
+  */
+  rasterLayers: [],
+
+  /**
+   * Number of enabled layers on each side
+   */
+  compareLayersCount: Ember.computed('compare.side', 'compare.compareState.Left.layerIds.[]', 'compare.compareState.Right.layerIds.[]', function() {
+    return this.get(`compare.compareState.${this.get('compare.side')}.layerIds`).length;
+  }),
+
+  /**
+   * Array of background layers ids for tree filter
+   */
+  backgroundIds: Ember.computed('backgroundLayers', 'backgroundLayers.[]', function() {
+    const backgroundLayers = this.get('backgroundLayers');
+    return (backgroundLayers) ? this.get('backgroundLayers').map(l => l.get('id')) : [];
+  }),
+
+  /**
+    Adds side by side control to map and removes current visible layers.
+
+    @method onCompareLayersEnabled
+  */
+  onCompareLayersEnabled: Ember.observer('compare.compareLayersEnabled', 'ignoreCompareMode', function() {
+    let map = this.get('leafletMap');
+    let sbs = this.get('sideBySide');
+    if (this.get('compare.compareLayersEnabled') && !this.get('ignoreCompareMode')) {
       let layers = this.get('layers');
-
-      return Ember.isArray(layers) && layers.filter((layer) => {
-        return !Ember.isNone(layer) && Ember.get(layer, 'isDeleted') !== true;
-      }).length > 0;
-    }),
-
-    /**
-      Flag: indicates whether some nested content for header is defined
-      (some yield markup for 'header').
-
-      @property _hasHeader
-      @type boolean
-      @readOnly
-      @private
-    */
-    _hasHeader: Ember.computed('_slots.[]', '_isRoot', 'readonly', 'showHeader', function() {
-      // Yielded {{block-slot "header"}} is defined and current tree is root.
-      return (this._isRegistered('header') || !this.get('readonly')) && this.get('_isRoot') && this.get('showHeader');
-    }),
-
-    /**
-      Flag: indicates whether some nested content is defined
-      (some yield markup or {{#crossLink "FlexberryMaplayersComponent/layers:property"}}'layers'{{/crossLink}} are defined).
-
-      @property _hasContent
-      @type boolean
-      @readOnly
-      @private
-    */
-    _hasContent: Ember.computed('_slots.[]', '_hasLayers', function() {
-      // Yielded {{block-slot "content"}} is defined or 'nodes' are defined.
-      return this._isRegistered('content') || this.get('_hasLayers');
-    }),
-
-    /**
-      Flag: indicates whether some nested content for footer is defined
-      (some yield markup for 'footer').
-
-      @property _hasFooter
-      @type boolean
-      @readOnly
-      @private
-    */
-    _hasFooter: Ember.computed('_slots.[]', '_isRoot', 'showFooter', function() {
-      // Yielded {{block-slot "header"}} is defined and current tree is root.
-      return this._isRegistered('footer') && this.get('_isRoot') && this.get('showFooter');
-    }),
-
-    /**
-      Reference to 'store' service.
-
-      @property store
-      @type <a href="https://emberjs.com/api/ember-data/2.4/classes/DS.Store">DS.Store</a>
-      @private
-    */
-    store: Ember.inject.service('store'),
-
-    /**
-      Flag: indicates whether add dialog has been already requested by user or not.
-
-      @property _addDialogHasBeenRequested
-      @type boolean
-      @private
-    */
-    _addDialogHasBeenRequested: false,
-
-    /**
-      Flag: indicates whether add dialog is visible or not.
-
-      @property _addDialogIsVisible
-      @type boolean
-      @private
-    */
-    _addDialogIsVisible: false,
-
-    /**
-      Layer model for 'add' dialog.
-
-      @property _addDialogLayer
-      @type NewPlatformFlexberryGISMapLayerModel
-      @default null
-    */
-    _addDialogLayer: null,
-
-    /**
-      Reference to component's template.
-    */
-    layout,
-
-    /**
-      Reference to component's CSS-classes names.
-      Must be also a component's instance property to be available from component's hbs-markup.
-    */
-    flexberryClassNames,
-
-    /**
-      Overridden ['tagName' property](http://emberjs.com/api/classes/Ember.Component.html#property_tagName).
-      Is blank to disable component's wrapping <div>.
-
-      @property tagName
-      @type String
-      @default ''
-    */
-    tagName: '',
-
-    /**
-      Component's CSS-classes names.
-
-      Any other CSS-class names can be added through component's 'class' property.
-      ```handlebars
-      {{#flexberry-maplayers class="styled"}}
-        Layers tree content
-      {{/flexberry-maplayers}}
-      ```
-
-      @property class
-      @type String
-      @default ''
-    */
-    class: '',
-
-    /**
-      Component's placeholder.
-      Will be displayed if nested layers are not defined.
-
-      @property placeholder
-      @type String
-      @default t('components.flexberry-maplayers.placeholder')
-    */
-    placeholder: t('components.flexberry-maplayers.placeholder'),
-
-    /**
-      Flag: indicates whether only one layer node can be expanded at the same time.
-      If true, all expanded layer nodes will be automatically collapsed, on some other node expand.
-
-      @property exclusive
-      @type Boolean
-      @default false
-    */
-    exclusive: false,
-
-    /**
-      Flag: indicates whether it is allowed for already expanded layer nodes to collapse.
-
-      @property collapsible
-      @type Boolean
-      @default true
-    */
-    collapsible: true,
-
-    /**
-      Flag: indicates whether nested layer nodes content opacity should be animated
-      (if true, it may cause performance issues with many nested child nodes).
-
-      @property animateChildren
-      @type Boolean
-      @default false
-    */
-    animateChildren: false,
-
-    /**
-      Layer nodes expand/collapse animation duration in milliseconds.
-
-      @property animationDuration
-      @type Number
-      @default 350
-    */
-    duration: 350,
-
-    /**
-      Nested layers hierarchy.
-      This property is optional and must be used when there are too many child layers,
-      and you don't want to define them explicitly in the hbs-markup,
-      then you can define layers array somewhere in code & pass defined array to this component's property.
-
-      @property layers
-      @type Object[]
-      @default null
-    */
-    layers: null,
-
-    /**
-      Leaflet map.
-
-      @property leafletMap
-      @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
-      @default null
-    */
-    leafletMap: null,
-
-    /**
-      History enabled mode
-
-      @default false
-    */
-    histEnabled: false,
-
-    /**
-      Flag: indicates whether layers tree is in readonly mode.
-      If true, layers nodes data-related UI will be in readonly mode.
-
-      @property readonly
-      @type Boolean
-      @default false
-    */
-    readonly: false,
-
-    /**
-      Flag: indicates whether "header" block-slot can be shown or not.
-
-      @property showHeader
-      @type Boolean
-      @default true
-    */
-    showHeader: true,
-
-    /**
-      Flag: indicates whether "footer" block-slot can be shown or not.
-
-      @property showFooter
-      @type Boolean
-      @default true
-    */
-    showFooter: true,
-
-    /**
-      Property contatining sideBySide component.
-
-      @property sideBySide
-      @type L.control.sideBySide
-      @default null
-    */
-    sideBySide: null,
-
-    /**
-      Proprty containing layer on left side of sideBySide control.
-
-      @property leftLayer
-      @type String
-      @default null
-    */
-    leftLayer: null,
-
-    /**
-      Proprty containing layer on right side of sideBySide control.
-
-      @property rightLayer
-      @type String
-      @default null
-    */
-    rightLayer: null,
-
-    /**
-      Property containing current active layers.
-
-      @property currentLayers
-      @type Array
-      @default []
-    */
-    currentLayers: [],
-
-    /**
-      Flag for checkAll visibility
-
-      @property allLayerVisible
-      @type Boolean
-      @default false
-    */
-    allLayerVisible: false,
-
-    /**
-      Proprty containing raster layers to compare.
-
-      @property rasterLayers
-      @type Array
-      @default []
-    */
-    rasterLayers: [],
-
-    /**
-     * Number of enabled layers on each side
-     */
-    compareLayersCount: Ember.computed('compare.side', 'compare.compareState.Left.layerIds.[]', 'compare.compareState.Right.layerIds.[]', function() {
-      return this.get(`compare.compareState.${this.get('compare.side')}.layerIds`).length;
-    }),
-
-    /**
-     * Array of background layers ids for tree filter
-     */
-    backgroundIds: Ember.computed('backgroundLayers', 'backgroundLayers.[]', function() {
-      const backgroundLayers = this.get('backgroundLayers');
-      return (backgroundLayers) ? this.get('backgroundLayers').map(l => l.get('id')) : [];
-    }),
-
-    /**
-      Adds side by side control to map and removes current visible layers.
-
-      @method onCompareLayersEnabled
-    */
-    onCompareLayersEnabled: Ember.observer('compare.compareLayersEnabled', 'ignoreCompareMode', function() {
-      let map = this.get('leafletMap');
-      let sbs = this.get('sideBySide');
-      if (this.get('compare.compareLayersEnabled') && !this.get('ignoreCompareMode')) {
-        let layers = this.get('layers');
-        let layersArray = [];
-        layers.forEach(layer => {
-          if (layer.get('visibility')) {
-            layersArray.push(layer);
-          }
-
-          layer.side = null;
-          layer.set('visibility', false);
-        });
-        this.set('currentLayers', layersArray);
-        if (this.get('selectedBaseLayer')) {
-          this.setBgLayerBySide(this.get('selectedBaseLayer'), 'Left', map);
-          this.setBgLayerBySide(this.get('selectedBaseLayer'), 'Right', map);
+      let layersArray = [];
+      layers.forEach(layer => {
+        if (layer.get('visibility')) {
+          layersArray.push(layer);
         }
 
-        sbs.addTo(map);
-      } else {
-        this.destroyCompare(map);
-        sbs.remove();
+        layer.side = null;
+        layer.set('visibility', false);
+      });
+      this.set('currentLayers', layersArray);
+      if (this.get('selectedBaseLayer')) {
+        this.setBgLayerBySide(this.get('selectedBaseLayer'), 'Left', map);
+        this.setBgLayerBySide(this.get('selectedBaseLayer'), 'Right', map);
+      }
 
-        let layersToAdd = this.get('currentLayers');
-        let layers = this.get('layers');
+      sbs.addTo(map);
+    } else {
+      this.destroyCompare(map);
+      sbs.remove();
+
+      let layersToAdd = this.get('currentLayers');
+      let layers = this.get('layers');
+      layers.forEach(layer => {
+        let leafletLayer = layer.get('_leafletObject');
+
+        if (leafletLayer instanceof L.MarkerClusterGroup) {
+          leafletLayer = Ember.get(leafletLayer, '_originalVectorLayer');
+        }
+
+        if (leafletLayer && leafletLayer.getContainer && leafletLayer.getContainer()) {
+          leafletLayer.getContainer().style.clip = '';
+        }
+
+        if (layer.get('settingsAsObject.labelSettings.signMapObjects')) {
+          const labelsLayersOriginalLayer = leafletLayer.labelsLayers;
+          if (labelsLayersOriginalLayer) {
+            labelsLayersOriginalLayer.forEach(labelsLayers => {
+              if (labelsLayers && labelsLayers.getContainer && labelsLayers.getContainer()) {
+                leafletLayer.getContainer().style.clip = '';
+              }
+            });
+          }
+        }
+      });
+      layersToAdd.forEach(layer => Ember.set(layer, 'visibility', true));
+    }
+  }),
+
+  dynamicButtons: [],
+
+  actions: {
+    search() {
+      let searchValue = this.get('searchValue');
+
+      let layers = this.get('layers');
+
+      let setFiltered = function (layers, parentVisibility) {
+        let hasAnyVisible = false;
         layers.forEach(layer => {
-          let leafletLayer = layer.get('_leafletObject');
+          let visible = parentVisibility
+            ? true
+            : searchValue ? (layer.get('name') ? layer.get('name').toLowerCase().indexOf(searchValue.toLowerCase()) > -1 : false) : true;
 
-          if (leafletLayer instanceof L.MarkerClusterGroup) {
-            leafletLayer = Ember.get(leafletLayer, '_originalVectorLayer');
+          if (layer.get('layers') && layer.get('layers').length > 0) {
+            // если группа видима, то покажем все ее внутренние слои
+            // setFiltered обязательно нужно вызвать, чтобы пересчитались флаги у дочерних нод
+            let innerVisible = (setFiltered(layer.get('layers'), visible) || false);
+            visible = visible || innerVisible;
           }
 
-          if (leafletLayer && leafletLayer.getContainer && leafletLayer.getContainer()) {
-            leafletLayer.getContainer().style.clip = '';
-          }
+          layer.set('hideBySearch', !visible);
+          hasAnyVisible = hasAnyVisible || visible;
+        });
 
-          if (layer.get('settingsAsObject.labelSettings.signMapObjects')) {
-            const labelsLayersOriginalLayer = leafletLayer.labelsLayers;
-            if (labelsLayersOriginalLayer) {
-              labelsLayersOriginalLayer.forEach(labelsLayers => {
-                if (labelsLayers && labelsLayers.getContainer && labelsLayers.getContainer()) {
-                  leafletLayer.getContainer().style.clip = '';
-                }
-              });
-            }
+        return hasAnyVisible;
+      };
+
+      setFiltered(layers, false);
+    },
+
+    closeOtherCalendar(layerId) {
+      this.sendAction('closeOtherCalendar', layerId);
+    },
+
+    external(actionName, layer) {
+      this.sendAction(actionName, layer);
+    },
+
+    enableGroupVisibility() {
+      this.sendAction('enableGroupVisibility');
+    },
+
+    onAllLayerVisibilityChanged(e) {
+      this.set('allLayerVisible', !this.get('allLayerVisible'));
+      let visibility = this.get('allLayerVisible');
+      let layers = this.get('layers');
+      let setVisibility = function(layers) {
+        layers.forEach(layer => {
+          layer.set('visibility', visibility);
+          if (layer.get('layers')) {
+            setVisibility(layer.get('layers'));
           }
         });
-        layersToAdd.forEach(layer => Ember.set(layer, 'visibility', true));
-      }
-    }),
+      };
 
-    dynamicButtons: [],
+      setVisibility(layers);
+    },
 
-    actions: {
-      closeOtherCalendar(layerId) {
-        this.sendAction('closeOtherCalendar', layerId);
-      },
-
-      external(actionName, layer) {
-        this.sendAction(actionName, layer);
-      },
-
-      enableGroupVisibility() {
-        this.sendAction('enableGroupVisibility');
-      },
-
-      onAllLayerVisibilityChanged(e) {
-        this.set('allLayerVisible', !this.get('allLayerVisible'));
-        let visibility = this.get('allLayerVisible');
-        let layers = this.get('layers');
-        let setVisibility = function(layers) {
-          layers.forEach(layer => {
-            layer.set('visibility', visibility);
-            if (layer.get('layers')) {
-              setVisibility(layer.get('layers'));
-            }
-          });
-        };
-
-        setVisibility(layers);
-      },
-
-      onLayerTimeChanged(layer, time) {
-        this.sendAction('layerTimeChanged', layer, time);
-      },
-
-      /**
-        Handles add button's 'click' event.
-        Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.add:method"}}'add'{{/crossLink}} action.
-
-        @method actions.onAddButtonClick
-        @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
-        which describes button's 'click' event.
-      */
-      onAddButtonClick(e) {
-        // Create empty layer model.
-        let store = this.get('store');
-        let addDialogLayer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', { id: generateUniqueId() });
-        this.set('_addDialogLayer', addDialogLayer);
-
-        // Include dialog to markup.
-        this.set('_addDialogHasBeenRequested', true);
-
-        // Show dialog.
-        this.set('_addDialogIsVisible', true);
-      },
-
-      /**
-        Handles add dialog's 'approve' action.
-        Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.add:method"}}'add'{{/crossLink}} action.
-
-        @method actions.onAddDialogApprove
-        @param {Object} e Action's event object.
-        @param {Object} e.layerProperties Object containing properties of new child layer.
-      */
-      onAddDialogApprove(...args) {
-        // Send outer 'add' action.
-        this.sendAction('add', ...args);
-      }
+    onLayerTimeChanged(layer, time) {
+      this.sendAction('layerTimeChanged', layer, time);
     },
 
     /**
-      Component's action invoking when user wants to add child layer into layers tree root.
+      Handles add button's 'click' event.
+      Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.add:method"}}'add'{{/crossLink}} action.
 
-      @method sendingActions.add
-      @param {Object} e Action's event object.
-      @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
-      which describes inner 'add' button's 'click' event.
+      @method actions.onAddButtonClick
+      @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
+      which describes button's 'click' event.
     */
-  }
+    onAddButtonClick(e) {
+      // Create empty layer model.
+      let store = this.get('store');
+      let addDialogLayer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', { id: generateUniqueId() });
+      this.set('_addDialogLayer', addDialogLayer);
+
+      // Include dialog to markup.
+      this.set('_addDialogHasBeenRequested', true);
+
+      // Show dialog.
+      this.set('_addDialogIsVisible', true);
+    },
+
+    /**
+      Handles add dialog's 'approve' action.
+      Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.add:method"}}'add'{{/crossLink}} action.
+
+      @method actions.onAddDialogApprove
+      @param {Object} e Action's event object.
+      @param {Object} e.layerProperties Object containing properties of new child layer.
+    */
+    onAddDialogApprove(...args) {
+      // Send outer 'add' action.
+      this.sendAction('add', ...args);
+    }
+  },
+
+  /**
+    Component's action invoking when user wants to add child layer into layers tree root.
+
+    @method sendingActions.add
+    @param {Object} e Action's event object.
+    @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
+    which describes inner 'add' button's 'click' event.
+  */
+}
 );
 
 // Add component's CSS-class names as component's class static constants

@@ -6,7 +6,8 @@
 
 {{#flexberry-treenode
   _hasContent=_hasContent
-  class=componentName
+  _expanded=(and isGroup (eq layer.hideBySearch false))
+  class=(concat componentName ' ' extraClassNames)
   headerClick=(action "onHeaderClick")
   beforeExpand=(action "onBeforeExpand")
   beforeCollapse=(action "onBeforeCollapse")
@@ -34,7 +35,7 @@
           class=(concat flexberryClassNames.typeIcon " " _typeIconClass)
         }}
         <div class={{flexberryClassNames.caption}}>
-          {{layer.name}}
+          {{{show-searched-value layer.name searchValue}}}
           {{#if (and histEnabled (eq layer.type "with-history"))}}
            от {{flexberry-simpledatetime
                 _flatpickr=layer._flatpickr
@@ -201,6 +202,7 @@
   {{#block-slot "content"}}
     {{#if _hasLayers}}
       {{flexberry-maplayers
+        searchValue=searchValue
         readonly=readonly
         access=access
         leafletMap=leafletMap
