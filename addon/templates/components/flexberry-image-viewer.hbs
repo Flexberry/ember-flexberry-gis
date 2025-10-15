@@ -1,0 +1,35 @@
+<div class="flexberry-image-viewer">
+    {{#each images as |image index|}}
+        <div class="preview">
+            <img class="img-responsive" src={{image.preview}} />
+        </div>
+    {{/each}}
+
+    {{#if images}}
+        <div class="preview more" onclick={{action "showAll"}}>
+            Смотреть все фото
+        </div>
+    {{else}}
+        <div class="preview more">
+            Нет данных
+        </div>
+    {{/if}}
+</div>
+
+{{#if galleryDialogIsRequested}}
+
+    {{#flexberry-dialog
+        class="carousel"
+        visible=galleryDialogIsVisible
+    }}
+
+    <div>
+        {{#flexberry-carousel
+            images=images
+        }}
+        {{/flexberry-carousel}}
+    </div>
+
+    {{/flexberry-dialog}}
+
+{{/if}}

@@ -1,0 +1,37 @@
+<div class="flexberry-carousel-actions">
+    {{#if (gt total 0)}}
+      <a onclick={{action "delete" activeIndex}}>
+          <i class="delete icon"></i>
+          Удалить
+      </a>
+    {{/if}}
+
+    <a onclick={{action "add"}}>
+        <i class="plus icon"></i>
+        Добавить еще фото
+    </a>
+</div>
+
+<div class="flexberry-carousel-container">
+
+  {{#if (gt total 0)}}
+    <div class="flexberry-carousel-body">
+        {{#each images as |image index|}}
+          <div class="{{concat "flexberry-carousel-item " image.from (if (eq index activeIndex) " active") (if image.slidingIn " slide-in") (if image.slidingOut " slide-out")}}">
+            <img class="img-responsive" src={{image.source}} />
+          </div>
+        {{/each}}
+    </div>
+
+    <div class="line-arrow left" onclick={{action "prev"}}></div>
+    <div class="line-arrow right" onclick={{action "next"}}></div>
+  {{else}}
+    <div class="flexberry-carousel-item no-data">
+      Нет данных
+    </div>
+  {{/if}}
+</div>
+
+{{#if (gt total 0)}}
+  {{math/add activeIndex 1}} из {{total}}
+{{/if}}

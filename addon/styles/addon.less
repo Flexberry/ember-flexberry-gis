@@ -5,12 +5,14 @@
 @import './themes/default/modules/sidebar.variables';
 
 .ui.loading.form {
+
   /**
     Increased 'loading' form z-index to hide leaflet map placed on form.
   */
   &:before {
     z-index: 1000000 !important;
   }
+
   /**
     Increased 'loading' form spinner z-index to make it visible above leaflet map & form.
   */
@@ -23,6 +25,7 @@
   .field .required {
     color: @red;
   }
+
   /**
     Prevent ui messages from being hided inside <form>.
   */
@@ -30,6 +33,7 @@
   .warning.message,
   .error.message {
     display: block !important;
+
     /**
       Hide hidden ui messages inside <form>.
     */
@@ -50,6 +54,7 @@
 */
 
 .ui.checkbox {
+
   .box:before,
   label:before,
   input:checked~.box:after,
@@ -59,7 +64,7 @@
   }
 }
 
-.scale-header > label {
+.scale-header>label {
   font-size: 0.92857143em;
   font-weight: bold;
 }
@@ -71,12 +76,29 @@
   user-select: none;
 }
 
-.leaflet-tile-pane   { z-index: auto; }
-.leaflet-marker-pane { z-index: 2500; }
-.leaflet-popup-pane { z-index: 2000; }
-.leaflet-tooltip-pane { z-index: 2000; }
-.leaflet-overlay-pane { z-index: 2000; }
-.leaflet-zoomto-pane { z-index: 2000; }
+.leaflet-tile-pane {
+  z-index: auto;
+}
+
+.leaflet-marker-pane {
+  z-index: 2500;
+}
+
+.leaflet-popup-pane {
+  z-index: 2000;
+}
+
+.leaflet-tooltip-pane {
+  z-index: 2000;
+}
+
+.leaflet-overlay-pane {
+  z-index: 2000;
+}
+
+.leaflet-zoomto-pane {
+  z-index: 2000;
+}
 
 .hidden {
   display: none !important;
@@ -129,11 +151,11 @@
   height: 42px;
 }
 
-.w-80{
+.w-80 {
   width: 80%;
 }
 
-.w-100{
+.w-100 {
   width: 100%;
 }
 
@@ -141,11 +163,11 @@
   justify-content: center;
 }
 
-.p-10{
+.p-10 {
   padding: 10px;
 }
 
-.ml-auto{
+.ml-auto {
   margin-left: auto !important;
 }
 
@@ -159,7 +181,7 @@
   &:hover {
     box-shadow: none !important;
     border: none;
-    background: transparent!important;
+    background: transparent !important;
   }
 }
 
@@ -167,16 +189,21 @@
   .identify-file-buttons {
     padding: 10px 10px 0 10px;
   }
+
   .wrapper {
     margin: 20px 0px;
   }
+
   .wrapper:last-child {
     margin-bottom: 0px;
   }
-  .file-input, .flexberry-file-filename-input {
+
+  .file-input,
+  .flexberry-file-filename-input {
     width: 85% !important;
     height: 32px;
   }
+
   .file-panel {
     button {
       padding: 4px 6px;
@@ -185,7 +212,7 @@
 }
 
 .temp-layer-info {
-  > i {
+  >i {
     color: #DBA939 !important;
   }
 }
@@ -226,6 +253,7 @@
     width: 1rem;
     height: 1rem;
     margin: 0;
+
     &::before {
       content: "\e806";
       font-family: 'Crimean';
@@ -243,17 +271,19 @@
     top: 50%;
     left: 0.875rem;
     transform: translateY(-50%);
+
     &::before {
-        content: "\e939";
-        color: #71BC90;
-      }
+      content: "\e939";
+      color: #71BC90;
+    }
   }
 
   &.blue-icon {
     i.success::before {
       color: #0061D9;
     }
-    p i.icon-guideline-save.text-icon  {
+
+    p i.icon-guideline-save.text-icon {
       // font-size: 1.25rem !important;
       // vertical-align: sub !important;
       // color: #0061D9 !important;
@@ -266,6 +296,7 @@
     font-size: 1.125rem;
     line-height: 2rem;
   }
+
   p {
     font-family: 'GOSTUI2';
     font-size: 0.875rem;
@@ -282,6 +313,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -292,5 +324,160 @@
   to {
     opacity: 0;
     transform: translateY(20px);
+  }
+}
+
+.flexberry-image-viewer {
+  display: flex;
+  flex-direction: row;
+  flex-flow: wrap;
+  gap: 0 10px;
+  align-items: center;
+
+  .preview {
+    width: 100px;
+    height: 100px;
+
+    img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+  }
+}
+
+.carousel.ui.modal {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+
+  .flexberry-dialog-header.header,
+  .flexberry-dialog-toolbar.actions {
+    display: none;
+  }
+
+  .flexberry-dialog-content.content {
+    background: transparent;
+    padding: 0;
+  }
+
+  .flexberry-carousel-actions {
+    position: absolute;
+    top: -25px;
+    right: 0px;
+
+    a {
+      color: white;
+    }
+  }
+
+  .flexberry-carousel-container {
+    position: relative;
+    overflow: hidden;
+    display: block;
+
+    .flexberry-carousel-body {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .flexberry-carousel-body::after,
+    .flexberry-carousel-body::before {
+      content: '';
+      display: table;
+      clear: both;
+    }
+
+    .flexberry-carousel-item {
+      display: none;
+    }
+
+    .flexberry-carousel-item.active {
+      display: block;
+    }
+
+    .flexberry-carousel-item img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+
+    .flexberry-carousel-item.no-data {
+      display: block;
+      width: 100px;
+      font-size: 20px;
+      color: white;
+      width: 100%;
+      text-align: center;
+    }
+
+    .line-arrow.left {
+      border-top: 2px solid #a9a9a9;
+      border-left: 2px solid #a9a9a9;
+      transform: rotate(-54deg) skew(-20deg);
+      left: 20px;
+    }
+
+    .line-arrow.right {
+      border-top: 2px solid #a9a9a9;
+      border-right: 2px solid #a9a9a9;
+      transform: rotate(54deg) skew(20deg);
+      right: 20px;
+    }
+
+    .line-arrow {
+      position: absolute;
+      overflow: hidden;
+      display: inline-block;
+      font-size: 12px;
+      width: 40px;
+      height: 40px;
+      margin-top: -20px;
+      top: 50%;
+      cursor: pointer;
+    }
+
+    .flexberry-carousel-item {
+      position: relative;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .flexberry-carousel-item.left,
+    .flexberry-carousel-item.right {
+      display: block;
+    }
+
+    .flexberry-carousel-item.left,
+    .flexberry-carousel-item.right {
+      position: absolute;
+      top: 0;
+      width: 100%;
+    }
+
+    .flexberry-carousel-item.left {
+      left: 100%;
+    }
+
+    .flexberry-carousel-item.right {
+      left: -100%;
+    }
+
+    .flexberry-carousel-item.active.left.slide-out {
+      left: -100%;
+    }
+
+    .flexberry-carousel-item.active.right.slide-out {
+      left: 100%;
+    }
+
+    .flexberry-carousel-item.left.slide-in,
+    .flexberry-carousel-item.right.slide-in {
+      left: 0;
+    }
+
+    .flexberry-carousel-item.active {
+      position: relative;
+      left: 0;
+    }
   }
 }
