@@ -1,0 +1,47 @@
+{{#if hasLayers}}
+
+  {{#drag-box
+    additionalClassName='legend-drag-panel'
+    container='.mappanel'
+    top=panelTop
+    left=panelLeft
+    bottom=panelBottom
+    right=panelRight
+    visible=showPanel
+  }}
+    <div class="{{titleClass}}"></div>
+    <div class="div-tools">
+    
+      {{#each layers as |layer|}}
+        {{#if (not layer.isDeleted)}}
+          <div>
+            <div class={{flexberryClassNames.caption}}>
+              {{layer.name}}
+            </div>
+
+            {{#if (and layer.layerInitialized layer.legendCanBeDisplayed) }}
+              {{component (concat "legends/" layer.legendType "-legend")
+                layer=layer
+              }}
+            {{/if}}
+          </div>
+        {{/if}}
+      {{/each}}
+
+    </div>
+    <a title={{lagendCloseCaption}} class="{{flexberryClassNames.prefix}} {{flexberryClassNames.close}} item" {{action "closePanel"}}>
+      <i class="close icon {{flexberryClassNames.icon}} icon"></i>
+    </a>
+  {{/drag-box}}
+
+  {{map-commands/base
+    class=(concat flexberryClassNames.wrapper " " class)
+    name="base"
+    caption=caption
+    tooltip=tooltip
+    iconClass=iconClass
+    leafletMap=leafletMap
+    click=(action "showPanel")
+  }}
+
+{{/if}}
