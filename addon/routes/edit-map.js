@@ -171,6 +171,23 @@ export default EditFormRoute.extend({
       let otherLayers = Ember.A();
       otherLayers.addObjects(other);
       model.set('otherLayers', otherLayers);
+
+      let getLegendLayers = (layers) => {
+        let results = Ember.A();
+        layers.forEach((l) => {
+          if (l.get('type') !== 'group' && l.get('settingsAsObject') && !l.get('settingsAsObject.backgroundSettings.canBeBackground') && l.get('settingsAsObject.showInLegend')) {
+            results.addObject(l);
+          }
+
+          if (l.get('layers')) {
+            results.addObjects(getLegendLayers(l.get('layers')));
+          }
+        });
+
+        return results;
+      };
+
+      model.set('legendLayers', getLegendLayers(hierarchy));
     }
   },
 

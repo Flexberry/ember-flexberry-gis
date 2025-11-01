@@ -175,6 +175,13 @@ div.measure-drag-panel {
   }
 }
 
+/* legend-drag-panel */
+div.legend-drag-panel {
+  border: @defaultGrayBorder;
+  border-radius: @defaultBorderRadius;
+  box-shadow: @defaultBoxShadow;
+}
+
 .identify-tab .flexberry-identify-panel .field:not(last-child) {
   margin-bottom: 0.5em;
 }
