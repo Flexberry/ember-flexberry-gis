@@ -1,17 +1,19 @@
 {{#if hasLayers}}
 
   {{#drag-box
-    additionalClassName='legend-drag-panel'
-    container='.mappanel'
+    additionalClassName="legend-drag-panel"
+    container=".mappanel"
     top=panelTop
     left=panelLeft
     bottom=panelBottom
     right=panelRight
     visible=showPanel
+    clearPositionOnHide=false
+    resizable=true
   }}
     <div class="{{titleClass}}"></div>
     <div class="div-tools">
-    
+
       {{#each layers as |layer|}}
         {{#if (not layer.isDeleted)}}
           <div>
@@ -19,8 +21,9 @@
               {{layer.name}}
             </div>
 
-            {{#if (and layer.layerInitialized layer.legendCanBeDisplayed) }}
-              {{component (concat "legends/" layer.legendType "-legend")
+            {{#if (and layer.layerInitialized layer.legendCanBeDisplayed)}}
+              {{component
+                (concat "legends/" layer.legendType "-legend")
                 layer=layer
               }}
             {{/if}}
@@ -29,7 +32,11 @@
       {{/each}}
 
     </div>
-    <a title={{lagendCloseCaption}} class="{{flexberryClassNames.prefix}} {{flexberryClassNames.close}} item" {{action "closePanel"}}>
+    <a
+      title={{lagendCloseCaption}}
+      class="{{flexberryClassNames.prefix}} {{flexberryClassNames.close}} item"
+      {{action "closePanel"}}
+    >
       <i class="close icon {{flexberryClassNames.icon}} icon"></i>
     </a>
   {{/drag-box}}

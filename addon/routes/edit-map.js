@@ -175,7 +175,7 @@ export default EditFormRoute.extend({
       let getLegendLayers = (layers) => {
         let results = Ember.A();
         layers.forEach((l) => {
-          if (l.get('type') !== 'group' && l.get('settingsAsObject') && !l.get('settingsAsObject.backgroundSettings.canBeBackground') && l.get('settingsAsObject.showInLegend')) {
+          if (l.get('type') !== 'group' && l.get('settingsAsObject') && !l.get('settingsAsObject.backgroundSettings.canBeBackground') && l.get('settingsAsObject.legendSettings.isVisibleInLegendWidget')) {
             results.addObject(l);
           }
 

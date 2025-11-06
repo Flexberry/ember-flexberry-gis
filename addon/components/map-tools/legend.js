@@ -27,7 +27,7 @@ let LegendMapToolComponent = Ember.Component.extend({
 
   /**
     Map tool's additional CSS-class.
- 
+
     @property class
     @type String
     @default flexberry-legend-tool
@@ -36,7 +36,7 @@ let LegendMapToolComponent = Ember.Component.extend({
 
   /**
     Map tool's caption.
- 
+
     @property caption
     @type String
   */
@@ -45,14 +45,14 @@ let LegendMapToolComponent = Ember.Component.extend({
   /**
     Map tool's tooltip text.
     Will be added as wrapper's element 'title' attribute.
- 
+
     @property tooltip
   */
   tooltip: '',
 
   /**
     Map tool's title CSS-class names.
- 
+
     @property titleClass
     @type String
     @default 'legend-map-tool-panel-title'
@@ -61,7 +61,7 @@ let LegendMapToolComponent = Ember.Component.extend({
 
   /**
     Map tool's icon CSS-class names.
- 
+
     @property iconClass
     @type String
     @default 'icon-guideline-layer-all'
@@ -84,7 +84,7 @@ let LegendMapToolComponent = Ember.Component.extend({
     @default null
     @type String
   */
-  panelTop: null,
+  panelTop: '390px',
 
   /**
     Panel position. Bottom
@@ -93,7 +93,7 @@ let LegendMapToolComponent = Ember.Component.extend({
     @default 4px
     @type String
   */
-  panelBottom: '20px',
+  panelBottom: '195px',
 
   /**
     Panel position. Left
@@ -111,7 +111,7 @@ let LegendMapToolComponent = Ember.Component.extend({
     @default 65px
     @type String
   */
-  panelRight: '80px',
+  panelRight: '30px',
 
   /**
     Layers for show
