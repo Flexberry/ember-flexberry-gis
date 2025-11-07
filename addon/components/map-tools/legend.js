@@ -64,9 +64,9 @@ let LegendMapToolComponent = Ember.Component.extend({
 
     @property iconClass
     @type String
-    @default 'icon-guideline-layer-all'
+    @default 'icon-guideline-rast-map'
   */
-  iconClass: 'icon-guideline-layer-all',
+  iconClass: 'icon-guideline-rast-map',
 
   /**
     Show or hide panel
@@ -135,6 +135,10 @@ let LegendMapToolComponent = Ember.Component.extend({
 
     showPanel() {
       this.set('showPanel', true);
+    },
+
+    togglePanel() {
+      this.set('showPanel', !this.get('showPanel'));
     }
   }
 });

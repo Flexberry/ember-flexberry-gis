@@ -746,12 +746,13 @@ div.measure-drag-panel {
 }
 
 div.legend-drag-panel {
+  padding: 20px;
   border: 2px solid @bluesky;
   border-radius: 5px;
   box-shadow: @defaultBoxShadow;
 
-  height: 350px;
-  width: 270px;
+  height: 270px;
+  width: 350px;
   min-width: 220px;
   min-height: 220px;
   box-sizing: border-box;
@@ -772,9 +773,16 @@ div.legend-drag-panel {
   }
 
   .div-tools {
-    padding: 4px 10px;
     overflow: auto;
-    height: 100%;
+    height: calc(100% - 20px);
+
+    p.not-found {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      color: #6C7180;
+    }
 
     .layer-legend-image-wrapper {
       font-size: @layerLegendImageWrapperFontSize;

@@ -1,19 +1,20 @@
-{{#if hasLayers}}
+{{#drag-box
+  additionalClassName="legend-drag-panel"
+  container=".mappanel"
+  top=panelTop
+  left=panelLeft
+  bottom=panelBottom
+  right=panelRight
+  visible=showPanel
+  clearPositionOnHide=false
+  resizable=true
+}}
+  <h3 class="{{titleClass}}">Легенда карты</h3>
+  <div class="div-tools">
 
-  {{#drag-box
-    additionalClassName="legend-drag-panel"
-    container=".mappanel"
-    top=panelTop
-    left=panelLeft
-    bottom=panelBottom
-    right=panelRight
-    visible=showPanel
-    clearPositionOnHide=false
-    resizable=true
-  }}
-    <div class="{{titleClass}}"></div>
-    <div class="div-tools">
-
+    {{#if (not hasLayers)}}
+      <p class="not-found">Нет доступных слоев для отображения</p>
+    {{else}}
       {{#each layers as |layer|}}
         {{#if (not layer.isDeleted)}}
           <div>
@@ -30,25 +31,24 @@
           </div>
         {{/if}}
       {{/each}}
+    {{/if}}
 
-    </div>
-    <a
-      title={{lagendCloseCaption}}
-      class="{{flexberryClassNames.prefix}} {{flexberryClassNames.close}} item"
-      {{action "closePanel"}}
-    >
-      <i class="close icon {{flexberryClassNames.icon}} icon"></i>
-    </a>
-  {{/drag-box}}
+  </div>
+  <a
+    title={{lagendCloseCaption}}
+    class="{{flexberryClassNames.prefix}} {{flexberryClassNames.close}} item"
+    {{action "closePanel"}}
+  >
+    <i class="close icon {{flexberryClassNames.icon}} icon"></i>
+  </a>
+{{/drag-box}}
 
-  {{map-commands/base
-    class=(concat flexberryClassNames.wrapper " " class)
-    name="base"
-    caption=caption
-    tooltip=tooltip
-    iconClass=iconClass
-    leafletMap=leafletMap
-    click=(action "showPanel")
-  }}
-
-{{/if}}
+{{map-commands/base
+  class=(concat flexberryClassNames.wrapper " " class)
+  name="base"
+  caption=caption
+  tooltip=tooltip
+  iconClass=iconClass
+  leafletMap=leafletMap
+  click=(action "togglePanel")
+}}

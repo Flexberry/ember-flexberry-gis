@@ -15,6 +15,7 @@ export let Model = Ember.Mixin.create({
   name: DS.attr('string', { defaultValue: '' }),
   description: DS.attr('string'),
   keyWords: DS.attr('string'),
+  settings: DS.attr('string'),
 
   /**
     Non-stored property for full text search combining 'name', 'description', and 'keywords'.
@@ -37,7 +38,7 @@ export let Model = Ember.Mixin.create({
       }))
       ```
   */
-  _anyTextCompute: function() {
+  _anyTextCompute: function () {
     let result = (this.anyTextCompute && typeof this.anyTextCompute === 'function') ? this.anyTextCompute() : null;
     this.set('anyText', result);
   },
@@ -68,6 +69,17 @@ export let Model = Ember.Mixin.create({
 
   init: function () {
     this.set('validations', this.getValidations());
+    this.set('settingsAsObject', function () {
+      const settingsRaw = this.get('settings') || {};
+      let settings = null;
+      try {
+        settings = JSON.parse(settingsRaw);
+      } catch (e) {
+        console.error('Map model settings parse error', e.message)
+      }
+
+      return settings;
+    }.bind(this));
     this._super.apply(this, arguments);
   }
 });
@@ -104,6 +116,8 @@ export let defineProjections = function (modelClass) {
     coordinateReferenceSystem: Projection.attr('Система координат'),
     boundingBox: Projection.attr('Граница'),
     owner: Projection.attr('Владелец'),
+    settings: Projection.attr('Настройки'),
+
     mapLayer: Projection.hasMany('new-platform-flexberry-g-i-s-map-layer', '', {
       name: Projection.attr('Наименование'),
       description: Projection.attr('Описание'),
