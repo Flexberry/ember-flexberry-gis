@@ -86,12 +86,12 @@ export default Ember.Component.extend({
     // Patching JQuery-ui draggable() for position:absolute
     let __dx;
     let __dy;
-    let __recoupLeft, __recoupTop;
+    let __recoupLeft;
+    let __recoupTop;
     const that = this;
     this.$().draggable({
       containment: container,
       drag: function (event, ui) {
-        //resize bug fix ui drag `enter code here`
         __dx = ui.position.left - ui.originalPosition.left;
         __dy = ui.position.top - ui.originalPosition.top;
         ui.position.left = ui.originalPosition.left + __dx;
@@ -102,7 +102,6 @@ export default Ember.Component.extend({
       },
       start: function (event, ui) {
         that.$(this).css('cursor', 'pointer');
-        //resize bug fix ui drag
         let left = parseInt(that.$(this).css('left'), 10);
         left = isNaN(left) ? 0 : left;
         let top = parseInt(that.$(this).css('top'), 10);
