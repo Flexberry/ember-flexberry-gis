@@ -33,7 +33,7 @@ export default Ember.Component.extend({
 
       const top = this.get('top');
       const right = this.get('right');
-      const bottom = this.get('bottom')
+      const bottom = this.get('bottom');
       const left = this.get('left');
 
       if (!Ember.isNone(top)) {
@@ -86,37 +86,35 @@ export default Ember.Component.extend({
     // Patching JQuery-ui draggable() for position:absolute
     let __dx;
     let __dy;
-    let __scale = 0.5;
     let __recoupLeft, __recoupTop;
+    const that = this;
     this.$().draggable({
-      containment: container, drag: function (event, ui) {
+      containment: container,
+      drag: function (event, ui) {
         //resize bug fix ui drag `enter code here`
         __dx = ui.position.left - ui.originalPosition.left;
         __dy = ui.position.top - ui.originalPosition.top;
-        //ui.position.left = ui.originalPosition.left + ( __dx/__scale);
-        //ui.position.top = ui.originalPosition.top + ( __dy/__scale );
-        ui.position.left = ui.originalPosition.left + (__dx);
-        ui.position.top = ui.originalPosition.top + (__dy);
+        ui.position.left = ui.originalPosition.left + __dx;
+        ui.position.top = ui.originalPosition.top + __dy;
 
         ui.position.left += __recoupLeft;
         ui.position.top += __recoupTop;
       },
       start: function (event, ui) {
-        $(this).css('cursor', 'pointer');
+        that.$(this).css('cursor', 'pointer');
         //resize bug fix ui drag
-        let left = parseInt($(this).css('left'), 10);
+        let left = parseInt(that.$(this).css('left'), 10);
         left = isNaN(left) ? 0 : left;
-        let top = parseInt($(this).css('top'), 10);
+        let top = parseInt(that.$(this).css('top'), 10);
         top = isNaN(top) ? 0 : top;
         __recoupLeft = left - ui.position.left;
         __recoupTop = top - ui.position.top;
       },
       create: function (event, ui) {
-        $(this).attr('oriLeft', $(this).css('left'));
-        $(this).attr('oriTop', $(this).css('top'));
-      }
-    })
-
+        that.$(this).attr('oriLeft', that.$(this).css('left'));
+        that.$(this).attr('oriTop', that.$(this).css('top'));
+      },
+    });
 
     if (this.get('resizable')) {
       this.$().resizable();
