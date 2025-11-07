@@ -75,7 +75,7 @@ export let Model = Ember.Mixin.create({
       try {
         settings = JSON.parse(settingsRaw);
       } catch (e) {
-        console.error('Map model settings parse error', e.message)
+        console.error('Map model settings parse error', e.message);
       }
 
       return settings;
