@@ -159,7 +159,7 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
         return !Ember.isNone(layer) && Ember.get(layer, 'isDeleted') !== true;
       }).length > 0;
     }),
-    
+
     searchValue: null,
     applyedSearchValue: null,
 
