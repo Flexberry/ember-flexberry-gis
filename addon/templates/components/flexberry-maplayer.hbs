@@ -6,7 +6,7 @@
 
 {{#flexberry-treenode
   _hasContent=_hasContent
-  _expanded=(and isGroup (eq layer.hideBySearch false))
+  _expanded=(and isGroup (eq layer.needExpand true))
   class=(concat componentName ' ' extraClassNames)
   headerClick=(action "onHeaderClick")
   beforeExpand=(action "onBeforeExpand")
@@ -202,7 +202,7 @@
   {{#block-slot "content"}}
     {{#if _hasLayers}}
       {{flexberry-maplayers
-        searchValue=searchValue
+        applyedSearchValue=searchValue
         readonly=readonly
         access=access
         leafletMap=leafletMap

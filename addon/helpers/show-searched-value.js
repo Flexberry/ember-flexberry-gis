@@ -5,12 +5,35 @@ export default Ember.Helper.extend({
     let value = args.length >= 1 ? args[0] : undefined;
     let searchValue = args.length >= 2 ? args[1] : undefined;
 
-    if (value && searchValue && value.toLowerCase().indexOf(searchValue.toLowerCase()) > -1) {
-      let index = value.toLowerCase().indexOf(searchValue.toLowerCase());
-      return value.substring(0, index) + '<b><span>' + searchValue + '</span></b>'
-        + value.substring(index + searchValue.length);
-    } else {
+    let search = function (value, searchValue) {
+      if (!searchValue) return value;
+
+      const searches = searchValue.toLowerCase().split(' ');
+
+      let startIndex = 0;
+      let finded = true;
+      let text = '';
+
+      searches.forEach((s) => {
+        if (!s) return;
+
+        let index = value.toLowerCase().indexOf(s, startIndex);
+        if (index > -1) {
+          text = text + value.substring(startIndex, index) + '<b><span>' + value.substring(index, index + s.length) + '</span></b>';
+          startIndex = index + s.length;
+        } else {
+          finded = false;
+        }
+      });
+
+      if (finded) {
+        text = text + value.substring(startIndex);
+        return text;
+      }
+
       return value;
     }
+
+    return search(value, searchValue);
   }
 });
