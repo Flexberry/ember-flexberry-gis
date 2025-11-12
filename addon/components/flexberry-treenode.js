@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import FlexberryTreenode from "ember-flexberry/components/flexberry-treenode";
 
 const flexberryClassNamesPrefix = 'flexberry-treenode';

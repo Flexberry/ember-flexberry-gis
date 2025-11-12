@@ -6,7 +6,9 @@ export default Ember.Helper.extend({
     let searchValue = args.length >= 2 ? args[1] : undefined;
 
     let search = function (value, searchValue) {
-      if (!searchValue) return value;
+      if (!searchValue) {
+        return value;
+      }
 
       const searches = searchValue.toLowerCase().split(' ');
 
@@ -15,7 +17,9 @@ export default Ember.Helper.extend({
       let text = '';
 
       searches.forEach((s) => {
-        if (!s) return;
+        if (!s) {
+          return;
+        }
 
         let index = value.toLowerCase().indexOf(s, startIndex);
         if (index > -1) {
@@ -32,7 +36,7 @@ export default Ember.Helper.extend({
       }
 
       return value;
-    }
+    };
 
     return search(value, searchValue);
   }
