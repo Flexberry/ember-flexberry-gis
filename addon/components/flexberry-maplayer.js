@@ -543,6 +543,11 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     tagName: '',
 
     /**
+     * Extra class name for treenode
+     */
+    extraClassNames: '',
+
+    /**
       Leaflet map.
 
       @property leafletMap

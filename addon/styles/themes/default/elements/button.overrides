@@ -22,18 +22,3 @@
     color: transparent;
   }
 }
-
-.flexberry-search-panel .flexberry-search.ui.search {
-  .ui.search-button {
-    position: absolute;
-    right: 30px;
-    border: none;
-    height: 40px;
-  }
-  .ui.clear-search-button {
-    position: absolute;
-    right: 0px;
-    border: none;
-    height: 40px;
-  }
-}

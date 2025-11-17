@@ -18,6 +18,9 @@ module.exports = {
 
     app.import('vendor/jquery/jquery.drag-resize.js');
 
+    app.import('vendor/jquery/jquery-ui-draggable-resizable.min.css');
+    app.import('vendor/jquery/jquery-ui-draggable-resizable.min.js');
+
     app.import('vendor/jquery/jquery.waitForImages.js');
 
     // Import Leaflet library & it's resources.
