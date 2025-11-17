@@ -356,7 +356,12 @@ let BaseMapToolComponent = Ember.Component.extend(SlotsMixin, {
     if (this.get('_hasSubmenu')) {
 
       // Initialize Semantic UI dropdown module.
-      $item.dropdown();
+      $item.dropdown().on('touchend touchcancel', function(event) {
+        if (!$(event.target).closest('.flexberry-map-command-submenu .item').length) {
+          event.stopPropagation();
+          event.preventDefault();
+        }
+      });
     } else if (!Ember.isNone(MutationObserver)) {
 
       // Sometimes Semantic UI adds/removes classes too late what breaks results of component's class name bindings.
