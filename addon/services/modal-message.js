@@ -26,6 +26,7 @@ export default Ember.Service.extend({
       isModalVisible: true,
       modalTitle: options.title,
       modalText: options.text,
+      modalIconClass: options.modalIconClass || 'success',
       modalDuration: options.duration || 5000,
       modalOnClose: onClose,
       modalExtraClass: options.extraClass || '',

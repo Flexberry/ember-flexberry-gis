@@ -29,6 +29,7 @@ import FlexberryLayersIntersectionPanel from './components/flexberry-layers-inte
 import GeometryAddModesComponents from './components/geometry-add-modes';
 import ChartsComponents from './components/charts';
 import LayerResultListComponent from './components/layer-result-list';
+import LayerExportComponent from './components/layer-export';
 import FeatureResultItemComponent from './components/feature-result-item';
 import HistoryControlComponent from './components/history-control';
 import FlexberryCreateObjectGeometry from './components/flexberry-create-object-geometry';
@@ -51,7 +52,7 @@ export default {
   'layers-dialogs': LayersDialogsComponents,
   'map-commands-dialogs': MapCommandsDialogsComponents,
 
-  'legends': LegendsComponents,
+  legends: LegendsComponents,
 
   'flexberry-mapinfo': FlexberryMapInfoComponent,
   'flexberry-maptoolbar': FlexberryMapToolbarComponent,
@@ -70,21 +71,22 @@ export default {
   'flexberry-layers-intersections-panel': FlexberryLayersIntersectionPanel,
   'flexberry-multiple-select': FlexberryMultipleSelectComponent,
   'geometry-add-modes': GeometryAddModesComponents,
-  'charts': ChartsComponents,
+  charts: ChartsComponents,
   'layer-result-list': LayerResultListComponent,
+  'layer-export': LayerExportComponent,
   'feature-result-item': FeatureResultItemComponent,
   'history-control': HistoryControlComponent,
   'flexberry-create-object-geometry': FlexberryCreateObjectGeometry,
   'compare-object-geometries': CompareObjectGeometries,
-  'minimap': MinimapComponent,
+  minimap: MinimapComponent,
   'flexberry-edit-layer-feature': EditLayerFeatureComponent,
   'favourites-list': {
-    'clear': {
-      'tooltip': 'Clear selection'
-    }
+    clear: {
+      tooltip: 'Clear selection',
+    },
   },
   'base-vector-layer': {
-    'zoomFrom': 'Zoom from',
-    'zoomTo': 'to'
-  }
+    zoomFrom: 'Zoom from',
+    zoomTo: 'to',
+  },
 };

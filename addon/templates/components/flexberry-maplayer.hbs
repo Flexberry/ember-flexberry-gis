@@ -133,8 +133,16 @@
                     {{flexberry-button
                       class=(concat flexberryClassNames.loadButton " floated " flexberryClassNames.preventExpandCollapse)
                       iconClass="icon-guideline-download-layer"
-                      caption=(t "components.flexberry-maplayer.load-button.tooltip")
-                      click=(action "onLoadButtonClick")
+                      caption=(t "components.flexberry-maplayer.import-data-button.caption")
+                      click=(action "onImportLayerDataButtonClick")
+                    }}
+
+                    {{flexberry-button
+                      class=(concat flexberryClassNames.loadButton " floated " flexberryClassNames.preventExpandCollapse)
+                      iconClass="icon-guideline-download-layer"
+                      caption=(t "components.flexberry-maplayer.export-data-button.caption")
+                      tooltip=(if true  "" (t "components.flexberry-maplayer.export-data-button.tooltip.not-found"))
+                      click=(action "onExportLayerDataButtonClick")
                     }}
                   {{/if}}
                 </div>
