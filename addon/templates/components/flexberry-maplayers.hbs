@@ -18,7 +18,26 @@
   {{#yield-slot "above-tree" (block-params this)}}
     {{yield}}
 
-    {{#if (not compare.compareLayersEnabled)}}
+    <div class="layer-search-panel">
+      <div class="fluid action input ember-view flexberry-search ui search">
+        {{input
+          class="fluid action input prompt"
+          type="text"
+          maxlength="256"
+          value=searchValue
+          placeholder=(t "components.flexberry-maplayers.search")
+          enter=(action "search")
+        }}
+        <button class="ui icon clear-search-button {{if searchValue "" "hidden"}}" {{action "clearSearch"}}>
+          <i class="icon-guideline-cross-r"></i>
+        </button>
+        <button class="ui icon search-button" {{action "search"}}>
+          <i class="icon-guideline-search"></i>
+        </button>
+      </div>
+    </div>    
+
+    {{#if (and (not compare.compareLayersEnabled) _hasVisibleLayers)}}
       <div class="flexberry-check-all">
         <span {{action "onAllLayerVisibilityChanged"}}>{{#if allLayerVisible}}Снять выделение{{else}}Выделить все{{/if}}</span>
       </div>
@@ -52,31 +71,39 @@
   {{/block-slot}}
 
   {{#block-slot "content"}}
-    {{#each layers as |layer|}}
-      {{#if (and (not layer.isDeleted) (not (array-contains backgroundIds layer.id)))}}
-        {{#flexberry-maplayer
-          readonly=readonly
-          access=access
-          leafletMap=leafletMap
-          histEnabled=histEnabled
-          layer=layer
-          dynamicProperties=layer.dynamicProperties
-          dynamicActions=layer.dynamicActions
-          side=side
-          sideBySide=sideBySide
-          leftLayer=leftLayer
-          rightLayer=rightLayer
-          closeOtherCalendar = (action "closeOtherCalendar")
-          layerTimeChanged=(action "onLayerTimeChanged")
-          enableGroupVisibility=(action 'enableGroupVisibility')
-          dynamicButtons=dynamicButtons
-          external=(action 'external')
-          backgroundLayers=backgroundLayers
-          ignoreCompareMode=ignoreCompareMode
-        }}
-        {{/flexberry-maplayer}}
-      {{/if}}
-    {{/each}}
+    {{#if _hasVisibleLayers}}
+      {{#each layers as |layer|}}
+        {{#if (and (not layer.isDeleted) (not (array-contains backgroundIds layer.id)))}}
+          {{#flexberry-maplayer
+            readonly=readonly
+            access=access
+            leafletMap=leafletMap
+            histEnabled=histEnabled
+            layer=layer
+            searchValue=applyedSearchValue
+            extraClassNames=(if (get layer 'hideBySearch') 'hide')
+            dynamicProperties=layer.dynamicProperties
+            dynamicActions=layer.dynamicActions
+            side=side
+            sideBySide=sideBySide
+            leftLayer=leftLayer
+            rightLayer=rightLayer
+            closeOtherCalendar = (action "closeOtherCalendar")
+            layerTimeChanged=(action "onLayerTimeChanged")
+            enableGroupVisibility=(action 'enableGroupVisibility')
+            dynamicButtons=dynamicButtons
+            external=(action 'external')
+            backgroundLayers=backgroundLayers
+            ignoreCompareMode=ignoreCompareMode
+          }}
+          {{/flexberry-maplayer}}
+        {{/if}}
+      {{/each}}
+    {{else}}
+      <div class="nodata">
+        Нет данных
+      </div>
+    {{/if}}
     {{#yield-slot "content" (block-params this)}}
       {{yield}}
     {{/yield-slot}}

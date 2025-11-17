@@ -160,6 +160,18 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
       }).length > 0;
     }),
 
+    searchValue: null,
+    applyedSearchValue: null,
+
+    _hasVisibleLayers: Ember.computed('layers.[]', 'layers.@each.hideBySearch', 'layers.@each.isDeleted', function () {
+      let layers = this.get('layers');
+
+      // достаточно посмотреть только первый уровень
+      return Ember.isArray(layers) && layers.filter((layer) => {
+        return !Ember.isNone(layer) && Ember.get(layer, 'isDeleted') !== true && Ember.get(layer, 'hideBySearch') !== true;
+      }).length > 0;
+    }),
+
     /**
       Flag: indicates whether some nested content for header is defined
       (some yield markup for 'header').
@@ -509,6 +521,73 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
     dynamicButtons: [],
 
     actions: {
+      search() {
+        let searchValue = this.get('searchValue');
+        this.set('applyedSearchValue', searchValue);
+
+        let search = function (text, searchValue) {
+          if (!searchValue) {
+            return true;
+          }
+
+          const searches = searchValue.split(' ');
+          let startIndex = 0;
+          let finded = true;
+
+          searches.forEach((s) => {
+            if (!s) {
+              return;
+            }
+
+            let index = text.toLowerCase().indexOf(s, startIndex);
+            if (index > -1) {
+              startIndex = index + s.length;
+            } else {
+              finded = false;
+            }
+          });
+
+          return finded;
+        };
+
+        let layers = this.get('layers');
+
+        let setFiltered = function (layers, parentVisibility) {
+          let hasAnyVisible = false;
+          layers.forEach(layer => {
+
+            let needExpand = searchValue ?
+              (layer.get('name') ? search(layer.get('name').toLowerCase(), searchValue.toLowerCase()) : false) :
+              false;
+
+            let visible = parentVisibility ?
+              true :
+              (searchValue ? needExpand : true);
+
+            if (layer.get('layers') && layer.get('layers').length > 0) {
+              // если группа видима, то покажем все ее внутренние слои
+              // setFiltered обязательно нужно вызвать, чтобы пересчитались флаги у дочерних нод
+              let innerVisible = (setFiltered(layer.get('layers'), visible) || false);
+              visible = visible || innerVisible;
+              needExpand = needExpand || innerVisible;
+            }
+
+            layer.set('hideBySearch', !visible);
+            layer.set('needExpand', needExpand);
+            hasAnyVisible = hasAnyVisible || visible;
+          });
+
+          return hasAnyVisible;
+        };
+
+        setFiltered(layers, false);
+      },
+
+      clearSearch() {
+        this.set('searchValue', null);
+        this.set('applyedSearchValue', null);
+        this.send('search');
+      },
       closeOtherCalendar(layerId) {
         this.sendAction('closeOtherCalendar', layerId);
       },
