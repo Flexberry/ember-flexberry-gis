@@ -179,6 +179,13 @@ div.measure-drag-panel {
   }
 }
 
+/* legend-drag-panel */
+div.legend-drag-panel {
+  border: @defaultGrayBorder;
+  border-radius: @defaultBorderRadius;
+  box-shadow: @defaultBoxShadow;
+}
+
 /* Идентификация */
 .flexberry-identify-panel {
   background-color: @white;

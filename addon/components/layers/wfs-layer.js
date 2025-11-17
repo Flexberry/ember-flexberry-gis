@@ -1415,6 +1415,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
               leafletFeatures = leafletFeatures.map(newLeafletFeature => {
                 const featureID = newLeafletFeature.feature.properties.primarykey;
                 const allreadyLoadedFeature = that.getLayer(featureID);
+
                 // Если объект слоя уже был загружен на карту, то не берем новый экземпляр, а отсылаемся к уже существующему
                 if (allreadyLoadedFeature) {
                   return allreadyLoadedFeature;
