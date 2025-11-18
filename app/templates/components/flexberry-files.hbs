@@ -1,0 +1,99 @@
+<div class="ui {{inputClass}} action input flexberry-file-dropzone">
+  <input type="file" name="files[]" accept={{accept}} id={{_fileInputId}} class="flexberry-file-file-input" style="display:none"
+   multiple />
+  {{!-- value=(get this "_fileName") is a way to get one way binding, so input events will not cause _fileName mutation --}}
+  {{input
+    type="text"
+    class="flexberry-file-filename-input"
+    readonly="readonly"
+    placeholder=placeholder
+    value=_fileName
+  }}
+  {{#unless readonly}}
+    {{#if _addButtonIsVisible}}
+      <label
+        class="flexberry-file-add-button ui icon {{buttonClass}} {{unless _addButtonIsEnabled "disabled"}} button"
+        title={{t "components.flexberry-file.add-button-title"}}
+        for={{_fileInputId}}
+        {{action "addButtonClick" on="click" preventDefault=false}}>
+        <i class="add outline square icon"></i>
+      </label>
+    {{/if}}
+    {{#if _removeButtonIsVisible}}
+      <label
+        class="flexberry-file-remove-button ui icon {{buttonClass}} {{unless _removeButtonIsEnabled "disabled"}} button"
+        title={{t "components.flexberry-file.remove-button-title"}}
+        {{action "removeButtonClick" on="click" preventDefault=false}}>
+        <i class="trash outline icon"></i>
+      </label>
+    {{/if}}
+    {{#if _uploadButtonIsVisible}}
+      <label
+        class="flexberry-file-upload-button ui icon {{buttonClass}} {{unless _uploadButtonIsEnabled "disabled"}} {{if _uploadIsInProgress "loading"}} button"
+        title={{t "components.flexberry-file.upload-button-title"}}
+        {{action "uploadButtonClick" on="click" preventDefault=false}}>
+        <i class="upload outline icon"></i>
+      </label>
+    {{/if}}
+  {{/unless}}
+  {{#if _downloadButtonIsVisible}}
+    <label
+      class="flexberry-file-download-button ui icon {{buttonClass}} {{unless _downloadButtonIsEnabled "disabled"}} button"
+      title={{t "components.flexberry-file.download-button-title"}}
+      {{action "downloadButtonClick" on="click" preventDefault=false}}>
+      <i class="download outline icon"></i>
+    </label>
+  {{/if}}
+</div>
+{{#if (and showPreview _hasFile)}}
+  {{#if _canLoadPreview}}
+    <div class="flexberry-file-image-preview-wrapper ui segment">
+      <div class="ui three column grid">
+        {{#each _files as |file|}}
+          {{#unless file._hasError}}
+            <div class="column">
+              <div class="ui segment flexberry-file-image-preview-block">
+                {{#unless file._isPreviewLoading}}
+                  {{#if file._previewBase64}}
+                    <img
+                      class="flexberry-file-image-preview ui small centered image"
+                      src={{file._previewBase64}}
+                      alt={{file.name}}
+                    />
+                  {{else}}
+                    <span style="color:red;">{{t "components.flexberry-file.preview-image-alternative-text"}}</span>
+                  {{/if}}
+                {{/unless}}
+                <div class="ui {{if file._isPreviewLoading " active " "disabled "}} loader"></div>
+
+                <div class="ui tiny header" style="word-break: break-all;">{{file.name}}</div>
+
+                <button type="button" class="ui mini red icon button" title="Удалить файл" {{action "removeSingleFile" file}}>
+                  <i class="close icon"></i>
+                </button>
+              </div>
+            </div>
+          {{/unless}}
+        {{/each}}
+      </div>
+    </div>
+  {{else}}
+    {{#if _previewErrorFileNames}}
+      <span>{{_previewErrorFileNames}}</span><span style="color:red;">{{_errorPreviewCaption}}</span>
+    {{else}}
+      <span>{{_fileName}}</span>&nbsp;<span style="color:red;">{{_errorPreviewCaption}}</span>
+    {{/if}}
+  {{/if}}
+{{/if}}
+
+{{#if errorMessages.length}}
+  <div class="ui negative message">
+    <ul>
+      {{#each errorMessages as |errorMessage|}}
+        <li>{{errorMessage}}</li>
+      {{/each}}
+    </ul>
+  </div>
+{{/if}}
+
+<div class="flexberry-file-download-iframes-container" style="display: none;"></div>

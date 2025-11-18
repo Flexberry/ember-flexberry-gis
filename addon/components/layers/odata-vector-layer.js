@@ -999,6 +999,27 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin, {
             Ember.getOwner(this).register(`mixin:${modelName}`, modelMixin);
           }
 
+          // Регаем модель для файлов
+          if (this.get('photosEnabled')) {
+            var modelNameFiles = modelName + 'files';
+            this.сreateModelHierarchy(metadataUrl, modelNameFiles).then(({ model, dataModel, modelMixin }) => {
+              model.defineProjection(modelNameFiles, modelNameFiles, this.createProjection(dataModel));
+
+              let modelRegisteredFiles = Ember.getOwner(this)._lookupFactory(`model:${modelNameFiles}`);
+              let mixinRegisteredFiles = Ember.getOwner(this)._lookupFactory(`mixin:${modelNameFiles}`);
+
+              if (Ember.isNone(modelRegisteredFiles)) {
+                Ember.getOwner(this).register(`model:${modelNameFiles}`, model);
+              }
+
+              if (Ember.isNone(mixinRegisteredFiles)) {
+                Ember.getOwner(this).register(`mixin:${modelNameFiles}`, modelMixin);
+              }
+
+              resolve('Create dynamic model: ' + modelNameFiles);
+            });
+          }
+
           resolve('Create dynamic model: ' + modelName);
         }).catch((e) => {
           reject('Can\'t create dynamic model: ' + modelName + '. Error: ' + e);

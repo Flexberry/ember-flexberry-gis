@@ -217,27 +217,16 @@
       {{/if}}
   {{/if}}
 
-  <div class="feature-div-property-name">
-    Фото
-  </div>
+  {{#if photosEnabled}}
+    <div class="feature-div-property-name">
+      Фото
+    </div>
 
-  <div class="feature-div-property-value">
-    {{#flexberry-image-viewer
-      images=(array 
-      (hash
-        source="https://uzpk-ea.skyori.ru/odata/file?fileUploadKey=06479eca-dd53-4de8-b513-67e5a72cf513&fileName=image%20(49).png"
-        preview="https://uzpk-ea.skyori.ru/odata/file?fileUploadKey=06479eca-dd53-4de8-b513-67e5a72cf513&fileName=image%20(49).png"
-      )
-      (hash 
-        source="https://ununsplash.imgix.net/photo-1433785124354-92116416b870?dpr=2&fit=crop&fm=jpg&h=700&q=75&w=1050"
-        preview="https://ununsplash.imgix.net/photo-1433785124354-92116416b870?dpr=2&fit=crop&fm=jpg&h=700&q=75&w=1050"
-      )
-      (hash
-        source="https://ununsplash.imgix.net/photo-1429547584745-d8bec594c82e?q=75&fm=jpg&w=1080&fit=max&s=1870a82969024ba6816b271a49ca5876"
-        preview="https://ununsplash.imgix.net/photo-1429547584745-d8bec594c82e?q=75&fm=jpg&w=1080&fit=max&s=1870a82969024ba6816b271a49ca5876"
-      ))
-    }}
-    {{/flexberry-image-viewer}}  
-  </div>
-
+    <div class="feature-div-property-value">
+      {{#flexberry-image-viewer
+        feature=feature
+      }}
+      {{/flexberry-image-viewer}}
+    </div>
+  {{/if}}
 </div>

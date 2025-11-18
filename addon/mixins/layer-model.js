@@ -203,6 +203,10 @@ export default Ember.Mixin.create({
     return this.get('settingsAsObject.showOnMinimap');
   }),
 
+  photosEnabled: Ember.computed('settingsAsObject.photosEnabled', function () {
+    return this.get('settingsAsObject.photosEnabled');
+  }),
+
   /**
     Flag: layer's whether layer's legend can be displayed.
     @property hasLegend

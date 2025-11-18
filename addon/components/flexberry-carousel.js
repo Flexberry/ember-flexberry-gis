@@ -45,22 +45,17 @@ export default Ember.Component.extend({
 
   actions: {
     add() {
-      let images = this.get('images');
-      images.pushObject({
-        source: "https://ununsplash.imgix.net/photo-1429547584745-d8bec594c82e?q=75&fm=jpg&w=1080&fit=max&s=1870a82969024ba6816b271a49ca5876",
-        preview: "https://ununsplash.imgix.net/photo-1429547584745-d8bec594c82e?q=75&fm=jpg&w=1080&fit=max&s=1870a82969024ba6816b271a49ca5876"
-      });
-
-      this.set('images', images);
-      this.set('activeIndex', images.length - 1);
+      this.sendAction('onHideCarousel');
+      this.sendAction('onAddPhoto');
     },
 
     delete(index) {
-      let images = this.get('images');
-      let image = images.objectAt(index);
-      images.removeObject(image);
-      this.set('images', images);
-      this.set('activeIndex', index < this.get('total') ? index : 0);
+      //let images = this.get('images');
+      //let image = images.objectAt(index);
+      //images.removeObject(image);
+      //this.set('images', images);
+      //this.set('activeIndex', index < this.get('total') ? index : 0);
+      this.sendAction('onShowDeletePhoto');
     },
 
     next() {
@@ -69,7 +64,7 @@ export default Ember.Component.extend({
 
       let newIndex = activeIndex + 1;
 
-      if (newIndex === count) { 
+      if (newIndex === count) {
         newIndex = 0;
       }
 
