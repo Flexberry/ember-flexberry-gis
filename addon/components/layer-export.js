@@ -18,6 +18,8 @@ export default Ember.Component.extend({
 
   modalMessage: Ember.inject.service(),
 
+  session: Ember.inject.service('session'),
+
   class: 'layer-export-dialog',
 
   layer: null,
@@ -80,7 +82,6 @@ export default Ember.Component.extend({
 
   selectedCRS: 'EPSG:4326',
 
-  intervalID: null,
   intervalTime: 1000,
 
   init() {
@@ -93,17 +94,61 @@ export default Ember.Component.extend({
   },
 
   start(param) {
+    let accessToken = this.get('session.data.authenticated.access_token');
+    let headers = { Authorization: `Bearer ${accessToken}` };
+
     Ember.$.ajax({
       url: `${config.APP.backendUrls.exportApi}`,
       type: 'POST',
       data: JSON.stringify(param),
       dataType: 'json',
+      headers: headers,
       contentType: 'application/json; charset=utf-8',
     })
       .done((response) => {
         const exportID = response;
-        const intervalID = setInterval(() => this.poll(exportID), this.get('intervalTime'));
-        this.set('intervalID', intervalID);
+        let intervalID = null;
+
+        const poll = () => {
+          Ember.$.ajax({
+            url: `${config.APP.backendUrls.exportApi}/${exportID}/status`,
+            type: 'GET',
+            cache: false,
+            dataType: 'json',
+          })
+            .done((response) => {
+              if (!response) {
+                console.error({ message: 'No response' });
+                clearInterval(intervalID);
+                this.send('onError');
+                return;
+              }
+
+              // TODO: errorMessage может появиться для статуса ExportStatus.running - исправить
+              if (response.status === ExportStatus.FAILED || response.status === ExportStatus.CANCELLED || response.status === ExportStatus.TIMEDOUT) {
+                console.error({ message: response.errorMessage || 'Unexpected export polling error', response: response });
+                clearInterval(intervalID);
+                this.send('onError');
+                return;
+              }
+
+              // Успешное завершение
+              if (response.status === ExportStatus.COMPLETED) {
+                this.download(exportID);
+                clearInterval(intervalID);
+                return;
+              }
+
+              // Продолжаем опрашивать статус
+            })
+            .fail((e) => {
+              console.error(e);
+              clearInterval(intervalID);
+              this.send('onError');
+            });
+        };
+
+        intervalID = setInterval(() => poll(exportID), this.get('intervalTime'));
         this.send('onExecute');
       })
       .fail((error) => {
@@ -113,47 +158,6 @@ export default Ember.Component.extend({
           error,
         });
 
-        this.send('onError');
-      });
-  },
-
-  poll(exportID) {
-    const intervalID = this.get('intervalID');
-
-    Ember.$.ajax({
-      url: `${config.APP.backendUrls.exportApi}/${exportID}/status`,
-      type: 'GET',
-      cache: false,
-      dataType: 'json',
-    })
-      .done((response) => {
-        if (!response) {
-          console.error({ message: 'No response' });
-          clearInterval(intervalID);
-          this.send('onError');
-          return;
-        }
-
-        // TODO: errorMessage может появиться для статуса ExportStatus.running - исправить
-        if (response.status === ExportStatus.FAILED || response.status === ExportStatus.CANCELLED || response.status === ExportStatus.TIMEDOUT) {
-          console.error({ message: response.errorMessage || 'Unexpected export polling error', response: response });
-          clearInterval(intervalID);
-          this.send('onError');
-          return;
-        }
-
-        // Успешное завершение
-        if (response.status === ExportStatus.COMPLETED) {
-          this.download(exportID);
-          clearInterval(intervalID);
-          return;
-        }
-
-        // Продолжаем опрашивать статус
-      })
-      .fail((e) => {
-        console.error(e);
-        clearInterval(intervalID);
         this.send('onError');
       });
   },
@@ -190,15 +194,28 @@ export default Ember.Component.extend({
         settings = settings.wfs;
       }
 
-      const data = {
-        OutputFormat: this.get('format'),
-        LayerName: `${settings.typeNS}:${settings.typeName}`,
-        SourceSrs: this.get('selectedCRS') ? this.get('layer.crs.code') : null,
-        TargetSrs: this.get('selectedCRS'),
-        LayerType: this.get('layer.type'),
-        AdditionalArguments: ` -unsetFid -noNativeData -nomd --config GDAL_HTTP_UNSAFESSL YES --config GDAL_HTTP_VERIFYSSL NO -dsco FORMAT=GML3 -oo EXPOSE_GML_ID=NO`,
+      let data = {
+        outputFormat: this.get('format'),
+        layerNS: settings.typeNS,
+        layerName: settings.typeName,
+        sourceSrs: this.get('selectedCRS') ? this.get('layer.crs.code') : null,
+        targetSrs: this.get('selectedCRS'),
+        layerType: this.get('layer.type'),
         //geometryField: this.layer.get('settingsAsObject.geometryField'),
       };
+      let additionalArguments = null;
+
+      if (data.outputFormat === 'GML2') {
+        additionalArguments = { dsco: { FORMAT: 'GML2' } };
+        data = Object.assign(data, additionalArguments);
+        data.outputFormat = 'GML';
+      }
+
+      if (data.outputFormat === 'GML3') {
+        additionalArguments = { dsco: { FORMAT: 'GML3' } };
+        data = Object.assign(data, additionalArguments);
+        data.outputFormat = 'GML';
+      }
 
       this.start(data);
     },
