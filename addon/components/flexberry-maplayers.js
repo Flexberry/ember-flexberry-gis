@@ -554,30 +554,46 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
 
         let setFiltered = function (layers, parentVisibility) {
           let hasAnyVisible = false;
+          let hasAnyFinded = false;
           layers.forEach(layer => {
 
-            let needExpand = searchValue ?
-              (layer.get('name') ? search(layer.get('name').toLowerCase(), searchValue.toLowerCase()) : false) :
-              false;
+            let finded = layer.get('name') && searchValue ? search(layer.get('name').toLowerCase(), searchValue.toLowerCase()) : false;
 
+            // если поисковое значение не задано, то не будем трогать состояние - null
+            // если поисковое значение задано и слой соответствует - развернем, true
+            // если поисковое значение задано, но слой не соответствует - смотрим на родителя:
+            //   если родитель видим, то свернем, иначе - не трогаем
+            // отсутствие имени у слоя приравниванием к не соответствию, false
+            let needExpand = searchValue ?
+              (finded ? true : (parentVisibility ? false : null) ) :
+              null;
+
+            // если родитель видим, то в любом случае показываем
+            // если поисковое значение не задано, то тоже показываем
+            // иначе смотрим на соответствие
             let visible = parentVisibility ?
               true :
-              (searchValue ? needExpand : true);
+              (searchValue ? finded : true);
 
             if (layer.get('layers') && layer.get('layers').length > 0) {
               // если группа видима, то покажем все ее внутренние слои
               // setFiltered обязательно нужно вызвать, чтобы пересчитались флаги у дочерних нод
-              let innerVisible = (setFiltered(layer.get('layers'), visible) || false);
+              let { innerVisible, innerFinded } = (setFiltered(layer.get('layers'), visible) || false);
               visible = visible || innerVisible;
-              needExpand = needExpand || innerVisible;
+              // видимый и соответствующий поиску - разные флаги, т.к. для найденной группый будут видимыми все ее потомки,
+              // безотносительно их соответствия поиску
+              // а разворачивать нужно только те группы, у которых что-то из дочерних нод "соответствует"
+              finded = finded || innerFinded;
+              needExpand = innerFinded ? true : needExpand;
             }
 
             layer.set('hideBySearch', !visible);
             layer.set('needExpand', needExpand);
             hasAnyVisible = hasAnyVisible || visible;
+            hasAnyFinded = hasAnyFinded || finded;
           });
 
-          return hasAnyVisible;
+          return {innerVisible: hasAnyVisible, innerFinded: hasAnyFinded };
         };
 
         setFiltered(layers, false);

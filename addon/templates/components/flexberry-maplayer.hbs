@@ -6,7 +6,7 @@
 
 {{#flexberry-treenode
   _hasContent=_hasContent
-  _expanded=(and isGroup (eq layer.needExpand true))
+  _expanded=(if isGroup layer.needExpand null)
   class=(concat componentName ' ' extraClassNames)
   headerClick=(action "onHeaderClick")
   beforeExpand=(action "onBeforeExpand")
