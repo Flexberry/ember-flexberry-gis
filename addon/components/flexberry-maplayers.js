@@ -565,7 +565,7 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
             //   если родитель видим, то свернем, иначе - не трогаем
             // отсутствие имени у слоя приравниванием к не соответствию, false
             let needExpand = searchValue ?
-              (finded ? true : (parentVisibility ? false : null) ) :
+              (finded ? true : (parentVisibility ? false : null)) :
               null;
 
             // если родитель видим, то в любом случае показываем
@@ -580,6 +580,7 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
               // setFiltered обязательно нужно вызвать, чтобы пересчитались флаги у дочерних нод
               let { innerVisible, innerFinded } = (setFiltered(layer.get('layers'), visible) || false);
               visible = visible || innerVisible;
+
               // видимый и соответствующий поиску - разные флаги, т.к. для найденной группый будут видимыми все ее потомки,
               // безотносительно их соответствия поиску
               // а разворачивать нужно только те группы, у которых что-то из дочерних нод "соответствует"
@@ -593,7 +594,7 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
             hasAnyFinded = hasAnyFinded || finded;
           });
 
-          return {innerVisible: hasAnyVisible, innerFinded: hasAnyFinded };
+          return { innerVisible: hasAnyVisible, innerFinded: hasAnyFinded };
         };
 
         setFiltered(layers, false);
