@@ -718,14 +718,36 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       }
     ),
 
+    totalFeatures: 0,
+
+    layerInitializationChanged: Ember.observer('layer.layerInitialized', function () {
+      Ember.run.once(this, '_getTotalFeatures');
+    }),
+
     /**
       Initializes DOM-related component's properties.
     */
     didInsertElement() {
+      this._super(...arguments);
+
       if (this.get('layer.type') === 'group') {
         this.set('isGroup', true);
         this.set('disabled', 'disabled');
       }
+
+      if (this.get('layer.layerInitialized')) {
+        this._getTotalFeatures();
+      }
+    },
+
+    _getTotalFeatures() {
+      let layerModel = this.get('layer');
+
+      return layerModel.leafletObjectGetter().then((leafletObject) => {
+        return leafletObject.loadFeaturesForTableAttr(1, -1, null, null, false).then((response) => {
+          this.set('totalFeatures', response.totalFeatures || 0);
+        });
+      });
     },
 
     actions: {
@@ -1096,7 +1118,14 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       },
 
       onExportLayerDataButtonClick() {
-        this.sendAction('onExportLayerData');
+        const totalFeatures = this.get('totalFeatures');
+        const filter = null;
+
+        if (totalFeatures === 0) {
+          return;
+        }
+
+        this.sendAction('onExportLayerData', filter, totalFeatures);
       },
     },
 

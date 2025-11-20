@@ -23,6 +23,8 @@ export default Ember.Component.extend({
   class: 'layer-export-dialog',
 
   layer: null,
+  filter: null,
+  count: 0,
 
   types: {
     withoutGeometry: 'Без геометрии',
@@ -201,6 +203,7 @@ export default Ember.Component.extend({
         sourceSrs: this.get('selectedCRS') ? this.get('layer.crs.code') : null,
         targetSrs: this.get('selectedCRS'),
         layerType: this.get('layer.type'),
+        filter: Ember.isBlank(this.get('filter')) ? null : JSON.stringify(this.get('filter')),
         //geometryField: this.layer.get('settingsAsObject.geometryField'),
       };
       let additionalArguments = null;

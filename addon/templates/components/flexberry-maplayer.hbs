@@ -142,8 +142,9 @@
                       class=(concat flexberryClassNames.loadButton " floated " flexberryClassNames.preventExpandCollapse)
                       iconClass="icon-guideline-download-layer"
                       caption=(t "components.flexberry-maplayer.export-data-button.caption")
-                      tooltip=(if true  "" (t "components.flexberry-maplayer.export-data-button.tooltip.not-found"))
+                      tooltip=(if (eq totalFeatures 0)  (t "components.flexberry-maplayer.export-data-button.tooltip.not-found") "" )
                       click=(action "onExportLayerDataButtonClick")
+                      readonly=(eq totalFeatures 0)
                     }}
                   {{/if}}
                 </div>
