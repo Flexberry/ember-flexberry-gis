@@ -18,6 +18,8 @@ export default Ember.Component.extend({
 
   modalMessage: Ember.inject.service(),
 
+  store: Ember.inject.service(),
+
   session: Ember.inject.service('session'),
 
   class: 'layer-export-dialog',
@@ -98,6 +100,72 @@ export default Ember.Component.extend({
   start(param) {
     let accessToken = this.get('session.data.authenticated.access_token');
     let headers = { Authorization: `Bearer ${accessToken}` };
+    let intervalID = null;
+
+    const poll = (exportID) => {
+      Ember.$.ajax({
+        url: `${config.APP.backendUrls.exportApi}/${exportID}/status`,
+        type: 'GET',
+        cache: false,
+        dataType: 'json',
+      })
+        .done((response) => {
+          if (!response) {
+            console.error({ message: 'No response' });
+            clearInterval(intervalID);
+            this.send('onError');
+            return;
+          }
+
+          // TODO: errorMessage может появиться для статуса ExportStatus.running - исправить
+          if (response.status === ExportStatus.FAILED || response.status === ExportStatus.CANCELLED || response.status === ExportStatus.TIMEDOUT) {
+            console.error({ message: response.errorMessage || 'Unexpected export polling error', response: response });
+            clearInterval(intervalID);
+            this.send('onError');
+            return;
+          }
+
+          // Успешное завершение
+          if (response.status === ExportStatus.COMPLETED) {
+            this.download(exportID);
+            clearInterval(intervalID);
+            return;
+          }
+
+          // Продолжаем опрашивать статус
+        })
+        .fail((e) => {
+          console.error(e);
+          clearInterval(intervalID);
+          this.send('onError');
+        });
+    };
+
+    if (this.get('layer.type') === 'odata-vector') {
+      const adapter = this.get('store').adapterFor('rgispk');
+
+      adapter.callAction(
+        config.APP.backendActions.export,
+        { exportRequest: JSON.stringify(param) },
+        param.odataUrl,
+        null,
+        (response) => {
+          intervalID = setInterval(() => poll(response.value), this.get('intervalTime'));
+          this.send('onExecute');
+        },
+        (error) => {
+          console.error({
+            url: config.APP.backendActions.export,
+            odataUrl: param.odataUrl,
+            message: error.message,
+            error,
+          });
+
+          this.send('onError');
+        }
+      );
+      return;
+    }
 
     Ember.$.ajax({
       url: `${config.APP.backendUrls.exportApi}`,
@@ -107,49 +175,7 @@ export default Ember.Component.extend({
       headers: headers,
       contentType: 'application/json; charset=utf-8',
     })
-      .done((response) => {
-        const exportID = response;
-        let intervalID = null;
-
-        const poll = () => {
-          Ember.$.ajax({
-            url: `${config.APP.backendUrls.exportApi}/${exportID}/status`,
-            type: 'GET',
-            cache: false,
-            dataType: 'json',
-          })
-            .done((response) => {
-              if (!response) {
-                console.error({ message: 'No response' });
-                clearInterval(intervalID);
-                this.send('onError');
-                return;
-              }
-
-              // TODO: errorMessage может появиться для статуса ExportStatus.running - исправить
-              if (response.status === ExportStatus.FAILED || response.status === ExportStatus.CANCELLED || response.status === ExportStatus.TIMEDOUT) {
-                console.error({ message: response.errorMessage || 'Unexpected export polling error', response: response });
-                clearInterval(intervalID);
-                this.send('onError');
-                return;
-              }
-
-              // Успешное завершение
-              if (response.status === ExportStatus.COMPLETED) {
-                this.download(exportID);
-                clearInterval(intervalID);
-                return;
-              }
-
-              // Продолжаем опрашивать статус
-            })
-            .fail((e) => {
-              console.error(e);
-              clearInterval(intervalID);
-              this.send('onError');
-            });
-        };
-
+      .done((exportID) => {
         intervalID = setInterval(() => poll(exportID), this.get('intervalTime'));
         this.send('onExecute');
       })
@@ -191,21 +217,32 @@ export default Ember.Component.extend({
   actions: {
     onApprove() {
       let settings = this.get('layer.settingsAsObject');
+      let data = {};
+      if (this.get('layer.type') === 'odata-vector') {
+        data = {
+          outputFormat: this.get('format'),
+          odataQueryName: settings.modelName, // 'IISRGISPKSharedShareLocations',
+          odataProjectionName: settings.projectionName, // 'ShareLocationL',
+          odataUrl: settings.odataUrl, // 'http://localhost:4205/odata/',
+          sourceSrs: this.get('selectedCRS') ? this.get('layer.crs.code') : null,
+          targetSrs: this.get('selectedCRS'),
+          filter: Ember.isBlank(this.get('filter')) ? null : JSON.stringify(this.get('filter')),
+        };
+      } else {
+        if (this.get('layer.type') === 'wms-wfs') {
+          settings = settings.wfs;
+        }
 
-      if (this.get('layer.type') === 'wms-wfs') {
-        settings = settings.wfs;
+        data = {
+          outputFormat: this.get('format'),
+          layerNS: settings.typeNS,
+          layerName: settings.typeName,
+          sourceSrs: this.get('selectedCRS') ? this.get('layer.crs.code') : null,
+          targetSrs: this.get('selectedCRS'),
+          filter: Ember.isBlank(this.get('filter')) ? null : JSON.stringify(this.get('filter')),
+        };
       }
 
-      let data = {
-        outputFormat: this.get('format'),
-        layerNS: settings.typeNS,
-        layerName: settings.typeName,
-        sourceSrs: this.get('selectedCRS') ? this.get('layer.crs.code') : null,
-        targetSrs: this.get('selectedCRS'),
-        layerType: this.get('layer.type'),
-        filter: Ember.isBlank(this.get('filter')) ? null : JSON.stringify(this.get('filter')),
-        //geometryField: this.layer.get('settingsAsObject.geometryField'),
-      };
       let additionalArguments = null;
 
       if (data.outputFormat === 'GML2') {
