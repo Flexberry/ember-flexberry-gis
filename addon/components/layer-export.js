@@ -86,7 +86,7 @@ export default Ember.Component.extend({
 
   selectedCRS: 'EPSG:4326',
 
-  intervalTime: 1000,
+  intervalTime: 2000,
 
   init() {
     this._super(...arguments);
@@ -118,7 +118,12 @@ export default Ember.Component.extend({
           }
 
           // TODO: errorMessage может появиться для статуса ExportStatus.running - исправить
-          if (response.status === ExportStatus.FAILED || response.status === ExportStatus.CANCELLED || response.status === ExportStatus.TIMEDOUT) {
+          if (
+            response.status === ExportStatus.FAILED ||
+            response.status === ExportStatus.CANCELLED ||
+            response.status === ExportStatus.TIMEDOUT ||
+            response.errorMessage
+          ) {
             console.error({ message: response.errorMessage || 'Unexpected export polling error', response: response });
             clearInterval(intervalID);
             this.send('onError');

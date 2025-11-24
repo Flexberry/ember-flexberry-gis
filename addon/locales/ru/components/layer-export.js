@@ -1,7 +1,7 @@
 export default {
   captions: {
     form: 'Экспорт данных слоя',
-    approveButton: 'ОК',
+    approveButton: 'Ок',
     denyButton: 'Отмена',
     type: 'Тип выгрузки',
     format: 'Формат',

@@ -744,6 +744,11 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       let layerModel = this.get('layer');
 
       return layerModel.leafletObjectGetter().then((leafletObject) => {
+        if (!Ember.get(leafletObject, 'loadFeaturesForTableAttr')) {
+          this.set('totalFeatures', 0);
+          return;
+        }
+
         return leafletObject.loadFeaturesForTableAttr(1, -1, null, null, false).then((response) => {
           this.set('totalFeatures', response.totalFeatures || 0);
         });

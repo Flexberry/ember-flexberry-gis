@@ -550,7 +550,3 @@ form.flexberry-geometry-add-mode-import-form,
   display: none;
 }
 
-.layer-export-dialog {
-  background-color:red;
-
-}
