@@ -1,0 +1,55 @@
+{{#flexberry-dialog
+  class=class
+  contentClass=(if showErrorMessage "has error message" "")
+  caption=(t 'components.layer-export.captions.form')
+  approveButtonCaption=(t 'components.layer-export.captions.approveButton')
+  denyButtonCaption=(t 'components.layer-export.captions.denyButton')
+  visible=visible
+  approve=(action "onApprove")
+}}
+<form class="ui form" role="form">
+  <div class="ui celled grid">
+    <div class="column">
+      <div class="field">
+        <label>{{t "components.layer-export.captions.type"}}</label>
+        {{flexberry-dropdown
+          class="fluid"
+          items=types
+          value=type
+          displayCaptions=true
+          placeholder=""
+          onChange=(action "onTypeChange")
+        }}
+      </div>
+      <div class="field">
+        <label>{{t "components.layer-export.captions.format"}}</label>
+        {{flexberry-dropdown
+          class="fluid"
+          items=formats
+          value=format
+          displayCaptions=true
+          placeholder=""
+          needChecksOnValue=false
+          readonly=(if (eq type "withoutGeometry") true false)
+        }}
+      </div>
+      <div class="field">
+        <label>{{t "components.layer-export.captions.crs"}}</label>
+        {{flexberry-dropdown
+          class="fluid"
+          items=CRS
+          value=selectedCRS
+          displayCaptions=true
+          placeholder=""
+          needChecksOnValue=false
+          readonly= (if (eq type "withoutGeometry") true false)
+        }}
+      </div>
+
+      <div class="field">
+        <label>Экспортируемых объектов: {{count}}</label>
+      </div>
+    </div>
+  </div>
+</form>
+{{/flexberry-dialog}}

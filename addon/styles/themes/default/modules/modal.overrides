@@ -549,3 +549,4 @@ form.flexberry-geometry-add-mode-import-form,
 .rastrMessage .flexberry-dialog-toolbar.actions .flexberry-dialog-cancel-button {
   display: none;
 }
+

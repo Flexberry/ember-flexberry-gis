@@ -11,6 +11,8 @@ export default Ember.Component.extend({
   extraClass: '',
   autoClose: true,
 
+  iconClass: 'success',
+
   init() {
     this._super();
 
