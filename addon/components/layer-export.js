@@ -98,6 +98,7 @@ export default Ember.Component.extend({
   },
 
   start(param) {
+    const config = Ember.getOwner(this).resolveRegistration('config:environment');
     let accessToken = this.get('session.data.authenticated.access_token');
     let headers = { Authorization: `Bearer ${accessToken}` };
     let intervalID = null;
@@ -196,6 +197,7 @@ export default Ember.Component.extend({
   },
 
   download(exportID) {
+    const config = Ember.getOwner(this).resolveRegistration('config:environment');
     Ember.$.ajax({
       url: `${config.APP.backendUrls.exportApi}/${exportID}/file`,
       method: 'GET',
