@@ -137,7 +137,9 @@
                       caption=(t "components.flexberry-maplayer.import-data-button.caption")
                       click=(action "onImportLayerDataButtonClick")
                     }}
+                  {{/if}}
 
+                  {{#if (and (not isGroup) presenceLayerInGeoportal )}}
                     {{flexberry-button
                       class=(concat flexberryClassNames.loadButton " floated " flexberryClassNames.preventExpandCollapse)
                       iconClass="icon-guideline-export-layer"
