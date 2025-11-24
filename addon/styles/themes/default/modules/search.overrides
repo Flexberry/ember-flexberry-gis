@@ -2,99 +2,6 @@
          Theme Overrides
 *******************************/
 
-.flexberry-search.ui.search {
-  display: block;
-  border-radius: @defaultBorderRadius;
-  .prompt {
-    width: 320px !important;
-    border: @defaultGrayBorder !important;
-    color: @textColor;
-    height: 40px;
-    border-radius: 3.5px !important;
-    padding-left: 11px;
-    padding-right: 80px;
-    text-overflow: ellipsis;
-    input.ember-text-field {
-      background-color: @whitecolor;
-    }
-  }
-
-  button.ui.icon {
-    border: none;
-    color: @darkbluecolor;
-    padding: 0;
-    outline: none;
-    top: 0;
-    
-    .icon-guideline-cross-r {
-      font-size: 18px;
-      color: @blueyGreyColor;
-    }
-
-    .icon {
-      &.remove:before {
-        content: '\e806';
-        font-size: 12px;
-        color: @greyIconColor;
-      }
-      &.search:before {
-        content: "\e803";
-        font-size: 20px;
-        opacity: 1;
-      }
-      &.attr {
-        margin: 0 0 10px;
-      }
-      &.attr:before {
-        font-size: 8px;
-        opacity: 1;
-      }
-    }
-
-    &.search-button:hover {
-      .search:before {
-        color: @buttonHoverColor;
-      }
-    }
-    &.clear-search-button:hover {
-      .remove:before {
-        color: @buttonHoverColor !important;
-      }
-    }
-  }
-  .dropdown {
-    background-color: @whitecolor;
-    &.active {
-      background-color: @lightbluecolor;
-    }
-  }
-}
-
-.layer-search-panel {
-  width: 320px;
-  box-shadow: @defaultBoxShadow;
-  margin-bottom: 10px;
-
-  .flexberry-search {
-    width: 100%;
-  }
-
-  .flexberry-search.ui.search {
-    .ui.search-button {
-      position: absolute;
-      right: 5px;
-      border: none;
-      height: 40px;
-    }
-    .ui.clear-search-button {
-      position: absolute;
-      right: 34px;
-      border: none;
-      height: 40px;
-    }
-  }
-}
-
 .flexberry-search-panel {
   .flexberry-search {
     width: 100%;
@@ -181,4 +88,108 @@ div.details {
 
 div.detail {
     padding: 2px 0.7em;
+}
+
+.layer-search-panel .flexberry-search.ui.search,
+.outer-search.flexberry-search-panel .flexberry-search.ui.search {
+  display: block;
+  border-radius: @defaultBorderRadius;
+  input.prompt {
+    width: 320px !important;
+    border: @defaultGrayBorder !important;
+    color: @textColor;
+    height: 40px;
+    border-radius: 3.5px !important;
+    padding-left: 11px;
+    padding-right: 80px;
+    text-overflow: ellipsis;
+    input.ember-text-field {
+      background-color: @whitecolor;
+    }
+  }
+
+  button.ui.icon {
+    border: none;
+    color: @darkbluecolor;
+    padding: 0;
+    outline: none;
+    top: 0;
+    &.separate {
+      position: absolute;
+      top: 8px;
+      right: 28px;
+      border-left: 1px solid #DDE1E6;
+      i.icon {
+        width: auto;
+        margin: 0;
+      }
+    }
+    .icon-guideline-cross-r {
+      font-size: 18px;
+      color: @blueyGreyColor;
+    }
+
+    .icon {
+      &.remove:before {
+        content: '\e806';
+        font-size: 12px;
+        color: @greyIconColor;
+      }
+      &.search:before {
+        content: "\e803";
+        font-size: 20px;
+        opacity: 1;
+      }
+      &.attr {
+        margin: 0 0 10px;
+      }
+      &.attr:before {
+        font-size: 8px;
+        opacity: 1;
+      }
+    }
+
+    &.search-button:hover {
+      .search:before {
+        color: @buttonHoverColor;
+      }
+    }
+    &.clear-search-button:hover {
+      .remove:before {
+        color: @buttonHoverColor !important;
+      }
+    }
+  }
+  .dropdown {
+    background-color: @whitecolor;
+    &.active {
+      background-color: @lightbluecolor;
+    }
+  }
+}
+
+.layer-search-panel {
+  width: 320px;
+  box-shadow: @defaultBoxShadow;
+  border-radius: @defaultBorderRadius;
+  margin-bottom: 10px;
+
+  .flexberry-search {
+    width: 100%;
+  }
+
+  .flexberry-search.ui.search {
+    .ui.search-button {
+      position: absolute;
+      right: 5px;
+      border: none;
+      height: 40px;
+    }
+    .ui.clear-search-button {
+      position: absolute;
+      right: 34px;
+      border: none;
+      height: 40px;
+    }
+  }
 }
