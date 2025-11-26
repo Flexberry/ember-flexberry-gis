@@ -1,7 +1,6 @@
 import Ember from 'ember';
 import layout from '../templates/components/layer-export';
 import { downloadBlob } from '../utils/download-file';
-import { capitalize, camelize } from 'ember-flexberry-data/utils/string-functions';
 
 const ExportStatus = {
   PENDING: 0,
@@ -98,15 +97,14 @@ export default Ember.Component.extend({
     this.set('selectedCRS', crs);
   },
 
-  getExportApiURL() {
+  getExportApiURL(param, config) {
     let exportApiUrl = config.APP.backendUrls.exportApi;
 
     if (this.get('layer.type') === 'odata-vector') {
       const url = new URL(exportApiUrl);
 
       // Изменяем путь, добавляя нужный сегмент перед '/api/exports'
-      url.pathname = param.odataUrl.replace('/odata', '') + url.pathname;
-      exportApiUrl = url.href;
+      exportApiUrl = param.odataUrl.replace('/odata', '') + url.pathname;
     }
 
     return exportApiUrl;
@@ -114,10 +112,10 @@ export default Ember.Component.extend({
 
   start(param) {
     const config = Ember.getOwner(this).resolveRegistration('config:environment');
-    let accessToken = this.get('session.data.authenticated.access_token');
-    let headers = { Authorization: `Bearer ${accessToken}` };
+    const exportApiUrl = this.getExportApiURL(param, config);
+    const accessToken = this.get('session.data.authenticated.access_token');
+    const headers = { Authorization: `Bearer ${accessToken}` };
     let intervalID = null;
-    const exportApiUrl = this.getExportApiURL();
 
     const poll = (exportID) => {
       Ember.$.ajax({
@@ -165,8 +163,10 @@ export default Ember.Component.extend({
 
     if (this.get('layer.type') === 'odata-vector') {
       const adapter = this.get('store').adapterFor('rgispk');
+      const odataExportActionUrl = config.APP.backendActions.export;
+
       adapter.callAction(
-        config.APP.backendActions.export,
+        odataExportActionUrl,
         { exportRequest: JSON.stringify(param) },
         param.odataUrl,
         null,
@@ -176,7 +176,7 @@ export default Ember.Component.extend({
         },
         (error) => {
           console.error({
-            url: config.APP.backendActions.export,
+            url: odataExportActionUrl,
             odataUrl: param.odataUrl,
             message: error.message,
             error,
@@ -212,7 +212,6 @@ export default Ember.Component.extend({
   },
 
   download(exportApiUrl, exportID) {
-    const config = Ember.getOwner(this).resolveRegistration('config:environment');
     Ember.$.ajax({
       url: `${exportApiUrl}/${exportID}/file`,
       method: 'GET',
@@ -243,20 +242,13 @@ export default Ember.Component.extend({
       if (this.get('layer.type') === 'odata-vector') {
         data = {
           outputFormat: this.get('format'),
-          odataQueryName: Ember.String.pluralize(capitalize(camelize(settings.modelName))), // 'IISRGISPKSharedShareLocations',
-          odataProjectionName: settings.projectionName, // 'ShareLocationL',
-          odataUrl: settings.odataUrl, // 'http://localhost:4205/odata/',
+          odataQueryName: settings.odataClass,
+          odataProjectionName: settings.projectionName,
+          odataUrl: settings.odataUrl,
           sourceSrs: this.get('selectedCRS') ? this.get('layer.crs.code') : null,
           targetSrs: this.get('selectedCRS'),
           filter: Ember.isBlank(this.get('filter')) ? null : JSON.stringify(this.get('filter')),
         };
-
-        // pluralize не всегда срабатывает, добавляя 's', тем более на окончание odata
-        // Для работы flexberry orm необходимо передавать odataQueryName в множественном числе
-        const lastChar = data.odataQueryName.at(-1);
-        if (lastChar !== 's') {
-          data.odataQueryName = data.odataQueryName + 's';
-        }
       } else {
         if (this.get('layer.type') === 'wms-wfs') {
           settings = settings.wfs;
