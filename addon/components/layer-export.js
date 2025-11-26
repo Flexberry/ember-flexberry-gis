@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import layout from '../templates/components/layer-export';
 import { downloadBlob } from '../utils/download-file';
+import { capitalize, camelize } from 'ember-flexberry-data/utils/string-functions';
 
 const ExportStatus = {
   PENDING: 0,
@@ -97,15 +98,30 @@ export default Ember.Component.extend({
     this.set('selectedCRS', crs);
   },
 
+  getExportApiURL() {
+    let exportApiUrl = config.APP.backendUrls.exportApi;
+
+    if (this.get('layer.type') === 'odata-vector') {
+      const url = new URL(exportApiUrl);
+
+      // Изменяем путь, добавляя нужный сегмент перед '/api/exports'
+      url.pathname = param.odataUrl.replace('/odata', '') + url.pathname;
+      exportApiUrl = url.href;
+    }
+
+    return exportApiUrl;
+  },
+
   start(param) {
     const config = Ember.getOwner(this).resolveRegistration('config:environment');
     let accessToken = this.get('session.data.authenticated.access_token');
     let headers = { Authorization: `Bearer ${accessToken}` };
     let intervalID = null;
+    const exportApiUrl = this.getExportApiURL();
 
     const poll = (exportID) => {
       Ember.$.ajax({
-        url: `${config.APP.backendUrls.exportApi}/${exportID}/status`,
+        url: `${exportApiUrl}/${exportID}/status`,
         type: 'GET',
         cache: false,
         dataType: 'json',
@@ -133,7 +149,7 @@ export default Ember.Component.extend({
 
           // Успешное завершение
           if (response.status === ExportStatus.COMPLETED) {
-            this.download(exportID);
+            this.download(exportApiUrl, exportID);
             clearInterval(intervalID);
             return;
           }
@@ -149,7 +165,6 @@ export default Ember.Component.extend({
 
     if (this.get('layer.type') === 'odata-vector') {
       const adapter = this.get('store').adapterFor('rgispk');
-
       adapter.callAction(
         config.APP.backendActions.export,
         { exportRequest: JSON.stringify(param) },
@@ -174,7 +189,7 @@ export default Ember.Component.extend({
     }
 
     Ember.$.ajax({
-      url: `${config.APP.backendUrls.exportApi}`,
+      url: `${exportApiUrl}`,
       type: 'POST',
       data: JSON.stringify(param),
       dataType: 'json',
@@ -187,7 +202,7 @@ export default Ember.Component.extend({
       })
       .fail((error) => {
         console.error({
-          url: config.APP.backendUrls.exportApi,
+          url: exportApiUrl,
           message: error.message,
           error,
         });
@@ -196,10 +211,10 @@ export default Ember.Component.extend({
       });
   },
 
-  download(exportID) {
+  download(exportApiUrl, exportID) {
     const config = Ember.getOwner(this).resolveRegistration('config:environment');
     Ember.$.ajax({
-      url: `${config.APP.backendUrls.exportApi}/${exportID}/file`,
+      url: `${exportApiUrl}/${exportID}/file`,
       method: 'GET',
       cache: false,
       xhrFields: {
@@ -228,13 +243,20 @@ export default Ember.Component.extend({
       if (this.get('layer.type') === 'odata-vector') {
         data = {
           outputFormat: this.get('format'),
-          odataQueryName: settings.modelName, // 'IISRGISPKSharedShareLocations',
+          odataQueryName: Ember.String.pluralize(capitalize(camelize(settings.modelName))), // 'IISRGISPKSharedShareLocations',
           odataProjectionName: settings.projectionName, // 'ShareLocationL',
           odataUrl: settings.odataUrl, // 'http://localhost:4205/odata/',
           sourceSrs: this.get('selectedCRS') ? this.get('layer.crs.code') : null,
           targetSrs: this.get('selectedCRS'),
           filter: Ember.isBlank(this.get('filter')) ? null : JSON.stringify(this.get('filter')),
         };
+
+        // pluralize не всегда срабатывает, добавляя 's', тем более на окончание odata
+        // Для работы flexberry orm необходимо передавать odataQueryName в множественном числе
+        const lastChar = data.odataQueryName.at(-1);
+        if (lastChar !== 's') {
+          data.odataQueryName = data.odataQueryName + 's';
+        }
       } else {
         if (this.get('layer.type') === 'wms-wfs') {
           settings = settings.wfs;
