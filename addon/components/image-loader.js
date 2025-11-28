@@ -19,18 +19,18 @@ export default Ember.Component.extend({
     let token = this.get('token');
     let imageUrl = this.get('imageUrl');
     let _this = this;
-    $.ajax({
+    Ember.$.ajax({
       url: imageUrl,
       method: 'GET',
       headers: {
-        'Authorization': token,
+        Authorization: token,
       },
       success: (data, textStatus, jqXHR) => {
         _this.set('previewBase64', data);
       },
       error: (jqXHR, textStatus, errorThrown) => {
         console.error('Ошибка при загрузке фото:', errorThrown);
-      }
+      },
     });
-  }
+  },
 });

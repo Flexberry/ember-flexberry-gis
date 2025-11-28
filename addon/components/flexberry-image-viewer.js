@@ -52,30 +52,28 @@ export default Ember.Component.extend({
     } else {
       this.set('uploadUrlFiles', this.feature.layerModel.settingsAsObject.uploadUrlFiles);
 
-      this.set('token', this.get('session.isAuthenticated') ?
-       `Bearer ${this.get('session.data.authenticated.access_token')}` :
-        null);
+      this.set('token', this.get('session.isAuthenticated') ? `Bearer ${this.get('session.data.authenticated.access_token')}` : null);
       this.getFhotoLayer();
     }
   },
 
   /**
-  * Отображаем на списке только 5 фото.
-  */
-  limitImages: Ember.computed('images.[]', function() {
+   * Отображаем на списке только 5 фото.
+   */
+  limitImages: Ember.computed('images.[]', function () {
     return this.get('images').slice(0, 5);
   }),
 
   /**
-  * Можно добавить максимум 20 фото.
-  */
-  visibleAddPhoto: Ember.computed('images.[]', function() {
+   * Можно добавить максимум 20 фото.
+   */
+  visibleAddPhoto: Ember.computed('images.[]', function () {
     return this.get('images.length') < 20;
   }),
 
   /**
-  * Вычитать фото.
-  */
+   * Вычитать фото.
+   */
   getFhotoLayer() {
     let store = this.get('store');
     let feature = this.get('feature');
@@ -85,21 +83,20 @@ export default Ember.Component.extend({
 
     if (feature.layerModel.get('type') === 'odata-vector') {
       predicate = new Query.SimplePredicate(
-        feature.layerModel.settingsAsObject.modelName.split('-')[1], Query.FilterOperator.Eq, feature.properties.primarykey);
+        feature.layerModel.settingsAsObject.modelName.split('-')[1],
+        Query.FilterOperator.Eq,
+        feature.properties.primarykey
+      );
     } else {
-      predicate = new Query.SimplePredicate(
-        feature.layerModel.settingsAsObject.typeName, Query.FilterOperator.Eq, feature.properties.primarykey);
+      predicate = new Query.SimplePredicate(feature.layerModel.settingsAsObject.typeName, Query.FilterOperator.Eq, feature.properties.primarykey);
     }
 
-    let queryBuilder = new Query.Builder(store)
-      .from(modelName)
-      .selectByProjection(projectionName)
-      .where(predicate);
+    let queryBuilder = new Query.Builder(store).from(modelName).selectByProjection(projectionName).where(predicate);
     let build = queryBuilder.build();
     let adapter = store.adapterFor(modelName);
 
     adapter.batchLoadModel(modelName, build, store).then(({ res, count }) => {
-      let images = res.map(item => {
+      let images = res.map((item) => {
         if (item.get('filePath')) {
           let filePath = JSON.parse(item.get('filePath'));
 
@@ -123,8 +120,8 @@ export default Ember.Component.extend({
   },
 
   /**
-  * Следим за статусом загрузки файлов, если true, значит загрузка идеит и нужно ждать
-  */
+   * Следим за статусом загрузки файлов, если true, значит загрузка идеит и нужно ждать
+   */
   checkUploadStatus() {
     if (this.get('uploadIsInProgressFiles') === true) {
       Ember.run.later(() => {
@@ -136,13 +133,14 @@ export default Ember.Component.extend({
   },
 
   /**
-  * Сохранение фото.
-  */
+   * Сохранение фото.
+   */
   saveFile() {
     let relatedModel = this.get('_relatedModelStub');
     if (relatedModel) {
       relatedModel.off('uploadFiles');
     }
+
     this.set('showFileAdd', false);
 
     let json = this.get('filesJson');
@@ -176,8 +174,8 @@ export default Ember.Component.extend({
         filePath: JSON.stringify(file),
         fileName: file.fileName || null,
         mime: file.fileMimeType || null,
-        width: file.width || null,//TODO: заполнять
-        height: file.height || null,//TODO: заполнять
+        width: file.width || null, //TODO: заполнять
+        height: file.height || null, //TODO: заполнять
       });
 
       //Для одаты надо сделать set модели т.к. связь BelongTo, для остального пишем ключ.
@@ -197,7 +195,7 @@ export default Ember.Component.extend({
 
     Ember.RSVP.allSettled(promises).then((result) => {
       result.forEach((file) => {
-        if (file.state === "fulfilled") {
+        if (file.state === 'fulfilled') {
           if (file.value.get('filePath')) {
             let filePath = JSON.parse(file.value.get('filePath'));
 
@@ -269,8 +267,8 @@ export default Ember.Component.extend({
     },
 
     /**
-    * Удаление фото.
-    */
+     * Удаление фото.
+     */
     delete() {
       let _this = this;
       let deleteIndex = _this.get('deleteIndex');
@@ -284,14 +282,17 @@ export default Ember.Component.extend({
 
         if (!Ember.isEmpty(obj)) {
           obj.deleteRecord();
-          obj.save().then(() => {
-            images.removeObject(image);
-            _this.set('images', images);
-            _this.set('deleteIndex', null);
-          }).catch(() => {
-            console.error('Ошибка при удалении.');
-            obj.rollbackAttributes();
-          });
+          obj
+            .save()
+            .then(() => {
+              images.removeObject(image);
+              _this.set('images', images);
+              _this.set('deleteIndex', null);
+            })
+            .catch(() => {
+              console.error('Ошибка при удалении.');
+              obj.rollbackAttributes();
+            });
         }
       }
     },

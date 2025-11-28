@@ -30,7 +30,7 @@ export default FlexberryFileComponent.extend({
       dropZone: _this.$('.flexberry-file-dropzone'),
       url: _this.get('uploadUrl'),
       change: null,
-      add: function(e, uploadData) {
+      add: function (e, uploadData) {
         _this.onFileAdd(uploadData.files);
         uploadData.headers = _this.get('headers');
         _this.set('_uploadData', uploadData);
@@ -70,23 +70,23 @@ export default FlexberryFileComponent.extend({
   /**
    * Есть ли выбранные файлы
    */
-  _hasFile: Ember.computed('_files.[]', function() {
+  _hasFile: Ember.computed('_files.[]', function () {
     let files = this.get('_files');
 
     if (!files || !Array.isArray(files)) {
       return false;
     }
 
-    return files.get('length') > 0 && files.any(file => !file._hasError);
+    return files.get('length') > 0 && files.any((file) => !file._hasError);
   }),
 
   /**
    * Имя выбранных файлов
    */
-  _fileName: Ember.computed('_files.[]', function() {
+  _fileName: Ember.computed('_files.[]', function () {
     let files = this.get('_files');
     if (Ember.isArray(files) && files.length > 0) {
-      return files.map(f => f.name).join(', ');
+      return files.map((f) => f.name).join(', ');
     }
 
     return null;
@@ -95,57 +95,61 @@ export default FlexberryFileComponent.extend({
   /**
    * true, если хотя бы одно превью загружено
    */
-  _canLoadPreview: Ember.computed('_files.@each._previewBase64', function() {
-    return this.get('_files').any(f => !!f._previewBase64);
+  _canLoadPreview: Ember.computed('_files.@each._previewBase64', function () {
+    return this.get('_files').any((f) => !!f._previewBase64);
   }),
 
   /**
    * true, если хотя бы одно превью сейчас загружается
    */
-  _previewDownloadIsInProgress: Ember.computed('_files.@each._isPreviewLoading', function() {
-    return this.get('_files').any(f => f._isPreviewLoading);
+  _previewDownloadIsInProgress: Ember.computed('_files.@each._isPreviewLoading', function () {
+    return this.get('_files').any((f) => f._isPreviewLoading);
   }),
 
   /**
    * Имена файлов, у которых превью не удалось загрузить
    */
-  _previewErrorFileNames: Ember.computed('_files.@each._previewError', function() {
+  _previewErrorFileNames: Ember.computed('_files.@each._previewError', function () {
     let files = this.get('_files') || [];
-    let errorFiles = files.filter(f => f._previewError);
-    return errorFiles.length > 0 ? errorFiles.map(f => f.name).join(', ') : null;
+    let errorFiles = files.filter((f) => f._previewError);
+    return errorFiles.length > 0 ? errorFiles.map((f) => f.name).join(', ') : null;
   }),
 
   /**
    * Кнопка "Добавить" активна, если не достигнут лимит и нет ошибок
    */
-  _addButtonIsEnabled: Ember.computed('_files.[]', function() {
+  _addButtonIsEnabled: Ember.computed('_files.[]', function () {
     let files = this.get('_files');
-    return files.length < this.get('maxFiles') && files.every(f => !f._hasError);
+    return files.length < this.get('maxFiles') && files.every((f) => !f._hasError);
   }),
 
   /**
    * Кнопка "Удалить" активна, если есть файлы
    */
-  _removeButtonIsEnabled: Ember.computed('_uploadIsInProgress', '_files.[]', function() {
-    let filesWithErrors = this.get('_files').filter(f => f._hasError);
-    return !(this.get('_uploadIsInProgress')) || filesWithErrors.length > 0;
+  _removeButtonIsEnabled: Ember.computed('_uploadIsInProgress', '_files.[]', function () {
+    let filesWithErrors = this.get('_files').filter((f) => f._hasError);
+    return !this.get('_uploadIsInProgress') || filesWithErrors.length > 0;
   }),
 
-  onFileAdd: function(selectedFiles) {
-    if (!selectedFiles || selectedFiles.length === 0) return;
+  onFileAdd: function (selectedFiles) {
+    if (!selectedFiles || selectedFiles.length === 0) {
+      return;
+    }
 
     let existingFiles = this.get('_files');
-    let existingFileNames = existingFiles.map(file => file.name);
-    selectedFiles = Array.from(selectedFiles).filter(file => !existingFileNames.includes(file.name));
+    let existingFileNames = existingFiles.map((file) => file.name);
+    selectedFiles = Array.from(selectedFiles).filter((file) => !existingFileNames.includes(file.name));
 
-    if (selectedFiles.length === 0) return;
+    if (selectedFiles.length === 0) {
+      return;
+    }
 
     if (existingFiles.length + selectedFiles.length > this.get('maxFiles')) {
       this.addErrorMessage(`Можно добавить максимум ${this.get('maxFiles')} изображений.`);
       return;
     }
 
-    selectedFiles.forEach(selectedFile => {
+    selectedFiles.forEach((selectedFile) => {
       let accept = this.get('accept');
       let fileType = selectedFile.type;
       let fileName = selectedFile.name;
@@ -173,9 +177,10 @@ export default FlexberryFileComponent.extend({
 
       if (fileType && fileType.startsWith('image/')) {
         let reader = new FileReader();
-        reader.onload = function(event) {
+        reader.onload = function (event) {
           Ember.set(selectedFile, '_previewBase64', event.target.result);
         };
+
         reader.readAsDataURL(selectedFile);
       }
     });
@@ -202,7 +207,7 @@ export default FlexberryFileComponent.extend({
   },
 
   willDestroyElement() {
-    Ember.run.next(this, function() {
+    Ember.run.next(this, function () {
       this._super(...arguments);
     });
   },
@@ -241,16 +246,19 @@ export default FlexberryFileComponent.extend({
      */
     uploadButtonClick() {
       if (this.get('_files.length') > 0 && this.get('errorMessages.length') === 0) {
-        return this._uploadFilesSequentially(this.get('_files'))
+        return this._uploadFilesSequentially(this.get('_files'));
       }
     },
   },
 
   /**
-  * Последовательная загрузка файлов
-  */
+   * Последовательная загрузка файлов
+   */
   _uploadFilesSequentially(files) {
-    if (!files || files.length === 0) return Ember.RSVP.resolve();
+    if (!files || files.length === 0) {
+      return Ember.RSVP.resolve();
+    }
+
     let uploadData = this.get('_uploadData');
     this.set('_uploadIsInProgress', true);
 
@@ -262,30 +270,33 @@ export default FlexberryFileComponent.extend({
             files: [file],
           });
 
-          uploadClone.submit().done((result) => {
-            let prevValue = this.get('value');
-            let arr = [];
+          uploadClone
+            .submit()
+            .done((result) => {
+              let prevValue = this.get('value');
+              let arr = [];
 
-            try {
-              arr = JSON.parse(prevValue) || [];
-              if (!Array.isArray(arr)) {
+              try {
+                arr = JSON.parse(prevValue) || [];
+                if (!Array.isArray(arr)) {
+                  arr = [];
+                }
+              } catch (e) {
                 arr = [];
               }
-            } catch (e) {
-              arr = [];
-            }
 
-            arr.push(result);
-            this.set('value', JSON.stringify(arr));
+              arr.push(result);
+              this.set('value', JSON.stringify(arr));
 
-            this.sendAction('uploadSuccess', result, index);
-            resolve();
-          }).fail((jqXhr, textStatus, errorThrown) => {
-            this.set('_uploadIsInProgress', false);
-            this.addErrorMessage(`Ошибка загрузки файла "${file.name}": ${errorThrown}`);
-            this.sendAction('uploadFail', errorThrown, index);
-            reject(errorThrown);
-          });
+              this.sendAction('uploadSuccess', result, index);
+              resolve();
+            })
+            .fail((jqXhr, textStatus, errorThrown) => {
+              this.set('_uploadIsInProgress', false);
+              this.addErrorMessage(`Ошибка загрузки файла "${file.name}": ${errorThrown}`);
+              this.sendAction('uploadFail', errorThrown, index);
+              reject(errorThrown);
+            });
         });
       });
     });

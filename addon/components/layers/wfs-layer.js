@@ -15,6 +15,7 @@ import getBooleanFromString from '../../utils/get-boolean-from-string';
 import WfsFilterParserMixin from '../../mixins/wfs-filter-parser';
 import { Projection, Serializer } from 'ember-flexberry-data';
 import GisAdapter from 'ember-flexberry-gis/adapters/odata';
+import DS from 'ember-data';
 
 /**
   WFS layer component for leaflet map.
