@@ -408,7 +408,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
           let layer = this._createVectorLayer(wfsLayer, options, featuresReadFormat);
 
           if (layer.options.displaySettings && layer.options.displaySettings.photosEnabled) {
-            this.createDynamicModelFiles(layer);
+            this.createDynamicModelFiles();
           }
 
           resolve(layer);
@@ -499,7 +499,10 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
     let settingsAsObject = this.get('layerModel.settingsAsObject');
     if (!Ember.isEmpty(settingsAsObject)) {
       if (!Ember.isEmpty(options.url)) {
-        settingsAsObject.uploadUrlFiles = options.url.replace('/geoserver', '').replace('/ows', '') + '/odata/File';
+        let url = options.url.replace('/geoserver', '').replace('/ows', '');
+        settingsAsObject.uploadUrlFiles = url + '/odata/File';
+        settingsAsObject.urlOdata = url + '/odata';
+        settingsAsObject.urlShared = url + '/shared/models/';
       }
 
       if (!Ember.isEmpty(options.typeNS) && !Ember.isEmpty(options.typeName)) {
@@ -1702,12 +1705,13 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
     });
   },
 
-  createDynamicModelFiles(layer) {
-    let modelNameFiles = layer.options.typeNS.toLowerCase() + '-' + layer.options.typeName + '-files';
-    let metadataUrl = layer.options.url.replace('/geoserver', '').replace('/ows', '') + '/shared/models/';
+  createDynamicModelFiles() {
+    let modelNameFiles = this.layerModel.settingsAsObject.modelNameFiles;
+    let metadataUrl = this.layerModel.settingsAsObject.urlShared;
 
     this.createModelHierarchy(metadataUrl, modelNameFiles).then(({ model, dataModel, modelMixin }) => {
-      model.defineProjection(layer.options.typeName + '-files', modelNameFiles, this.createProjection(dataModel, layer.options.typeName + '_files'));
+      model.defineProjection(this.layerModel.settingsAsObject.projectionNameFiles,
+        modelNameFiles, this.createProjection(dataModel, this.layerModel.settingsAsObject.typeName + '_files'));
 
       let modelRegisteredFiles = Ember.getOwner(this)._lookupFactory(`model:${modelNameFiles}`);
       let mixinRegisteredFiles = Ember.getOwner(this)._lookupFactory(`mixin:${modelNameFiles}`);
@@ -1722,8 +1726,8 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
 
       let adapterRegistered = Ember.getOwner(this)._lookupFactory(`adapter:${modelNameFiles}`);
       if (Ember.isNone(adapterRegistered)) {
-        let modelAdapter = this.createAdapterForModel(layer.options.url.replace('/geoserver', '').replace('/ows', '') + '/odata',
-          layer.options.typeNS + layer.options.typeName + 'filess');
+        let modelAdapter = this.createAdapterForModel(this.layerModel.settingsAsObject.urlOdata,
+          this.layerModel.settingsAsObject.typeNS + this.layerModel.settingsAsObject.typeName + 'filess');
         Ember.getOwner(this).register(`adapter:${modelNameFiles}`, modelAdapter);
       }
 

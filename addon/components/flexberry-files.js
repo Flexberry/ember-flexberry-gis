@@ -1,8 +1,10 @@
 import FlexberryFileComponent from 'ember-flexberry/components/flexberry-file';
 import Ember from 'ember';
 import { getSizeInUnits } from 'ember-flexberry/utils/file-size-units-converter';
+import layout from '../templates/components/flexberry-files';
 
 export default FlexberryFileComponent.extend({
+  layout,
 
   _files: Ember.A([]),
 

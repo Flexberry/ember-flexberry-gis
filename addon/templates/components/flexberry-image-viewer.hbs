@@ -1,7 +1,9 @@
+{{#if visibleAddPhoto}}
 <a onclick={{action "onAddPhoto"}}>
     <i class="plus icon"></i>
     Добавить изображения
 </a>
+{{/if}}
 <div class="flexberry-image-viewer">
   {{#each limitImages as |image index|}}
       <div class="preview">

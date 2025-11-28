@@ -60,10 +60,17 @@ export default Ember.Component.extend({
   },
 
   /**
-  * Отображаем на списке только 5 фото .
+  * Отображаем на списке только 5 фото.
   */
   limitImages: Ember.computed('images.[]', function() {
     return this.get('images').slice(0, 5);
+  }),
+
+  /**
+  * Можно добавить максимум 20 фото.
+  */
+  visibleAddPhoto: Ember.computed('images.[]', function() {
+    return this.get('images.length') < 20;
   }),
 
   /**
