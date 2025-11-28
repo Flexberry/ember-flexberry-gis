@@ -15,7 +15,7 @@ import Ember from 'ember';
   @param {Object} header headers for request odata.
   @return {Promise} Object consist of fileName and blob.
 */
-let downloadFile = function(layerModel, objectIds, outputFormat, crsOuput, crsLayer, url, header = {}) {
+let downloadFile = function (layerModel, objectIds, outputFormat, crsOuput, crsLayer, url, header = {}) {
   return new Ember.RSVP.Promise((resolve, reject) => {
     let req = null;
     let headers = {};
@@ -30,14 +30,17 @@ let downloadFile = function(layerModel, objectIds, outputFormat, crsOuput, crsLa
       }
 
       if (type !== 'odata-vector') {
-        let wfsLayer = new L.WFS({
-          crs: crsOuput.crs,
-          url: layerSettings.url,
-          typeNS: layerSettings.typeNS,
-          typeName: layerSettings.typeName,
-          geometryField: layerSettings.geometryField,
-          showExisting: false
-        }, readFormat);
+        let wfsLayer = new L.WFS(
+          {
+            crs: crsOuput.crs,
+            url: layerSettings.url,
+            typeNS: layerSettings.typeNS,
+            typeName: layerSettings.typeName,
+            geometryField: layerSettings.geometryField,
+            showExisting: false,
+          },
+          readFormat
+        );
 
         let filters = objectIds.map((id) => new L.Filter.GmlObjectID(id));
         let allfilters = new L.Filter.Or(...filters);
@@ -48,7 +51,6 @@ let downloadFile = function(layerModel, objectIds, outputFormat, crsOuput, crsLa
         geoserverElem.setAttribute('url', layerSettings.url);
         wfsElem.appendChild(geoserverElem);
         req = wfsElem;
-
       } else {
         let doc = document.implementation.createDocument('', '', null);
         let odataElem = doc.createElement('odata');
@@ -100,7 +102,7 @@ let downloadFile = function(layerModel, objectIds, outputFormat, crsOuput, crsLa
       },
       error: (errorMessage) => {
         reject('Layer upload error ' + layerName + ': ' + errorMessage);
-      }
+      },
     });
   });
 };
@@ -111,7 +113,7 @@ let downloadFile = function(layerModel, objectIds, outputFormat, crsOuput, crsLa
   @param {Object} crs crs in which to download data.
   @return {Object} L.Format.
 */
-let getWfsFormat = function(outputFormat, crs) {
+let getWfsFormat = function (outputFormat, crs) {
   if (outputFormat === 'JSON') {
     return new L.Format.GeoJSON({ crs: crs });
   }
@@ -132,7 +134,7 @@ let getWfsFormat = function(outputFormat, crs) {
   @param {string} format Output format.
   @return {string} file extension.
 */
-let getFileExt = function(format) {
+let getFileExt = function (format) {
   switch (format) {
     case 'JSON':
       return 'json';
@@ -157,7 +159,7 @@ let getFileExt = function(format) {
   @param {string} filename File name.
   @param {Blob} blob Data array.
 */
-let downloadBlob = function(filename, blob) {
+let downloadBlob = function (filename, blob) {
   let element = document.createElement('a');
 
   element.setAttribute('href', window.URL.createObjectURL(blob));
@@ -171,7 +173,4 @@ let downloadBlob = function(filename, blob) {
   document.body.removeChild(element);
 };
 
-export {
-  downloadFile,
-  downloadBlob
-};
+export { downloadFile, downloadBlob };
