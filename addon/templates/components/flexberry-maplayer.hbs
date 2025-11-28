@@ -6,7 +6,8 @@
 
 {{#flexberry-treenode
   _hasContent=_hasContent
-  class=componentName
+  _expanded=(if isGroup layer.needExpand null)
+  class=(concat componentName ' ' extraClassNames)
   headerClick=(action "onHeaderClick")
   beforeExpand=(action "onBeforeExpand")
   beforeCollapse=(action "onBeforeCollapse")
@@ -34,7 +35,7 @@
           class=(concat flexberryClassNames.typeIcon " " _typeIconClass)
         }}
         <div class={{flexberryClassNames.caption}}>
-          {{layer.name}}
+          {{{show-searched-value layer.name searchValue}}}
           {{#if (and histEnabled (eq layer.type "with-history"))}}
            от {{flexberry-simpledatetime
                 _flatpickr=layer._flatpickr
@@ -132,9 +133,20 @@
                   {{#if (and (not readonlyData) (not isGroup) _editOperationIsAvailable presenceLayerInGeoportal _loadLayerDataIsAvailableApi)}}
                     {{flexberry-button
                       class=(concat flexberryClassNames.loadButton " floated " flexberryClassNames.preventExpandCollapse)
-                      iconClass="icon-guideline-download-layer"
-                      caption=(t "components.flexberry-maplayer.load-button.tooltip")
-                      click=(action "onLoadButtonClick")
+                      iconClass="icon-guideline-import-layer"
+                      caption=(t "components.flexberry-maplayer.import-data-button.caption")
+                      click=(action "onImportLayerDataButtonClick")
+                    }}
+                  {{/if}}
+
+                  {{#if (and (not isGroup) presenceLayerInGeoportal )}}
+                    {{flexberry-button
+                      class=(concat flexberryClassNames.loadButton " floated " flexberryClassNames.preventExpandCollapse)
+                      iconClass="icon-guideline-export-layer"
+                      caption=(t "components.flexberry-maplayer.export-data-button.caption")
+                      tooltip=(if (eq totalFeatures 0)  (t "components.flexberry-maplayer.export-data-button.tooltip.not-found") "" )
+                      click=(action "onExportLayerDataButtonClick")
+                      readonly=(eq totalFeatures 0)
                     }}
                   {{/if}}
                 </div>
@@ -201,6 +213,7 @@
   {{#block-slot "content"}}
     {{#if _hasLayers}}
       {{flexberry-maplayers
+        applyedSearchValue=searchValue
         readonly=readonly
         access=access
         leafletMap=leafletMap

@@ -417,12 +417,20 @@
     padding: 6px 0;
   }
 
+  &.treeview .ui.tab .ui.search > .prompt {
+    background: none;
+  }
+
   &.treeview .ui.tab > .flexberry-maplayers {
     overflow-y: auto;
     overflow-x: hidden;
     margin-top: 5px;
     height: ~"calc(100% - 120px)" !important;
-    scrollbar-gutter: stable;
+    scrollbar-gutter: stable;   
+
+    .nodata {
+      text-align: center;
+    }
   }
 
   &.treeview .flexberry-maplayers {
@@ -922,85 +930,13 @@
     color: @buttonHoverColor;
   }
   .flexberry-search.ui.search {
-    display: block;
-    border-radius: @defaultBorderRadius;
-    .prompt {
-      width: 320px !important;
-      border: @defaultGrayBorder !important;
-      color: @textColor;
-      height: 40px;
-      border-radius: 3.5px !important;
-      padding-left: 11px;
-      padding-right: 80px;
-      text-overflow: ellipsis;
-      input.ember-text-field {
-        background-color: @whitecolor;
-      }
-    }
     .flexberry-search-results.results.visible {
       border: none;
       margin-top: 0px;
     }
-    button.ui.icon {
-      border: none;
-      color: @darkbluecolor;
-      padding: 0;
-      outline: none;
-      top: 0;
-      &.separate {
-        position: absolute;
-        top: 8px;
-        right: 28px;
-        border-left: 1px solid #DDE1E6;
-        i.icon {
-          width: auto;
-          margin: 0;
-        }
-      }
 
-      .icon-guideline-cross-r {
-        font-size: 18px;
-        color: @blueyGreyColor;
-      }
-
-      .icon {
-        &.remove:before {
-          content: '\e806';
-          font-size: 12px;
-          color: @greyIconColor;
-        }
-        &.search:before {
-          content: "\e803";
-          font-size: 20px;
-          opacity: 1;
-        }
-        &.attr {
-          margin: 0 0 10px;
-        }
-        &.attr:before {
-          font-size: 8px;
-          opacity: 1;
-        }
-      }
-      &.search-button:hover {
-        .search:before {
-          color: @buttonHoverColor;
-        }
-      }
-      &.clear-search-button:hover {
-        .remove:before {
-          color: @buttonHoverColor !important;
-        }
-      }
-    }
     .flexberry-search-results {
       position: initial;
-    }
-    .dropdown {
-      background-color: @whitecolor;
-      &.active {
-        background-color: @lightbluecolor;
-      }
     }
   }
 }

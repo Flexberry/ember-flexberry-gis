@@ -407,8 +407,13 @@
             text-align: left;
             opacity: 0.75;
             padding: 8px 0px 2px 0px;
-            &:hover {
+            &:not(.disabled):hover {
               opacity: 1;
+            }
+
+            &.disabled {
+              opacity: 0.75 !important;
+              pointer-events: auto !important;
             }
           }
         }

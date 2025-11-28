@@ -160,6 +160,18 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
       }).length > 0;
     }),
 
+    searchValue: null,
+    applyedSearchValue: null,
+
+    _hasVisibleLayers: Ember.computed('layers.[]', 'layers.@each.hideBySearch', 'layers.@each.isDeleted', function () {
+      let layers = this.get('layers');
+
+      // достаточно посмотреть только первый уровень
+      return Ember.isArray(layers) && layers.filter((layer) => {
+        return !Ember.isNone(layer) && Ember.get(layer, 'isDeleted') !== true && Ember.get(layer, 'hideBySearch') !== true;
+      }).length > 0;
+    }),
+
     /**
       Flag: indicates whether some nested content for header is defined
       (some yield markup for 'header').
@@ -509,6 +521,90 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
     dynamicButtons: [],
 
     actions: {
+      search() {
+        let searchValue = this.get('searchValue');
+        this.set('applyedSearchValue', searchValue);
+
+        let search = function (text, searchValue) {
+          if (!searchValue) {
+            return true;
+          }
+
+          const searches = searchValue.split(' ');
+          let startIndex = 0;
+          let finded = true;
+
+          searches.forEach((s) => {
+            if (!s) {
+              return;
+            }
+
+            let index = text.toLowerCase().indexOf(s, startIndex);
+            if (index > -1) {
+              startIndex = index + s.length;
+            } else {
+              finded = false;
+            }
+          });
+
+          return finded;
+        };
+
+        let layers = this.get('layers');
+
+        let setFiltered = function (layers, parentVisibility) {
+          let hasAnyVisible = false;
+          let hasAnyFinded = false;
+          layers.forEach(layer => {
+
+            let finded = layer.get('name') && searchValue ? search(layer.get('name').toLowerCase(), searchValue.toLowerCase()) : false;
+
+            // если поисковое значение не задано, то не будем трогать состояние - null
+            // если поисковое значение задано и слой соответствует - развернем, true
+            // если поисковое значение задано, но слой не соответствует - смотрим на родителя:
+            //   если родитель видим, то свернем, иначе - не трогаем
+            // отсутствие имени у слоя приравниванием к не соответствию, false
+            let needExpand = searchValue ?
+              (finded ? true : (parentVisibility ? false : null)) :
+              null;
+
+            // если родитель видим, то в любом случае показываем
+            // если поисковое значение не задано, то тоже показываем
+            // иначе смотрим на соответствие
+            let visible = parentVisibility ?
+              true :
+              (searchValue ? finded : true);
+
+            if (layer.get('layers') && layer.get('layers').length > 0) {
+              // если группа видима, то покажем все ее внутренние слои
+              // setFiltered обязательно нужно вызвать, чтобы пересчитались флаги у дочерних нод
+              let { innerVisible, innerFinded } = (setFiltered(layer.get('layers'), visible) || false);
+              visible = visible || innerVisible;
+
+              // видимый и соответствующий поиску - разные флаги, т.к. для найденной группый будут видимыми все ее потомки,
+              // безотносительно их соответствия поиску
+              // а разворачивать нужно только те группы, у которых что-то из дочерних нод "соответствует"
+              finded = finded || innerFinded;
+              needExpand = innerFinded ? true : needExpand;
+            }
+
+            layer.set('hideBySearch', !visible);
+            layer.set('needExpand', needExpand);
+            hasAnyVisible = hasAnyVisible || visible;
+            hasAnyFinded = hasAnyFinded || finded;
+          });
+
+          return { innerVisible: hasAnyVisible, innerFinded: hasAnyFinded };
+        };
+
+        setFiltered(layers, false);
+      },
+
+      clearSearch() {
+        this.set('searchValue', null);
+        this.set('applyedSearchValue', null);
+        this.send('search');
+      },
       closeOtherCalendar(layerId) {
         this.sendAction('closeOtherCalendar', layerId);
       },

@@ -61,9 +61,9 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
     });
     availableFormats = Ember.A(availableFormats);
     Ember.assert(
-      `Wrong value of \`format\` property: ${format}. ` +
-      `Allowed values are: [\`${availableFormats.join(`\`, \``)}\`].`,
-      availableFormats.contains(format));
+      `Wrong value of \`format\` property: ${format}. ` + `Allowed values are: [\`${availableFormats.join(`\`, \``)}\`].`,
+      availableFormats.contains(format)
+    );
 
     let options = this.get('options');
     let crs = Ember.get(options, 'crs');
@@ -71,7 +71,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
 
     let readFormatOptions = {
       crs,
-      geometryField
+      geometryField,
     };
 
     let pane = this.get('_pane');
@@ -114,20 +114,22 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
       }
 
       let load = this.get('_loadFeatures').bind(wfsLayer);
-      load(resultingFilter, false, wfsLayer).then((layers) => {
-        let features = Ember.A();
+      load(resultingFilter, false, wfsLayer)
+        .then((layers) => {
+          let features = Ember.A();
 
-        layers.forEach((layer) => {
-          let feature = layer.feature;
-          feature.leafletLayer = layer;
-          Ember.set(feature, 'arch', this.get('hasTime') || false);
-          features.pushObject(feature);
+          layers.forEach((layer) => {
+            let feature = layer.feature;
+            feature.leafletLayer = layer;
+            Ember.set(feature, 'arch', this.get('hasTime') || false);
+            features.pushObject(feature);
+          });
+
+          resolve(features);
+        })
+        .catch((e) => {
+          reject(e);
         });
-
-        resolve(features);
-      }).catch((e) => {
-        reject(e);
-      });
     });
   },
 
@@ -188,7 +190,6 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
       if (!Ember.isNone(leafletObject)) {
         leafletObject.baseAddLayer(layer);
       }
-
     });
 
     this._super(...arguments);
@@ -204,8 +205,8 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
 
     if (this.get('labelSettings.signMapObjects') && leafletObject.labelsLayers) {
       if (!Ember.isNone(layer._label) && leafletObject.labelsLayers) {
-        leafletObject.labelsLayers.forEach(zoomLabels => {
-          layer._label.forEach(l => {
+        leafletObject.labelsLayers.forEach((zoomLabels) => {
+          layer._label.forEach((l) => {
             if (zoomLabels.hasLayer(l)) {
               let id = layer._label.indexOf(l);
               L.FeatureGroup.prototype.removeLayer.call(zoomLabels, l);
@@ -221,7 +222,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
     let leafletObject = this.returnLeafletObject();
     leafletObject.baseEditLayer(layer);
 
-    if (layer.state = state.update) {
+    if ((layer.state = state.update)) {
       let coordinates = this._getGeometry(layer);
       Ember.set(layer, 'feature.geometry.coordinates', coordinates);
     }
@@ -236,10 +237,14 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
   updateLabel(layer) {
     let leafletObject = this.returnLeafletObject();
 
-    if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('labelsLayers')) &&
-      !Ember.isNone(leafletObject.labelsLayers) && !Ember.isNone(layer._label)) {
-      leafletObject.labelsLayers.forEach(zoomLabels => {
-        layer._label.forEach(l => {
+    if (
+      this.get('labelSettings.signMapObjects') &&
+      !Ember.isNone(this.get('labelsLayers')) &&
+      !Ember.isNone(leafletObject.labelsLayers) &&
+      !Ember.isNone(layer._label)
+    ) {
+      leafletObject.labelsLayers.forEach((zoomLabels) => {
+        layer._label.forEach((l) => {
           if (zoomLabels.hasLayer(l)) {
             let id = layer._label.indexOf(l);
             L.FeatureGroup.prototype.removeLayer.call(zoomLabels, l);
@@ -280,7 +285,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
           var exceptionReport = L.XmlUtil.parseOwsExceptionReport(responseText);
           if (exceptionReport) {
             that.fire('error', {
-              error: new Error(exceptionReport.message)
+              error: new Error(exceptionReport.message),
             });
             reject(exceptionReport);
             return that;
@@ -290,7 +295,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
           // so convert response to layers.
           var layers = that.readFormat.responseToLayers(responseText, {
             coordsToLatLng: that.options.coordsToLatLng,
-            pointToLayer: that.options.pointToLayer
+            pointToLayer: that.options.pointToLayer,
           });
 
           layers.forEach(function (element) {
@@ -322,7 +327,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
           if (fireLoad) {
             that.fire('load', {
               responseText: responseText,
-              layers: layers
+              layers: layers,
             });
           }
 
@@ -332,13 +337,13 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
         },
         error: function (errorMessage) {
           that.fire('error', {
-            error: new Error(errorMessage)
+            error: new Error(errorMessage),
           });
 
           reject(errorMessage);
 
           return that;
-        }
+        },
       });
     });
   },
@@ -355,8 +360,8 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
     });
 
     if (this.get('labelSettings.signMapObjects') && leafletObject.labelsLayers) {
-      leafletObject.labelsLayers.forEach(zoomLabels => {
-        zoomLabels.eachLayer(layer => {
+      leafletObject.labelsLayers.forEach((zoomLabels) => {
+        zoomLabels.eachLayer((layer) => {
           L.FeatureGroup.prototype.removeLayer.call(zoomLabels, layer);
         });
       });
@@ -479,7 +484,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
       let load = this.continueLoad(wfsLayer);
       if (options.showExisting) {
         let loaded = {
-          layers: featureLayers
+          layers: featureLayers,
         };
         let promise = this._featuresProcessCallback(loaded.layers, wfsLayer);
         if (loaded.results && Ember.isArray(loaded.results)) {
@@ -506,8 +511,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
       }
 
       if (!Ember.isEmpty(options.typeNS) && !Ember.isEmpty(options.typeName)) {
-        settingsAsObject.modelNameFiles = options.typeNS.toLowerCase()
-         + '-' + options.typeName + '-files'
+        settingsAsObject.modelNameFiles = options.typeNS.toLowerCase() + '-' + options.typeName + '-files';
         settingsAsObject.projectionNameFiles = options.typeName + '-files';
       }
     }
@@ -522,8 +526,8 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
     changes.forEach((layer) => {
       if (layer.state === state.insert) {
         if (!Ember.isNone(layer._label) && leafletObject.labelsLayers) {
-          leafletObject.labelsLayers.forEach(zoomLabels => {
-            layer._label.forEach(l => {
+          leafletObject.labelsLayers.forEach((zoomLabels) => {
+            layer._label.forEach((l) => {
               if (leafletObject.leafletMap.hasLayer(L) && zoomLabels.hasLayer(l)) {
                 let id = layer._label.indexOf(l);
                 leafletObject.leafletMap.removeLayer(l);
@@ -564,21 +568,23 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
       let filter = new L.Filter.Intersects(this.get('geometryField'), e.polygonLayer, this.get('crs'));
 
       this._getFeature({
-        filter
-      }).then(filteredFeatures => {
-        if (this.get('typeGeometry') === 'polygon') {
-          let projectedIdentifyPolygon = e.polygonLayer.toProjectedGeoJSON(this.get('crs'));
-          let scale = this.get('mapApi').getFromApi('precisionScale');
-          filteredFeatures.forEach(feature => {
-            feature.properties = feature.properties || {};
-            feature.properties.intersectionArea = intersectionArea(projectedIdentifyPolygon, feature.leafletLayer.toProjectedGeoJSON(this.get('crs')), scale);
-          });
-        }
+        filter,
+      })
+        .then((filteredFeatures) => {
+          if (this.get('typeGeometry') === 'polygon') {
+            let projectedIdentifyPolygon = e.polygonLayer.toProjectedGeoJSON(this.get('crs'));
+            let scale = this.get('mapApi').getFromApi('precisionScale');
+            filteredFeatures.forEach((feature) => {
+              feature.properties = feature.properties || {};
+              feature.properties.intersectionArea = intersectionArea(projectedIdentifyPolygon, feature.leafletLayer.toProjectedGeoJSON(this.get('crs')), scale);
+            });
+          }
 
-        resolve(filteredFeatures);
-      }).catch((message) => {
-        reject(message);
-      });
+          resolve(filteredFeatures);
+        })
+        .catch((message) => {
+          reject(message);
+        });
     });
   },
 
@@ -678,7 +684,6 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
                 equals.push(new L.Filter.Like(field, '*' + e.searchOptions.queryString + '*', { matchCase: false }));
                 break;
             }
-
           } else {
             console.error(`The field name: \"${field}\" is incorrect, check the name of the search attribute in the layer settings`);
           }
@@ -701,8 +706,8 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
       fillOpacity: 0.3,
       style: {
         color: 'yellow',
-        weight: 2
-      }
+        weight: 2,
+      },
     });
 
     return featuresPromise;
@@ -737,7 +742,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
     let filter = linkEquals.length === 1 ? linkEquals[0] : new L.Filter.Or(...linkEquals);
 
     let featuresPromise = this._getFeature({
-      filter
+      filter,
     });
 
     return featuresPromise;
@@ -753,7 +758,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
   getFilterParameters(parameters, queryFilter) {
     let equals = Ember.A();
 
-    parameters.forEach(linkParam => {
+    parameters.forEach((linkParam) => {
       let property = linkParam.get('layerField');
       let propertyValue = queryFilter[linkParam.get('queryKey')];
       if (Ember.isArray(propertyValue)) {
@@ -810,7 +815,8 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
         };
 
         let filter = null;
-        if (Ember.isArray(featureIds) && !Ember.isNone(featureIds)) {// load features by id
+        if (Ember.isArray(featureIds) && !Ember.isNone(featureIds)) {
+          // load features by id
           let loadIds = getLoadedFeatures(featureIds);
 
           let remainingFeat = featureIds.filter((item) => {
@@ -818,11 +824,13 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
           });
           if (!Ember.isEmpty(remainingFeat)) {
             filter = this.addCustomFilter(makeFilterEqOr(remainingFeat));
-          } else { // If objects is already loaded, return leafletObject
+          } else {
+            // If objects is already loaded, return leafletObject
             resolve(leafletObject);
             return;
           }
-        } else {// load objects that don't exist yet
+        } else {
+          // load objects that don't exist yet
           let alreadyLoaded = getLoadedFeatures(null);
           let filterEqOr = makeFilterEqOr(alreadyLoaded);
           if (!Ember.isNone(filterEqOr)) {
@@ -830,9 +838,12 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
           }
         }
 
-        leafletObject.loadFeatures(filter).then(() => {
-          resolve(leafletObject);
-        }).catch(mes => reject(mes));
+        leafletObject
+          .loadFeatures(filter)
+          .then(() => {
+            resolve(leafletObject);
+          })
+          .catch((mes) => reject(mes));
       } else {
         resolve(leafletObject);
       }
@@ -876,7 +887,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
 
             let layers = leafletObject.readFormat.responseToLayers(responseText, {
               coordsToLatLng: leafletObject.options.coordsToLatLng,
-              pointToLayer: leafletObject.options.pointToLayer
+              pointToLayer: leafletObject.options.pointToLayer,
             });
 
             layers.forEach(function (element) {
@@ -889,14 +900,14 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
           },
           error: function (errorMessage) {
             reject(errorMessage);
-          }
+          },
         });
       } else {
         if (Ember.isArray(featureIds) && !Ember.isNone(featureIds)) {
           let objects = [];
           featureIds.forEach((id) => {
             let features = leafletObject._layers;
-            let obj = Object.values(features).find(feature => {
+            let obj = Object.values(features).find((feature) => {
               return this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(this.get('layerModel'), feature) === id;
             });
             if (!Ember.isNone(obj)) {
@@ -979,12 +990,14 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
       let promise;
       if (needPromise) {
         promise = new Ember.RSVP.Promise((resolve, reject) => {
-          leafletObject.once('loadCompleted', () => {
-            resolve();
-          }).once('error', (e) => {
-            leafletObject.existingFeaturesLoaded = false;
-            reject();
-          });
+          leafletObject
+            .once('loadCompleted', () => {
+              resolve();
+            })
+            .once('error', (e) => {
+              leafletObject.existingFeaturesLoaded = false;
+              reject();
+            });
         });
       } else {
         promise = Ember.RSVP.resolve('The layer does not require loading');
@@ -1050,7 +1063,10 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
 
     let featuresIds = [];
     Object.values(leafletObject.changes)
-      .filter((layer) => { return Ember.isNone(ids) || ids.contains(leafletObject.getLayerId(layer)); }).forEach(layer => {
+      .filter((layer) => {
+        return Ember.isNone(ids) || ids.contains(leafletObject.getLayerId(layer));
+      })
+      .forEach((layer) => {
         if (layer.state === state.insert) {
           if (leafletObject.hasLayer(layer)) {
             leafletObject.removeLayer(layer);
@@ -1111,9 +1127,13 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
         let e = {
           featureIds: featuresIds,
           layer: leafletObject.layerId,
-          results: Ember.A()
+          results: Ember.A(),
         };
-        this.loadLayerFeatures(e).then(() => { resolve(); }).catch((e) => reject(e));
+        this.loadLayerFeatures(e)
+          .then(() => {
+            resolve();
+          })
+          .catch((e) => reject(e));
       }
     });
   },
@@ -1130,7 +1150,8 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
     let typeNS = leafletObject.options.typeNS;
     let typeName = leafletObject.options.typeName;
     let crsName = L.CRS.EPSG4326.code;
-    return '<?xml version="1.0" encoding="UTF-8"?>' +
+    return (
+      '<?xml version="1.0" encoding="UTF-8"?>' +
       '<wps:Execute version="1.0.0" service="WPS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
       'xmlns="http://www.opengis.net/wps/1.0.0" xmlns:wfs="http://www.opengis.net/wfs" xmlns:wps="http://www.opengis.net/wps/1.0.0" ' +
       'xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" ' +
@@ -1143,7 +1164,11 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
       '<wps:Reference mimeType="text/xml; subtype=wfs-collection/1.0" xlink:href="http://geoserver/wfs" method="POST">' +
       '<wps:Body>' +
       '<wfs:GetFeature service="WFS" version="1.0.0" outputFormat="GML2">' +
-      '<wfs:Query typeName="' + typeNS + ':' + typeName + '"/>' +
+      '<wfs:Query typeName="' +
+      typeNS +
+      ':' +
+      typeName +
+      '"/>' +
       '</wfs:GetFeature>' +
       '</wps:Body>' +
       '</wps:Reference>' +
@@ -1151,13 +1176,17 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
       '<wps:Input>' +
       '<ows:Identifier>point</ows:Identifier>' +
       '<wps:Data>' +
-      '<wps:ComplexData mimeType="text/xml; subtype=gml/3.1.1"><![CDATA[' + point + ']]></wps:ComplexData>' +
+      '<wps:ComplexData mimeType="text/xml; subtype=gml/3.1.1"><![CDATA[' +
+      point +
+      ']]></wps:ComplexData>' +
       '</wps:Data>' +
       '</wps:Input>' +
       '<wps:Input>' +
       '<ows:Identifier>crs</ows:Identifier>' +
       '<wps:Data>' +
-      '<wps:LiteralData>' + crsName + '</wps:LiteralData>' +
+      '<wps:LiteralData>' +
+      crsName +
+      '</wps:LiteralData>' +
       '</wps:Data>' +
       '</wps:Input>' +
       '</wps:DataInputs>' +
@@ -1166,7 +1195,8 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
       '<ows:Identifier>result</ows:Identifier>' +
       '</wps:RawDataOutput>' +
       '</wps:ResponseForm>' +
-      '</wps:Execute>';
+      '</wps:Execute>'
+    );
   },
 
   /**
@@ -1192,7 +1222,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
       }
 
       let filterPromise = this._getFeature({
-        filter
+        filter,
       });
       resolve(filterPromise);
     });
@@ -1270,13 +1300,13 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
 
             let nearObject = leafletObject.readFormat.responseToLayers(responseText, {
               coordsToLatLng: leafletObject.options.coordsToLatLng,
-              pointToLayer: leafletObject.options.pointToLayer
+              pointToLayer: leafletObject.options.pointToLayer,
             });
             if (Ember.isArray(nearObject) && nearObject.length === 1) {
               const distance = mapApi._getDistanceBetweenObjects(e.featureLayer, nearObject[0]);
               const id = mapApi._getLayerFeatureId(layerModel, nearObject[0]).replace(leafletObject.options.typeName + '.', '');
               let obj = {
-                featureIds: [id]
+                featureIds: [id],
               };
               _this.getLayerFeatures(obj).then((object) => {
                 if (Ember.isArray(object) && object.length === 1) {
@@ -1296,7 +1326,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
           },
           error: function (error) {
             reject(`Error for request getNearObject via WPS ${wpsUrl} for layer ${layerModel.get('name')}: ${error}`);
-          }
+          },
         });
       } else {
         let distances = [1, 10, 100, 1000, 10000, 100000, 1000000];
@@ -1334,7 +1364,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
       if (that.error) {
         resolve({
           data: [],
-          totalCount: 0,
+          totalFeatures: 0,
         });
         return that;
       }
@@ -1343,9 +1373,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
         let leafletFilters = Object.entries(filterModel).map(([key, value]) => {
           let isMultiFilter = Ember.isPresent(value.conditions) && Ember.isArray(value.conditions);
           if (isMultiFilter) {
-            let multiFilters = value.conditions.map((multiValue) =>
-              this.parseFilterConditionExpressionAG(key, multiValue.type, multiValue)
-            );
+            let multiFilters = value.conditions.map((multiValue) => this.parseFilterConditionExpressionAG(key, multiValue.type, multiValue));
 
             if (value.operator === 'OR') {
               return new L.Filter.Or(...multiFilters);
@@ -1436,9 +1464,10 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
               // Сбор аналитики (totalFeatures) из ответа geoJSON
               var featureMetrics = featuresMeta || that.readFormat.responseToMetrics(responseText);
 
-              leafletFeatures = leafletFeatures.map(newLeafletFeature => {
+              leafletFeatures = leafletFeatures.map((newLeafletFeature) => {
                 const featureID = newLeafletFeature.feature.properties.primarykey;
                 const allreadyLoadedFeature = that.getLayer(featureID);
+
                 // Если объект слоя уже был загружен на карту, то не берем новый экземпляр, а отсылаемся к уже существующему
                 if (allreadyLoadedFeature) {
                   return allreadyLoadedFeature;
@@ -1586,24 +1615,27 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
                 let model = _this.createModel(modelMixin);
                 resolve({ model: model, dataModel: dataModel, modelMixin: modelMixin });
               } else {
-                _this.createModelHierarchy(metadataUrl, parentModelName).then(({ model }) => {
-                  let mMixin = _this.createMixin(dataModel);
-                  let mModel = model.extend(mMixin, {});
-                  mModel.reopenClass({
-                    _parentModelName: parentModelName,
-                    namespace: _this.get('namespace')
-                  });
+                _this
+                  .createModelHierarchy(metadataUrl, parentModelName)
+                  .then(({ model }) => {
+                    let mMixin = _this.createMixin(dataModel);
+                    let mModel = model.extend(mMixin, {});
+                    mModel.reopenClass({
+                      _parentModelName: parentModelName,
+                      namespace: _this.get('namespace'),
+                    });
 
-                  resolve({ model: mModel, dataModel: dataModel, modelMixin: mMixin });
-                }).catch((e) => {
-                  reject('Can\'t create parent model: ' + parentModelName + ' .Error: ' + e);
-                });
+                    resolve({ model: mModel, dataModel: dataModel, modelMixin: mMixin });
+                  })
+                  .catch((e) => {
+                    reject("Can't create parent model: " + parentModelName + ' .Error: ' + e);
+                  });
               }
             }
           },
           error: function (e) {
-            reject('Can\'t create model: ' + modelName + ' .Error: ' + e);
-          }
+            reject("Can't create model: " + modelName + ' .Error: ' + e);
+          },
         });
       } else {
         reject('ModelName and metadataUrl is empty');
@@ -1643,7 +1675,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
     let namespace = this.get('namespace');
     let model = Projection.Model.extend(modelMixin);
     model.reopenClass({
-      namespace: namespace
+      namespace: namespace,
     });
 
     return model;
@@ -1657,7 +1689,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
     @return {Object} Projection
   */
   createProjection(jsonModel, projectionName) {
-    let projJson = jsonModel.projections.filter(proj => proj.name === projectionName);
+    let projJson = jsonModel.projections.filter((proj) => proj.name === projectionName);
     let modelProjection = {};
     if (projJson.length > 0) {
       projJson[0].attrs.forEach((attr) => {
@@ -1676,12 +1708,11 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
   */
   createSerializer() {
     let serializer = Ember.Mixin.create({
-
       primaryKey: '__PrimaryKey',
 
       getAttrs: function () {
         let parentAttrs = this._super();
-        let attrs = { };
+        let attrs = {};
 
         return Ember.$.extend(true, {}, parentAttrs, attrs);
       },
@@ -1689,7 +1720,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
       init: function () {
         this.set('attrs', this.getAttrs());
         this._super(...arguments);
-      }
+      },
     });
 
     return Serializer.Odata.extend(serializer);
@@ -1710,8 +1741,11 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
     let metadataUrl = this.layerModel.settingsAsObject.urlShared;
 
     this.createModelHierarchy(metadataUrl, modelNameFiles).then(({ model, dataModel, modelMixin }) => {
-      model.defineProjection(this.layerModel.settingsAsObject.projectionNameFiles,
-        modelNameFiles, this.createProjection(dataModel, this.layerModel.settingsAsObject.typeName + '_files'));
+      model.defineProjection(
+        this.layerModel.settingsAsObject.projectionNameFiles,
+        modelNameFiles,
+        this.createProjection(dataModel, this.layerModel.settingsAsObject.typeName + '_files')
+      );
 
       let modelRegisteredFiles = Ember.getOwner(this)._lookupFactory(`model:${modelNameFiles}`);
       let mixinRegisteredFiles = Ember.getOwner(this)._lookupFactory(`mixin:${modelNameFiles}`);
@@ -1726,8 +1760,10 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
 
       let adapterRegistered = Ember.getOwner(this)._lookupFactory(`adapter:${modelNameFiles}`);
       if (Ember.isNone(adapterRegistered)) {
-        let modelAdapter = this.createAdapterForModel(this.layerModel.settingsAsObject.urlOdata,
-          this.layerModel.settingsAsObject.typeNS + this.layerModel.settingsAsObject.typeName + 'filess');
+        let modelAdapter = this.createAdapterForModel(
+          this.layerModel.settingsAsObject.urlOdata,
+          this.layerModel.settingsAsObject.typeNS + this.layerModel.settingsAsObject.typeName + 'filess'
+        );
         Ember.getOwner(this).register(`adapter:${modelNameFiles}`, modelAdapter);
       }
 

@@ -278,6 +278,31 @@
     }
   }
 
+  i.modal-icon {
+    position: absolute;
+    font-size: 2.5rem;
+    vertical-align: middle;
+    font-family: 'guideline-icons';
+    font-style: normal;
+    top: 50%;
+    left: 0.875rem;
+    transform: translateY(-50%);
+
+    &.green {
+      color: #71BC90;
+    }
+
+    &.red {
+      color: #e94b3d;
+    }
+
+    &.orange {
+      color: #dba939;
+    }
+  }
+
+
+
   &.blue-icon {
     i.success::before {
       color: #0061D9;
@@ -518,4 +543,201 @@
 
 .ui.three.column.grid > .column.fix-size-files.fixed {
   width: 150px;
+}
+
+.flexberry-image-viewer {
+  display: flex;
+  flex-direction: row;
+  flex-flow: wrap;
+  gap: 0 10px;
+  align-items: center;
+
+  .preview {
+    width: 100px;
+    height: 100px;
+
+    img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+  }
+}
+
+.carousel.ui.modal {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+
+  .flexberry-dialog-header.header,
+  .flexberry-dialog-toolbar.actions {
+    display: none;
+  }
+
+  .flexberry-dialog-content.content {
+    background: transparent;
+    padding: 0;
+  }
+
+  .flexberry-carousel-actions {
+    position: absolute;
+    top: -25px;
+    right: 0px;
+
+    a {
+      color: white;
+    }
+  }
+
+  .flexberry-carousel-container {
+    position: relative;
+    overflow: hidden;
+    display: block;
+
+    .flexberry-carousel-body {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .flexberry-carousel-body::after,
+    .flexberry-carousel-body::before {
+      content: '';
+      display: table;
+      clear: both;
+    }
+
+    .flexberry-carousel-item {
+      display: none;
+    }
+
+    .flexberry-carousel-item.active {
+      display: block;
+    }
+
+    .flexberry-carousel-item img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+
+    .flexberry-carousel-item.no-data {
+      display: block;
+      width: 100px;
+      font-size: 20px;
+      color: white;
+      width: 100%;
+      text-align: center;
+    }
+
+    .line-arrow.left {
+      border-top: 2px solid #a9a9a9;
+      border-left: 2px solid #a9a9a9;
+      transform: rotate(-54deg) skew(-20deg);
+      left: 20px;
+    }
+
+    .line-arrow.right {
+      border-top: 2px solid #a9a9a9;
+      border-right: 2px solid #a9a9a9;
+      transform: rotate(54deg) skew(20deg);
+      right: 20px;
+    }
+
+    .line-arrow {
+      position: absolute;
+      overflow: hidden;
+      display: inline-block;
+      font-size: 12px;
+      width: 40px;
+      height: 40px;
+      margin-top: -20px;
+      top: 50%;
+      cursor: pointer;
+    }
+
+    .flexberry-carousel-item {
+      position: relative;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .flexberry-carousel-item.left,
+    .flexberry-carousel-item.right {
+      display: block;
+    }
+
+    .flexberry-carousel-item.left,
+    .flexberry-carousel-item.right {
+      position: absolute;
+      top: 0;
+      width: 100%;
+    }
+
+    .flexberry-carousel-item.left {
+      left: 100%;
+    }
+
+    .flexberry-carousel-item.right {
+      left: -100%;
+    }
+
+    .flexberry-carousel-item.active.left.slide-out {
+      left: -100%;
+    }
+
+    .flexberry-carousel-item.active.right.slide-out {
+      left: 100%;
+    }
+
+    .flexberry-carousel-item.left.slide-in,
+    .flexberry-carousel-item.right.slide-in {
+      left: 0;
+    }
+
+    .flexberry-carousel-item.active {
+      position: relative;
+      left: 0;
+    }
+  }
+}
+
+.flexberry-file-image-preview-block {
+  position: relative;
+  display: inline-block;
+}
+
+.flexberry-file-image-preview-block .delete-image-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 17px;
+  height: 17px;
+  background: white;
+  color: #DC231E;
+  border: 2px solid #DC231E;
+  border-radius: 50%;
+  padding: 0;
+  font-size: 11px;
+  line-height: 13px;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 0 3px rgba(0,0,0,0.35);
+}
+
+.flexberry-file-image-preview-block .delete-image-btn:hover {
+  background: #f2f2f2;
+  border-color: #DC231E;
+  color: #DC231E;
+  box-shadow: 0 0 6px rgba(0,0,0,0.55);
+}
+
+.flexberry-file-dropzone {
+  padding-bottom: 10px;
+}
+
+.ui.three.column.grid > .column.fix-size-files.fixed {
+  width: 150px;
+}
+
+.hide {
+  display: none;
 }

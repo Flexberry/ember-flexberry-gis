@@ -15,9 +15,7 @@ import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 
 import openCloseSubmenu from 'ember-flexberry-gis/utils/open-close-sub-menu';
 import layout from '../templates/components/flexberry-maplayer';
-import {
-  translationMacro as t
-} from 'ember-i18n';
+import { translationMacro as t } from 'ember-i18n';
 import CompareLayerMixin from '../mixins/compare-layers';
 /**
   Component's CSS-classes names.
@@ -52,7 +50,8 @@ const flexberryClassNames = {
   removeButton: flexberryClassNamesPrefix + '-remove-button',
   boundsButton: flexberryClassNamesPrefix + '-bounds-button',
   attributesButton: flexberryClassNamesPrefix + '-attributes-button',
-  loadButton: flexberryClassNamesPrefix + '-load-button',
+  importDataButton: flexberryClassNamesPrefix + '-import-data-button',
+  exportDataButton: flexberryClassNamesPrefix + '-export-data-button',
   caption: flexberryClassNamesPrefix + '-caption-label',
   legendToggler: flexberryClassNamesPrefix + '-legend-toggler',
   preventExpandCollapse: FlexberryTreenodeComponent.flexberryClassNames.preventExpandCollapse,
@@ -143,8 +142,8 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
   DomActionsMixin,
   DynamicActionsMixin,
   DynamicPropertiesMixin,
-  CompareLayerMixin, {
-
+  CompareLayerMixin,
+  {
     dynamicButtons: [],
 
     /**
@@ -195,9 +194,12 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     _hasLayers: Ember.computed('layer.layers.[]', 'layer.layers.@each.isDeleted', function () {
       let layers = this.get('layer.layers');
 
-      return Ember.isArray(layers) && layers.filter((layer) => {
-        return !Ember.isNone(layer) && Ember.get(layer, 'isDeleted') !== true;
-      }).length > 0;
+      return (
+        Ember.isArray(layers) &&
+        layers.filter((layer) => {
+          return !Ember.isNone(layer) && Ember.get(layer, 'isDeleted') !== true;
+        }).length > 0
+      );
     }),
 
     /**
@@ -541,6 +543,11 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     tagName: '',
 
     /**
+     * Extra class name for treenode
+     */
+    extraClassNames: '',
+
+    /**
       Leaflet map.
 
       @property leafletMap
@@ -617,7 +624,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         let layer = this.get('layer');
         let readonly = this.get('readonly');
 
-        let mapLayerId = Object.keys(presenceLayerInGeoportal).find(key => key === layer.id);
+        let mapLayerId = Object.keys(presenceLayerInGeoportal).find((key) => key === layer.id);
 
         let access = !Ember.isNone(layer) && !Ember.isNone(presenceLayerInGeoportal) && !Ember.isNone(mapLayerId);
 
@@ -674,45 +681,81 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
      * Should be true, if layer is enabled on any side.
      * @type Bool
      */
-    comparedLayerEnable: Ember.computed('compare.side',
-    'compare.compareState.Left.childLayersEnabled',
-    'compare.compareState.Right.childLayersEnabled',
-    'compare.compareState.Left.groupLayersEnabled',
-    'compare.compareState.Right.groupLayersEnabled', function() {
-      const side = this.get('compare.side');
-      const oppositeSide = this.getOppositeSide(side);
-      const groupSideSettings = this.get(`compare.compareState.${side}.groupLayersEnabled`);
-      const childSideSettings = this.get(`compare.compareState.${side}.childLayersEnabled`);
-      const oppositeChildSideSettings = this.get(`compare.compareState.${oppositeSide}.childLayersEnabled`);
-      const layer = this.get('layer');
-      if (this.get('isGroup')) {
-        return !!groupSideSettings.find(id => id === layer.get('id'));
-      }
+    comparedLayerEnable: Ember.computed(
+      'compare.side',
+      'compare.compareState.Left.childLayersEnabled',
+      'compare.compareState.Right.childLayersEnabled',
+      'compare.compareState.Left.groupLayersEnabled',
+      'compare.compareState.Right.groupLayersEnabled',
+      function () {
+        const side = this.get('compare.side');
+        const oppositeSide = this.getOppositeSide(side);
+        const groupSideSettings = this.get(`compare.compareState.${side}.groupLayersEnabled`);
+        const childSideSettings = this.get(`compare.compareState.${side}.childLayersEnabled`);
+        const oppositeChildSideSettings = this.get(`compare.compareState.${oppositeSide}.childLayersEnabled`);
+        const layer = this.get('layer');
+        if (this.get('isGroup')) {
+          return !!groupSideSettings.find((id) => id === layer.get('id'));
+        }
 
-      return !![...childSideSettings, ...oppositeChildSideSettings].find(l => l.id === this.get('layer.id'));
-    }),
+        return !![...childSideSettings, ...oppositeChildSideSettings].find((l) => l.id === this.get('layer.id'));
+      }
+    ),
 
     /**
      * Readonly for checkbox.
      * Should be true, if layer is enabled on the opposite side.
      * @type Bool
      */
-    isLayerSelectedOnOtherSide: Ember.computed('compare.side',
-    'compare.compareState.Left.childLayersEnabled.[]',
-    'compare.compareState.Right.childLayersEnabled.[]', function() {
-      const oppositeSide = this.getOppositeSide(this.get('compare.side'));
-      const oppositechildSideSettings = this.get(`compare.compareState.${oppositeSide}.childLayersEnabled`);
-      return (!!oppositechildSideSettings.find(l => l.id === this.get('layer.id')));
+    isLayerSelectedOnOtherSide: Ember.computed(
+      'compare.side',
+      'compare.compareState.Left.childLayersEnabled.[]',
+      'compare.compareState.Right.childLayersEnabled.[]',
+      function () {
+        const oppositeSide = this.getOppositeSide(this.get('compare.side'));
+        const oppositechildSideSettings = this.get(`compare.compareState.${oppositeSide}.childLayersEnabled`);
+        return !!oppositechildSideSettings.find((l) => l.id === this.get('layer.id'));
+      }
+    ),
+
+    totalFeatures: 0,
+
+    layerInitializationChanged: Ember.observer('layer.layerInitialized', function () {
+      Ember.run.once(this, '_getTotalFeatures');
     }),
 
     /**
       Initializes DOM-related component's properties.
     */
     didInsertElement() {
+      this._super(...arguments);
+
       if (this.get('layer.type') === 'group') {
         this.set('isGroup', true);
         this.set('disabled', 'disabled');
       }
+
+      if (this.get('layer.layerInitialized')) {
+        this._getTotalFeatures();
+      }
+    },
+
+    _getTotalFeatures() {
+      let layerModel = this.get('layer');
+
+      if (Ember.isNone(layerModel) || !Ember.get(layerModel, 'leafletObjectGetter')) {
+        return;
+      }
+
+      return layerModel.leafletObjectGetter().then((leafletObject) => {
+        if (!Ember.get(leafletObject, 'loadFeaturesForTableAttr')) {
+          return;
+        }
+
+        return leafletObject.loadFeaturesForTableAttr(1, -1, null, null, false).then((response) => {
+          this.set('totalFeatures', response.totalFeatures || 0);
+        });
+      });
     },
 
     actions: {
@@ -875,7 +918,12 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       onAddButtonClick(e) {
         // Create empty layer.
         let store = this.get('store');
-        this.set('_addDialogLayer', store.createRecord('new-platform-flexberry-g-i-s-map-layer', { id: generateUniqueId() }));
+        this.set(
+          '_addDialogLayer',
+          store.createRecord('new-platform-flexberry-g-i-s-map-layer', {
+            id: generateUniqueId(),
+          })
+        );
 
         // Include dialog to markup.
         this.set('_addDialogHasBeenRequested', true);
@@ -905,7 +953,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
           let side = this.get('compare.side');
           let compareSettings = this.get(`compare.compareState.${side}`);
           let sideGroupLayers = compareSettings.groupLayersEnabled;
-          let isGroupVisibleInCompareTree = !!sideGroupLayers.find(id => id === layer.get('id'));
+          let isGroupVisibleInCompareTree = !!sideGroupLayers.find((id) => id === layer.get('id'));
 
           if (!isGroupVisibleInCompareTree) {
             this.setGroupLayerBySide(layer, this.get('compare.side'), this.get('leafletMap'));
@@ -1073,11 +1121,20 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         this.sendAction('closeOtherCalendar', this.get('layer.id'));
       },
 
-      onLoadButtonClick() {
-        if (!Ember.isNone(this.get('presenceLayerInGeoportal'))) {
-          this.sendAction('onLoad');
+      onImportLayerDataButtonClick() {
+        this.sendAction('onImportLayerData');
+      },
+
+      onExportLayerDataButtonClick() {
+        const totalFeatures = this.get('totalFeatures');
+        const filter = null;
+
+        if (totalFeatures === 0) {
+          return;
         }
-      }
+
+        this.sendAction('onExportLayerData', filter, totalFeatures);
+      },
     },
 
     /**
@@ -1188,7 +1245,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 FlexberryMaplayerComponent.reopenClass({
-  flexberryClassNames
+  flexberryClassNames,
 });
 
 export default FlexberryMaplayerComponent;
