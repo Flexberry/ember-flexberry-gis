@@ -2,13 +2,18 @@ import Ember from 'ember';
 import layout from '../templates/components/flexberry-image-viewer';
 import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 import { Query } from 'ember-flexberry-data';
+import moment from 'moment';
 
 export default Ember.Component.extend({
   layout,
 
   store: Ember.inject.service('store'),
 
+  session: Ember.inject.service(),
+
   tagName: '',
+
+  images: Ember.A(),
 
   galleryDialogIsRequested: false,
 
@@ -18,51 +23,71 @@ export default Ember.Component.extend({
 
   showFileDelete: false,
 
-  activeIndex: 0,
+  deleteIndex: null,
 
   filesJson: null,
 
-  images: Ember.A(),
-
   feature: null,
 
-  //uploadUrlFiles: 'https://rgispk.skyori.ru/s11e44a9c2b014c43b3e53d03e432892c/odata/File',
+  uploadUrlFiles: null,
 
-  uploadUrlFiles: 'https://localhost:5001/s11e44a9c2b014c43b3e53d03e432892c/odata/File',
+  token: null,
+
+  _relatedModelStub: null,
+
+  uploadIsInProgressFiles: null,
 
   init() {
     this._super(...arguments);
 
-    // Evented stub for flexberry-file's 'relatedModel' property.
     let relatedModelStub = Ember.Object.extend(Ember.Evented, {}).create();
     this.set('_relatedModelStub', relatedModelStub);
 
-    if (this.feature.layerModel.settingsAsObject.photosEnabled) {
+    if (!this.feature.layerModel.settingsAsObject.displaySettings.photosEnabled) {
+      return;
+    }
+
+    if (Ember.isEmpty(this.feature.layerModel.settingsAsObject.uploadUrlFiles)) {
+      console.error('Пустой uploadUrlFiles. Раздел фото не будет загружен.');
+    } else {
+      this.set('uploadUrlFiles', this.feature.layerModel.settingsAsObject.uploadUrlFiles);
+
+      this.set('token', this.get('session.isAuthenticated') ?
+       `Bearer ${this.get('session.data.authenticated.access_token')}` :
+        null);
       this.getFhotoLayer();
     }
   },
 
+  /**
+  * Отображаем на списке только 5 фото .
+  */
   limitImages: Ember.computed('images.[]', function() {
     return this.get('images').slice(0, 5);
   }),
 
+  /**
+  * Вычитать фото.
+  */
   getFhotoLayer() {
     let store = this.get('store');
     let feature = this.get('feature');
-    let modelName;
-    let projectionName;
+    let modelName = this.feature.layerModel.settingsAsObject.modelNameFiles;
+    let projectionName = this.feature.layerModel.settingsAsObject.projectionNameFiles;
+    let predicate;
 
-    if (feature.layerModel.settingsAsObject.odataUrl) {
-      modelName = feature.layerModel.settingsAsObject.modelName + 'files';
-      projectionName = feature.layerModel.settingsAsObject.projectionName;
+    if (feature.layerModel.get('type') === 'odata-vector') {
+      predicate = new Query.SimplePredicate(
+        feature.layerModel.settingsAsObject.modelName.split('-')[1], Query.FilterOperator.Eq, feature.properties.primarykey);
     } else {
-      modelName = feature.layerModel.settingsAsObject.typeNS.toLowerCase() + '-' + feature.layerModel.settingsAsObject.typeName + 'files';
-      projectionName = feature.layerModel.settingsAsObject.typeName + 'files';
+      predicate = new Query.SimplePredicate(
+        feature.layerModel.settingsAsObject.typeName, Query.FilterOperator.Eq, feature.properties.primarykey);
     }
 
     let queryBuilder = new Query.Builder(store)
       .from(modelName)
-      .selectByProjection(projectionName);
+      .selectByProjection(projectionName)
+      .where(predicate);
     let build = queryBuilder.build();
     let adapter = store.adapterFor(modelName);
 
@@ -71,14 +96,122 @@ export default Ember.Component.extend({
         if (item.get('filePath')) {
           let filePath = JSON.parse(item.get('filePath'));
 
+          let fileName = item.get('fileName');
+          if (fileName && fileName.length > 100) {
+            fileName = fileName.substring(0, 97) + '...';
+          }
+
           return {
-            source: filePath.fileUrl,
-            preview: filePath.fileUrl
+            preview: filePath.previewUrl,
+            creator: item.get('creator'),
+            createTime: moment(item.get('createTime')).format('DD.MM.YYYY'),
+            id: item.get('id'),
+            fileName: fileName,
           };
         }
       });
 
       this.set('images', images);
+    });
+  },
+
+  /**
+  * Следим за статусом загрузки файлов, если true, значит загрузка идеит и нужно ждать
+  */
+  checkUploadStatus() {
+    if (this.get('uploadIsInProgressFiles') === true) {
+      Ember.run.later(() => {
+        this.checkUploadStatus();
+      }, 100);
+    } else {
+      this.saveFile();
+    }
+  },
+
+  /**
+  * Сохранение фото.
+  */
+  saveFile() {
+    let relatedModel = this.get('_relatedModelStub');
+    if (relatedModel) {
+      relatedModel.off('uploadFiles');
+    }
+    this.set('showFileAdd', false);
+
+    let json = this.get('filesJson');
+    if (Ember.isEmpty(json)) {
+      console.error('Нет файлов для сохранения');
+      return;
+    }
+
+    let arrayFiles = [];
+    try {
+      arrayFiles = JSON.parse(json);
+    } catch (e) {
+      console.error('Ошибка парсинга JSON:', e);
+      return;
+    }
+
+    if (!Ember.isArray(arrayFiles) || arrayFiles.length === 0) {
+      console.error('Нет файлов для сохранения');
+      return;
+    }
+
+    let store = this.get('store');
+    let feature = this.get('feature');
+    let images = this.get('images');
+    let records = [];
+    let modelName = this.feature.layerModel.settingsAsObject.modelNameFiles;
+
+    arrayFiles.forEach((file) => {
+      let record = store.createRecord(modelName, {
+        id: generateUniqueId(),
+        filePath: JSON.stringify(file),
+        fileName: file.fileName || null,
+        mime: file.fileMimeType || null,
+        width: file.width || null,//TODO: заполнять
+        height: file.height || null,//TODO: заполнять
+      });
+
+      //Для одаты надо сделать set модели т.к. связь BelongTo, для остального пишем ключ.
+      if (feature.layerModel.get('type') === 'odata-vector') {
+        record.set(feature.layerModel.settingsAsObject.modelName.split('-')[1], feature.leafletLayer.model);
+      } else {
+        record.set(feature.layerModel.settingsAsObject.typeName, feature.properties.primarykey);
+      }
+
+      records.push(record);
+    });
+
+    let promises = [];
+    records.forEach((file) => {
+      promises.pushObject(file.save());
+    });
+
+    Ember.RSVP.allSettled(promises).then((result) => {
+      result.forEach((file) => {
+        if (file.state === "fulfilled") {
+          if (file.value.get('filePath')) {
+            let filePath = JSON.parse(file.value.get('filePath'));
+
+            let fileName = file.value.get('fileName');
+            if (fileName && fileName.length > 100) {
+              fileName = fileName.substring(0, 97) + '...';
+            }
+
+            //TODO: После сохранения не подтягиваются актуальные поля с бека
+            images.pushObject({
+              preview: filePath.previewUrl,
+              creator: file.value.get('creator'),
+              createTime: moment(file.value.get('createTime')).format('DD.MM.YYYY'),
+              id: file.value.get('id'),
+              fileName: fileName,
+            });
+          }
+        } else {
+          console.error(`Ошибка при сохранении файла: ${file.reason}`);
+        }
+      });
     });
   },
 
@@ -97,87 +230,63 @@ export default Ember.Component.extend({
       this.set('showFileAdd', true);
     },
 
-    onHideAddFile() {
-      this.set('showFileAdd', false);
-    },
-
-    onShowDeletePhoto() {
+    onShowDeletePhoto(index) {
       this.set('showFileDelete', true);
+      this.set('deleteIndex', index);
     },
 
     onHideDeletePhoto() {
       this.set('showFileDelete', false);
     },
 
-    delete(item) {
-      //let images = this.get('images');
-      //let image = images.objectAt(item.iindex - 1);
-      //images.removeObject(image);
-      //this.set('images', images);
-      //this.set('activeIndex', item.iindex - 1);
-      this.send('onShowDeletePhoto');
+    onDeny(e) {
+      e.closeDialog = false;
+
+      let relatedModel = this.get('_relatedModelStub');
+      if (relatedModel) {
+        relatedModel.off('uploadFiles');
+      }
+
+      this.set('showFileAdd', false);
     },
 
-    savePhoto() {
-      let json = this.get('filesJson');
-      if (!json) {
-        console.error('Нет файлов для сохранения');
-        return;
+    onApprove(e) {
+      e.closeDialog = false;
+
+      let relatedModel = this.get('_relatedModelStub');
+      if (relatedModel) {
+        relatedModel.trigger('uploadFiles');
+
+        this.checkUploadStatus();
       }
-
-      let files = [];
-      try {
-        files = JSON.parse(json);
-      } catch (e) {
-        console.error('Ошибка парсинга JSON:', e);
-        return;
-      }
-
-      if (!Ember.isArray(files) || files.length === 0) {
-        console.error('Нет файлов для сохранения');
-        return;
-      }
-
-      let store = this.get('store');
-      let records = [];
-      let feature = this.get('feature');
-      let modelName;
-
-      if (feature.layerModel.settingsAsObject.odataUrl) {
-        modelName = feature.layerModel.settingsAsObject.modelName + 'files';
-      } else {
-        modelName = feature.layerModel.settingsAsObject.typeNS.toLowerCase() + '-' + feature.layerModel.settingsAsObject.typeName + 'files';
-      }
-
-      files.forEach((file) => {
-        let record = store.createRecord(modelName, {
-          id: generateUniqueId(),
-          filePath: JSON.stringify(file),
-          fileName: file.fileName || null,
-          mime: file.fileMimeType || null,
-          width: file.width || null,//!!
-          height: file.height || null,//!!
-        });
-
-        records.push(record);
-      });
-
-      let images = this.get('images');
-      let adapter = store.adapterFor(modelName);
-      adapter.batchUpdate(store, records).then((result) => {
-        console.log(`Сохранено файлов: ${result.length}`);
-        result.forEach((file) => {
-          if (file.get('filePath')) {
-            let filePath = JSON.parse(file.get('filePath'));
-            images.pushObject({
-              source: filePath.fileUrl,
-              preview: filePath.fileUrl
-            });
-          }
-        });
-      }).catch((error) => {
-        console.error('Ошибка при сохранении файлов:', error);
-      });
     },
-  }
+
+    /**
+    * Удаление фото.
+    */
+    delete() {
+      let _this = this;
+      let deleteIndex = _this.get('deleteIndex');
+      if (!Ember.isEmpty(deleteIndex)) {
+        let images = _this.get('images');
+        let store = _this.get('store');
+        let image = images.objectAt(deleteIndex);
+        let feature = _this.get('feature');
+        let modelName = feature.layerModel.settingsAsObject.modelNameFiles;
+        let obj = store.peekRecord(modelName, image.id);
+
+        if (!Ember.isEmpty(obj)) {
+          obj.deleteRecord();
+          obj.save().then(() => {
+            images.removeObject(image);
+            _this.set('images', images);
+            _this.set('deleteIndex', null);
+          }).catch(() => {
+            console.error('Ошибка при удалении.');
+            obj.rollbackAttributes();
+          });
+        }
+      }
+    },
+  },
 });

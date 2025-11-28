@@ -44,7 +44,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
     'withCredentials',
     'continueLoading',
     'wpsUrl',
-    'photosEnabled',
+    'displaySettings',
   ],
 
   /**
@@ -407,7 +407,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
           let wfsLayer = e.target;
           let layer = this._createVectorLayer(wfsLayer, options, featuresReadFormat);
 
-          if (layer.options.photosEnabled) {
+          if (layer.options.displaySettings && layer.options.displaySettings.photosEnabled) {
             this.createDynamicModelFiles(layer);
           }
 
@@ -495,6 +495,19 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
     wfsLayer.loadFeaturesForTableAttr = this.get('_loadFeaturesForTableAttr').bind(wfsLayer);
     wfsLayer.getMetaForTableAttr = this.get('_getMetaForTableAttr').bind(wfsLayer);
     wfsLayer._addSortingToWfsXml = this.get('_addSortingToWfsXml').bind(wfsLayer);
+
+    let settingsAsObject = this.get('layerModel.settingsAsObject');
+    if (!Ember.isEmpty(settingsAsObject)) {
+      if (!Ember.isEmpty(options.url)) {
+        settingsAsObject.uploadUrlFiles = options.url.replace('/geoserver', '').replace('/ows', '') + '/odata/File';
+      }
+
+      if (!Ember.isEmpty(options.typeNS) && !Ember.isEmpty(options.typeName)) {
+        settingsAsObject.modelNameFiles = options.typeNS.toLowerCase()
+         + '-' + options.typeName + '-files'
+        settingsAsObject.projectionNameFiles = options.typeName + '-files';
+      }
+    }
 
     return wfsLayer;
   },
@@ -1549,12 +1562,12 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
   /**
     Creates models in recursive.
 
-    @method сreateModelHierarchy
+    @method createModelHierarchy
     @param {String} metadataUrl
     @param {String} modelName
     @return {Promise} Object consists of model, json data and mixin.
   */
-  сreateModelHierarchy(metadataUrl, modelName) {
+  createModelHierarchy(metadataUrl, modelName) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       if (!Ember.isNone(modelName) && !Ember.isNone(metadataUrl)) {
         let _this = this;
@@ -1570,7 +1583,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
                 let model = _this.createModel(modelMixin);
                 resolve({ model: model, dataModel: dataModel, modelMixin: modelMixin });
               } else {
-                _this.сreateModelHierarchy(metadataUrl, parentModelName).then(({ model }) => {
+                _this.createModelHierarchy(metadataUrl, parentModelName).then(({ model }) => {
                   let mMixin = _this.createMixin(dataModel);
                   let mModel = model.extend(mMixin, {});
                   mModel.reopenClass({
@@ -1641,7 +1654,6 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
     @return {Object} Projection
   */
   createProjection(jsonModel, projectionName) {
-    //let projectionName = this.get('projectionName');
     let projJson = jsonModel.projections.filter(proj => proj.name === projectionName);
     let modelProjection = {};
     if (projJson.length > 0) {
@@ -1666,7 +1678,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
 
       getAttrs: function () {
         let parentAttrs = this._super();
-        let attrs = {};
+        let attrs = { };
 
         return Ember.$.extend(true, {}, parentAttrs, attrs);
       },
@@ -1677,15 +1689,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
       }
     });
 
-    let baseSerializer;
-    let odataSerializer = this.get('odataSerializer');
-    if (!Ember.isNone(odataSerializer)) {
-      baseSerializer = Ember.getOwner(this)._lookupFactory(`serializer:${odataSerializer}`);
-    }
-
-    let modelSerializer = !Ember.isNone(baseSerializer) ? baseSerializer.extend(serializer) : Serializer.Odata.extend(serializer);
-
-    return modelSerializer;
+    return Serializer.Odata.extend(serializer);
   },
 
   createAdapterForModel(url, modelNameFiles) {
@@ -1699,12 +1703,11 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
   },
 
   createDynamicModelFiles(layer) {
-    let modelNameFiles = layer.options.typeNS.toLowerCase() + '-' + layer.options.typeName + 'files';
-    //TODO: придумать как брать путь до вложений по нормальному.
+    let modelNameFiles = layer.options.typeNS.toLowerCase() + '-' + layer.options.typeName + '-files';
     let metadataUrl = layer.options.url.replace('/geoserver', '').replace('/ows', '') + '/shared/models/';
 
-    this.сreateModelHierarchy(metadataUrl, modelNameFiles).then(({ model, dataModel, modelMixin }) => {
-      model.defineProjection(layer.options.typeName + 'files', modelNameFiles, this.createProjection(dataModel, layer.options.typeName + 'files'));
+    this.createModelHierarchy(metadataUrl, modelNameFiles).then(({ model, dataModel, modelMixin }) => {
+      model.defineProjection(layer.options.typeName + '-files', modelNameFiles, this.createProjection(dataModel, layer.options.typeName + '_files'));
 
       let modelRegisteredFiles = Ember.getOwner(this)._lookupFactory(`model:${modelNameFiles}`);
       let mixinRegisteredFiles = Ember.getOwner(this)._lookupFactory(`mixin:${modelNameFiles}`);
@@ -1729,8 +1732,6 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
         let modelSerializer = this.createSerializer();
         Ember.getOwner(this).register(`serializer:${modelNameFiles}`, modelSerializer);
       }
-
-      resolve('Create dynamic model: ' + modelNameFiles);
     });
   },
 });

@@ -1,19 +1,27 @@
+<a onclick={{action "onAddPhoto"}}>
+    <i class="plus icon"></i>
+    Добавить изображения
+</a>
 <div class="flexberry-image-viewer">
-    {{#each limitImages as |image index|}}
-        <div class="preview">
-            <img class="img-responsive" src={{image.preview}} />
-        </div>
-    {{/each}}
+  {{#each limitImages as |image index|}}
+      <div class="preview">
+         {{#image-loader
+          token=token
+          imageUrl=image.preview
+         }}
+        {{/image-loader}}
+      </div>
+  {{/each}}
 
-    {{#if images}}
-        <div class="preview more" onclick={{action "showAll"}}>
-            Смотреть все
-        </div>
-    {{else}}
-        <div class="preview more">
-            Нет данных
-        </div>
-    {{/if}}
+  {{#if images}}
+      <div class="preview more" onclick={{action "showAll"}}>
+          Смотреть все
+      </div>
+  {{else}}
+      <div class="preview more">
+          Нет данных
+      </div>
+  {{/if}}
 </div>
 
 {{#if galleryDialogIsRequested}}
@@ -25,6 +33,7 @@
     <div>
         {{#flexberry-carousel
             images=images
+            token=token
             onAddPhoto=(action "onAddPhoto")
             onHideCarousel=(action "onHideCarousel")
             onShowDeletePhoto=(action "onShowDeletePhoto")
@@ -42,9 +51,8 @@
     approveButtonCaption="Загрузить фото"
     denyButtonCaption="Отменить загрузку"
     visible=showFileAdd
-    show=(action "onAddPhoto")
-    hide=(action "onHideAddFile")
-    approve=(action "savePhoto")
+    approve=(action "onApprove")
+    deny=(action "onDeny")
   }}
   <div class="field">
     {{flexberry-files
@@ -61,24 +69,24 @@
       maxUploadFileSize=20
       maxUploadFileSizeUnit="Mb"
       value=filesJson
-      showUploadButton=true
+      _uploadIsInProgress=uploadIsInProgressFiles
     }}
   </div>
   {{/flexberry-dialog}}
-{{/if}}
+  {{/if}}
 
-{{#if showFileDelete}}
-  {{#flexberry-dialog
-    caption="Внимание"
-    approveButtonCaption="Удалить"
-    denyButtonCaption="Отмена"
-    visible=showFileDelete
-    show=(action "onShowDeletePhoto")
-    hide=(action "onHideDeletePhoto")
-  }}
-  <p>
-    Фотография будет удалена без возможности восстановления.<br>
-    Продолжить действие?
-  </p>
-  {{/flexberry-dialog}}
-{{/if}}
+  {{#if showFileDelete}}
+    {{#flexberry-dialog
+      caption="Внимание"
+      approveButtonCaption="Удалить"
+      denyButtonCaption="Отмена"
+      visible=showFileDelete
+      hide=(action "onHideDeletePhoto")
+      approve=(action "delete")
+    }}
+    <p>
+      Фотография будет удалена без возможности восстановления.<br>
+      Продолжить действие?
+    </p>
+    {{/flexberry-dialog}}
+  {{/if}}

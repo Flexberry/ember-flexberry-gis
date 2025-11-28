@@ -613,7 +613,7 @@ test('test method createDynamicModel() with json', function(assert) {
   let spyCreateProjection = sinon.spy(component, 'createProjection');
   let spyCreateMixin = sinon.spy(component, 'createMixin');
   let spyCreateSerializer = sinon.spy(component, 'createSerializer');
-  let spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
+  let spyCreateModelHierarchy = sinon.spy(component, 'createModelHierarchy');
   let stubAjax = sinon.stub(Ember.$, 'ajax');
   stubAjax.yieldsTo('success', jsonModel);
   let _lookupFactoryStub = sinon.stub(Ember.getOwner(this), '_lookupFactory');
@@ -674,7 +674,7 @@ test('test method createDynamicModel() with json with parent', function(assert) 
   let spyCreateProjection = sinon.spy(component, 'createProjection');
   let spyCreateMixin = sinon.spy(component, 'createMixin');
   let spyCreateSerializer = sinon.spy(component, 'createSerializer');
-  let spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
+  let spyCreateModelHierarchy = sinon.spy(component, 'createModelHierarchy');
   let _lookupFactoryStub = sinon.stub(Ember.getOwner(this), '_lookupFactory');
   _lookupFactoryStub.returns(null);
 
@@ -805,7 +805,7 @@ test('test method createVectorLayer() without dynamicModel', function(assert) {
   let _createVectorLayerSpy = sinon.spy(component, '_createVectorLayer');
   let spyCreateDynamicModel = sinon.spy(component, 'createDynamicModel');
   let spyAjax = sinon.spy(Ember.$, 'ajax');
-  let spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
+  let spyCreateModelHierarchy = sinon.spy(component, 'createModelHierarchy');
 
   let _lookupFactoryStub = sinon.stub(Ember.getOwner(this), '_lookupFactory');
   _lookupFactoryStub.withArgs('model:test-model').returns(null);
@@ -849,7 +849,7 @@ test('test method createVectorLayer() with dynamicModel=true', function(assert) 
   let spyCreateDynamicModel = sinon.spy(component, 'createDynamicModel');
   let stubAjax = sinon.stub(Ember.$, 'ajax');
   stubAjax.yieldsTo('success', jsonModel);
-  let spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
+  let spyCreateModelHierarchy = sinon.spy(component, 'createModelHierarchy');
 
   let _lookupFactoryStub = sinon.stub(Ember.getOwner(this), '_lookupFactory');
   _lookupFactoryStub.withArgs('model:test-model').returns(null);
@@ -1088,9 +1088,9 @@ test('test method createModelHierarchy() with 3 parent', function(assert) {
 
   let spyCreateModel = sinon.spy(component, 'createModel');
   let spyCreateMixin = sinon.spy(component, 'createMixin');
-  let spyCreateModelHierarchy = sinon.spy(component, 'сreateModelHierarchy');
+  let spyCreateModelHierarchy = sinon.spy(component, 'createModelHierarchy');
 
-  component.сreateModelHierarchy(param.metadataUrl, param.modelName).then(({ model, dataModel, modelMixin }) => {
+  component.createModelHierarchy(param.metadataUrl, param.modelName).then(({ model, dataModel, modelMixin }) => {
     assert.equal(stubAjax.callCount, 4);
     assert.equal(spyCreateModel.callCount, 1);
     assert.equal(spyCreateMixin.callCount, 4);

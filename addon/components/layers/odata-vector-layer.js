@@ -839,13 +839,20 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin, {
     @param {Object} jsonModel Data model in json format.
     @return {Object} Projection
   */
-  createProjection(jsonModel) {
-    let projectionName = this.get('projectionName');
+  createProjection(jsonModel, projectionName) {
+    if (Ember.isEmpty(projectionName)) {
+      projectionName = this.get('projectionName');
+    }
+
     let projJson = jsonModel.projections.filter(proj => proj.name === projectionName);
     let modelProjection = {};
     if (projJson.length > 0) {
       projJson[0].attrs.forEach((attr) => {
         modelProjection[attr.name] = Projection.attr('');
+      });
+
+      projJson[0].belongsTo.forEach((belongsTo) => {
+        modelProjection[belongsTo.name] = Projection.belongsTo(belongsTo.relatedTo, '', {});
       });
     }
 
@@ -869,6 +876,10 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin, {
       mixin[attr.name] = DS.attr(attr.type, { required: attr.notNull });
     });
 
+    jsonModel.belongsTo.forEach((belongsTo) => {
+      mixin[belongsTo.name] = DS.belongsTo(belongsTo.relatedTo);
+    });
+
     let modelMixin = Ember.Mixin.create(mixin);
     return modelMixin;
   },
@@ -879,21 +890,66 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin, {
     @method createSerializer
     @return {Object} Serializer
   */
-  createSerializer() {
+  createSerializer(belongToSerialize) {
     let serializer = Ember.Mixin.create({
       primaryKey: '__PrimaryKey',
+
       getAttrs: function () {
         let parentAttrs = this._super();
         let attrs = {
-
         };
+
+        if (!Ember.isEmpty(belongToSerialize)) {
+          attrs[belongToSerialize] = { serialize: 'odata-id', deserialize: 'records' };
+        }
 
         return Ember.$.extend(true, {}, parentAttrs, attrs);
       },
+
       init: function () {
         this.set('attrs', this.getAttrs());
         this._super(...arguments);
-      }
+      },
+
+      serializeBelongsTo(snapshot, json, relationship) {
+        var option = this.attrsOption(relationship.key);
+        if (!option || option.serialize !== 'odata-id') {
+          this._super(snapshot, json, relationship);
+          return;
+        }
+
+        var key = relationship.key;
+        var belongsToId = snapshot.belongsTo(key, { id: true });
+        if (belongsToId === undefined) {
+          return;
+        }
+
+        var payloadKey = this.keyForRelationship(key, relationship.kind, 'serialize');
+        if (Ember.isNone(belongsToId)) {
+          json[payloadKey] = null;
+        } else {
+          if (Ember.isEmpty(belongToSerialize)) {
+            json[payloadKey] = Ember.String.pluralize(capitalize(camelize(relationship.type))) + '(' + belongsToId + ')';
+          } else {
+
+            // Переписал camelize исходя из того, что имена слоев не могут содержать заглавные буквы,
+            // строка типа: geo-testlayer становится geoTestlayer, а одата ждет geotestlayer
+            let camelizeNoUpperCase = function camelize(str) {
+              const STRING_CAMELIZE_REGEXP_1 = (/(\-|\_|\.|\s)+(.)?/g);
+              const STRING_CAMELIZE_REGEXP_2 = (/(^|\/)([A-ZА-ЯЁ])/g);
+
+              return str.replace(STRING_CAMELIZE_REGEXP_1, (match, separator, chr) => chr ? chr : '')
+                .replace(STRING_CAMELIZE_REGEXP_2, (match, separator, chr) => match.toLowerCase());
+            };
+
+            json[payloadKey] = Ember.String.pluralize(capitalize(camelizeNoUpperCase(relationship.type))) + '(' + belongsToId + ')';
+          }
+        }
+
+        if (relationship.options.polymorphic) {
+          this.serializePolymorphicType(snapshot, json, relationship);
+        }
+      },
     });
 
     let baseSerializer;
@@ -910,12 +966,12 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin, {
   /**
     Creates models in recursive.
 
-    @method сreateModelHierarchy
+    @method createModelHierarchy
     @param {String} metadataUrl
     @param {String} modelName
     @return {Promise} Object consists of model, json data and mixin.
   */
-  сreateModelHierarchy(metadataUrl, modelName) {
+  createModelHierarchy(metadataUrl, modelName) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       if (!Ember.isNone(modelName) && !Ember.isNone(metadataUrl)) {
         let _this = this;
@@ -931,7 +987,7 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin, {
                 let model = _this.createModel(modelMixin);
                 resolve({ model: model, dataModel: dataModel, modelMixin: modelMixin });
               } else {
-                _this.сreateModelHierarchy(metadataUrl, parentModelName).then(({ model }) => {
+                _this.createModelHierarchy(metadataUrl, parentModelName).then(({ model }) => {
                   let mMixin = _this.createMixin(dataModel);
                   let mModel = model.extend(mMixin, {});
                   mModel.reopenClass({
@@ -984,8 +1040,8 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin, {
       }
 
       if (Ember.isNone(modelRegistered) || Ember.isNone(mixinRegistered)) {
-        this.сreateModelHierarchy(metadataUrl, modelName).then(({ model, dataModel, modelMixin }) => {
-          model.defineProjection(projectionName, modelName, this.createProjection(dataModel));
+        this.createModelHierarchy(metadataUrl, modelName).then(({ model, dataModel, modelMixin }) => {
+          model.defineProjection(projectionName, modelName, this.createProjection(dataModel, null));
 
           // Необходимо еще раз проверить регистрацию, т.к. могут быть слои с одной моделью, а код - асинхронный
           modelRegistered = Ember.getOwner(this)._lookupFactory(`model:${modelName}`);
@@ -1000,10 +1056,10 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin, {
           }
 
           // Регаем модель для файлов
-          if (this.get('photosEnabled')) {
-            var modelNameFiles = modelName + 'files';
-            this.сreateModelHierarchy(metadataUrl, modelNameFiles).then(({ model, dataModel, modelMixin }) => {
-              model.defineProjection(modelNameFiles, modelNameFiles, this.createProjection(dataModel));
+          if (this.get('displaySettings.photosEnabled')) {
+            var modelNameFiles = modelName + '-files';
+            this.createModelHierarchy(metadataUrl, modelNameFiles).then(({ model, dataModel, modelMixin }) => {
+              model.defineProjection(modelNameFiles, modelNameFiles, this.createProjection(dataModel, projectionName.replace('Spatial', '_files')));
 
               let modelRegisteredFiles = Ember.getOwner(this)._lookupFactory(`model:${modelNameFiles}`);
               let mixinRegisteredFiles = Ember.getOwner(this)._lookupFactory(`mixin:${modelNameFiles}`);
@@ -1016,7 +1072,21 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin, {
                 Ember.getOwner(this).register(`mixin:${modelNameFiles}`, modelMixin);
               }
 
-              resolve('Create dynamic model: ' + modelNameFiles);
+              let serializerRegisteredFiles = Ember.getOwner(this)._lookupFactory(`serializer:${modelNameFiles}`);
+              if (Ember.isNone(serializerRegisteredFiles)) {
+                this.set('odataSerializer', null);
+                let modelSerializer = this.createSerializer(modelName.split('-')[1]);
+                Ember.getOwner(this).register(`serializer:${modelNameFiles}`, modelSerializer);
+              }
+
+              let adapterRegisteredFiles = Ember.getOwner(this)._lookupFactory(`adapter:${modelNameFiles}`);
+              if (Ember.isNone(adapterRegisteredFiles)) {
+                let odataClass = this.get('odataClass');
+                this.set('odataClass', Ember.String.singularize(odataClass)  + 'filess');
+                let modelAdapter = this.createAdapterForModel();
+                Ember.getOwner(this).register(`adapter:${modelNameFiles}`, modelAdapter);
+                this.set('odataClass', odataClass);
+              }
             });
           }
 
@@ -1094,6 +1164,19 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin, {
     this._setFeaturesProcessCallback(layer);
     let load = this.continueLoad(layer);
     layer.promiseLoadLayer = load && load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
+
+    let settingsAsObject = this.get('layerModel.settingsAsObject');
+    if (!Ember.isEmpty(settingsAsObject)) {
+      if (!Ember.isEmpty(this.get('odataUrl'))) {
+        settingsAsObject.uploadUrlFiles = this.get('odataUrl') + '/File';
+      }
+
+      if (!Ember.isEmpty(this.get('modelName'))) {
+        settingsAsObject.modelNameFiles = this.get('modelName') + '-files';
+        settingsAsObject.projectionNameFiles = settingsAsObject.modelNameFiles;
+      }
+    }
+
     return layer;
   },
 

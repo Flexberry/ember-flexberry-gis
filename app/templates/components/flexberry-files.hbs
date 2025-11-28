@@ -1,7 +1,6 @@
 <div class="ui {{inputClass}} action input flexberry-file-dropzone">
   <input type="file" name="files[]" accept={{accept}} id={{_fileInputId}} class="flexberry-file-file-input" style="display:none"
    multiple />
-  {{!-- value=(get this "_fileName") is a way to get one way binding, so input events will not cause _fileName mutation --}}
   {{input
     type="text"
     class="flexberry-file-filename-input"
@@ -47,12 +46,12 @@
 </div>
 {{#if (and showPreview _hasFile)}}
   {{#if _canLoadPreview}}
-    <div class="flexberry-file-image-preview-wrapper ui segment">
+    <div class="flexberry-file-image-preview-wrapper">
       <div class="ui three column grid">
         {{#each _files as |file|}}
           {{#unless file._hasError}}
-            <div class="column">
-              <div class="ui segment flexberry-file-image-preview-block">
+            <div class="column fix-size-files fixed">
+              <div class="flexberry-file-image-preview-block">
                 {{#unless file._isPreviewLoading}}
                   {{#if file._previewBase64}}
                     <img
@@ -66,10 +65,10 @@
                 {{/unless}}
                 <div class="ui {{if file._isPreviewLoading " active " "disabled "}} loader"></div>
 
-                <div class="ui tiny header" style="word-break: break-all;">{{file.name}}</div>
+                <div class="ui tiny header" style="display:none">{{file.name}}</div>
 
-                <button type="button" class="ui mini red icon button" title="Удалить файл" {{action "removeSingleFile" file}}>
-                  <i class="close icon"></i>
+                <button type="button" class="delete-image-btn" title="Удалить файл" {{action "removeSingleFile" file}}>
+                  ✕
                 </button>
               </div>
             </div>

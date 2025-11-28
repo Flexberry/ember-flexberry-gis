@@ -180,7 +180,11 @@ export default Ember.Component.extend(SlotsMixin, ResultFeatureInitializer, {
   }),
 
   photosEnabled: Ember.computed('feature', function () {
-    return this.feature.layerModel.settingsAsObject.photosEnabled;
+    return this.feature.layerModel.settingsAsObject.displaySettings.photosEnabled;
+  }),
+
+  photosName: Ember.computed('feature', function () {
+    return this.feature.layerModel.settingsAsObject.displaySettings.photosName;
   }),
 
   /**

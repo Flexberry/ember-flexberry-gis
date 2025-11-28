@@ -61,6 +61,10 @@ export default Ember.Component.extend({
   */
   value: undefined,
 
+  photosEnabledLabel: 'components.layers-dialogs.settings.group.tab.display-settings.photos-enabled',
+
+  photosNameLabel: 'components.layers-dialogs.settings.group.tab.display-settings.photos-name',
+
   /**
     "Date format" textbox label locale key.
 

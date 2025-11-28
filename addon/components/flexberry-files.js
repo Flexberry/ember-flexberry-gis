@@ -4,7 +4,7 @@ import { getSizeInUnits } from 'ember-flexberry/utils/file-size-units-converter'
 
 export default FlexberryFileComponent.extend({
 
-  _files: null,
+  _files: Ember.A([]),
 
   maxFiles: 20,
 
@@ -13,6 +13,7 @@ export default FlexberryFileComponent.extend({
   init() {
     this._super(...arguments);
     this.set('_files', Ember.A([]));
+    this.set('errorMessages', Ember.A([]));
   },
 
   didInsertElement() {
@@ -55,6 +56,13 @@ export default FlexberryFileComponent.extend({
         _this.onFileAdd(e.dataTransfer.files);
       });
     }
+
+    let relatedModel = this.get('relatedModel');
+    if (relatedModel) {
+      relatedModel.on('uploadFiles', () => {
+        this.send('uploadButtonClick');
+      });
+    }
   },
 
   /**
@@ -62,20 +70,24 @@ export default FlexberryFileComponent.extend({
    */
   _hasFile: Ember.computed('_files.[]', function() {
     let files = this.get('_files');
+
+    if (!files || !Array.isArray(files)) {
+      return false;
+    }
+
     return files.get('length') > 0 && files.any(file => !file._hasError);
   }),
 
   /**
    * Имя выбранных файлов
    */
-  _fileName: Ember.computed('_files.[]', '_jsonValue.fileName', function() {
+  _fileName: Ember.computed('_files.[]', function() {
     let files = this.get('_files');
     if (Ember.isArray(files) && files.length > 0) {
       return files.map(f => f.name).join(', ');
     }
 
-    let singleFileName = this.get('_jsonValue.fileName');
-    return Ember.isNone(singleFileName) ? null : singleFileName;
+    return null;
   }),
 
   /**
@@ -173,6 +185,7 @@ export default FlexberryFileComponent.extend({
    * Добавление ошибки в список ошибок
    */
   addErrorMessage(message) {
+    console.error(message);
     let errorMessages = this.get('errorMessages');
     if (!errorMessages.includes(message)) {
       errorMessages.pushObject(message);
@@ -225,10 +238,8 @@ export default FlexberryFileComponent.extend({
      * Загрузка всех файлов.
      */
     uploadButtonClick() {
-      if (this.get('_files.length') > 0) {
-        this._uploadFilesSequentially(this.get('_files'));
-      } else {
-        this._super(...arguments);
+      if (this.get('_files.length') > 0 && this.get('errorMessages.length') === 0) {
+        return this._uploadFilesSequentially(this.get('_files'))
       }
     },
   },
@@ -237,52 +248,47 @@ export default FlexberryFileComponent.extend({
   * Последовательная загрузка файлов
   */
   _uploadFilesSequentially(files) {
-    if (!files || files.length === 0) return;
+    if (!files || files.length === 0) return Ember.RSVP.resolve();
     let uploadData = this.get('_uploadData');
     this.set('_uploadIsInProgress', true);
 
     let chain = Ember.RSVP.resolve();
     files.forEach((file, index) => {
-      chain = chain.then(() =>
-      new Ember.RSVP.Promise((resolve, reject) => {
-        let uploadClone = Object.assign({}, uploadData, {
-          files: [file]
-        });
+      chain = chain.then(() => {
+        return new Ember.RSVP.Promise((resolve, reject) => {
+          let uploadClone = Object.assign({}, uploadData, {
+            files: [file],
+          });
 
-        uploadClone.submit().done(result => {
-          let value = this.get('value');
-          let valueArray = [];
+          uploadClone.submit().done((result) => {
+            let prevValue = this.get('value');
+            let arr = [];
 
-          //TODO: переписать.
-          if (value) {
             try {
-              let parsed = JSON.parse(value);
-              valueArray = Array.isArray(parsed) ? parsed : [parsed];
+              arr = JSON.parse(prevValue) || [];
+              if (!Array.isArray(arr)) {
+                arr = [];
+              }
             } catch (e) {
-              valueArray = [];
+              arr = [];
             }
-          }
 
-          let existingIndex = valueArray.findIndex(v => v.fileName === file.name);
-          if (existingIndex !== -1) {
-            valueArray[existingIndex] = Object.assign({}, valueArray[existingIndex], result);
-          } else {
-            valueArray.push(result);
-          }
+            arr.push(result);
+            this.set('value', JSON.stringify(arr));
 
-          this.set('value', JSON.stringify(valueArray));
-
-          this.sendAction('uploadSuccess', result, index);
-          resolve();
-        }).fail((jqXhr, textStatus, errorThrown) => {
-          this.addErrorMessage(`Ошибка загрузки файла "${file.name}": ${errorThrown}`);
-          this.sendAction('uploadFail', errorThrown, index);
-          reject(errorThrown);
+            this.sendAction('uploadSuccess', result, index);
+            resolve();
+          }).fail((jqXhr, textStatus, errorThrown) => {
+            this.set('_uploadIsInProgress', false);
+            this.addErrorMessage(`Ошибка загрузки файла "${file.name}": ${errorThrown}`);
+            this.sendAction('uploadFail', errorThrown, index);
+            reject(errorThrown);
+          });
         });
-      }));
+      });
     });
 
-    chain.finally(() => {
+    return chain.finally(() => {
       this.set('_uploadIsInProgress', false);
       this.set('_files', Ember.A([]));
     });
