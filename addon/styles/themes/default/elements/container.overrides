@@ -758,7 +758,6 @@ div.legend-drag-panel {
   box-sizing: border-box;
 
   background: #fff;
-  opacity: 0.9;
 
   box-shadow: 0 0 4px #3c4f76;
 
