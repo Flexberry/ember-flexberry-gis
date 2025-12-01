@@ -502,7 +502,13 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
     wfsLayer.getMetaForTableAttr = this.get('_getMetaForTableAttr').bind(wfsLayer);
     wfsLayer._addSortingToWfsXml = this.get('_addSortingToWfsXml').bind(wfsLayer);
 
-    let settingsAsObject = this.get('layerModel.settingsAsObject');
+    this.setFileSettings(options)
+
+    return wfsLayer;
+  },
+
+  setFileSettings(options) {
+    let settingsAsObject = this.get('layerModel.settingsAsObject')
     if (!Ember.isEmpty(settingsAsObject)) {
       if (!Ember.isEmpty(options.url)) {
         let url = options.url.replace('/geoserver', '').replace('/ows', '');
@@ -516,8 +522,6 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
         settingsAsObject.projectionNameFiles = options.typeName + '-files';
       }
     }
-
-    return wfsLayer;
   },
 
   saveSuccess() {

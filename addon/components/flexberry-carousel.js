@@ -14,6 +14,8 @@ export default Ember.Component.extend({
 
   availableEdit: null,
 
+  feature: null,
+
   total: Ember.computed('images.[]', function () {
     return this.get('images') ? this.get('images').length : 0;
   }),
