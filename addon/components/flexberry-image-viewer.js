@@ -37,6 +37,8 @@ export default Ember.Component.extend({
 
   uploadIsInProgressFiles: null,
 
+  availableEdit: null,
+
   init() {
     this._super(...arguments);
 

@@ -8,13 +8,15 @@ export default Ember.Component.extend({
 
   activeIndex: 0,
 
-  total: Ember.computed('images.[]', function () {
-    return this.get('images') ? this.get('images').length : 0;
-  }),
-
   images: null,
 
   token: null,
+
+  availableEdit: null,
+
+  total: Ember.computed('images.[]', function () {
+    return this.get('images') ? this.get('images').length : 0;
+  }),
 
   slide(activeIndex, newIndex, direction) {
     let carouselItems = this.get('images');

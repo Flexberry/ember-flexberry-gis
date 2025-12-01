@@ -1,15 +1,16 @@
 <div class="flexberry-carousel-actions">
-    {{#if (gt total 0)}}
+    {{#if (and availableEdit (not feature.arch) (gt total 0))}}
       <a onclick={{action "delete" activeIndex}}>
           <i class="delete icon"></i>
           Удалить
       </a>
     {{/if}}
-
+    {{#if (and availableEdit (not feature.arch))}}
     <a onclick={{action "add"}}>
         <i class="plus icon"></i>
         Добавить
     </a>
+    {{/if}}
 </div>
 
 <div class="flexberry-carousel-container">

@@ -1,4 +1,4 @@
-{{#if visibleAddPhoto}}
+{{#if (and availableEdit (not feature.arch) visibleAddPhoto)}}
 <a onclick={{action "onAddPhoto"}}>
     <i class="plus icon"></i>
     Добавить изображения
@@ -36,6 +36,7 @@
         {{#flexberry-carousel
             images=images
             token=token
+            availableEdit=availableEdit
             onAddPhoto=(action "onAddPhoto")
             onHideCarousel=(action "onHideCarousel")
             onShowDeletePhoto=(action "onShowDeletePhoto")
