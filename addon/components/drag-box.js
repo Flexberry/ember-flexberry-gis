@@ -9,7 +9,7 @@ export default Ember.Component.extend({
 
   container: null,
 
-  zIndex: 500,
+  zIndex: 999,
 
   top: null,
 
@@ -59,7 +59,8 @@ export default Ember.Component.extend({
   }),
 
   didInsertElement() {
-    let container = this.get('container');
+    const container = this.get('container');
+
     if (Ember.isNone(container)) {
       return;
     }
@@ -84,34 +85,31 @@ export default Ember.Component.extend({
     }
 
     // Patching JQuery-ui draggable() for position:absolute
-    let __dx;
-    let __dy;
-    let __recoupLeft;
-    let __recoupTop;
-    const that = this;
+    const containmentElem = Ember.$(container)[0];
+    let absoluteOffsetLeft;
+    let absoluteOffsetTop;
+    const borderWidth = 6;
+    const borderHeight = 6;
     this.$().draggable({
       containment: container,
-      drag: function (event, ui) {
-        __dx = ui.position.left - ui.originalPosition.left;
-        __dy = ui.position.top - ui.originalPosition.top;
-        ui.position.left = ui.originalPosition.left + __dx;
-        ui.position.top = ui.originalPosition.top + __dy;
-
-        ui.position.left += __recoupLeft;
-        ui.position.top += __recoupTop;
-      },
       start: function (event, ui) {
-        that.$(this).css('cursor', 'pointer');
-        let left = parseInt(that.$(this).css('left'), 10);
+        let left = parseInt(ui.helper.css('left'), 10);
         left = isNaN(left) ? 0 : left;
-        let top = parseInt(that.$(this).css('top'), 10);
+        let top = parseInt(ui.helper.css('top'), 10);
         top = isNaN(top) ? 0 : top;
-        __recoupLeft = left - ui.position.left;
-        __recoupTop = top - ui.position.top;
+
+        // Вычисляем правильное смещение при position:absolute
+        absoluteOffsetLeft = left - ui.position.left;
+        absoluteOffsetTop = top - ui.position.top;
       },
-      create: function (event, ui) {
-        that.$(this).attr('oriLeft', that.$(this).css('left'));
-        that.$(this).attr('oriTop', that.$(this).css('top'));
+      drag: function (event, ui) {
+        // Применяем смещение
+        const newLeft = ui.position.left + absoluteOffsetLeft;
+        const newTop = ui.position.top + absoluteOffsetTop;
+
+        // Ограничиваем выход за границы, встроенный draggable.containment не учитывает transform()
+        ui.position.left = Math.min(newLeft, containmentElem.clientWidth - ui.helper.context.clientWidth - borderWidth);
+        ui.position.top = Math.min(newTop, containmentElem.clientHeight - ui.helper.context.clientHeight - borderHeight);
       },
     });
 

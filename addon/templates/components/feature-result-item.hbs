@@ -216,4 +216,18 @@
         {{/if}}
       {{/if}}
   {{/if}}
+
+  {{#if photosEnabled}}
+    <div class="feature-div-property-name">
+      {{photosName}}
+    </div>
+
+    <div class="feature-div-property-value">
+      {{#flexberry-image-viewer
+        feature=feature
+        availableEdit=availableEdit
+      }}
+      {{/flexberry-image-viewer}}
+    </div>
+  {{/if}}
 </div>

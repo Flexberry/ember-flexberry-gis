@@ -9,6 +9,7 @@ import openCloseSubmenu from 'ember-flexberry-gis/utils/open-close-sub-menu';
 import { zoomToBounds } from '../utils/zoom-to-bounds';
 import ResultFeatureInitializer from '../mixins/result-feature-initializer';
 import SlotsMixin from 'ember-block-slots';
+
 /**
   Component for display GeoJSON feature object details
 
@@ -31,6 +32,8 @@ export default Ember.Component.extend(SlotsMixin, ResultFeatureInitializer, {
     @type Ember.session
   */
   session: Ember.inject.service(),
+
+  store: Ember.inject.service('store'),
 
   /**
     Flag indicates whether to show all coordinates.
@@ -174,6 +177,14 @@ export default Ember.Component.extend(SlotsMixin, ResultFeatureInitializer, {
    */
   isActive: Ember.computed('selectedFeature', 'feature', function () {
     return this.get('selectedFeature') === this.get('feature');
+  }),
+
+  photosEnabled: Ember.computed('feature', function () {
+    return this.feature.layerModel.settingsAsObject.displaySettings.photosEnabled;
+  }),
+
+  photosName: Ember.computed('feature', function () {
+    return this.feature.layerModel.settingsAsObject.displaySettings.photosName;
   }),
 
   /**

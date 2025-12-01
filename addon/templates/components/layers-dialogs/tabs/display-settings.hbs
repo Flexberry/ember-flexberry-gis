@@ -47,6 +47,28 @@
     </div>
   </div>
   <div class="row">
+    <div class="column">
+      <div class="field">
+        {{flexberry-checkbox
+          value=value.photosEnabled
+          label=(t photosEnabledLabel)
+          class='toggle'
+        }}
+      </div>
+    </div>
+  </div>
+  <div class="row">
+     <div class="column">
+      <div class="field">
+        <label>{{t photosNameLabel}}</label>
+        {{flexberry-textbox
+          value=value.photosName
+          class=displayPropertyClass
+        }}
+      </div>
+    </div>
+  </div>
+  <div class="row">
     <table class="ui compact celled definition table">
       <thead class="full-width">
         <tr>

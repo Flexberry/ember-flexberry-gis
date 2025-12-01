@@ -13,6 +13,9 @@ import moment from 'moment';
 import { getDateFormatFromString, createTimeInterval } from '../../utils/get-date-from-string';
 import getBooleanFromString from '../../utils/get-boolean-from-string';
 import WfsFilterParserMixin from '../../mixins/wfs-filter-parser';
+import { Projection, Serializer } from 'ember-flexberry-data';
+import GisAdapter from 'ember-flexberry-gis/adapters/odata';
+import DS from 'ember-data';
 
 /**
   WFS layer component for leaflet map.
@@ -42,6 +45,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
     'withCredentials',
     'continueLoading',
     'wpsUrl',
+    'displaySettings',
   ],
 
   /**
@@ -408,6 +412,11 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
         .once('load', (e) => {
           let wfsLayer = e.target;
           let layer = this._createVectorLayer(wfsLayer, options, featuresReadFormat);
+
+          if (layer.options.displaySettings && layer.options.displaySettings.photosEnabled) {
+            this.createDynamicModelFiles();
+          }
+
           resolve(layer);
         })
         .once('error', (e) => {
@@ -493,7 +502,26 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
     wfsLayer.getMetaForTableAttr = this.get('_getMetaForTableAttr').bind(wfsLayer);
     wfsLayer._addSortingToWfsXml = this.get('_addSortingToWfsXml').bind(wfsLayer);
 
+    this.setFileSettings(options)
+
     return wfsLayer;
+  },
+
+  setFileSettings(options) {
+    let settingsAsObject = this.get('layerModel.settingsAsObject')
+    if (!Ember.isEmpty(settingsAsObject)) {
+      if (!Ember.isEmpty(options.url)) {
+        let url = options.url.replace('/geoserver', '').replace('/ows', '');
+        settingsAsObject.uploadUrlFiles = url + '/odata/File';
+        settingsAsObject.urlOdata = url + '/odata';
+        settingsAsObject.urlShared = url + '/shared/models/';
+      }
+
+      if (!Ember.isEmpty(options.typeNS) && !Ember.isEmpty(options.typeName)) {
+        settingsAsObject.modelNameFiles = options.typeNS.toLowerCase() + '-' + options.typeName + '-files';
+        settingsAsObject.projectionNameFiles = options.typeName + '-files';
+      }
+    }
   },
 
   saveSuccess() {
@@ -1544,6 +1572,7 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
       });
     });
   },
+
   _addSortingToWfsXml(xmlDoc, sortModel) {
     const query = xmlDoc.querySelector('Query');
     if (!query || !sortModel || !Array.isArray(sortModel)) {
@@ -1565,5 +1594,189 @@ export default BaseVectorLayer.extend(WfsFilterParserMixin, {
 
     const sortXML = new DOMParser().parseFromString(sortString, 'text/xml');
     query.appendChild(sortXML.documentElement);
+  },
+
+  /**
+    Creates models in recursive.
+
+    @method createModelHierarchy
+    @param {String} metadataUrl
+    @param {String} modelName
+    @return {Promise} Object consists of model, json data and mixin.
+  */
+  createModelHierarchy(metadataUrl, modelName) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      if (!Ember.isNone(modelName) && !Ember.isNone(metadataUrl)) {
+        let _this = this;
+        Ember.$.ajax({
+          url: metadataUrl + modelName + '.json',
+          async: true,
+          success: function (dataModel) {
+            if (!Ember.isNone(dataModel)) {
+              let parentModelName = dataModel.parentModelName;
+              if (Ember.isNone(parentModelName)) {
+                _this.set('namespace', dataModel.nameSpace);
+                let modelMixin = _this.createMixin(dataModel);
+                let model = _this.createModel(modelMixin);
+                resolve({ model: model, dataModel: dataModel, modelMixin: modelMixin });
+              } else {
+                _this
+                  .createModelHierarchy(metadataUrl, parentModelName)
+                  .then(({ model }) => {
+                    let mMixin = _this.createMixin(dataModel);
+                    let mModel = model.extend(mMixin, {});
+                    mModel.reopenClass({
+                      _parentModelName: parentModelName,
+                      namespace: _this.get('namespace'),
+                    });
+
+                    resolve({ model: mModel, dataModel: dataModel, modelMixin: mMixin });
+                  })
+                  .catch((e) => {
+                    reject("Can't create parent model: " + parentModelName + ' .Error: ' + e);
+                  });
+              }
+            }
+          },
+          error: function (e) {
+            reject("Can't create model: " + modelName + ' .Error: ' + e);
+          },
+        });
+      } else {
+        reject('ModelName and metadataUrl is empty');
+      }
+    });
+  },
+
+  /**
+    Creates mixin from data model.
+
+    @method createMixin
+    @param {Object} jsonModel Data model in json format.
+    @return {Object} Mixin
+  */
+  createMixin(jsonModel) {
+    if (Ember.isNone(jsonModel)) {
+      return;
+    }
+
+    let mixin = {};
+    jsonModel.attrs.forEach((attr) => {
+      mixin[attr.name] = DS.attr(attr.type, { required: attr.notNull });
+    });
+
+    let modelMixin = Ember.Mixin.create(mixin);
+    return modelMixin;
+  },
+
+  /**
+    Creates model from mixin.
+
+    @method createModel
+    @param {Object} modelMixin Model of mixin.
+    @return {Object} Model
+  */
+  createModel(modelMixin) {
+    let namespace = this.get('namespace');
+    let model = Projection.Model.extend(modelMixin);
+    model.reopenClass({
+      namespace: namespace,
+    });
+
+    return model;
+  },
+
+  /**
+    Creates projection from data model.
+
+    @method createProjection
+    @param {Object} jsonModel Data model in json format.
+    @return {Object} Projection
+  */
+  createProjection(jsonModel, projectionName) {
+    let projJson = jsonModel.projections.filter((proj) => proj.name === projectionName);
+    let modelProjection = {};
+    if (projJson.length > 0) {
+      projJson[0].attrs.forEach((attr) => {
+        modelProjection[attr.name] = Projection.attr('');
+      });
+    }
+
+    return modelProjection;
+  },
+
+  /**
+    Creates serializer from Serializer.Odata.
+
+    @method createSerializer
+    @return {Object} Serializer
+  */
+  createSerializer() {
+    let serializer = Ember.Mixin.create({
+      primaryKey: '__PrimaryKey',
+
+      getAttrs: function () {
+        let parentAttrs = this._super();
+        let attrs = {};
+
+        return Ember.$.extend(true, {}, parentAttrs, attrs);
+      },
+
+      init: function () {
+        this.set('attrs', this.getAttrs());
+        this._super(...arguments);
+      },
+    });
+
+    return Serializer.Odata.extend(serializer);
+  },
+
+  createAdapterForModel(url, modelNameFiles) {
+    return GisAdapter.extend(Projection.AdapterMixin, {
+      host: url,
+
+      pathForType() {
+        return modelNameFiles;
+      },
+    });
+  },
+
+  createDynamicModelFiles() {
+    let modelNameFiles = this.layerModel.settingsAsObject.modelNameFiles;
+    let metadataUrl = this.layerModel.settingsAsObject.urlShared;
+
+    this.createModelHierarchy(metadataUrl, modelNameFiles).then(({ model, dataModel, modelMixin }) => {
+      model.defineProjection(
+        this.layerModel.settingsAsObject.projectionNameFiles,
+        modelNameFiles,
+        this.createProjection(dataModel, this.layerModel.settingsAsObject.typeName + '_files')
+      );
+
+      let modelRegisteredFiles = Ember.getOwner(this)._lookupFactory(`model:${modelNameFiles}`);
+      let mixinRegisteredFiles = Ember.getOwner(this)._lookupFactory(`mixin:${modelNameFiles}`);
+
+      if (Ember.isNone(modelRegisteredFiles)) {
+        Ember.getOwner(this).register(`model:${modelNameFiles}`, model);
+      }
+
+      if (Ember.isNone(mixinRegisteredFiles)) {
+        Ember.getOwner(this).register(`mixin:${modelNameFiles}`, modelMixin);
+      }
+
+      let adapterRegistered = Ember.getOwner(this)._lookupFactory(`adapter:${modelNameFiles}`);
+      if (Ember.isNone(adapterRegistered)) {
+        let modelAdapter = this.createAdapterForModel(
+          this.layerModel.settingsAsObject.urlOdata,
+          this.layerModel.settingsAsObject.typeNS + this.layerModel.settingsAsObject.typeName + 'filess'
+        );
+        Ember.getOwner(this).register(`adapter:${modelNameFiles}`, modelAdapter);
+      }
+
+      let serializerRegistered = Ember.getOwner(this)._lookupFactory(`serializer:${modelNameFiles}`);
+      if (Ember.isNone(serializerRegistered)) {
+        let modelSerializer = this.createSerializer();
+        Ember.getOwner(this).register(`serializer:${modelNameFiles}`, modelSerializer);
+      }
+    });
   },
 });

@@ -26,7 +26,9 @@ export default {
         'properties-list-heading': 'Доступные свойства',
         'show-prop-heading': 'Показывать?',
         'locales-list-heading': 'Доступные локали',
-        'no-items-label': 'Нечего показать'
+        'no-items-label': 'Нечего показать',
+        'photos-enabled': 'Изображения',
+        'photos-name': 'Название на карте',
       },
 
       'identification-settings': 'Может быть идентифицирован',

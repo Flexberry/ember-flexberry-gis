@@ -9,7 +9,8 @@
   clearPositionOnHide=false
   resizable=true
 }}
-  <h3 class="{{titleClass}}">Легенда карты</h3>
+<div class="container">
+    <h3 class="{{titleClass}}">Легенда карты</h3>
   <div class="div-tools">
 
     {{#if (not hasLayers)}}
@@ -41,6 +42,7 @@
   >
     <i class="close icon {{flexberryClassNames.icon}} icon"></i>
   </a>
+</div>
 {{/drag-box}}
 
 {{map-commands/base
