@@ -116,11 +116,11 @@ export default FlexberryFileComponent.extend({
   }),
 
   /**
-   * Кнопка "Добавить" активна, если не достигнут лимит и нет ошибок
+   * Кнопка "Добавить" активна, если не достигнут лимит
    */
   _addButtonIsEnabled: Ember.computed('_files.[]', function () {
     let files = this.get('_files');
-    return files.length < this.get('maxFiles') && files.every((f) => !f._hasError);
+    return files.length < this.get('maxFiles');
   }),
 
   /**
@@ -185,7 +185,10 @@ export default FlexberryFileComponent.extend({
       }
     });
 
-    this.get('_files').pushObjects(selectedFiles);
+    let validFiles = selectedFiles.filter((file) => !file._hasError);
+    if (validFiles.length > 0) {
+      this.get('_files').pushObjects(validFiles);
+    }
   },
 
   /**
@@ -245,7 +248,7 @@ export default FlexberryFileComponent.extend({
      * Загрузка всех файлов.
      */
     uploadButtonClick() {
-      if (this.get('_files.length') > 0 && this.get('errorMessages.length') === 0) {
+      if (this.get('_files.length') > 0) {
         return this._uploadFilesSequentially(this.get('_files'));
       }
     },
