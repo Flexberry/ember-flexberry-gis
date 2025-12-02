@@ -646,7 +646,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         console.error('Cannot parse layer.settingsAsObject.url', error);
       }
 
-      return urlAsObj && urlAsObj.hostname === window.location.hostname;
+      return urlAsObj && urlAsObj.hostname !== window.location.hostname;
     }),
 
     /**
