@@ -139,7 +139,7 @@
                     }}
                   {{/if}}
 
-                  {{#if (and (not isGroup) presenceLayerInGeoportal )}}
+                  {{#if (and (not isGroup) presenceLayerInGeoportal (not isOpenLayer) (not (eq layer.type 'tile')) (not (eq layer.type 'wms')))}}
                     {{flexberry-button
                       class=(concat flexberryClassNames.loadButton " floated " flexberryClassNames.preventExpandCollapse)
                       iconClass="icon-guideline-export-layer"

@@ -634,6 +634,21 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       return false;
     }),
 
+    isOpenLayer: Ember.computed('access', 'access.accessibleData.[]', 'readonly', 'layer', function () {
+      let url = this.get('layer.settingsAsObject.url');
+      let urlAsObj = null;
+
+      if (!url) return false;
+
+      try {
+        urlAsObj = new URL(url);
+      } catch (error) {
+        console.error('Cannot parse layer.settingsAsObject.url', error);
+      }
+
+      return urlAsObj && urlAsObj.hostname === window.location.hostname;
+    }),
+
     /**
       Flag: indicates whether layer node has been expanded once.
 

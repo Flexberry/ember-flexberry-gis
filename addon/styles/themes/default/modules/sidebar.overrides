@@ -414,6 +414,11 @@
             &.disabled {
               opacity: 0.75 !important;
               pointer-events: auto !important;
+              color: @tempItemColor;
+
+              & > i {
+                color: @tempItemColor !important;
+              }
             }
           }
         }

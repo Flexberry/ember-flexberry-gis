@@ -17,6 +17,7 @@ export default Ember.Component.extend({
   visible: false,
 
   modalMessage: Ember.inject.service(),
+  i18n: Ember.inject.service(),
 
   store: Ember.inject.service(),
 
@@ -47,7 +48,6 @@ export default Ember.Component.extend({
     KML: 'KML',
     'ESRI Shapefile': 'Shape Zip',
     'MapInfo File': 'MIF',
-    GPX: 'GPX',
   },
 
   noGeometryFormats: {
@@ -95,6 +95,13 @@ export default Ember.Component.extend({
     const crs = layer.get('crs.code');
 
     this.set('selectedCRS', crs);
+
+    const settings = this.get('layer.settingsAsObject') || {};
+
+    // GPX format only polyline and marker
+    if (settings.typeGeometry === 'polyline' || settings.typeGeometry === 'marker') {
+      this.geometryFormats['GPX'] = 'GPX';
+    }
   },
 
   getExportApiURL(param, config) {
@@ -108,6 +115,35 @@ export default Ember.Component.extend({
     }
 
     return exportApiUrl;
+  },
+
+  getHeader() {
+    let result = {};
+    const locale = this.get('i18n.locale');
+    const getAttributesOptions = this.get('layer._attributesOptions');
+    const fields = this.get('layer._leafletObject.readFormat.featureType.fields');
+
+    if (Ember.isNone(getAttributesOptions)) {
+      return null;
+    }
+
+    return getAttributesOptions().then(({ object, settings }) => {
+      const localizedProperties = Ember.get(settings, `localizedProperties.${locale}`) || {};
+      let excludedProperties = Ember.get(settings, `excludedProperties`);
+      excludedProperties = Ember.isArray(excludedProperties) ? Ember.A(excludedProperties) : Ember.A();
+
+      for (let propertyName in fields) {
+        if (excludedProperties.contains(propertyName)) {
+          continue;
+        }
+
+        let propertyCaption = Ember.get(localizedProperties, propertyName);
+
+        result[propertyName] = !Ember.isBlank(propertyCaption) ? propertyCaption : propertyName;
+      }
+
+      return result;
+    });
   },
 
   start(param) {
@@ -276,6 +312,14 @@ export default Ember.Component.extend({
         additionalArguments = { dsco: { FORMAT: 'GML3' } };
         data = Object.assign(data, additionalArguments);
         data.outputFormat = 'GML';
+      }
+
+      if (data.outputFormat === 'XLSX') {
+        this.getHeader().then((header) => {
+          data.header = header ? JSON.stringify(header) : null;
+          this.start(data);
+        });
+        return;
       }
 
       this.start(data);
