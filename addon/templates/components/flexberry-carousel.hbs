@@ -1,41 +1,39 @@
-<div class="flexberry-carousel-actions">
+<div class="flexberry-carousel-header">
+  {{#if (gt total 0)}}
+    <span class="file-name">{{get images (concat activeIndex '.fileName')}}</span>
+  {{/if}}
+  <div class="actions">
     {{#if (and availableEdit (not feature.arch) (gt total 0))}}
-      <a onclick={{action "delete" activeIndex}}>
-          <i class="delete icon"></i>
-          Удалить
-      </a>
+      <button class="ui button" onclick={{action "delete" activeIndex}}><i class="icon-guideline-delete"></i>Удалить</button>
     {{/if}}
     {{#if (and availableEdit (not feature.arch))}}
-    <a onclick={{action "add"}}>
-        <i class="plus icon"></i>
-        Добавить
-    </a>
+      <button class="ui button" onclick={{action "add"}}><i class="icon-guideline-plus"></i>Добавить</button>
     {{/if}}
+    <button class="ui button cancel" title="Закрыть"><i class="icon-guideline-cross-r"></i></button>
+  </div>
 </div>
 
 <div class="flexberry-carousel-container">
-
   {{#if (gt total 0)}}
     <div class="flexberry-carousel-body">
+      <div class="flexberry-carousel-items">
         {{#each images as |image index|}}
           <div class="{{concat "flexberry-carousel-item " image.from (if (eq index activeIndex) " active") (if image.slidingIn " slide-in") (if image.slidingOut " slide-out")}}">
-            <div class="flexberry-carousel-filename">
-              {{image.fileName}}
-            </div>
             {{#image-loader
               token=token
               imageUrl=image.preview
             }}
             {{/image-loader}}
-            <div class="flexberry-carousel-creator">
-              Добавлено: {{image.creator}} {{image.createTime}}
-            </div>
           </div>
         {{/each}}
+      </div>
+      <span>{{math/add activeIndex 1}} из {{total}}</span>
     </div>
 
-    <div class="line-arrow left" onclick={{action "prev"}}></div>
-    <div class="line-arrow right" onclick={{action "next"}}></div>
+    <div class="flexberry-carousel-nav">
+      <button class="ui button icon-guideline-navigate-arrow-left" onclick={{action "prev"}}></button>
+      <button class="ui button icon-guideline-navigate-arrow" onclick={{action "next"}}></button>
+    </div>
   {{else}}
     <div class="flexberry-carousel-item no-data">
       Нет данных
@@ -43,6 +41,10 @@
   {{/if}}
 </div>
 
-{{#if (gt total 0)}}
-  {{math/add activeIndex 1}} из {{total}}
-{{/if}}
+<div class="flexberry-carousel-footer">
+  {{#if (gt total 0)}}
+    Добавлено: <br>
+    {{get images (concat activeIndex '.creator')}}
+    {{get images (concat activeIndex '.createTime')}}
+  {{/if}}
+</div>

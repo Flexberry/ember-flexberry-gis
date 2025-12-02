@@ -10,6 +10,8 @@ export default Ember.Component.extend({
 
   previewBase64: null,
 
+  tagName: '',
+
   init() {
     this._super(...arguments);
     this.loadImage();

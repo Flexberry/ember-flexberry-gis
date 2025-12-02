@@ -1,3 +1,13 @@
+{{#if errorMessages.length}}
+  <div class="ui negative message">
+    <ul>
+      {{#each errorMessages as |errorMessage|}}
+        <li>{{errorMessage}}</li>
+      {{/each}}
+    </ul>
+  </div>
+{{/if}}
+<label>{{label}}</label>
 <div class="ui {{inputClass}} action input flexberry-file-dropzone">
   <input type="file" name="files[]" accept={{accept}} id={{_fileInputId}} class="flexberry-file-file-input" style="display:none"
    multiple />
@@ -15,15 +25,15 @@
         title={{t "components.flexberry-file.add-button-title"}}
         for={{_fileInputId}}
         {{action "addButtonClick" on="click" preventDefault=false}}>
-        <i class="add outline square icon"></i>
+        <i class="icon-guideline-file"></i>
       </label>
     {{/if}}
-    {{#if _removeButtonIsVisible}}
+    {{#if (and _removeButtonIsVisible (or _hasFile errorMessages.length))}}
       <label
         class="flexberry-file-remove-button ui icon {{buttonClass}} {{unless _removeButtonIsEnabled "disabled"}} button"
         title={{t "components.flexberry-file.remove-button-title"}}
         {{action "removeButtonClick" on="click" preventDefault=false}}>
-        <i class="trash outline icon"></i>
+        <i class="icon-guideline-cross-r"></i>
       </label>
     {{/if}}
     {{#if _uploadButtonIsVisible}}
@@ -47,34 +57,30 @@
 {{#if (and showPreview _hasFile)}}
   {{#if _canLoadPreview}}
     <div class="flexberry-file-image-preview-wrapper">
-      <div class="ui three column grid">
-        {{#each _files as |file|}}
-          {{#unless file._hasError}}
-            <div class="column fix-size-files fixed">
-              <div class="flexberry-file-image-preview-block">
-                {{#unless file._isPreviewLoading}}
-                  {{#if file._previewBase64}}
-                    <img
-                      class="flexberry-file-image-preview ui small centered image"
-                      src={{file._previewBase64}}
-                      alt={{file.name}}
-                    />
-                  {{else}}
-                    <span style="color:red;">{{t "components.flexberry-file.preview-image-alternative-text"}}</span>
-                  {{/if}}
-                {{/unless}}
-                <div class="ui {{if file._isPreviewLoading " active " "disabled "}} loader"></div>
+      {{#each _files as |file|}}
+        {{#unless file._hasError}}
+          <div class="flexberry-file-image-preview-block">
+            {{#unless file._isPreviewLoading}}
+              {{#if file._previewBase64}}
+                <img
+                  class="flexberry-file-image-preview"
+                  src={{file._previewBase64}}
+                  alt={{file.name}}
+                />
+              {{else}}
+                <span style="color:red;">{{t "components.flexberry-file.preview-image-alternative-text"}}</span>
+              {{/if}}
+            {{/unless}}
+            <div class="ui {{if file._isPreviewLoading " active " "disabled "}} loader"></div>
 
-                <div class="ui tiny header" style="display:none">{{file.name}}</div>
+            <div class="ui tiny header" style="display:none">{{file.name}}</div>
 
-                <button type="button" class="delete-image-btn" title="Удалить файл" {{action "removeSingleFile" file}}>
-                  ✕
-                </button>
-              </div>
-            </div>
-          {{/unless}}
-        {{/each}}
-      </div>
+            <button type="button" class="delete-image-btn" title="Удалить файл" {{action "removeSingleFile" file}}>
+              ✕
+            </button>
+          </div>
+        {{/unless}}
+      {{/each}}
     </div>
   {{else}}
     {{#if _previewErrorFileNames}}
@@ -85,14 +91,5 @@
   {{/if}}
 {{/if}}
 
-{{#if errorMessages.length}}
-  <div class="ui negative message">
-    <ul>
-      {{#each errorMessages as |errorMessage|}}
-        <li>{{errorMessage}}</li>
-      {{/each}}
-    </ul>
-  </div>
-{{/if}}
 
 <div class="flexberry-file-download-iframes-container" style="display: none;"></div>
