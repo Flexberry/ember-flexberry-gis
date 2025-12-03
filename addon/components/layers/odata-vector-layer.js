@@ -17,6 +17,7 @@ import moment from 'moment';
 import getBooleanFromString from '../../utils/get-boolean-from-string';
 import { getDateFormatFromString, createTimeInterval } from '../../utils/get-date-from-string';
 import OdataFilterParserMixin from '../../mixins/odata-filter-parser';
+
 /**
   For batch reading
 */
@@ -889,7 +890,7 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin, {
     @method createSerializer
     @return {Object} Serializer
   */
-  createSerializer(belongToSerialize) {
+  createSerializer(belongToSerialize, needCapitalize) {
     let serializer = Ember.Mixin.create({
       primaryKey: '__PrimaryKey',
 
@@ -899,7 +900,7 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin, {
         };
 
         if (!Ember.isEmpty(belongToSerialize)) {
-          attrs[belongToSerialize] = { serialize: 'odata-id', deserialize: 'records' };
+          attrs[belongToSerialize] = { serialize: 'odata-id', deserialize: 'records', needCapitalize: needCapitalize };
         }
 
         return Ember.$.extend(true, {}, parentAttrs, attrs);
@@ -941,7 +942,13 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin, {
                 .replace(STRING_CAMELIZE_REGEXP_2, (match, separator, chr) => match.toLowerCase());
             };
 
-            json[payloadKey] = Ember.String.pluralize(capitalize(camelizeNoUpperCase(relationship.type))) + '(' + belongsToId + ')';
+            let relationshipName = camelizeNoUpperCase(relationship.type);
+            if (option.needCapitalize) {
+              relationshipName = capitalize(relationshipName);
+            }
+
+            // Odata всем именам объектов добавляет тупо s на конце, без каких либо правил инфлекторов.
+            json[payloadKey] = `${relationshipName}s(${belongsToId})`;
           }
         }
 
@@ -1074,14 +1081,15 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin, {
               let serializerRegisteredFiles = Ember.getOwner(this)._lookupFactory(`serializer:${modelNameFiles}`);
               if (Ember.isNone(serializerRegisteredFiles)) {
                 this.set('odataSerializer', null);
-                let modelSerializer = this.createSerializer(modelName.split('-')[1]);
+                let modelSerializer = this.createSerializer(modelName.split('-')[1],
+                  model.namespace.charAt(0) === model.namespace.charAt(0).toUpperCase());
                 Ember.getOwner(this).register(`serializer:${modelNameFiles}`, modelSerializer);
               }
 
               let adapterRegisteredFiles = Ember.getOwner(this)._lookupFactory(`adapter:${modelNameFiles}`);
               if (Ember.isNone(adapterRegisteredFiles)) {
                 let odataClass = this.get('odataClass');
-                this.set('odataClass', Ember.String.singularize(odataClass)  + 'filess');
+                this.set('odataClass', odataClass.slice(0, -1) + 'filess');
                 let modelAdapter = this.createAdapterForModel();
                 Ember.getOwner(this).register(`adapter:${modelNameFiles}`, modelAdapter);
                 this.set('odataClass', odataClass);
