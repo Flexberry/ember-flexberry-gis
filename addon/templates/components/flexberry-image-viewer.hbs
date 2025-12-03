@@ -3,7 +3,7 @@
 {{/if}}
 <div class="flexberry-image-viewer">
   {{#each displayedImages as |image index|}}
-      <a class="preview"  onclick={{action "showCurrent" index}}>
+      <a class="preview" onclick={{action "showCurrent" index}}>
         {{image-loader
           token=token
           imageUrl=image.preview
@@ -12,7 +12,7 @@
   {{/each}}
 
   {{#if (gt images.length displayedImagesLimit)}}
-    <a class="preview more"onclick={{action "toggleShowAll"}}>
+    <a class="preview more" onclick={{action "toggleShowAll"}}>
       {{#if showAll}}Скрыть{{else}}Смотреть все{{/if}}
     </a>
   {{/if}}
