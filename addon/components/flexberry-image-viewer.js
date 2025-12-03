@@ -37,6 +37,10 @@ export default Ember.Component.extend({
 
   availableEdit: null,
 
+  showAll: false,
+
+  displayedImagesLimit: 5,
+
   init() {
     this._super(...arguments);
 
@@ -56,12 +60,6 @@ export default Ember.Component.extend({
       this.getFhotoLayer();
     }
   },
-
-  /**
-   * Отображаем на списке только 5 фото.
-   */
-  showAll: false,
-  displayedImagesLimit: 5,
 
   displayedImages: Ember.computed('images.[]', 'showAll', function() {
     const images = this.get('images') || [];
