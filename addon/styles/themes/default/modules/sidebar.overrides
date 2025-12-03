@@ -300,15 +300,35 @@
                   display: block;
                   float: left;
                 }
-                .layer-legend-image {
-                  position: relative;
-                  max-width: 24px;
-                  max-height: 24px;
-                  .icon-image {
-                    position: absolute;
-                    pointer-events: none;
+
+                &:not(.wms) {
+                  .layer-legend-image {
+                    position: relative;
+                    max-width: 24px;
+                    max-height: 24px;
+
+                    .icon-image {
+                      position: absolute;
+                      pointer-events: none;
+                    }
                   }
                 }
+
+                &.wms {
+                  display:flex;
+                  flex:1;
+                  max-height: 200px;
+                  overflow:auto;
+                  align-items: flex-start;
+
+                  .layer-legend-image {
+                    .icon-image {
+                      position: absolute;
+                      pointer-events: none;
+                    }
+                  }
+                }
+
                 .layer-legend-caption {
                   color: @textColor;
                   margin: @layerLegendCaptionMargin;

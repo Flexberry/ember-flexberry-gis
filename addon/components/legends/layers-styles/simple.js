@@ -17,7 +17,7 @@ export default BaseLayerStyleLegendComponent.extend({
     @private
     @readOnly
   */
-  _geometriesCanBeDisplayed: Ember.computed('legendSettings.geometriesCanBeDisplayed', function() {
+  _geometriesCanBeDisplayed: Ember.computed('legendSettings.geometriesCanBeDisplayed', function () {
     return this.get('legendSettings.geometriesCanBeDisplayed') !== false;
   }),
 
@@ -29,7 +29,7 @@ export default BaseLayerStyleLegendComponent.extend({
     @private
     @readOnly
   */
-  _markersCanBeDisplayed: Ember.computed('legendSettings.markersCanBeDisplayed', function() {
+  _markersCanBeDisplayed: Ember.computed('legendSettings.markersCanBeDisplayed', function () {
     return this.get('legendSettings.markersCanBeDisplayed') !== false;
   }),
 
@@ -85,10 +85,9 @@ export default BaseLayerStyleLegendComponent.extend({
           Ember.set(styleRule, 'width', scale.size);
           Ember.set(styleRule, 'height', scale.size);
 
-          styles.forEach(style => {
+          styles.forEach((style) => {
             markersStylesRenderer.getStyle(scale, style);
           });
-
         }
       });
     } else {
@@ -100,11 +99,21 @@ export default BaseLayerStyleLegendComponent.extend({
     if (this.get('_geometriesCanBeDisplayed')) {
       let styleSettings = this.get('styleSettings');
       let canvas = this.$('canvas.geometries')[0];
+
+      if (!styleSettings) {
+        return;
+      }
+
       this._pathLegendRenderer(styleSettings, canvas);
     }
 
     if (this.get('_markersCanBeDisplayed')) {
       let styles = Ember.isNone(this.parentView.layer.legendStyle) ? this.get('styleSettings.style.marker') : this.parentView.layer.legendStyle;
+
+      if (!styles) {
+        return;
+      }
+
       if (styles.hasOwnProperty('scale')) {
         return;
       }
@@ -131,7 +140,7 @@ export default BaseLayerStyleLegendComponent.extend({
     layersStylesRenderer.renderOnCanvas({
       styleSettings: styleSettings,
       canvas: canvas,
-      target: 'legend'
+      target: 'legend',
     });
-  }
+  },
 });
