@@ -8,9 +8,17 @@ export default FlexberryFileComponent.extend({
 
   _files: Ember.A([]),
 
+  errorMessages: Ember.A([]),
+
+  errorMessageFormat: '',
+
+  removeFileCount: 0,
+
   maxFiles: 20,
 
-  errorMessages: Ember.A([]),
+  maxFilesCalc: Ember.computed('removeFileCount', 'maxFiles', function () {
+    return this.get('maxFiles') - this.get('removeFileCount');
+  }),
 
   init() {
     this._super(...arguments);
@@ -25,7 +33,7 @@ export default FlexberryFileComponent.extend({
     _this.$('.flexberry-file-file-input').fileupload({
       autoUpload: false,
       dataType: 'json',
-      maxNumberOfFiles: _this.get('maxFiles'),
+      maxNumberOfFiles: _this.get('maxFilesCalc'),
       singleFileUploads: true,
       dropZone: _this.$('.flexberry-file-dropzone'),
       url: _this.get('uploadUrl'),
@@ -120,7 +128,7 @@ export default FlexberryFileComponent.extend({
    */
   _addButtonIsEnabled: Ember.computed('_files.[]', function () {
     let files = this.get('_files');
-    return files.length < this.get('maxFiles');
+    return files.length < this.get('maxFilesCalc');
   }),
 
   /**
@@ -144,19 +152,22 @@ export default FlexberryFileComponent.extend({
       return;
     }
 
-    if (existingFiles.length + selectedFiles.length > this.get('maxFiles')) {
-      this.addErrorMessage(`Можно добавить максимум ${this.get('maxFiles')} изображений.`);
-      return;
-    }
-
+    let addedCount = 0;
     selectedFiles.forEach((selectedFile) => {
       let accept = this.get('accept');
       let fileType = selectedFile.type;
       let fileName = selectedFile.name;
 
+      if (existingFiles.length + addedCount >= this.get('maxFilesCalc')) {
+        Ember.set(selectedFile, '_hasError', true);
+        this.addErrorMessage(`Не удалось прикрепить файл: ${fileName}`);
+        this.addErrorMessage(`Максимальное количество фото у объекта — ${this.get('maxFiles')}`);
+        return;
+      }
+
       if (!this._isValidTypeFile(fileType, accept)) {
         Ember.set(selectedFile, '_hasError', true);
-        this.addErrorMessage(`Файл "${fileName}" имеет неподдерживаемый формат.`);
+        this.addErrorMessage(`Недопустимый формат файла ${fileName}. ${this.get('errorMessageFormat')}`);
         return;
       }
 
@@ -183,6 +194,8 @@ export default FlexberryFileComponent.extend({
 
         reader.readAsDataURL(selectedFile);
       }
+
+      addedCount++;
     });
 
     let validFiles = selectedFiles.filter((file) => !file._hasError);

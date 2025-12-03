@@ -304,12 +304,16 @@ export default Ember.Component.extend({
           obj
             .save()
             .then(() => {
-              images.removeObject(image);
+              var imageToRemove = images.findBy('id', image.id);
+              if (imageToRemove) {
+                images.removeObject(imageToRemove);
+              }
+
               _this.set('images', images);
               _this.set('deleteIndex', null);
             })
-            .catch(() => {
-              console.error('Ошибка при удалении.');
+            .catch((error) => {
+              console.error('Ошибка при удалении. ', error);
               obj.rollbackAttributes();
             });
         }
