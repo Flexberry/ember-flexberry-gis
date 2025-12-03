@@ -65,11 +65,13 @@
         showModalDialogOnDownloadError=false
         showModalDialogOnUploadError=false
         accept="image/jpeg, image/jpg, image/png"
+        errorMessageFormat="Возможна загрузка только форматов JPEG/JPG, PNG."
         maxUploadFileSize=20
         maxUploadFileSizeUnit="Mb"
         value=filesJson
         _uploadIsInProgress=uploadIsInProgressFiles
         label="Файл"
+        removeFileCount=(get images "length")
       }}
     </div>
     <div class="attach-img-dialog-actions">
