@@ -812,3 +812,44 @@
     }
   }
 }
+
+.ui.modal.info-dialog {
+  i.icon.close{
+    top: 5px;
+    right: 13px;
+    &::before {
+      content: "\e93b";
+      font-family: 'guideline-icons';
+      font-size: 1.5rem;
+      color: #DDE1E6;
+    }
+  }
+
+  &.with-icon > .content {
+    display: flex;
+    align-items: center;
+    i {
+      font-size: 2.5rem;
+      margin-right: 0.5rem;
+      color: #DBA939;
+    }
+  }
+
+  h4 {
+    font-size: 1.125rem;
+    margin-bottom: 0;
+  }
+
+  > .content {
+    padding: 0.5rem 1rem;
+  }
+
+  > .header {
+    background: transparent;
+    padding: 5px;
+  }
+  > .actions {
+    text-align: center;
+    padding-bottom: 1.5rem;
+  }
+}
