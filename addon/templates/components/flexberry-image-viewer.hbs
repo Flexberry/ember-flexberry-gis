@@ -1,8 +1,5 @@
 {{#if (and availableEdit (not feature.arch) visibleAddPhoto)}}
-<a onclick={{action "onAddPhoto"}}>
-    <i class="plus icon"></i>
-    Добавить изображения
-</a>
+  <a class="attach-img-button" onclick={{action "onAddPhoto"}}><i class="icon-guideline-plus icon"></i>Добавить изображения</a>
 {{/if}}
 <div class="flexberry-image-viewer">
   {{#each limitImages as |image index|}}
@@ -27,70 +24,72 @@
 </div>
 
 {{#if galleryDialogIsRequested}}
-    {{#flexberry-dialog
-        class="carousel"
-        visible=galleryDialogIsVisible
-        hide=(action "onHideCarousel")
-    }}
-    <div>
-        {{#flexberry-carousel
-            images=images
-            token=token
-            feature=feature
-            availableEdit=availableEdit
-            onAddPhoto=(action "onAddPhoto")
-            onHideCarousel=(action "onHideCarousel")
-            onShowDeletePhoto=(action "onShowDeletePhoto")
-        }}
-        {{/flexberry-carousel}}
-    </div>
+  {{#flexberry-dialog
+    class="basic fullscreen carousel"
+    visible=galleryDialogIsRequested
+    hide=(action "onHideCarousel")
+    closable=true
+    flexberryClassNames=(hash toolbar="hidden" header="hidden" closeButton="hidden")
+  }}
+    {{flexberry-carousel
+      images=images
+      token=token
+      feature=feature
+      availableEdit=availableEdit
+      onAddPhoto=(action "onAddPhoto")
+      onHideCarousel=(action "onHideCarousel")
+      onShowDeletePhoto=(action "onShowDeletePhoto")}}
 
-    {{/flexberry-dialog}}
-
+  {{/flexberry-dialog}}
 {{/if}}
 
 {{#if showFileAdd}}
   {{#flexberry-dialog
-    caption="Прикрепление файлов"
-    approveButtonCaption="Загрузить фото"
-    denyButtonCaption="Отменить загрузку"
+    class="attach-img-dialog"
     visible=showFileAdd
-    approve=(action "onApprove")
-    deny=(action "onDeny")
+    flexberryClassNames=(hash toolbar="hidden" header="hidden" closeButton="hidden")
   }}
-  <div class="field">
-    {{flexberry-files
-      uploadUrl=uploadUrlFiles
-      inputClass="fluid"
-      showUploadButton=false
-      showDownloadButton=false
-      showPreview=true
-      readonly=false
-      relatedModel=_relatedModelStub
-      showModalDialogOnDownloadError=false
-      showModalDialogOnUploadError=false
-      accept="image/jpeg, image/jpg, image/png"
-      maxUploadFileSize=20
-      maxUploadFileSizeUnit="Mb"
-      value=filesJson
-      _uploadIsInProgress=uploadIsInProgressFiles
-    }}
-  </div>
+    <div class="attach-img-dialog-header">
+      <div class="header">Прикрепление изображений</div>
+      <button class="ui button" onclick={{action "onDeny"}}><i class="icon-guideline-arrow-long-back"></i>Отменить загрузку</button>
+    </div>
+    <div class="field">
+      {{flexberry-files
+        uploadUrl=uploadUrlFiles
+        inputClass="fluid"
+        showUploadButton=false
+        showDownloadButton=false
+        showPreview=true
+        readonly=false
+        relatedModel=_relatedModelStub
+        showModalDialogOnDownloadError=false
+        showModalDialogOnUploadError=false
+        accept="image/jpeg, image/jpg, image/png"
+        maxUploadFileSize=20
+        maxUploadFileSizeUnit="Mb"
+        value=filesJson
+        _uploadIsInProgress=uploadIsInProgressFiles
+        label="Файл"
+      }}
+    </div>
+    <div class="attach-img-dialog-actions">
+      <button class="ui button attach {{if (not filesJson) "disabled"}}" onclick={{action "onApprove"}}>Загрузить файлы<i class="icon-guideline-arrow-long-next"></i></button>
+    </div>
   {{/flexberry-dialog}}
-  {{/if}}
+{{/if}}
 
-  {{#if showFileDelete}}
-    {{#flexberry-dialog
-      caption="Внимание"
-      approveButtonCaption="Удалить"
-      denyButtonCaption="Отмена"
-      visible=showFileDelete
-      hide=(action "onHideDeletePhoto")
-      approve=(action "delete")
-    }}
+{{#if showFileDelete}}
+  {{#flexberry-dialog
+    caption="Внимание"
+    approveButtonCaption="Удалить"
+    denyButtonCaption="Отмена"
+    visible=showFileDelete
+    hide=(action "onHideDeletePhoto")
+    approve=(action "delete")
+  }}
     <p>
       Фотография будет удалена без возможности восстановления.<br>
       Продолжить действие?
     </p>
-    {{/flexberry-dialog}}
-  {{/if}}
+  {{/flexberry-dialog}}
+{{/if}}

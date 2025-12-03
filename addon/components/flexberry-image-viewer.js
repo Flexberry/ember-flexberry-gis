@@ -17,8 +17,6 @@ export default Ember.Component.extend({
 
   galleryDialogIsRequested: false,
 
-  galleryDialogIsVisible: false,
-
   showFileAdd: false,
 
   showFileDelete: false,
@@ -222,15 +220,34 @@ export default Ember.Component.extend({
     });
   },
 
+  _addDimmerClass: Ember.observer('galleryDialogIsRequested', function() {
+    Ember.run.scheduleOnce('afterRender', this, function() {
+      if (this.get('galleryDialogIsRequested')) {
+        let $modal = Ember.$('.ui.basic.fullscreen.carousel.modal');
+        if ($modal.length) {
+          let $dimmer = $modal.closest('.ui.dimmer.modals');
+          if ($dimmer.length) {
+            $dimmer.addClass('carousel-dimmer');
+          }
+        }
+      } else {
+        Ember.$('.ui.dimmer.modals.carousel-dimmer').removeClass('carousel-dimmer');
+      }
+    });
+  }),
+
+  willDestroyElement() {
+    this._super(...arguments);
+    Ember.$('.ui.dimmer.modals.carousel-dimmer').removeClass('carousel-dimmer');
+  },
+
   actions: {
     showAll() {
       this.set('galleryDialogIsRequested', true);
-      this.set('galleryDialogIsVisible', true);
     },
 
     onHideCarousel() {
       this.set('galleryDialogIsRequested', false);
-      this.set('galleryDialogIsVisible', false);
     },
 
     onAddPhoto() {
