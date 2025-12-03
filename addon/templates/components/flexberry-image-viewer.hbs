@@ -2,24 +2,19 @@
   <a class="attach-img-button" onclick={{action "onAddPhoto"}}><i class="icon-guideline-plus icon"></i>Добавить изображения</a>
 {{/if}}
 <div class="flexberry-image-viewer">
-  {{#each limitImages as |image index|}}
-      <div class="preview">
-         {{#image-loader
+  {{#each displayedImages as |image index|}}
+      <a class="preview" onclick={{action "showCurrent" index}}>
+        {{image-loader
           token=token
           imageUrl=image.preview
-         }}
-        {{/image-loader}}
-      </div>
+        }}
+      </a>
   {{/each}}
 
-  {{#if images}}
-      <div class="preview more" onclick={{action "showAll"}}>
-          Смотреть все
-      </div>
-  {{else}}
-      <div class="preview more">
-          Нет данных
-      </div>
+  {{#if (gt images.length displayedImagesLimit)}}
+    <a class="preview more" onclick={{action "toggleShowAll"}}>
+      {{#if showAll}}Скрыть{{else}}Смотреть все{{/if}}
+    </a>
   {{/if}}
 </div>
 
@@ -32,6 +27,7 @@
     flexberryClassNames=(hash toolbar="hidden" header="hidden" closeButton="hidden")
   }}
     {{flexberry-carousel
+      activeIndex=activeIndex
       images=images
       token=token
       feature=feature

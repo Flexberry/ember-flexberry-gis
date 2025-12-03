@@ -37,6 +37,10 @@ export default Ember.Component.extend({
 
   availableEdit: null,
 
+  showAll: false,
+
+  displayedImagesLimit: 5,
+
   init() {
     this._super(...arguments);
 
@@ -57,11 +61,9 @@ export default Ember.Component.extend({
     }
   },
 
-  /**
-   * Отображаем на списке только 5 фото.
-   */
-  limitImages: Ember.computed('images.[]', function () {
-    return this.get('images').slice(0, 5);
+  displayedImages: Ember.computed('images.[]', 'showAll', function() {
+    const images = this.get('images') || [];
+    return this.get('showAll') ? images : images.slice(0, this.get('displayedImagesLimit'));
   }),
 
   /**
@@ -242,8 +244,13 @@ export default Ember.Component.extend({
   },
 
   actions: {
-    showAll() {
+    showCurrent(index) {
+      this.set('activeIndex', index)
       this.set('galleryDialogIsRequested', true);
+    },
+
+    toggleShowAll() {
+      this.toggleProperty('showAll');
     },
 
     onHideCarousel() {
