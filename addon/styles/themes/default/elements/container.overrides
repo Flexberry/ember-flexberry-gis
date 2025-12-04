@@ -839,8 +839,7 @@ div.legend-drag-panel {
       &.wms {
         display:flex;
         flex:1;
-        max-height: 200px;
-        overflow:auto;
+        width: fit-content;
         align-items: flex-start;
 
         .layer-legend-image {

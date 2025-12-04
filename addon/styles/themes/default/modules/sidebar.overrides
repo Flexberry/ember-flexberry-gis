@@ -317,7 +317,7 @@
                 &.wms {
                   display:flex;
                   flex:1;
-                  max-height: 200px;
+                  width: fit-content;
                   overflow:auto;
                   align-items: flex-start;
 

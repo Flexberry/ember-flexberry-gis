@@ -344,6 +344,7 @@
     &.ui.tab > .flexberry-maplayers.ui.styled.accordion {
       height: ~"calc(100% - 140px)" !important;
       width: 1000px;
+      overflow-x: auto;
       .accordion:first-child .title {
         border-top: none;
       }
