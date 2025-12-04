@@ -78,16 +78,17 @@
 
 {{#if showFileDelete}}
   {{#flexberry-dialog
-    caption="Внимание"
+    class="tiny info-dialog with-icon"
     approveButtonCaption="Удалить"
     denyButtonCaption="Отмена"
     visible=showFileDelete
     hide=(action "onHideDeletePhoto")
     approve=(action "delete")
   }}
-    <p>
-      Фотография будет удалена без возможности восстановления.<br>
-      Продолжить действие?
-    </p>
+    <i class="icon-guideline-circle-problem"></i>
+    <div>
+      <h4>Удаление изображения</h4>
+      <span>Вы действительно хотите удалить изображение?</span>
+    </div>
   {{/flexberry-dialog}}
 {{/if}}
