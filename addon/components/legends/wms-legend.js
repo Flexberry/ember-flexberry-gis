@@ -44,7 +44,7 @@ export default BaseLegendComponent.extend({
     'layer.settingsAsObject.legendSettings.format',
     'layer.settingsAsObject.legendSettings.layers',
     'layer.settingsAsObject.styles',
-    function() {
+    function () {
       let legends = Ember.A();
       let layerSettings = this.get('layer.settingsAsObject') || {};
 
@@ -58,74 +58,82 @@ export default BaseLegendComponent.extend({
       }
 
       return DS.PromiseArray.create({
-        promise: Ember.RSVP.Promise.all(Ember.A((Ember.get(layerSettings, 'legendSettings.layers') || Ember.get(layerSettings, 'layers') || '').split(','))
-        .map((layerName) => {
-          return new Ember.RSVP.Promise((resolve) => {
-            const format = Ember.get(layerSettings, 'legendSettings.format') || Ember.get(layerSettings, 'imageFormat') || 'image/png';
-            let legendImageScale = this.get('defaultScale');
-            let parameters = {
-              service: 'WMS',
-              request: 'GetLegendGraphic',
-              version: Ember.get(layerSettings, 'legendSettings.version') || Ember.get(layerSettings, 'version') || '1.1.0',
-              format: format,
-              width: legendImageScale,
-              height: legendImageScale,
-              layer: layerName,
-              style: Ember.get(layerSettings, 'styles') || ''
-            };
+        promise: Ember.RSVP.Promise.all(
+          Ember.A((Ember.get(layerSettings, 'legendSettings.layers') || Ember.get(layerSettings, 'layers') || '').split(',')).map((layerName) => {
+            return new Ember.RSVP.Promise((resolve) => {
+              const format = Ember.get(layerSettings, 'legendSettings.format') || Ember.get(layerSettings, 'imageFormat') || 'image/png';
+              let legendImageScale = this.get('defaultScale');
+              let parameters = {
+                service: 'WMS',
+                request: 'GetLegendGraphic',
+                version: Ember.get(layerSettings, 'legendSettings.version') || Ember.get(layerSettings, 'version') || '1.1.0',
+                format: format,
+                width: legendImageScale,
+                height: legendImageScale,
+                layer: layerName,
+                style: Ember.get(layerSettings, 'styles') || '',
+              };
 
-            if (format !== 'application/json') {
-              resolve([{
-                src: `${url}${L.Util.getParamString(parameters)}`,
-                layerName: layerName,
-                useLayerName: false
-              }]);
-            } else {
-              let legendUrl = `${url}${L.Util.getParamString(parameters)}`;
-              Ember.$.ajax(legendUrl, {
-                method: 'GET',
-                xhrFields: {
-                  withCredentials: true
-                }
-              })
-                .fail(() => resolve(null))
-                .done((response) => {
-                  if (response && response.Legend && response.Legend[0]) {
-                    // One legend per query.
-                    let legendsContainer = [];
-                    response.Legend[0].rules.forEach(rule => {
-                      if (!rule || !rule.symbolizers) {
-                        return;
-                      }
+              if (format !== 'application/json') {
+                resolve([
+                  {
+                    src: `${url}${L.Util.getParamString(parameters)}`,
+                    layerName: layerName,
+                    useLayerName: false,
+                  },
+                ]);
+              } else {
+                let legendUrl = `${url}${L.Util.getParamString(parameters)}`;
+                Ember.$.ajax(legendUrl, {
+                  method: 'GET',
+                  xhrFields: {
+                    withCredentials: true,
+                  },
+                })
+                  .fail(() => resolve(null))
+                  .done((response) => {
+                    if (response && response.Legend && response.Legend[0]) {
+                      // One legend per query.
+                      let legendsContainer = [];
+                      response.Legend[0].rules.forEach((rule) => {
+                        if (!rule || !rule.symbolizers) {
+                          return;
+                        }
 
-                      let nonTextSymbolizers = rule.symbolizers.filter(symbolizer => Object.keys(symbolizer).filter(name => name !== 'Text').length > 0);
-                      if (nonTextSymbolizers.length === 0) {
-                        return;
-                      }
+                        let nonTextSymbolizers = rule.symbolizers.filter((symbolizer) => Object.keys(symbolizer).filter((name) => name !== 'Text').length > 0);
+                        if (nonTextSymbolizers.length === 0) {
+                          return;
+                        }
 
-                      parameters.rule = rule.name;
-                      parameters.format = 'image/png';
-                      parameters.width = legendImageScale;
-                      parameters.height = legendImageScale;
-                      legendsContainer.push({
-                        src: `${url}${L.Util.getParamString(parameters)}`,
-                        layerName: rule.title || rule.name,
-                        useLayerName: true,
-                        style: `height: ${this.get('height')}px;`
+                        parameters.rule = rule.name;
+
+                        if (Ember.isNone(rule.name)) {
+                          console.error({ layerName: layerName, rule: rule, message: `Ошибка SLD слоя, rule.name не существует` });
+                        }
+
+                        parameters.format = 'image/png';
+                        parameters.width = legendImageScale;
+                        parameters.height = legendImageScale;
+                        legendsContainer.push({
+                          src: `${url}${L.Util.getParamString(parameters)}`,
+                          layerName: rule.title || rule.name,
+                          useLayerName: true,
+                        });
                       });
-                    });
 
-                    resolve(legendsContainer);
-                  } else {
-                    resolve(null);
-                  }
-                });
-            }
-          });
-        })).then(lArray => {
-          legends.pushObjects(lArray.filter(l => !!l).flat());
+                      resolve(legendsContainer);
+                    } else {
+                      resolve(null);
+                    }
+                  });
+              }
+            });
+          })
+        ).then((lArray) => {
+          legends.pushObjects(lArray.filter((l) => !!l).flat());
           return legends;
-        })
+        }),
       });
-    })
+    }
+  ),
 });

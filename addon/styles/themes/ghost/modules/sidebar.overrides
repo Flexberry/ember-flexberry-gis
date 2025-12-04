@@ -342,8 +342,9 @@
     overflow-x: hidden;
     overflow-y: hidden !important;
     &.ui.tab > .flexberry-maplayers.ui.styled.accordion {
-      height: ~"calc(100% - 70px)" !important;
+      height: ~"calc(100% - 140px)" !important;
       width: 1000px;
+      overflow-x: auto;
       .accordion:first-child .title {
         border-top: none;
       }
@@ -426,7 +427,7 @@
     overflow-x: hidden;
     margin-top: 5px;
     height: ~"calc(100% - 120px)" !important;
-    scrollbar-gutter: stable;   
+    scrollbar-gutter: stable;
 
     .nodata {
       text-align: center;

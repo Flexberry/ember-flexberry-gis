@@ -19,33 +19,33 @@ export default EditFormRoute.extend({
     setting: {
       refreshModel: false,
       replace: false,
-      as: 'setting'
+      as: 'setting',
     },
     geofilter: {
       refreshModel: false,
       replace: false,
-      as: 'geofilter'
+      as: 'geofilter',
     },
     zoom: {
       refreshModel: false,
       replace: false,
-      as: 'zoom'
+      as: 'zoom',
     },
     lat: {
       refreshModel: false,
       replace: false,
-      as: 'lat'
+      as: 'lat',
     },
     lng: {
       refreshModel: false,
       replace: false,
-      as: 'lng'
+      as: 'lng',
     },
     metadata: {
       refreshModel: false,
       replace: false,
-      as: 'metadata'
-    }
+      as: 'metadata',
+    },
   },
 
   /**
@@ -112,13 +112,15 @@ export default EditFormRoute.extend({
     let metadataQuery = this._getMetadata(params.metadata);
 
     return new Ember.RSVP.Promise((resolve, reject) => {
-      Ember.RSVP.all([modelQuery, metadataQuery]).then((data) => {
-        let [model, metadata] = data;
-        this._addMetadata(model, metadata);
-        resolve(model);
-      }).catch((error) => {
-        reject(error);
-      });
+      Ember.RSVP.all([modelQuery, metadataQuery])
+        .then((data) => {
+          let [model, metadata] = data;
+          this._addMetadata(model, metadata);
+          resolve(model);
+        })
+        .catch((error) => {
+          reject(error);
+        });
     });
   },
 
@@ -150,13 +152,13 @@ export default EditFormRoute.extend({
     this.get('mapApi').addToApi('mapModel', model);
 
     this.transitionTo({
-      queryParams: currentParams
+      queryParams: currentParams,
     });
   },
 
   setLayerCategories(model, layers) {
     if (layers) {
-      let rootLayers = layers.filter(layer => Ember.isEmpty(layer.get('parent')));
+      let rootLayers = layers.filter((layer) => Ember.isEmpty(layer.get('parent')));
 
       let hierarchy = this.sortLayersByIndex(rootLayers);
       model.set('hierarchy', hierarchy);
@@ -179,7 +181,7 @@ export default EditFormRoute.extend({
           const canBeBackground = l.get('settingsAsObject.backgroundSettings.canBeBackground') || false;
           const isVisibleInLegendWidget = l.get('settingsAsObject.legendSettings.isVisibleInLegendWidget') || false;
 
-          if (type !== 'group' && !canBeBackground && isVisibleInLegendWidget) {
+          if (type !== 'group' && type !== 'tile' && !canBeBackground && isVisibleInLegendWidget) {
             results.addObject(l);
           }
 
@@ -225,9 +227,7 @@ export default EditFormRoute.extend({
       return null;
     }
 
-    let queryBuilder = new Query.Builder(this.get('store'))
-      .from(this.get('metadataModelName'))
-      .selectByProjection(this.get('metadataProjection'));
+    let queryBuilder = new Query.Builder(this.get('store')).from(this.get('metadataModelName')).selectByProjection(this.get('metadataProjection'));
 
     let conditions = metadata.split(',').map((item) => {
       let id = item.trim().toLowerCase();
@@ -277,5 +277,5 @@ export default EditFormRoute.extend({
     }
 
     return result;
-  }
+  },
 });
