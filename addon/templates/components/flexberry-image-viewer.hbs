@@ -25,6 +25,7 @@
     hide=(action "onHideCarousel")
     closable=true
     flexberryClassNames=(hash toolbar="hidden" header="hidden" closeButton="hidden")
+    allowMultiple=true
   }}
     {{flexberry-carousel
       activeIndex=activeIndex
@@ -35,7 +36,21 @@
       onAddPhoto=(action "onAddPhoto")
       onHideCarousel=(action "onHideCarousel")
       onShowDeletePhoto=(action "onShowDeletePhoto")}}
-
+  {{/flexberry-dialog}}
+  {{#flexberry-dialog
+    class="tiny info-dialog with-icon"
+    approveButtonCaption="Удалить"
+    denyButtonCaption="Отмена"
+    visible=showFileDelete
+    hide=(action "onHideDeletePhoto")
+    approve=(action "delete")
+    allowMultiple=true
+  }}
+    <i class="icon-guideline-circle-problem"></i>
+    <div>
+      <h4>Удаление изображения</h4>
+      <span>Вы действительно хотите удалить изображение?</span>
+    </div>
   {{/flexberry-dialog}}
 {{/if}}
 
@@ -72,23 +87,6 @@
     </div>
     <div class="attach-img-dialog-actions">
       <button class="ui button attach {{if (not filesJson) "disabled"}}" onclick={{action "onApprove"}}>Загрузить файлы<i class="icon-guideline-arrow-long-next"></i></button>
-    </div>
-  {{/flexberry-dialog}}
-{{/if}}
-
-{{#if showFileDelete}}
-  {{#flexberry-dialog
-    class="tiny info-dialog with-icon"
-    approveButtonCaption="Удалить"
-    denyButtonCaption="Отмена"
-    visible=showFileDelete
-    hide=(action "onHideDeletePhoto")
-    approve=(action "delete")
-  }}
-    <i class="icon-guideline-circle-problem"></i>
-    <div>
-      <h4>Удаление изображения</h4>
-      <span>Вы действительно хотите удалить изображение?</span>
     </div>
   {{/flexberry-dialog}}
 {{/if}}

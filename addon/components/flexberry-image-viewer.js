@@ -245,7 +245,7 @@ export default Ember.Component.extend({
 
   actions: {
     showCurrent(index) {
-      this.set('activeIndex', index)
+      this.set('activeIndex', index);
       this.set('galleryDialogIsRequested', true);
     },
 
@@ -261,9 +261,8 @@ export default Ember.Component.extend({
       this.set('showFileAdd', true);
     },
 
-    onShowDeletePhoto(index) {
+    onShowDeletePhoto() {
       this.set('showFileDelete', true);
-      this.set('deleteIndex', index);
     },
 
     onHideDeletePhoto() {
@@ -297,7 +296,7 @@ export default Ember.Component.extend({
      */
     delete() {
       let _this = this;
-      let deleteIndex = _this.get('deleteIndex');
+      let deleteIndex = _this.get('activeIndex');
       if (!Ember.isEmpty(deleteIndex)) {
         let images = _this.get('images');
         let store = _this.get('store');
@@ -311,13 +310,10 @@ export default Ember.Component.extend({
           obj
             .save()
             .then(() => {
-              var imageToRemove = images.findBy('id', image.id);
-              if (imageToRemove) {
-                images.removeObject(imageToRemove);
-              }
-
-              _this.set('images', images);
-              _this.set('deleteIndex', null);
+              _this.set('activeIndex', deleteIndex > 0 ?  --deleteIndex : 0);
+              Ember.run.next(()=> {
+                images.removeObject(image);
+              });
             })
             .catch((error) => {
               console.error('Ошибка при удалении. ', error);

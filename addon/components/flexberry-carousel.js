@@ -20,6 +20,17 @@ export default Ember.Component.extend({
     return this.get('images') ? this.get('images').length : 0;
   }),
 
+  currentImage: Ember.computed('images.[]', 'activeIndex', function() {
+    let images = this.get('images');
+    let activeIndex = this.get('activeIndex');
+
+    if (!images || activeIndex == null || activeIndex < 0 || activeIndex >= images.get('length')) {
+      return null;
+    }
+
+    return images.objectAt(activeIndex);
+  }),
+
   slide(activeIndex, newIndex, direction) {
     let carouselItems = this.get('images');
     let activeItem = carouselItems[activeIndex];
@@ -55,8 +66,8 @@ export default Ember.Component.extend({
       this.sendAction('onAddPhoto');
     },
 
-    delete(index) {
-      this.sendAction('onShowDeletePhoto', index);
+    delete() {
+      this.sendAction('onShowDeletePhoto');
     },
 
     next() {
