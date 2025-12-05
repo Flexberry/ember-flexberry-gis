@@ -1,10 +1,8 @@
 <div class="flexberry-carousel-header">
-  {{#if (gt total 0)}}
-    <span class="file-name">{{get images (concat activeIndex '.fileName')}}</span>
-  {{/if}}
+  <span class="file-name">{{currentImage.fileName}}</span>
   <div class="actions">
     {{#if (and availableEdit (not feature.arch) (gt total 0))}}
-      <button class="ui button" onclick={{action "delete" activeIndex}}><i class="icon-guideline-delete"></i>Удалить</button>
+      <button class="ui button" onclick={{action "delete"}}><i class="icon-guideline-delete"></i>Удалить</button>
     {{/if}}
     {{#if (and availableEdit (not feature.arch))}}
       <button class="ui button" onclick={{action "add"}}><i class="icon-guideline-plus"></i>Добавить</button>
@@ -41,10 +39,10 @@
   {{/if}}
 </div>
 
-<div class="flexberry-carousel-footer">
-  {{#if (gt total 0)}}
-    Добавлено: <br>
-    {{get images (concat activeIndex '.creator')}}
-    {{get images (concat activeIndex '.createTime')}}
-  {{/if}}
-</div>
+{{#if (gt total 0)}}
+  <div class="flexberry-carousel-footer">
+      Добавлено: <br>
+      {{currentImage.creator}}
+      {{currentImage.createTime}}
+  </div>
+{{/if}}
