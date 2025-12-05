@@ -87,7 +87,7 @@ export default BaseLegendComponent.extend({
                 Ember.$.ajax(legendUrl, {
                   method: 'GET',
                   xhrFields: {
-                    withCredentials: true,
+                    withCredentials: Ember.get(layerSettings, 'withCredentials') || false,
                   },
                 })
                   .fail(() => resolve(null))
