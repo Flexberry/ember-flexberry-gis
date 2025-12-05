@@ -181,7 +181,7 @@ export default EditFormRoute.extend({
           const canBeBackground = l.get('settingsAsObject.backgroundSettings.canBeBackground') || false;
           const isVisibleInLegendWidget = l.get('settingsAsObject.legendSettings.isVisibleInLegendWidget') || false;
 
-          if (type !== 'group' && type !== 'tile' && !canBeBackground && isVisibleInLegendWidget) {
+          if (type !== 'group' && type !== 'tile-vector' && type !== 'tile' && !canBeBackground && isVisibleInLegendWidget) {
             results.addObject(l);
           }
 
