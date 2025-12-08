@@ -177,7 +177,7 @@ div.measure-drag-panel {
 
 /* legend-drag-panel */
 div.legend-drag-panel {
-  border: @defaultGrayBorder;
+  border: 0px;
   border-radius: @defaultBorderRadius;
   box-shadow: @defaultBoxShadow;
 }
