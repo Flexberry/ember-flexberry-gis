@@ -1272,6 +1272,18 @@ export default BaseLayer.extend(layerLabel, {
 
     this.get('_leafletLayerPromise').then((leafletLayer) => {
       this._checkZoomPane();
+
+      Ember.set(this.get('layerModel'), 'getTotalFeatures', this._getTotalFeatures.bind(this))
+    });
+  },
+
+  _getTotalFeatures() {
+    return this.getLeafletObject().then((leafletObject) => {
+      if (!Ember.get(leafletObject, 'loadFeaturesForTableAttr')) {
+        return 0;
+      }
+
+      return leafletObject.loadFeaturesForTableAttr(1, -1, null, null, false).then((response) => response.totalFeatures || 0);
     });
   },
 

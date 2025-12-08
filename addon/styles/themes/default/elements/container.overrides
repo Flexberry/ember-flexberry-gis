@@ -763,6 +763,10 @@ div.legend-drag-panel {
     height: 100%;
     display: flex;
     flex-direction: column;
+
+    .legend-map-tool-panel-title {
+      font-size: 1.25rem;
+    }
   }
 
   .flexberry-legend-close-map-tool {

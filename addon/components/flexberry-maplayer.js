@@ -634,21 +634,6 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       return false;
     }),
 
-    isOpenLayer: Ember.computed('access', 'access.accessibleData.[]', 'readonly', 'layer', function () {
-      let url = this.get('layer.settingsAsObject.url');
-      let urlAsObj = null;
-
-      if (!url) return false;
-
-      try {
-        urlAsObj = new URL(url);
-      } catch (error) {
-        console.error({ url: url, message: 'Cannot parse layer.settingsAsObject.url', error: error });
-      }
-
-      return urlAsObj && urlAsObj.hostname !== window.location.hostname;
-    }),
-
     /**
       Flag: indicates whether layer node has been expanded once.
 
@@ -735,10 +720,6 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
 
     totalFeatures: 0,
 
-    layerInitializationChanged: Ember.observer('layer.layerInitialized', function () {
-      Ember.run.once(this, '_getTotalFeatures');
-    }),
-
     /**
       Initializes DOM-related component's properties.
     */
@@ -749,28 +730,6 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         this.set('isGroup', true);
         this.set('disabled', 'disabled');
       }
-
-      if (this.get('layer.layerInitialized')) {
-        this._getTotalFeatures();
-      }
-    },
-
-    _getTotalFeatures() {
-      let layerModel = this.get('layer');
-
-      if (Ember.isNone(layerModel) || !Ember.get(layerModel, 'leafletObjectGetter')) {
-        return;
-      }
-
-      return layerModel.leafletObjectGetter().then((leafletObject) => {
-        if (!Ember.get(leafletObject, 'loadFeaturesForTableAttr')) {
-          return;
-        }
-
-        return leafletObject.loadFeaturesForTableAttr(1, -1, null, null, false).then((response) => {
-          this.set('totalFeatures', response.totalFeatures || 0);
-        });
-      });
     },
 
     actions: {
@@ -804,10 +763,21 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         @method actions.onSubmenu
       */
       onSubmenu() {
-        let component = Ember.$('.' + this.get('componentName'));
-        let moreButton = Ember.$('.more.floated.button', component);
-        let elements = Ember.$('.more.submenu.hidden', component);
-        openCloseSubmenu(this, moreButton, elements);
+        const layerModel = this.get('layer');
+        const component = Ember.$('.' + this.get('componentName'));
+        const moreButton = Ember.$('.more.floated.button', component);
+        const elements = Ember.$('.more.submenu.hidden', component);
+
+        if (Ember.isNone(layerModel.getTotalFeatures)) {
+          openCloseSubmenu(this, moreButton, elements);
+          return;
+        }
+
+        // Пересчитаем totalFeatures
+        layerModel.getTotalFeatures().then((totalFeatures) => {
+          this.set('totalFeatures', totalFeatures || 0);
+          openCloseSubmenu(this, moreButton, elements);
+        });
       },
 
       onAddCompare() {
