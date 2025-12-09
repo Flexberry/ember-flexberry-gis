@@ -134,6 +134,19 @@
 </div>
 <div class="feature-result-item-content content {{if infoExpanded "visible" "hidden"}}">
   {{#if infoExpanded}}
+      {{#if photosEnabled}}
+        <div class="feature-div-property-name">
+          {{photosName}}
+        </div>
+
+        <div class="feature-div-property-value">
+          {{#flexberry-image-viewer
+            feature=feature
+            availableEdit=availableEdit
+          }}
+          {{/flexberry-image-viewer}}
+        </div>
+      {{/if}}
       {{#each-in feature.properties as |propertyName propertyValue|}}
         {{#if (not (array-contains _excludedProperties propertyName))}}
           <div class="feature-div-property-name">
@@ -215,19 +228,5 @@
             </div>
         {{/if}}
       {{/if}}
-  {{/if}}
-
-  {{#if photosEnabled}}
-    <div class="feature-div-property-name">
-      {{photosName}}
-    </div>
-
-    <div class="feature-div-property-value">
-      {{#flexberry-image-viewer
-        feature=feature
-        availableEdit=availableEdit
-      }}
-      {{/flexberry-image-viewer}}
-    </div>
   {{/if}}
 </div>

@@ -81,18 +81,20 @@ export default Ember.Component.extend({
     let feature = this.get('feature');
     let modelName = this.feature.layerModel.settingsAsObject.modelNameFiles;
     let projectionName = this.feature.layerModel.settingsAsObject.projectionNameFiles;
-    let predicate;
+    let predicateAtr;
 
     if (feature.layerModel.get('type') === 'odata-vector') {
-      predicate = new Query.SimplePredicate(
-        feature.layerModel.settingsAsObject.modelName.split('-')[1],
-        Query.FilterOperator.Eq,
-        feature.properties.primarykey
-      );
+      predicateAtr = feature.layerModel.settingsAsObject.modelName.split('-')[1];
+    } else if (feature.layerModel.get('type') === 'wms-wfs') {
+      predicateAtr = feature.layerModel.settingsAsObject.wfs.typeName;
     } else {
-      predicate = new Query.SimplePredicate(feature.layerModel.settingsAsObject.typeName, Query.FilterOperator.Eq, feature.properties.primarykey);
+      predicateAtr = feature.layerModel.settingsAsObject.typeName;
     }
 
+    let predicate = new Query.SimplePredicate(
+      predicateAtr,
+      Query.FilterOperator.Eq,
+      feature.properties.primarykey);
     let queryBuilder = new Query.Builder(store).from(modelName).selectByProjection(projectionName).where(predicate);
     let build = queryBuilder.build();
     let adapter = store.adapterFor(modelName);
@@ -183,6 +185,8 @@ export default Ember.Component.extend({
       //Для одаты надо сделать set модели т.к. связь BelongTo, для остального пишем ключ.
       if (feature.layerModel.get('type') === 'odata-vector') {
         record.set(feature.layerModel.settingsAsObject.modelName.split('-')[1], feature.leafletLayer.model);
+      } else if (feature.layerModel.get('type') === 'wms-wfs') {
+        record.set(feature.layerModel.settingsAsObject.wfs.typeName, feature.properties.primarykey);
       } else {
         record.set(feature.layerModel.settingsAsObject.typeName, feature.properties.primarykey);
       }

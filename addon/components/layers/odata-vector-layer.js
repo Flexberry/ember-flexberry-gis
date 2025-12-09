@@ -1063,38 +1063,7 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin, {
 
           // Регаем модель для файлов
           if (this.get('displaySettings.photosEnabled')) {
-            let modelNameFiles = modelName + '-files';
-            this.createModelHierarchy(metadataUrl, modelNameFiles).then(({ model, dataModel, modelMixin }) => {
-              model.defineProjection(modelNameFiles, modelNameFiles, this.createProjection(dataModel, projectionName.replace('Spatial', '_files')));
-
-              let modelRegisteredFiles = Ember.getOwner(this)._lookupFactory(`model:${modelNameFiles}`);
-              let mixinRegisteredFiles = Ember.getOwner(this)._lookupFactory(`mixin:${modelNameFiles}`);
-
-              if (Ember.isNone(modelRegisteredFiles)) {
-                Ember.getOwner(this).register(`model:${modelNameFiles}`, model);
-              }
-
-              if (Ember.isNone(mixinRegisteredFiles)) {
-                Ember.getOwner(this).register(`mixin:${modelNameFiles}`, modelMixin);
-              }
-
-              let serializerRegisteredFiles = Ember.getOwner(this)._lookupFactory(`serializer:${modelNameFiles}`);
-              if (Ember.isNone(serializerRegisteredFiles)) {
-                this.set('odataSerializer', null);
-                let modelSerializer = this.createSerializer(modelName.split('-')[1],
-                  model.namespace.charAt(0) === model.namespace.charAt(0).toUpperCase());
-                Ember.getOwner(this).register(`serializer:${modelNameFiles}`, modelSerializer);
-              }
-
-              let adapterRegisteredFiles = Ember.getOwner(this)._lookupFactory(`adapter:${modelNameFiles}`);
-              if (Ember.isNone(adapterRegisteredFiles)) {
-                let odataClass = this.get('odataClass');
-                this.set('odataClass', odataClass.slice(0, -1) + 'filess');
-                let modelAdapter = this.createAdapterForModel();
-                Ember.getOwner(this).register(`adapter:${modelNameFiles}`, modelAdapter);
-                this.set('odataClass', odataClass);
-              }
-            });
+            this.createDynamicModelFiles();
           }
 
           resolve('Create dynamic model: ' + modelName);
@@ -1172,6 +1141,12 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin, {
     let load = this.continueLoad(layer);
     layer.promiseLoadLayer = load && load instanceof Ember.RSVP.Promise ? load : Ember.RSVP.resolve();
 
+    this.setFileSettings();
+
+    return layer;
+  },
+
+  setFileSettings() {
     let settingsAsObject = this.get('layerModel.settingsAsObject');
     if (!Ember.isEmpty(settingsAsObject)) {
       if (!Ember.isEmpty(this.get('odataUrl'))) {
@@ -1183,8 +1158,6 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin, {
         settingsAsObject.projectionNameFiles = settingsAsObject.modelNameFiles;
       }
     }
-
-    return layer;
   },
 
   /**
@@ -1288,6 +1261,11 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin, {
       });
 
       Ember.set(attributesOptions, 'settings.excludedProperties', excluded);
+
+      //Если с карты поменяли видимость фото, проверяем что зарегана модель.
+      if (attributesOptions.settings.photosEnabled) {
+        this.createDynamicModelFiles();
+      }
 
       return attributesOptions;
     });
@@ -2138,4 +2116,42 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin, {
         });
     });
   },
+
+  createDynamicModelFiles() {
+    let modelName = this.get('modelName');
+    let projectionName = this.get('projectionName');
+    let metadataUrl = this.get('metadataUrl');
+    let modelNameFiles = modelName + '-files';
+    let modelRegisteredFiles = Ember.getOwner(this)._lookupFactory(`model:${modelNameFiles}`);
+
+    if (Ember.isNone(modelRegisteredFiles)) {
+      this.createModelHierarchy(metadataUrl, modelNameFiles).then(({ model, dataModel, modelMixin }) => {
+        model.defineProjection(modelNameFiles, modelNameFiles, this.createProjection(dataModel, projectionName.replace('Spatial', '_files')));
+        let mixinRegisteredFiles = Ember.getOwner(this)._lookupFactory(`mixin:${modelNameFiles}`);
+
+        Ember.getOwner(this).register(`model:${modelNameFiles}`, model);
+
+        if (Ember.isNone(mixinRegisteredFiles)) {
+          Ember.getOwner(this).register(`mixin:${modelNameFiles}`, modelMixin);
+        }
+
+        let serializerRegisteredFiles = Ember.getOwner(this)._lookupFactory(`serializer:${modelNameFiles}`);
+        if (Ember.isNone(serializerRegisteredFiles)) {
+          this.set('odataSerializer', null);
+          let modelSerializer = this.createSerializer(modelName.split('-')[1],
+            model.namespace.charAt(0) === model.namespace.charAt(0).toUpperCase());
+          Ember.getOwner(this).register(`serializer:${modelNameFiles}`, modelSerializer);
+        }
+
+        let adapterRegisteredFiles = Ember.getOwner(this)._lookupFactory(`adapter:${modelNameFiles}`);
+        if (Ember.isNone(adapterRegisteredFiles)) {
+          let odataClass = this.get('odataClass');
+          this.set('odataClass', odataClass.slice(0, -1) + 'filess');
+          let modelAdapter = this.createAdapterForModel();
+          Ember.getOwner(this).register(`adapter:${modelNameFiles}`, modelAdapter);
+          this.set('odataClass', odataClass);
+        }
+      });
+    }
+  }
 });

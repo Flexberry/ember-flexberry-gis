@@ -32,6 +32,16 @@ export default WmsLayerComponent.extend({
     return this._super(...arguments).then((attributesOptions) => {
       resultingAttributesOptions = attributesOptions;
 
+      let settingsPhotosEnabled = Ember.get(resultingAttributesOptions, 'settings.photosEnabled');
+      if (!Ember.isNone(settingsPhotosEnabled)) {
+        this.set('_wfsLayer.displaySettings.photosEnabled', settingsPhotosEnabled);
+      }
+
+      let settingsphotosName = Ember.get(resultingAttributesOptions, 'settings.photosName');
+      if (!Ember.isNone(settingsphotosName)) {
+        this.set('_wfsLayer.displaySettings.photosName', settingsphotosName);
+      }
+
       return this.get('_wfsLayer')._getAttributesOptions(source).then((wfsAttributesOptions) => {
         let excluded = Ember.get(resultingAttributesOptions, 'settings.excludedProperties');
         let wfsExcluded = Ember.get(wfsAttributesOptions, 'settings.excludedProperties');
@@ -222,5 +232,5 @@ export default WmsLayerComponent.extend({
       innerWfsLayer.destroy();
       this.set('_wfsLayer', null);
     }
-  }
+  },
 });
