@@ -798,6 +798,11 @@ div.legend-drag-panel {
       color: #6C7180;
     }
 
+    .layer-legend {
+      display: flex;
+      flex-direction: column;
+    }
+
     .layer-legend-image-wrapper {
       font-size: @layerLegendImageWrapperFontSize;
       vertical-align: middle;
@@ -862,8 +867,7 @@ div.legend-drag-panel {
       .layer-legend-caption {
         color: @textColor;
         margin: @layerLegendCaptionMargin;
-        max-width: @layerLegendCaptionMaxWidth;
-        width: @layerLegendCaptionWidth;
+        flex: 1;
         line-height: 1.2;
       }
     }
