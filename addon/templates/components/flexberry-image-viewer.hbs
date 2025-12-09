@@ -23,7 +23,6 @@
     class="basic fullscreen carousel"
     visible=galleryDialogIsRequested
     hide=(action "onHideCarousel")
-    closable=true
     flexberryClassNames=(hash toolbar="hidden" header="hidden" closeButton="hidden")
     allowMultiple=true
   }}
@@ -35,7 +34,9 @@
       availableEdit=availableEdit
       onAddPhoto=(action "onAddPhoto")
       onHideCarousel=(action "onHideCarousel")
-      onShowDeletePhoto=(action "onShowDeletePhoto")}}
+      onShowDeletePhoto=(action "onShowDeletePhoto")
+      visibleAddPhoto=visibleAddPhoto
+    }}
   {{/flexberry-dialog}}
   {{#flexberry-dialog
     class="tiny info-dialog with-icon"
@@ -83,10 +84,17 @@
         _uploadIsInProgress=uploadIsInProgressFiles
         label="Файл"
         removeFileCount=(get images "length")
+        onFilesChange=(action "onFilesChange")
       }}
     </div>
     <div class="attach-img-dialog-actions">
-      <button class="ui button attach {{if (not filesJson) "disabled"}}" onclick={{action "onApprove"}}>Загрузить файлы<i class="icon-guideline-arrow-long-next"></i></button>
+      <button
+        class="ui button attach {{unless hasFiles "disabled"}}"
+        onclick={{action "onApprove"}}
+      >
+        Загрузить файлы
+        <i class="icon-guideline-arrow-long-next"></i>
+      </button>
     </div>
   {{/flexberry-dialog}}
 {{/if}}

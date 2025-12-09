@@ -41,6 +41,8 @@ export default Ember.Component.extend({
 
   displayedImagesLimit: 5,
 
+  hasFiles: false,
+
   init() {
     this._super(...arguments);
 
@@ -243,10 +245,37 @@ export default Ember.Component.extend({
     Ember.$('.ui.dimmer.modals.carousel-dimmer').removeClass('carousel-dimmer');
   },
 
+  _modalClickHandler: null,
+
+  _addModalClickHandler() {
+    Ember.run.next(this, () => {
+      const modal = document.querySelector('.ui.modal.carousel');
+      if (!modal) return;
+
+      const clickHandler = (event) => {
+        if (!event.target.closest('.actions, .button, .img-responsive, .file-name')) {
+          this.send('onHideCarousel');
+        }
+      };
+
+      modal.addEventListener('click', clickHandler);
+      this._modalClickHandler = { modal, clickHandler };
+    });
+  },
+
+  _removeModalClickHandler() {
+    if (this._modalClickHandler) {
+      const { modal, clickHandler } = this._modalClickHandler;
+      modal.removeEventListener('click', clickHandler);
+      this._modalClickHandler = null;
+    }
+  },
+
   actions: {
     showCurrent(index) {
       this.set('activeIndex', index);
       this.set('galleryDialogIsRequested', true);
+      Ember.run.scheduleOnce('afterRender', this, this._addModalClickHandler);
     },
 
     toggleShowAll() {
@@ -255,6 +284,7 @@ export default Ember.Component.extend({
 
     onHideCarousel() {
       this.set('galleryDialogIsRequested', false);
+      this._removeModalClickHandler();
     },
 
     onAddPhoto() {
@@ -281,6 +311,7 @@ export default Ember.Component.extend({
     },
 
     onApprove(e) {
+      this.set('hasFiles', false);
       e.closeDialog = false;
 
       let relatedModel = this.get('_relatedModelStub');
@@ -321,6 +352,10 @@ export default Ember.Component.extend({
             });
         }
       }
+    },
+
+    onFilesChange(hasFiles) {
+      this.set('hasFiles', hasFiles);
     },
   },
 });

@@ -16,6 +16,8 @@ export default FlexberryFileComponent.extend({
 
   maxFiles: 20,
 
+  onFilesChange: null,
+
   maxFilesCalc: Ember.computed('removeFileCount', 'maxFiles', function () {
     return this.get('maxFiles') - this.get('removeFileCount');
   }),
@@ -139,6 +141,13 @@ export default FlexberryFileComponent.extend({
     return !this.get('_uploadIsInProgress') || filesWithErrors.length > 0;
   }),
 
+  filesObserver: Ember.observer('_files.[]', function() {
+    let hasFiles = this.get('_files.length') > 0;
+    if (this.get('onFilesChange')) {
+      this.get('onFilesChange')(hasFiles);
+    }
+  }),
+
   onFileAdd: function (selectedFiles) {
     if (!selectedFiles || selectedFiles.length === 0) {
       return;
@@ -229,6 +238,10 @@ export default FlexberryFileComponent.extend({
   },
 
   actions: {
+    clearErrorMessages() {
+      this.clearErrorMessages();
+    },
+
     /**
      * Удаление одного конкретного файла.
      */
