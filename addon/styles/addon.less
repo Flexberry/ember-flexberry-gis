@@ -408,8 +408,14 @@
   flex-grow: 1;
   text-align: center;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
+  align-items: center;
+  .ui.button.nav {
+    background-color: transparent;
+    color: inherit;
+    font-size: 4rem;
+    box-shadow: none;
+  }
 }
 
 .flexberry-carousel-header {
@@ -448,6 +454,7 @@
   position: relative;
   transition: all 0.4s ease-in-out;
   height: 100%;
+  text-align: center;
 }
 
 .flexberry-carousel-item.active {
@@ -455,9 +462,11 @@
 }
 
 .flexberry-carousel-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+  max-width: 100%;
+  max-height: 100%;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .flexberry-carousel-item.no-data {
@@ -500,23 +509,6 @@
 
 .flexberry-carousel-item.active {
   left: 0;
-}
-
-.flexberry-carousel-nav {
-  position: absolute;
-  margin-top: -20px;
-  top: 50%;
-  transform: translateY(-50%);
-  left: 0;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  .ui.button {
-    background-color: transparent;
-    color: inherit;
-    font-size: 4rem;
-    box-shadow: none;
-  }
 }
 
 .flexberry-carousel-header .actions .ui.button {
@@ -583,12 +575,16 @@
   display: none;
 }
 
+.attach-img-dialog .flexberry-file .ui.action.input:not([class*="left action"]) > input {
+ border-right-color: #F4F7FB !important;
+}
+
 .attach-img-dialog .flexberry-file .ui.action.input:not([class*="left action"])>.button {
   background-color: #F4F7FB;
   padding: .5714em .35714em;
   border: none;
 }
-.attach-img-dialog .flexberry-file .ui.action.input:not([class*="left action"])>.button:not(:last-child) {
+.attach-img-dialog .flexberry-file .ui.action.input:not([class*="left action"])>.button:not(:last-of-type) {
   border-radius: 0;
 }
 

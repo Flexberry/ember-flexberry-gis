@@ -1092,6 +1092,7 @@
   max-width: 34.5rem;
   margin-top: -3rem;
   text-align:justify;
+  z-index: 2000;
 }
 .ui.bottom.left.popup.small.help-popup {
   margin-top: -31px;
