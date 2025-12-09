@@ -41,7 +41,7 @@ export default Ember.Component.extend({
 
   displayedImagesLimit: 5,
 
-  hasChildFiles: false,
+  hasFiles: false,
 
   init() {
     this._super(...arguments);
