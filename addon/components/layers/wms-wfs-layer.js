@@ -32,12 +32,12 @@ export default WmsLayerComponent.extend({
     return this._super(...arguments).then((attributesOptions) => {
       resultingAttributesOptions = attributesOptions;
 
-      let settingsPhotosEnabled = Ember.get(resultingAttributesOptions, 'settings.photosEnabled');
+      let settingsPhotosEnabled = this.get('displaySettings.photosEnabled');
       if (!Ember.isNone(settingsPhotosEnabled)) {
         this.set('_wfsLayer.displaySettings.photosEnabled', settingsPhotosEnabled);
       }
 
-      let settingsphotosName = Ember.get(resultingAttributesOptions, 'settings.photosName');
+      let settingsphotosName = this.get('displaySettings.photosName');
       if (!Ember.isNone(settingsphotosName)) {
         this.set('_wfsLayer.displaySettings.photosName', settingsphotosName);
       }

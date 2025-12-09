@@ -452,8 +452,6 @@ export default Ember.Component.extend(
         let localizedProperties = this.get('displaySettings.featuresPropertiesSettings.localizedProperties') || {};
         let excludedProperties = this.get('displaySettings.featuresPropertiesSettings.excludedProperties');
         let currentLocale = this.get('i18n.locale');
-        let photosEnabled = this.get('displaySettings.photosEnabled');
-        let photosName = this.get('displaySettings.photosName');
 
         let extendLocalizedProperties = (currentLocalizedProperties) => {
           let extraLocales = this.getDefaultLocalizedProperties();
@@ -480,8 +478,6 @@ export default Ember.Component.extend(
             readonly: true,
             localizedProperties: JSON.parse(JSON.stringify(localizedProperties)),
             excludedProperties: excludedProperties ? JSON.parse(JSON.stringify(excludedProperties)) : [],
-            photosEnabled: photosEnabled,
-            photosName: photosName,
           }
         });
       });

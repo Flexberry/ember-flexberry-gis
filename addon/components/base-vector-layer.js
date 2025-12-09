@@ -276,6 +276,8 @@ export default BaseLayer.extend(layerLabel, {
       });
 
       Ember.set(attributesOptions, 'settings.excludedProperties', excluded);
+      Ember.set(attributesOptions, 'settings.photosEnabled', this.get('displaySettings.photosEnabled'));
+      Ember.set(attributesOptions, 'settings.photosName', this.get('displaySettings.photosName'));
 
       return attributesOptions;
     }.bind(this));
