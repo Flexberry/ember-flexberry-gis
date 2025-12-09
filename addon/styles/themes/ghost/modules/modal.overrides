@@ -813,16 +813,26 @@
   }
 }
 
+.ui.modal .ui.message,
 .ui.modal.info-dialog {
-  i.icon.close{
+  i.icon.close {
     top: 5px;
     right: 13px;
     &::before {
       content: "\e93b";
       font-family: 'guideline-icons';
       font-size: 1.5rem;
-      color: #DDE1E6;
     }
+  }
+}
+
+.ui.modal .ui.message i.icon.close::before {
+  color: #e3aaa7;
+}
+
+.ui.modal.info-dialog {
+  i.icon.close::before {
+    color: #DDE1E6;
   }
 
   &.with-icon > .content {

@@ -45,11 +45,13 @@ export default Ember.Component.extend({
   */
   didInsertElement() {
     this._super(...arguments);
-    this.$().popup({
-      on: 'hover',
-      hoverable: true,
-      transition: 'fade',
-      className: { popup: `ui popup help-popup ${this.get('small') ? 'small' : ''}` }
+    Ember.run.scheduleOnce('afterRender', this, function() {
+      this.$().popup({
+        on: 'hover',
+        hoverable: true,
+        transition: 'fade',
+        className: { popup: `ui popup help-popup ${this.get('small') ? 'small' : ''}` }
+      });
     });
   }
 });

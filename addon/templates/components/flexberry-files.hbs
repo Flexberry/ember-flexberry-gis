@@ -1,10 +1,9 @@
 {{#if errorMessages.length}}
   <div class="ui negative message">
-    <ul>
-      {{#each errorMessages as |errorMessage|}}
-        <li>{{errorMessage}}</li>
-      {{/each}}
-    </ul>
+    <i class="close icon" {{action "clearErrorMessages" on="click"}}></i>
+    {{#each errorMessages as |errorMessage|}}
+      <div>{{errorMessage}}</div>
+    {{/each}}
   </div>
 {{/if}}
 <label>{{label}}</label>
@@ -24,7 +23,7 @@
         class="flexberry-file-add-button ui icon {{buttonClass}} {{unless _addButtonIsEnabled "disabled"}} button"
         title={{t "components.flexberry-file.add-button-title"}}
         for={{_fileInputId}}
-        {{action "addButtonClick" on="click" preventDefault=false}}>
+        {{action "clearErrorMessages" on="click" preventDefault=false}}>
         <i class="icon-guideline-file"></i>
       </label>
     {{/if}}
@@ -53,6 +52,15 @@
       <i class="download outline icon"></i>
     </label>
   {{/if}}
+  {{help-popup
+    htmlMessage="Возможна загрузка до 20 изображений
+      для одного объекта. Поддерживаются
+      только форматы PNG/JPEG/JPG, размер
+      файла не должен превышать 20 Мб."
+    variation="wide"
+    position="bottom left"
+    small=true
+  }}
 </div>
 {{#if (and showPreview _hasFile)}}
   {{#if _canLoadPreview}}

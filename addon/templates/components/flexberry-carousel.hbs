@@ -4,7 +4,7 @@
     {{#if (and availableEdit (not feature.arch) (gt total 0))}}
       <button class="ui button" onclick={{action "delete"}}><i class="icon-guideline-delete"></i>Удалить</button>
     {{/if}}
-    {{#if (and availableEdit (not feature.arch))}}
+    {{#if (and availableEdit (not feature.arch) visibleAddPhoto)}}
       <button class="ui button" onclick={{action "add"}}><i class="icon-guideline-plus"></i>Добавить</button>
     {{/if}}
     <button class="ui button cancel" title="Закрыть"><i class="icon-guideline-cross-r"></i></button>
@@ -13,6 +13,7 @@
 
 <div class="flexberry-carousel-container">
   {{#if (gt total 0)}}
+    <button class="ui button nav icon-guideline-navigate-arrow-left" onclick={{action "prev"}}></button>
     <div class="flexberry-carousel-body">
       <div class="flexberry-carousel-items">
         {{#each images as |image index|}}
@@ -27,11 +28,7 @@
       </div>
       <span>{{math/add activeIndex 1}} из {{total}}</span>
     </div>
-
-    <div class="flexberry-carousel-nav">
-      <button class="ui button icon-guideline-navigate-arrow-left" onclick={{action "prev"}}></button>
-      <button class="ui button icon-guideline-navigate-arrow" onclick={{action "next"}}></button>
-    </div>
+    <button class="ui button nav icon-guideline-navigate-arrow" onclick={{action "next"}}></button>
   {{else}}
     <div class="flexberry-carousel-item no-data">
       Нет данных
