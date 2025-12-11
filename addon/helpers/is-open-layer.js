@@ -7,7 +7,7 @@ export function isOpenLayer([layer] /*, hash*/) {
 
   let url = Ember.get(layer, 'settingsAsObject.url');
   let urlAsObj = null;
-  const withoutDomainRegex = /^\/geoserver\/[^\/]+\/ows$/;
+  const withoutDomainRegex = /^\/geoserver\/([^\/]+\/)?ows$/;
 
   if (!url) return false;
 
