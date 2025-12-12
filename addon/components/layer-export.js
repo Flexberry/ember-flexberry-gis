@@ -273,54 +273,74 @@ export default Ember.Component.extend({
 
   actions: {
     onApprove() {
+      const data = {
+        outputFormat: this.get('format'),
+        sourceSrs: this.get('selectedCRS') ? this.get('layer.crs.code') : null,
+        targetSrs: this.get('selectedCRS'),
+      };
       let settings = this.get('layer.settingsAsObject');
-      let data = {};
+
       if (this.get('layer.type') === 'odata-vector') {
-        data = {
-          outputFormat: this.get('format'),
+        Object.assign(data, {
           odataQueryName: settings.odataClass,
           odataProjectionName: settings.projectionName,
           odataUrl: settings.odataUrl,
-          sourceSrs: this.get('selectedCRS') ? this.get('layer.crs.code') : null,
-          targetSrs: this.get('selectedCRS'),
-          filter: Ember.isBlank(this.get('filter')) ? null : JSON.stringify(this.get('filter')),
-        };
+        });
       } else {
         if (this.get('layer.type') === 'wms-wfs') {
           settings = settings.wfs;
         }
 
-        data = {
-          outputFormat: this.get('format'),
+        Object.assign(data, {
           layerNS: settings.typeNS,
           layerName: settings.typeName,
-          sourceSrs: this.get('selectedCRS') ? this.get('layer.crs.code') : null,
-          targetSrs: this.get('selectedCRS'),
-          filter: Ember.isBlank(this.get('filter')) ? null : JSON.stringify(this.get('filter')),
-        };
+        });
       }
 
-      let additionalArguments = null;
-
+      // Добавляем доп. параметры для сервиса экспорта
       if (data.outputFormat === 'GML2') {
-        additionalArguments = { dsco: { FORMAT: 'GML2' } };
-        data = Object.assign(data, additionalArguments);
-        data.outputFormat = 'GML';
+        Object.assign(data, { dsco: { FORMAT: 'GML2' }, outputFormat: 'GML' });
       }
 
       if (data.outputFormat === 'GML3') {
-        additionalArguments = { dsco: { FORMAT: 'GML3' } };
-        data = Object.assign(data, additionalArguments);
-        data.outputFormat = 'GML';
+        Object.assign(data, { dsco: { FORMAT: 'GML3' }, outputFormat: 'GML' });
       }
 
       if (data.outputFormat === 'XLSX') {
         this.getHeader().then((header) => {
-          data.header = header ? JSON.stringify(header) : null;
+          Object.assign(data, { header: header ? JSON.stringify(header) : null });
           this.start(data);
         });
         return;
       }
+
+      // Приводим время в UTC для отправки на сервер
+      const filter = this.get('filter');
+      const toUTC = (value) => {
+        const condition = value.type;
+        const type = value.filterType;
+
+        if (type !== 'date' && type !== 'dateTime') {
+          return;
+        }
+
+        value.dateFrom = new Date(value.dateFrom).toISOString();
+
+        if (condition === 'inRange') {
+          value.dateTo = new Date(value.dateTo).toISOString();
+        }
+      };
+      Object.entries(filter).forEach(([key, value]) => {
+        let isMultiFilter = Ember.isPresent(value.conditions) && Ember.isArray(value.conditions);
+        if (isMultiFilter) {
+          value.conditions.forEach((multiValue) => toUTC(multiValue));
+          return;
+        }
+
+        toUTC(value);
+      });
+
+      Object.assign(data, { filter: !Ember.isNone(filter) && Object.keys(filter).length > 0 ? JSON.stringify(filter) : null });
 
       this.start(data);
     },
