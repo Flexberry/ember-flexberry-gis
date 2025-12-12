@@ -340,7 +340,7 @@ export default Ember.Component.extend({
         toUTC(value);
       });
 
-      Object.assign(data, { filter: Ember.isBlank(filter) ? null : JSON.stringify(filter) });
+      Object.assign(data, { filter: !Ember.isNone(filter) && Object.keys(filter).length > 0 ? JSON.stringify(filter) : null });
 
       this.start(data);
     },
