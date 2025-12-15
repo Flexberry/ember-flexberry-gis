@@ -39,7 +39,7 @@ export let Model = Ember.Mixin.create({
       ```
   */
   _anyTextCompute: function () {
-    let result = (this.anyTextCompute && typeof this.anyTextCompute === 'function') ? this.anyTextCompute() : null;
+    let result = this.anyTextCompute && typeof this.anyTextCompute === 'function' ? this.anyTextCompute() : null;
     this.set('anyText', result);
   },
 
@@ -62,26 +62,29 @@ export let Model = Ember.Mixin.create({
     let parentValidations = this._super();
     let thisValidations = {
       name: { presence: true },
-      public: { presence: true }
+      public: { presence: true },
     };
     return Ember.$.extend(true, {}, parentValidations, thisValidations);
   },
 
   init: function () {
     this.set('validations', this.getValidations());
-    this.set('settingsAsObject', function () {
-      const settingsRaw = this.get('settings') || {};
-      let settings = null;
-      try {
-        settings = JSON.parse(settingsRaw);
-      } catch (e) {
-        console.error('Map model settings parse error', e.message);
-      }
+    this.set(
+      'settingsAsObject',
+      function () {
+        const settingsRaw = this.get('settings') || '{}';
+        let settings = null;
+        try {
+          settings = JSON.parse(settingsRaw);
+        } catch (e) {
+          console.error('Map model settings parse error', e.message);
+        }
 
-      return settings;
-    }.bind(this));
+        return settings;
+      }.bind(this)
+    );
     this._super.apply(this, arguments);
-  }
+  },
 });
 
 export let defineProjections = function (modelClass) {
@@ -91,7 +94,7 @@ export let defineProjections = function (modelClass) {
     createTime: Projection.attr('Время создания'),
     editor: Projection.attr('Редактор'),
     editTime: Projection.attr('Время редактирования'),
-    picture: Projection.attr('Изображение')
+    picture: Projection.attr('Изображение'),
   });
 
   modelClass.defineProjection('Map', 'new-platform-flexberry-g-i-s-map', {
@@ -100,7 +103,7 @@ export let defineProjections = function (modelClass) {
     lng: Projection.attr('Долгота', { hidden: true }),
     zoom: Projection.attr('Зум', { hidden: true }),
     public: Projection.attr('Общая', { hidden: true }),
-    coordinateReferenceSystem: Projection.attr('Система координат', { hidden: true })
+    coordinateReferenceSystem: Projection.attr('Система координат', { hidden: true }),
   });
 
   modelClass.defineProjection('MapE', 'new-platform-flexberry-g-i-s-map', {
@@ -130,19 +133,22 @@ export let defineProjections = function (modelClass) {
       coordinateReferenceSystem: Projection.attr('Система координат'),
       boundingBox: Projection.attr('Граница'),
       securityKey: Projection.attr('', { hidden: true }),
-      parent: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', 'Родитель', {
-      }, { hidden: true }),
-      map: Projection.belongsTo('new-platform-flexberry-g-i-s-map', 'Карта', {
-      }, { hidden: true }),
+      parent: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', 'Родитель', {}, { hidden: true }),
+      map: Projection.belongsTo('new-platform-flexberry-g-i-s-map', 'Карта', {}, { hidden: true }),
       layerLink: Projection.hasMany('new-platform-flexberry-g-i-s-layer-link', '', {
         mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', 'Тип', {
           typeName: Projection.attr('Тип объекта', { hidden: true }),
           listForm: Projection.attr('Списковая форма', { hidden: true }),
-          editForm: Projection.attr('Форма редактирования', { hidden: true })
+          editForm: Projection.attr('Форма редактирования', { hidden: true }),
         }),
-        layer: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', '', {
-          name: Projection.attr('Слой', { hidden: true })
-        }, { hidden: true }),
+        layer: Projection.belongsTo(
+          'new-platform-flexberry-g-i-s-map-layer',
+          '',
+          {
+            name: Projection.attr('Слой', { hidden: true }),
+          },
+          { hidden: true }
+        ),
         allowShow: Projection.attr('Показывать'),
         parameters: Projection.hasMany('new-platform-flexberry-g-i-s-link-parameter', 'Параметры связи', {
           objectField: Projection.attr('Поле объекта'),
@@ -150,11 +156,10 @@ export let defineProjections = function (modelClass) {
           expression: Projection.attr('Выражение', { hidden: true }),
           queryKey: Projection.attr('Ключ запроса', { hidden: true }),
           linkField: Projection.attr('Ключ связи', { hidden: true }),
-          layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-layer-link', 'Связь', {
-          })
-        })
-      })
-    })
+          layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-layer-link', 'Связь', {}),
+        }),
+      }),
+    }),
   });
 
   modelClass.defineProjection('MapL', 'new-platform-flexberry-g-i-s-map', {
@@ -163,10 +168,10 @@ export let defineProjections = function (modelClass) {
     lng: Projection.attr('Долгота'),
     zoom: Projection.attr('Зум'),
     public: Projection.attr('Общая'),
-    picture: Projection.attr('Изображение')
+    picture: Projection.attr('Изображение'),
   });
 
   modelClass.defineProjection('MapGisSearchFormL', 'new-platform-flexberry-g-i-s-map', {
-    name: Projection.attr('Наименование')
+    name: Projection.attr('Наименование'),
   });
 };
