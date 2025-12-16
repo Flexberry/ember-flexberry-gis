@@ -13,7 +13,11 @@ export default Ember.Component.extend({
 
   tagName: '',
 
-  images: Ember.A(),
+  images: Ember.A([]),
+
+  deleteRecordsFiles: Ember.A([]),
+
+  saveRecordsFilesLater: Ember.A([]),
 
   galleryDialogIsRequested: false,
 
@@ -31,7 +35,7 @@ export default Ember.Component.extend({
 
   token: null,
 
-  _relatedModelStub: null,
+  modelFilesStub: null,
 
   uploadIsInProgressFiles: null,
 
@@ -43,23 +47,43 @@ export default Ember.Component.extend({
 
   hasFiles: false,
 
+  editLayerForm: null,
+
+  settingsAsObject: null,
+
+  layerType: null,
+
+  _modalClickHandler: null,
+
   init() {
     this._super(...arguments);
 
-    let relatedModelStub = Ember.Object.extend(Ember.Evented, {}).create();
-    this.set('_relatedModelStub', relatedModelStub);
+    this.set('images', Ember.A([]));
+    if (Ember.isNone(this.get('modelFilesStub'))) {
+      let modelFilesStub = Ember.Object.extend(Ember.Evented, {}).create();
+      this.set('modelFilesStub', modelFilesStub);
+    }
 
-    if (!this.feature.layerModel.settingsAsObject.displaySettings.photosEnabled) {
+    let settingsAsObject = this.get('settingsAsObject');
+    if (Ember.isNone(settingsAsObject) || !settingsAsObject.displaySettings.photosEnabled) {
       return;
     }
 
-    if (Ember.isEmpty(this.feature.layerModel.settingsAsObject.uploadUrlFiles)) {
+    if (Ember.isEmpty(settingsAsObject.uploadUrlFiles)) {
       console.error('Пустой uploadUrlFiles. Раздел фото не будет загружен.');
     } else {
-      this.set('uploadUrlFiles', this.feature.layerModel.settingsAsObject.uploadUrlFiles);
+      this.set('uploadUrlFiles', settingsAsObject.uploadUrlFiles);
 
       this.set('token', this.get('session.isAuthenticated') ? `Bearer ${this.get('session.data.authenticated.access_token')}` : null);
-      this.getFhotoLayer();
+
+      // если feature null значит мы пришли с формы создания объекта, ничего не подгружаем.
+      if (!Ember.isNone(this.get('feature'))) {
+        this.getFhotoLayer();
+      }
+
+      if (this.get('editLayerForm')) {
+        this.toggleProperty('showAll');
+      }
     }
   },
 
@@ -81,16 +105,19 @@ export default Ember.Component.extend({
   getFhotoLayer() {
     let store = this.get('store');
     let feature = this.get('feature');
-    let modelName = this.feature.layerModel.settingsAsObject.modelNameFiles;
-    let projectionName = this.feature.layerModel.settingsAsObject.projectionNameFiles;
+    let settingsAsObject = this.get('settingsAsObject');
+    let modelName = settingsAsObject.modelNameFiles;
+    let projectionName = settingsAsObject.projectionNameFiles;
+    let layerType = this.get('layerType');
+
     let predicateAtr;
 
-    if (feature.layerModel.get('type') === 'odata-vector') {
-      predicateAtr = feature.layerModel.settingsAsObject.modelName.split('-')[1];
-    } else if (feature.layerModel.get('type') === 'wms-wfs') {
-      predicateAtr = feature.layerModel.settingsAsObject.wfs.typeName;
+    if (layerType === 'odata-vector') {
+      predicateAtr = settingsAsObject.modelName.split('-')[1];
+    } else if (layerType === 'wms-wfs') {
+      predicateAtr = settingsAsObject.wfs.typeName;
     } else {
-      predicateAtr = feature.layerModel.settingsAsObject.typeName;
+      predicateAtr = settingsAsObject.typeName;
     }
 
     let predicate = new Query.SimplePredicate(
@@ -117,6 +144,7 @@ export default Ember.Component.extend({
             createTime: moment(item.get('createTime')).format('DD.MM.YYYY'),
             id: item.get('id'),
             fileName: fileName,
+            isBase64: false,
           };
         }
       });
@@ -142,9 +170,9 @@ export default Ember.Component.extend({
    * Сохранение фото.
    */
   saveFile() {
-    let relatedModel = this.get('_relatedModelStub');
-    if (relatedModel) {
-      relatedModel.off('uploadFiles');
+    let modelFilesStub = this.get('modelFilesStub');
+    if (modelFilesStub) {
+      modelFilesStub.off('uploadFiles');
     }
 
     this.set('showFileAdd', false);
@@ -171,8 +199,10 @@ export default Ember.Component.extend({
     let store = this.get('store');
     let feature = this.get('feature');
     let images = this.get('images');
+    let settingsAsObject = this.get('settingsAsObject');
+    let modelName = settingsAsObject.modelNameFiles;
+    let layerType = this.get('layerType');
     let records = [];
-    let modelName = this.feature.layerModel.settingsAsObject.modelNameFiles;
 
     arrayFiles.forEach((file) => {
       let record = store.createRecord(modelName, {
@@ -185,12 +215,12 @@ export default Ember.Component.extend({
       });
 
       //Для одаты надо сделать set модели т.к. связь BelongTo, для остального пишем ключ.
-      if (feature.layerModel.get('type') === 'odata-vector') {
-        record.set(feature.layerModel.settingsAsObject.modelName.split('-')[1], feature.leafletLayer.model);
-      } else if (feature.layerModel.get('type') === 'wms-wfs') {
-        record.set(feature.layerModel.settingsAsObject.wfs.typeName, feature.properties.primarykey);
+      if (layerType === 'odata-vector') {
+        record.set(settingsAsObject.modelName.split('-')[1], feature.leafletLayer.model);
+      } else if (layerType === 'wms-wfs') {
+        record.set(settingsAsObject.wfs.typeName, feature.properties.primarykey);
       } else {
-        record.set(feature.layerModel.settingsAsObject.typeName, feature.properties.primarykey);
+        record.set(settingsAsObject.typeName, feature.properties.primarykey);
       }
 
       records.push(record);
@@ -219,6 +249,7 @@ export default Ember.Component.extend({
               createTime: moment(file.value.get('createTime')).format('DD.MM.YYYY'),
               id: file.value.get('id'),
               fileName: fileName,
+              isBase64: false,
             });
           }
         } else {
@@ -249,8 +280,6 @@ export default Ember.Component.extend({
     Ember.$('.ui.dimmer.modals.carousel-dimmer').removeClass('carousel-dimmer');
   },
 
-  _modalClickHandler: null,
-
   _addModalClickHandler() {
     Ember.run.next(this, () => {
       const modal = document.querySelector('.ui.modal.carousel');
@@ -275,11 +304,34 @@ export default Ember.Component.extend({
     }
   },
 
+  saveFilesLaterFunc(modelFilesStub) {
+    modelFilesStub.trigger('saveFilesLater');
+    let images = this.get('images');
+    let saveRecordsFilesLater = this.get('saveRecordsFilesLater');
+    saveRecordsFilesLater.forEach((file) => {
+      if (!file.id) {
+        file.id = generateUniqueId();
+      }
+
+      if (!images.any(img => img.id === file.id)) {
+        images.pushObject({
+          preview: file.files[0]._previewBase64,
+          id: file.id,
+          isBase64: true,
+        });
+      }
+    });
+    this.set('showFileAdd', false);
+    modelFilesStub.off('saveFilesLater');
+  },
+
   actions: {
     showCurrent(index) {
-      this.set('activeIndex', index);
-      this.set('galleryDialogIsRequested', true);
-      Ember.run.scheduleOnce('afterRender', this, this._addModalClickHandler);
+      if (!this.get('editLayerForm')) {
+        this.set('activeIndex', index);
+        this.set('galleryDialogIsRequested', true);
+        Ember.run.scheduleOnce('afterRender', this, this._addModalClickHandler);
+      }
     },
 
     toggleShowAll() {
@@ -306,9 +358,9 @@ export default Ember.Component.extend({
     onDeny(e) {
       e.closeDialog = false;
 
-      let relatedModel = this.get('_relatedModelStub');
-      if (relatedModel) {
-        relatedModel.off('uploadFiles');
+      let modelFilesStub = this.get('modelFilesStub');
+      if (modelFilesStub) {
+        modelFilesStub.off('uploadFiles');
       }
 
       this.set('showFileAdd', false);
@@ -318,11 +370,14 @@ export default Ember.Component.extend({
       this.set('hasFiles', false);
       e.closeDialog = false;
 
-      let relatedModel = this.get('_relatedModelStub');
-      if (relatedModel) {
-        relatedModel.trigger('uploadFiles');
-
-        this.checkUploadStatus();
+      let modelFilesStub = this.get('modelFilesStub');
+      if (modelFilesStub) {
+        if (this.get('editLayerForm')) {
+          this.saveFilesLaterFunc(modelFilesStub);
+        } else {
+          modelFilesStub.trigger('uploadFiles');
+          this.checkUploadStatus();
+        }
       }
     },
 
@@ -336,30 +391,55 @@ export default Ember.Component.extend({
         let images = _this.get('images');
         let store = _this.get('store');
         let image = images.objectAt(deleteIndex);
-        let feature = _this.get('feature');
-        let modelName = feature.layerModel.settingsAsObject.modelNameFiles;
+        let settingsAsObject = _this.get('settingsAsObject');
+        let modelName = settingsAsObject.modelNameFiles;
         let obj = store.peekRecord(modelName, image.id);
 
         if (!Ember.isEmpty(obj)) {
           obj.deleteRecord();
           obj
-            .save()
-            .then(() => {
-              _this.set('activeIndex', deleteIndex > 0 ?  --deleteIndex : 0);
-              Ember.run.next(()=> {
-                images.removeObject(image);
-              });
-            })
-            .catch((error) => {
-              console.error('Ошибка при удалении. ', error);
-              obj.rollbackAttributes();
+          .save()
+          .then(() => {
+            _this.set('activeIndex', deleteIndex > 0 ?  --deleteIndex : 0);
+            Ember.run.next(()=> {
+              images.removeObject(image);
             });
+          })
+          .catch((error) => {
+            console.error('Ошибка при удалении. ', error);
+            obj.rollbackAttributes();
+          });
         }
       }
     },
 
     onFilesChange(hasFiles) {
       this.set('hasFiles', hasFiles);
+    },
+
+    deleteSingleFile(image) {
+      let images = this.get('images');
+      let deleteRecordsFiles = this.get('deleteRecordsFiles');
+      let store = this.get('store');
+      let settingsAsObject = this.get('settingsAsObject');
+      let modelName = settingsAsObject.modelNameFiles;
+      let obj = store.peekRecord(modelName, image.id);
+
+      Ember.run.next(()=> {
+        images.removeObject(image);
+        if (Ember.isEmpty(obj)) {
+          let saveRecordsFilesLater = this.get('saveRecordsFilesLater');
+          let fileToRemove = saveRecordsFilesLater.find(file => file.id === image.id);
+
+          if (fileToRemove) {
+            // Удаляем из массива на сохранение файл.
+            saveRecordsFilesLater.removeObject(fileToRemove);
+          }
+        } else {
+          obj.deleteRecord();
+          deleteRecordsFiles.pushObject(obj);
+        }
+      });
     },
   },
 });

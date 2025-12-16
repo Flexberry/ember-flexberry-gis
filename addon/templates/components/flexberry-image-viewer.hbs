@@ -3,18 +3,29 @@
 {{/if}}
 <div class="flexberry-image-viewer">
   {{#each displayedImages as |image index|}}
-      <a class="preview" onclick={{action "showCurrent" index}}>
+    <a class="preview" onclick={{action "showCurrent" index}}>
+      {{#if image.isBase64}}
+        <img class="img-responsive" src={{image.preview}} />
+      {{else}}
         {{image-loader
           token=token
           imageUrl=image.preview
         }}
-      </a>
+      {{/if}}
+      {{#if editLayerForm}}
+        <button type="button" class="delete-image-btn" title="Удалить файл" {{action "deleteSingleFile" image}}>
+          ✕
+        </button>
+      {{/if}}
+    </a>
   {{/each}}
 
-  {{#if (gt images.length displayedImagesLimit)}}
-    <a class="preview more" onclick={{action "toggleShowAll"}}>
-      {{#if showAll}}Скрыть{{else}}Смотреть все{{/if}}
-    </a>
+  {{#if (not editLayerForm)}}
+    {{#if (gt images.length displayedImagesLimit)}}
+      <a class="preview more" onclick={{action "toggleShowAll"}}>
+        {{#if showAll}}Скрыть{{else}}Смотреть все{{/if}}
+      </a>
+    {{/if}}
   {{/if}}
 </div>
 
@@ -73,7 +84,7 @@
         showDownloadButton=false
         showPreview=true
         readonly=false
-        relatedModel=_relatedModelStub
+        relatedModel=modelFilesStub
         showModalDialogOnDownloadError=false
         showModalDialogOnUploadError=false
         accept="image/jpeg, image/jpg, image/png"
@@ -85,6 +96,7 @@
         label="Файл"
         removeFileCount=(get images "length")
         onFilesChange=(action "onFilesChange")
+        saveRecordsFilesLater=saveRecordsFilesLater
       }}
     </div>
     <div class="attach-img-dialog-actions">
