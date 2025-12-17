@@ -87,6 +87,21 @@ export default Ember.Component.extend({
     }
   },
 
+  /**
+   * Метод вызывается после того, как атрибуты компонента были обновлены, только при последующих обновлениях(рендер был хотя бы один раз).
+   */
+  didUpdateAttrs() {
+    this._super(...arguments);
+
+    let feature = this.get('feature');
+    let settingsAsObject = this.get('settingsAsObject');
+    if (Ember.isNone(feature) || Ember.isNone(settingsAsObject) || !settingsAsObject.displaySettings.photosEnabled) {
+      return;
+    }
+
+    this.getFhotoLayer();
+  },
+
   displayedImages: Ember.computed('images.[]', 'showAll', function() {
     const images = this.get('images') || [];
     return this.get('showAll') ? images : images.slice(0, this.get('displayedImagesLimit'));
