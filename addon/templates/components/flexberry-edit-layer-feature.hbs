@@ -140,6 +140,25 @@
          {{#if _showLoader}}
           <div class="ui small active loader"></div>
         {{else}}
+          {{#if photosEnabled}}
+            <div class="feature-div-property-name">
+              {{photosName}}
+            </div>
+
+            <div class="feature-div-property-value">
+              {{#flexberry-image-viewer
+                feature=(get (get layers (concat '' curIndex)) "feature")
+                availableEdit=availableEdit
+                editLayerForm=true
+                settingsAsObject=layerModel.layerModel.settingsAsObject
+                layerType=layerModel.layerModel.type
+                deleteRecordsFiles=deleteRecordsFiles
+                uploadFilesLater=uploadFilesLater
+              }}
+              {{/flexberry-image-viewer}}
+            </div>
+          {{/if}}
+
           {{#each-in _model.fieldNames as |fieldName fieldValue|}}
           <div class="field {{if (or (get parsingErrors (concat '' curIndex '.' fieldName '.invalidValue')) (and (get parsingErrors (concat '' curIndex '.' fieldName '.missedValue')) (is-none (get dataValue fieldName) true) )) "error" ""}}">
             <label>{{fieldValue}}

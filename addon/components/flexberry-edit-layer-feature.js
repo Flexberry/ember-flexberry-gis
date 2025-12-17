@@ -3,6 +3,7 @@ import layout from '../templates/components/flexberry-edit-layer-feature';
 import SnapDrawMixin from '../mixins/snap-draw';
 import EditFeatureMixin from '../mixins/edit-feature';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
+import generateUniqueId from 'ember-flexberry-data/utils/generate-unique-id';
 import { translationMacro as t } from 'ember-i18n';
 import { addAlpha, splitColor } from '../utils/leaflet-opacity';
 
@@ -15,6 +16,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     @type MapApiService
   */
   mapApi: Ember.inject.service(),
+
+  store: Ember.inject.service('store'),
 
   /**
     Reference to component's template.
@@ -133,6 +136,12 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
   dataItems: null,
 
   isFavorite: false,
+
+  availableEdit: null,
+
+  deleteRecordsFiles: Ember.A([]),
+
+  uploadFilesLater: Ember.A([]),
 
   dataItemCount: Ember.computed('dataItems', function () {
     let items = this.get('dataItems.items');
@@ -460,6 +469,14 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     return modelData;
   }),
 
+  photosEnabled: Ember.computed('layerModel.layerModel', function () {
+    return this.get('layerModel.layerModel.settingsAsObject.displaySettings.photosEnabled');
+  }),
+
+  photosName: Ember.computed('layerModel.layerModel', function () {
+    return this.get('layerModel.layerModel.settingsAsObject.displaySettings.photosName');
+  }),
+
   /**
     Save domain values.
   */
@@ -785,6 +802,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     this._super(...arguments);
     this.set('parsingErrors', {});
     this.set('activeGeoTool', 'manual');
+    this.set('deleteRecordsFiles', Ember.A([]));
+    this.set('uploadFilesLater', Ember.A([]));
   },
 
   /**
@@ -924,6 +943,8 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     this.set('choiceValueData', null);
     this.set('leafletObject', null);
     this.set('mode', null);
+    this.set('deleteRecordsFiles', Ember.A([]));
+    this.set('uploadFilesLater', Ember.A([]));
   },
 
   /**
@@ -979,6 +1000,54 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     if (Ember.get(leafletObject, 'updateLabel') && typeof (leafletObject.updateLabel) === 'function') {
       leafletObject.updateLabel(layer);
     }
+  },
+
+  /**
+   * Загрузить файл на сервер.
+   */
+  submitFile(uploadFile) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      uploadFile
+        .submit()
+        .done((result) => resolve(result))
+        .fail((jqXhr, textStatus, errorThrown) => {
+          reject(errorThrown);
+        });
+    });
+  },
+
+  /**
+   * Получить строки файлов для записи в бд.
+   */
+  getRecordsFiles(layerModel, feature) {
+    let store = this.get('store');
+    let settingsAsObject = Ember.get(layerModel, 'layerModel.settingsAsObject');
+    let layerType = Ember.get(layerModel, 'layerModel.type');
+
+    let uploadFilesLater = this.get('uploadFilesLater');
+    return uploadFilesLater.map((uploadFile) => {
+      return this.submitFile(uploadFile).then((result) => {
+        let record = store.createRecord(settingsAsObject.modelNameFiles, {
+            id: generateUniqueId(),
+            filePath: JSON.stringify(result),
+            fileName: result.fileName || null,
+            mime: result.fileMimeType || null,
+            width: result.width || null,
+            height: result.height || null,
+          }
+        );
+
+        if (layerType === 'odata-vector') {
+          record.set(settingsAsObject.modelName.split('-')[1], feature.leafletLayer.model);
+        } else if (layerType === 'wms-wfs') {
+          record.set(settingsAsObject.wfs.typeName, feature.properties.primarykey);
+        } else {
+          record.set(settingsAsObject.typeName, feature.properties.primarykey);
+        }
+
+        return record;
+      });
+    });
   },
 
   actions: {
@@ -1262,6 +1331,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
         let leafletMap = this.get('leafletMap');
         this.set('loading', false);
         leafletObject.off('save:failed', saveFailed);
+        let uploadFilesPromises = Ember.A([]);
 
         if (
           !Ember.isNone(data.layers) &&
@@ -1272,6 +1342,12 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
             e.layers.forEach((l) => {
               leafletMap.removeLayer(l);
             });
+
+            // Для новых объектов слоя, feature появляется только после сохранения leafletObject.
+            if (data.layers.length === 1 && data.layers[0].feature) {
+              let newFeature = data.layers[0].feature;
+              uploadFilesPromises = this.getRecordsFiles(layerModel, newFeature);
+            }
           }
 
           data.layers.forEach((layer) => {
@@ -1313,6 +1389,17 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           _leafletObjectFirst.setParams({ fake: Date.now() }, false);
         }
 
+        if (uploadFilesPromises.length > 0) {
+          Ember.RSVP.all(uploadFilesPromises).then(records => {
+            return Ember.RSVP.all(records.map(r => r.save()));
+          }).catch((error) => {
+            console.error('Возникла ошибка при сохранении файлов ' + error);
+          }).finally(() => {
+            this.set('deleteRecordsFiles', Ember.A([]));
+            this.set('uploadFilesLater', Ember.A([]));
+          });
+        }
+
         this.get('modalMessage').showModal({
           title: 'Объект успешно сохранен',
           text: `Объект успешно сохранен в слой “${layerModel.name}”`,
@@ -1330,9 +1417,33 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
       this.set('loading', true);
       try {
-        (createPromise ? createPromise : Ember.RSVP.resolve()).then(() => {
-          leafletObject.save();
+        let objectsToSave = Ember.A([]);
+        objectsToSave.pushObject(leafletObject);
+
+        let deleteRecordsFiles = this.get('deleteRecordsFiles');
+        deleteRecordsFiles.forEach(obj => objectsToSave.pushObject(obj));
+        let uploadFilesPromises = Ember.A([]);
+        let editFeature = this.get(`layers.${this.get('curIndex')}.feature`);
+        if (state === 'Edit' && editFeature) {
+          uploadFilesPromises = this.getRecordsFiles(layerModel, editFeature);
+        }
+
+        if (Ember.isNone(createPromise)) {
+          createPromise = Ember.RSVP.resolve();
+        }
+
+        if (uploadFilesPromises.length > 0) {
+          createPromise = createPromise.then(() => {
+            return Ember.RSVP.all(uploadFilesPromises).then((records) => {
+              records.forEach(record => objectsToSave.pushObject(record));
+            });
+          });
+        }
+
+        createPromise.then(() => {
+          objectsToSave.forEach(obj => obj.save());
         });
+
       } catch (ex) {
         leafletObject.off('save:failed', saveFailed);
         leafletObject.off('save:success', saveSuccess);

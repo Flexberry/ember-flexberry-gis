@@ -351,11 +351,12 @@ export default BaseVectorLayer.extend(OdataFilterParserMixin, {
     layer.modelProj = modelProj;
     layer.minZoom = this.get('minZoom');
     layer.maxZoom = this.get('maxZoom');
-    layer.feature = {
+
+    Ember.set(layer, 'feature', {
       type: 'Feature',
       geometry: geometry,
       leafletLayer: layer
-    };
+    });
 
     layer.feature.properties = new Proxy(model, {
       get: function (target, prop) {
