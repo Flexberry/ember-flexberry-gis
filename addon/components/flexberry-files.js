@@ -18,7 +18,7 @@ export default FlexberryFileComponent.extend({
 
   onFilesChange: null,
 
-  saveRecordsFilesLater: Ember.A([]),
+  uploadFilesLater: Ember.A([]),
 
   maxFilesCalc: Ember.computed('removeFileCount', 'maxFiles', function () {
     return this.get('maxFiles') - this.get('removeFileCount');
@@ -288,13 +288,13 @@ export default FlexberryFileComponent.extend({
     saveFilesLater() {
       if (this.get('_files.length') > 0) {
         let files = this.get('_files');
-        let saveRecordsFilesLater = this.get('saveRecordsFilesLater');
+        let uploadFilesLater = this.get('uploadFilesLater');
         files.forEach((file) => {
           let uploadData = this.get('_uploadData');
           let uploadClone = Object.assign({}, uploadData, {
             files: [file],
           });
-          saveRecordsFilesLater.pushObject(uploadClone);
+          uploadFilesLater.pushObject(uploadClone);
         });
       }
     },

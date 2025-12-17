@@ -141,7 +141,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
 
   deleteRecordsFiles: Ember.A([]),
 
-  saveRecordsFilesLater: Ember.A([]),
+  uploadFilesLater: Ember.A([]),
 
   dataItemCount: Ember.computed('dataItems', function () {
     let items = this.get('dataItems.items');
@@ -803,7 +803,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     this.set('parsingErrors', {});
     this.set('activeGeoTool', 'manual');
     this.set('deleteRecordsFiles', Ember.A([]));
-    this.set('saveRecordsFilesLater', Ember.A([]));
+    this.set('uploadFilesLater', Ember.A([]));
   },
 
   /**
@@ -944,7 +944,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     this.set('leafletObject', null);
     this.set('mode', null);
     this.set('deleteRecordsFiles', Ember.A([]));
-    this.set('saveRecordsFilesLater', Ember.A([]));
+    this.set('uploadFilesLater', Ember.A([]));
   },
 
   /**
@@ -1005,7 +1005,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
   /**
    * Загрузить файл на сервер.
    */
-  submitFiles(uploadFile) {
+  submitFile(uploadFile) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       uploadFile
         .submit()
@@ -1024,9 +1024,9 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
     let settingsAsObject = Ember.get(layerModel, 'layerModel.settingsAsObject');
     let layerType = Ember.get(layerModel, 'layerModel.type');
 
-    let saveRecordsFilesLater = this.get('saveRecordsFilesLater');
-    return saveRecordsFilesLater.map((uploadFile) => {
-      return this.submitFiles(uploadFile).then((result) => {
+    let uploadFilesLater = this.get('uploadFilesLater');
+    return uploadFilesLater.map((uploadFile) => {
+      return this.submitFile(uploadFile).then((result) => {
         let record = store.createRecord(settingsAsObject.modelNameFiles, {
             id: generateUniqueId(),
             filePath: JSON.stringify(result),
@@ -1396,7 +1396,7 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
             console.error('Возникла ошибка при сохранении файлов ' + error);
           }).finally(() => {
             this.set('deleteRecordsFiles', Ember.A([]));
-            this.set('saveRecordsFilesLater', Ember.A([]));
+            this.set('uploadFilesLater', Ember.A([]));
           });
         }
 

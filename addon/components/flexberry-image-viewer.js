@@ -17,7 +17,7 @@ export default Ember.Component.extend({
 
   deleteRecordsFiles: Ember.A([]),
 
-  saveRecordsFilesLater: Ember.A([]),
+  uploadFilesLater: Ember.A([]),
 
   galleryDialogIsRequested: false,
 
@@ -307,8 +307,8 @@ export default Ember.Component.extend({
   saveFilesLaterFunc(modelFilesStub) {
     modelFilesStub.trigger('saveFilesLater');
     let images = this.get('images');
-    let saveRecordsFilesLater = this.get('saveRecordsFilesLater');
-    saveRecordsFilesLater.forEach((file) => {
+    let uploadFilesLater = this.get('uploadFilesLater');
+    uploadFilesLater.forEach((file) => {
       if (!file.id) {
         file.id = generateUniqueId();
       }
@@ -428,12 +428,12 @@ export default Ember.Component.extend({
       Ember.run.next(()=> {
         images.removeObject(image);
         if (Ember.isEmpty(obj)) {
-          let saveRecordsFilesLater = this.get('saveRecordsFilesLater');
-          let fileToRemove = saveRecordsFilesLater.find(file => file.id === image.id);
+          let uploadFilesLater = this.get('uploadFilesLater');
+          let fileToRemove = uploadFilesLater.find(file => file.id === image.id);
 
           if (fileToRemove) {
             // Удаляем из массива на сохранение файл.
-            saveRecordsFilesLater.removeObject(fileToRemove);
+            uploadFilesLater.removeObject(fileToRemove);
           }
         } else {
           obj.deleteRecord();
