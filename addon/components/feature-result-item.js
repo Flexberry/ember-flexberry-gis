@@ -296,6 +296,8 @@ export default Ember.Component.extend(SlotsMixin, ResultFeatureInitializer, {
   */
   isSubmenu: false,
 
+  leafletMap: null,
+
   /**
     Initializes DOM-related component's properties.
   */
@@ -323,14 +325,17 @@ export default Ember.Component.extend(SlotsMixin, ResultFeatureInitializer, {
       this.set('featureId', shapeId);
       this.set('hasEditForm', hasEditForm);
     }
+
+    this.set('leafletMap', this.get('mapApi').getFromApi('leafletMap'));
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+    let leafletMap = this.get('leafletMap');
     leafletMap.off('flexberry-map:edit-feature:end', this._updateFeatureResultItem, this);
     leafletMap.off('flexberry-map:edit-feature:fail', this._updateFeatureResultItem, this);
     leafletMap.off('flexberry-map:edit-feature:removeResultObject', this._removeResultObject, this);
+    this.set('leafletMap', null);
   },
 
   /**

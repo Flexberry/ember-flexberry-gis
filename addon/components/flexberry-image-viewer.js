@@ -55,6 +55,8 @@ export default Ember.Component.extend({
 
   _modalClickHandler: null,
 
+  leafletMap: null,
+
   init() {
     this._super(...arguments);
 
@@ -87,19 +89,35 @@ export default Ember.Component.extend({
     }
   },
 
-  /**
-   * Метод вызывается после того, как атрибуты компонента были обновлены, только при последующих обновлениях(рендер был хотя бы один раз).
-   */
-  didUpdateAttrs() {
+  didInsertElement() {
     this._super(...arguments);
 
+    let leafletMap = this.get('leafletMap');
+    if (leafletMap) {
+      leafletMap.on('flexberry-map:edit-feature:end', this._updateFeatureResultItem, this);
+    }
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+    Ember.$('.ui.dimmer.modals.carousel-dimmer').removeClass('carousel-dimmer');
+
+    let leafletMap = this.get('leafletMap');
+    if (leafletMap) {
+      leafletMap.off('flexberry-map:edit-feature:end', this._updateFeatureResultItem, this);
+    }
+  },
+
+  _updateFeatureResultItem(editedLayer) {
     let feature = this.get('feature');
     let settingsAsObject = this.get('settingsAsObject');
-    if (Ember.isNone(feature) || Ember.isNone(settingsAsObject) || !settingsAsObject.displaySettings.photosEnabled) {
-      return;
-    }
+    if (editedLayer && editedLayer.layers && feature && settingsAsObject && settingsAsObject.displaySettings.photosEnabled) {
+      let editedFeature = editedLayer.layers[0];
 
-    this.getFhotoLayer();
+      if (editedFeature.feature && editedFeature.feature.properties.primarykey === feature.properties.primarykey) {
+        this.getFhotoLayer();
+      }
+    }
   },
 
   displayedImages: Ember.computed('images.[]', 'showAll', function() {
@@ -289,11 +307,6 @@ export default Ember.Component.extend({
       }
     });
   }),
-
-  willDestroyElement() {
-    this._super(...arguments);
-    Ember.$('.ui.dimmer.modals.carousel-dimmer').removeClass('carousel-dimmer');
-  },
 
   _addModalClickHandler() {
     Ember.run.next(this, () => {
