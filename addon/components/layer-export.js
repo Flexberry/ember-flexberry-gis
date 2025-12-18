@@ -322,17 +322,20 @@ export default Ember.Component.extend({
           value.dateTo = new Date(value.dateTo).toISOString();
         }
       };
-      Object.entries(filter).forEach(([key, value]) => {
-        let isMultiFilter = Ember.isPresent(value.conditions) && Ember.isArray(value.conditions);
-        if (isMultiFilter) {
-          value.conditions.forEach((multiValue) => toUTC(multiValue));
-          return;
-        }
 
-        toUTC(value);
-      });
+      if (!Ember.isNone(filter) && Object.keys(filter).length > 0) {
+        Object.entries(filter).forEach(([key, value]) => {
+          let isMultiFilter = Ember.isPresent(value.conditions) && Ember.isArray(value.conditions);
+          if (isMultiFilter) {
+            value.conditions.forEach((multiValue) => toUTC(multiValue));
+            return;
+          }
 
-      Object.assign(data, { filter: !Ember.isNone(filter) && Object.keys(filter).length > 0 ? JSON.stringify(filter) : null });
+          toUTC(value);
+        });
+
+        Object.assign(data, { filter: !Ember.isNone(filter) && Object.keys(filter).length > 0 ? JSON.stringify(filter) : null });
+      }
 
       if (data.outputFormat === 'XLSX') {
         this.getHeader().then((header) => {
