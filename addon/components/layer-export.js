@@ -306,14 +306,6 @@ export default Ember.Component.extend({
         Object.assign(data, { dsco: { FORMAT: 'GML3' }, outputFormat: 'GML' });
       }
 
-      if (data.outputFormat === 'XLSX') {
-        this.getHeader().then((header) => {
-          Object.assign(data, { header: header ? JSON.stringify(header) : null });
-          this.start(data);
-        });
-        return;
-      }
-
       // Приводим время в UTC для отправки на сервер
       const filter = this.get('filter');
       const toUTC = (value) => {
@@ -341,6 +333,14 @@ export default Ember.Component.extend({
       });
 
       Object.assign(data, { filter: !Ember.isNone(filter) && Object.keys(filter).length > 0 ? JSON.stringify(filter) : null });
+
+      if (data.outputFormat === 'XLSX') {
+        this.getHeader().then((header) => {
+          Object.assign(data, { header: header ? JSON.stringify(header) : null });
+          this.start(data);
+        });
+        return;
+      }
 
       this.start(data);
     },
