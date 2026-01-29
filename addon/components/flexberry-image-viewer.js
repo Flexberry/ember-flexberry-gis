@@ -275,7 +275,6 @@ export default Ember.Component.extend({
               fileName = fileName.substring(0, 97) + '...';
             }
 
-            //TODO: После сохранения не подтягиваются актуальные поля с бека
             images.pushObject({
               preview: filePath.previewUrl,
               creator: file.value.get('creator'),
