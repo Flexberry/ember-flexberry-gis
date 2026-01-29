@@ -1389,24 +1389,26 @@ export default Ember.Component.extend(SnapDrawMixin, LeafletZoomToFeatureMixin, 
           _leafletObjectFirst.setParams({ fake: Date.now() }, false);
         }
 
-        if (uploadFilesPromises.length > 0) {
-          Ember.RSVP.all(uploadFilesPromises).then(records => {
-            return Ember.RSVP.all(records.map(r => r.save()));
-          }).catch((error) => {
-            console.error('Возникла ошибка при сохранении файлов ' + error);
-          }).finally(() => {
-            this.set('deleteRecordsFiles', Ember.A([]));
-            this.set('uploadFilesLater', Ember.A([]));
+        let afterSavePromise = uploadFilesPromises.length > 0
+          ? Ember.RSVP.all(uploadFilesPromises)
+              .then(records => Ember.RSVP.all(records.map(r => r.save())))
+              .catch((error) => {
+                console.error('Возникла ошибка при сохранении файлов', error);
+              })
+          : Ember.RSVP.resolve();
+
+        afterSavePromise.finally(() => {
+          this.get('modalMessage').showModal({
+            title: 'Объект успешно сохранен',
+            text: `Объект успешно сохранен в слой “${layerModel.name}”`,
+            duration: 5000,
           });
-        }
 
-        this.get('modalMessage').showModal({
-          title: 'Объект успешно сохранен',
-          text: `Объект успешно сохранен в слой “${layerModel.name}”`,
-          duration: 5000,
+          this.set('deleteRecordsFiles', Ember.A([]));
+          this.set('uploadFilesLater', Ember.A([]));
+
+          this.sendAction('editFeatureEnd'); // close edit tab
         });
-
-        this.sendAction('editFeatureEnd'); // close edit tab
       };
 
       leafletObject.off('save:failed', saveFailed);
