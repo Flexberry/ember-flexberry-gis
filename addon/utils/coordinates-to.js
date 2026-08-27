@@ -48,6 +48,10 @@ let coordinatesToArray = function(coordinates) {
             let item = coordinates[i][j][k];
             coors.push(item);
           }
+
+          if (j !== coordinates[i].length - 1) {
+            coors.push(null);
+          }
         }
 
         if (i !== coordinates.length - 1) {

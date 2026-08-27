@@ -106,7 +106,7 @@ test('test method coordinatesToString and coordinatesToArray for MultiPolygon wi
 
   let resultString = coordinatesToString(feature.coordinates);
   let resultArray = coordinatesToArray(feature.coordinates);
-  assert.equal(resultString, '40 40 \n45 20 \n30 45 \n40 40 \n\n35 20 \n30 10 \n10 10 \n5 30 \n20 45 \n35 20 \n20 30 \n15 20 \n25 20 \n20 30 \n');
+  assert.equal(resultString, '40 40 \n45 20 \n30 45 \n40 40 \n\n35 20 \n30 10 \n10 10 \n5 30 \n20 45 \n35 20 \n\n20 30 \n15 20 \n25 20 \n20 30 \n');
   assert.deepEqual(resultArray, [[40, 40], [45, 20], [30, 45], [40, 40], null, [35, 20], [30, 10],
-    [10, 10], [5, 30], [20, 45], [35, 20], [20, 30], [15, 20], [25, 20], [20, 30]]);
+    [10, 10], [5, 30], [20, 45], [35, 20], null, [20, 30], [15, 20], [25, 20], [20, 30]]);
 });
