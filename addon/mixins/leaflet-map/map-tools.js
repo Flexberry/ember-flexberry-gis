@@ -101,10 +101,6 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
           mapTool: mapTool
         });
 
-        if (mapTool === enabledMapTool) {
-          return enabledMapTool;
-        }
-
         // Disable enabled map-tool.
         // It will also trigger 'flexberry-map:tools:disable' event on leaflet map.
         if (!Ember.isNone(enabledMapTool)) {

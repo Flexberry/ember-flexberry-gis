@@ -143,6 +143,8 @@ let FlexberryMapComponent = Ember.Component.extend(
   */
   lat: null,
 
+  maptoolOptionsService: Ember.inject.service('maptool-options'),
+
   /**
     Map center longitude.
 
@@ -503,6 +505,10 @@ let FlexberryMapComponent = Ember.Component.extend(
 
     // Store map's container as jQuery object.
     let $leafletContainer = this.$();
+
+    // Выключаем стандартный обработчик ПКМ для контейнера карты
+    $leafletContainer.on('contextmenu', (e) => e.preventDefault());
+
     this.set('_$leafletContainer', $leafletContainer);
 
     let options = this.get('options');
@@ -513,20 +519,107 @@ let FlexberryMapComponent = Ember.Component.extend(
     if (this.get('mainMap')) {
       leafletMap.mainMap = true;
       L.DomEvent.on(leafletMap, 'mousedown mouseup mousein mouseout', (e) => {
+        // Обработка ПКМ: Включение инструмента идентификации типа "Прямоугольник"
+        // При mouseDown включение, создание вершины, переключение в draggable-состояние для задания области идентификации
+        // При mouseUp идентификация, переключение инструмента
+        if (e.originalEvent.button === 2) {
+          if (!this.get('maptoolOptionsService.isRightClickToolAvailable')) {
+            return;
+          }
+
+          if (e.type === 'mousedown') {
+            let rightClickAvailiblePrevMapTools = this.get('maptoolOptionsService.rightClickAvailiblePrevMapTools');
+
+            let prevToolName = leafletMap.flexberryMap.tools.getEnabled().name;
+            let savePrevEnabledTool = rightClickAvailiblePrevMapTools.some(availiblePrevMapToolName => prevToolName.includes(availiblePrevMapToolName));
+
+            // Сохраняем предыдущий инструмент из списка "включаемых" инструментов
+            if (savePrevEnabledTool) {
+              this.set('prevEnabledTools', {
+                name: leafletMap.flexberryMap.tools.getEnabled().name,
+                mapToolProperties: leafletMap.flexberryMap.tools.getEnabled().mapToolProperties
+              });
+            } else {
+              this.set('prevEnabledTools', null);
+            }
+
+            // Для переключения некоторых инструментов рисования требуется корректно прервать функциональность (вызвать необходимые обработчики, переключить флаги)
+            leafletMap.flexberryMap.tools.getEnabled().interrupt(e);
+
+            // ПКМ обработчик карты пока умеет работать только с identify-visible-rectangle
+            // this.rightClickToolProperties должен содержать перечень слоев для идентификации
+            // Включаем инструмент идентификации
+            let rightClickToolName = this.get('maptoolOptionsService.rightClickToolName');
+            let rightClickToolProperties = this.get('maptoolOptionsService.rightClickToolProperties');
+            let identifyTool = leafletMap.flexberryMap.tools.enable(rightClickToolName, rightClickToolProperties);
+            let identifyEditTools = Ember.get(identifyTool, '_editTools');
+
+            // Если _editTools не доступно
+            if (Ember.isNone(identifyEditTools)) {
+              console.error('The handler for right click map tool is not defined');
+              leafletMap.flexberryMap.tools.enable('drag');
+              return;
+            }
+
+            // Инициируем нажатие ЛКМ для создания стартовой точки и перехода в состояние "перетаскивание" инструмента
+            let newMouseDownEvent = new MouseEvent('mousedown');
+            identifyEditTools.onMousedown({
+              latlng: e.latlng,
+              originalEvent: newMouseDownEvent
+            });
+          }
+
+          if (e.type === 'mouseup') {
+            let currentMapTool = leafletMap.flexberryMap.tools.getEnabled();
+
+            if (Ember.get(currentMapTool, 'name') === this.get('maptoolOptionsService.rightClickToolName')) {
+              let identifyEditTools = Ember.get(currentMapTool, '_editTools');
+
+              if (!Ember.isNone(identifyEditTools)) {
+                identifyEditTools.commitDrawing(e);
+              }
+            }
+
+            if (!Ember.isNone(this.get('prevEnabledTools'))) {
+              leafletMap.flexberryMap.tools.enable(this.get('prevEnabledTools.name'), this.get('prevEnabledTools.mapToolProperties'));
+            } else {
+              leafletMap.flexberryMap.tools.enable('drag');
+            }
+
+            this.set('prevEnabledTools', null);
+          }
+
+          return;
+        }
+
+        // Обработка средней клавиши мыши: возможность перетаскивания карты из любого рабочего инструмента
+        // При mouseDown включение инструмента "рука"
+        // При mouseUp переключение обратно в рабочий инструмент
         if (e.originalEvent.button === 1) {
           if (e.type === 'mousedown') {
             e.originalEvent.preventDefault();
-            let enabledTools = {
+
+            this.set('prevEnabledTools', {
               name: leafletMap.flexberryMap.tools.getEnabled().name,
               mapToolProperties: leafletMap.flexberryMap.tools.getEnabled().mapToolProperties
-            };
-            this.set('prevEnabledTools', enabledTools);
+            });
+
             leafletMap.flexberryMap.tools.enable('drag');
           } else {
             leafletMap.flexberryMap.tools.enable(this.get('prevEnabledTools.name'), this.get('prevEnabledTools.mapToolProperties'));
             this.set('prevEnabledTools', null);
           }
-        } else if (!Ember.isNone(this.get('prevEnabledTools'))) {
+
+          return;
+        }
+
+        // Обработка ЛКМ: перезагрузить рабочий инструмент
+        // Если во время работы инструмента что-то пошло не так (двойной клик, одновременный клик лкм+пкм, выход за границы рабочей области)
+        if (e.originalEvent.button === 0) {
+          if (Ember.isNone(this.get('prevEnabledTools'))) {
+            return;
+          }
+
           leafletMap.flexberryMap.tools.enable(this.get('prevEnabledTools.name'), this.get('prevEnabledTools.mapToolProperties'));
           this.set('prevEnabledTools', null);
         }

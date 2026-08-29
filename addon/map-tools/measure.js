@@ -95,6 +95,24 @@ export default BaseNonclickableMapTool.extend({
     }
   },
 
+  interrupt(e) {
+    this._super(...arguments);
+    let measureTools = this.get('_measureTools');
+
+    if (Ember.isNone(measureTools)) {
+      return;
+    }
+
+    let measureEditTools = Ember.get(measureTools, 'editTools');
+
+    if (Ember.isNone(measureEditTools)) {
+      return;
+    }
+
+    measureEditTools.onMousedown(e);
+    measureEditTools.onMouseup(e);
+  },
+
   /**
     Handles edit tools 'editable:drawing:end' event.
 

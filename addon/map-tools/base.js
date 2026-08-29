@@ -101,6 +101,16 @@ export default Ember.Object.extend(Ember.Evented, LeafletMapVisibilityMixin, {
   },
 
   /**
+    Safely Interrupts tool functionality.
+
+    @method interrupt
+    @private
+  */
+  interrupt(e) {
+    return;
+  },
+
+  /**
     Enables tool.
 
     @method enable
